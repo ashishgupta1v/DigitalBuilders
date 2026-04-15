@@ -19,6 +19,7 @@ class LeadModel extends Model
         'phone',
         'project_type',
         'description',
+        'status',
     ];
 
     protected static function newFactory(): \App\Modules\Library\Infrastructure\Persistence\Factories\LeadModelFactory

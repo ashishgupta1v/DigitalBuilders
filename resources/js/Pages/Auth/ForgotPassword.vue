@@ -23,7 +23,12 @@ const submit = () => {
     <GuestLayout>
         <Head title="Forgot Password" />
 
-        <div class="mb-4 text-sm text-gray-600">
+        <div class="mb-6">
+            <span class="db-chip">Recovery flow</span>
+            <h1 class="mt-4 text-2xl font-semibold text-white">Reset your access credentials</h1>
+        </div>
+
+        <div class="mb-4 text-sm text-[#b4c3de]">
             Forgot your password? No problem. Just let us know your email
             address and we will email you a password reset link that will allow
             you to choose a new one.
@@ -31,7 +36,7 @@ const submit = () => {
 
         <div
             v-if="status"
-            class="mb-4 text-sm font-medium text-green-600"
+            class="mb-4 text-sm font-medium text-[#9feac5]"
         >
             {{ status }}
         </div>
@@ -53,7 +58,7 @@ const submit = () => {
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
-            <div class="mt-4 flex items-center justify-end">
+            <div class="mt-6 flex items-center justify-end">
                 <PrimaryButton
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"

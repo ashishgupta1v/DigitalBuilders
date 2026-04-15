@@ -14,11 +14,11 @@ final class ListLeadsUseCase
     ) {}
 
     /** @return LeadDTO[] */
-    public function execute(): array
+    public function execute(array $filters = []): array
     {
         return array_map(
             fn ($lead) => LeadDTO::fromEntity($lead),
-            $this->repository->all(),
+            $this->repository->all($filters),
         );
     }
 }

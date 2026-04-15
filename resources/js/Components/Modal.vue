@@ -95,7 +95,7 @@ const maxWidthClass = computed(() => {
                     @click="close"
                 >
                     <div
-                        class="absolute inset-0 bg-gray-500 opacity-75"
+                        class="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(122,196,255,0.22),transparent_52%),radial-gradient(circle_at_80%_88%,rgba(197,147,255,0.2),transparent_58%),rgba(7,12,18,0.72)] backdrop-blur-sm"
                     />
                 </div>
             </Transition>
@@ -110,7 +110,7 @@ const maxWidthClass = computed(() => {
             >
                 <div
                     v-show="show"
-                    class="mb-6 transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:mx-auto sm:w-full"
+                    class="mb-6 transform overflow-hidden rounded-[1.35rem] border border-[#b8c9e64d] bg-[linear-gradient(160deg,rgba(43,58,79,0.95),rgba(31,43,59,0.96))] shadow-[0_30px_48px_rgba(7,12,18,0.58)] transition-all sm:mx-auto sm:w-full"
                     :class="maxWidthClass"
                 >
                     <slot v-if="showSlot" />

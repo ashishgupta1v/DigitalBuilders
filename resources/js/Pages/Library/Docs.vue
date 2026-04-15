@@ -26,11 +26,20 @@ onMounted(() => {
 <template>
     <Head title="Documentation" />
 
-    <div class="min-h-screen bg-white">
-        <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="db-shell min-h-screen text-[#e7efff]">
+        <div class="db-grid-overlay" />
+        <div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+            <div class="mb-6 flex items-center justify-between">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.24em] text-[#bcd0ef]">Knowledge surface</p>
+                    <h1 class="mt-2 text-3xl font-semibold text-white">Documentation</h1>
+                </div>
+                <span class="db-chip">Sanitized render</span>
+            </div>
+
             <div
                 ref="containerRef"
-                class="prose prose-lg max-w-none"
+                class="db-panel db-reveal prose prose-invert prose-lg max-w-none rounded-[1.5rem] p-7"
                 v-html="sanitizedHtml"
             />
         </div>

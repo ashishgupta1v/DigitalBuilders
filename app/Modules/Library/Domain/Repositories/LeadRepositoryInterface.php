@@ -12,6 +12,11 @@ interface LeadRepositoryInterface
 
     public function findById(int $id): ?Lead;
 
-    /** @return Lead[] */
-    public function all(): array;
+    /**
+     * @param  array{status?: string, search?: string}  $filters
+     * @return Lead[]
+     */
+    public function all(array $filters = []): array;
+
+    public function updateStatus(int $id, string $status): void;
 }

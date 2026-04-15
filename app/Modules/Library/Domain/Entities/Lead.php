@@ -18,6 +18,7 @@ final class Lead
         private ProjectType $projectType,
         private ?string $description,
         private ?\DateTimeImmutable $createdAt = null,
+        private string $status = 'new',
     ) {}
 
     public static function create(
@@ -73,6 +74,16 @@ final class Lead
         return $this->createdAt;
     }
 
+    public function status(): string
+    {
+        return $this->status;
+    }
+
+    public function updateStatus(string $status): void
+    {
+        $this->status = $status;
+    }
+
     /**
      * Reconstitute from persistence (used by repository).
      */
@@ -84,7 +95,8 @@ final class Lead
         ProjectType $projectType,
         ?string $description,
         \DateTimeImmutable $createdAt,
+        string $status = 'new',
     ): self {
-        return new self($id, $name, $email, $phone, $projectType, $description, $createdAt);
+        return new self($id, $name, $email, $phone, $projectType, $description, $createdAt, $status);
     }
 }

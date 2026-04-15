@@ -31,6 +31,12 @@ const submit = () => {
     <GuestLayout>
         <Head title="Reset Password" />
 
+        <div class="mb-6">
+            <span class="db-chip">Credential rotation</span>
+            <h1 class="mt-4 text-2xl font-semibold text-white">Set a new password</h1>
+            <p class="mt-2 text-sm text-[#b4c3de]">Use a strong password for maximum account security.</p>
+        </div>
+
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="email" value="Email" />
@@ -84,7 +90,7 @@ const submit = () => {
                 />
             </div>
 
-            <div class="mt-4 flex items-center justify-end">
+            <div class="mt-6 flex items-center justify-end">
                 <PrimaryButton
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"

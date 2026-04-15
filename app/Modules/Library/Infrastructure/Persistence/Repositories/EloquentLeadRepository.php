@@ -34,12 +34,30 @@ final class EloquentLeadRepository implements LeadRepositoryInterface
     }
 
     /** @return Lead[] */
-    public function all(): array
+    public function all(array $filters = []): array
     {
-        return LeadModel::orderByDesc('created_at')
-            ->get()
+        $query = LeadModel::orderByDesc('created_at');
+
+        if (! empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        if (! empty($filters['search'])) {
+            $term = '%' . $filters['search'] . '%';
+            $query->where(function ($q) use ($term) {
+                $q->where('name', 'like', $term)
+                  ->orWhere('email', 'like', $term);
+            });
+        }
+
+        return $query->get()
             ->map(fn (LeadModel $m) => $this->toDomain($m))
             ->all();
+    }
+
+    public function updateStatus(int $id, string $status): void
+    {
+        LeadModel::where('id', $id)->update(['status' => $status]);
     }
 
     private function toDomain(LeadModel $model): Lead
@@ -52,6 +70,7 @@ final class EloquentLeadRepository implements LeadRepositoryInterface
             projectType: new ProjectType($model->project_type),
             description: $model->description,
             createdAt: new \DateTimeImmutable($model->created_at->toDateTimeString()),
+            status: $model->status ?? 'new',
         );
     }
 }
