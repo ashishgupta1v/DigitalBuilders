@@ -10,16 +10,27 @@ use App\Modules\Library\Application\DTOs\CreateLeadDTO;
 use App\Modules\Library\Application\Interfaces\MarkdownRendererInterface;
 use App\Modules\Library\Application\UseCases\CreateLeadUseCase;
 use App\Modules\Library\Application\UseCases\ListLeadsUseCase;
+use App\Modules\Library\Domain\Repositories\LeadRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class LeadController extends Controller
 {
-    public function index(ListLeadsUseCase $useCase): Response
+    private const VALID_STATUSES = ['new', 'contacted', 'converted'];
+
+    public function index(Request $request, ListLeadsUseCase $useCase): Response
     {
+        $filters = [
+            'status' => $request->query('status', ''),
+            'search' => $request->query('search', ''),
+        ];
+
         return Inertia::render('Library/Leads', [
-            'leads' => $useCase->execute(),
+            'leads'   => $useCase->execute(array_filter($filters)),
+            'filters' => $filters,
         ]);
     }
 
@@ -35,6 +46,48 @@ class LeadController extends Controller
 
         return back()
             ->with('success', 'Thank you! Your inquiry has been received. We\'ll respond within 24 business hours.');
+    }
+
+    public function updateStatus(Request $request, int $id, LeadRepositoryInterface $repository): RedirectResponse
+    {
+        $status = $request->input('status');
+
+        if (! in_array($status, self::VALID_STATUSES, true)) {
+            return back()->withErrors(['status' => 'Invalid status value.']);
+        }
+
+        $repository->updateStatus($id, $status);
+
+        return back()->with('success', 'Lead status updated.');
+    }
+
+    public function export(ListLeadsUseCase $useCase): HttpResponse
+    {
+        $leads = $useCase->execute();
+
+        $headers = ['Content-Type' => 'text/csv', 'Content-Disposition' => 'attachment; filename="leads.csv"'];
+
+        $callback = function () use ($leads) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['ID', 'Name', 'Email', 'Phone', 'Project Type', 'Status', 'Description', 'Submitted At']);
+
+            foreach ($leads as $lead) {
+                fputcsv($file, [
+                    $lead->id,
+                    $lead->name,
+                    $lead->email,
+                    $lead->phone,
+                    $lead->projectTypeLabel,
+                    $lead->status,
+                    $lead->description ?? '',
+                    $lead->createdAt ?? '',
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     public function docs(MarkdownRendererInterface $renderer): Response

@@ -17,6 +17,7 @@ final class LeadDTO
         public readonly string $projectTypeLabel,
         public readonly ?string $description,
         public readonly ?string $createdAt,
+        public readonly string $status = 'new',
     ) {}
 
     public static function fromEntity(Lead $lead): self
@@ -30,6 +31,7 @@ final class LeadDTO
             projectTypeLabel: $lead->projectType()->label(),
             description: $lead->description(),
             createdAt: $lead->createdAt()?->format('Y-m-d H:i:s'),
+            status: $lead->status(),
         );
     }
 }

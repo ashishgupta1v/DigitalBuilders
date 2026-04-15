@@ -25,8 +25,10 @@ Route::middleware('auth')->group(function () {
 // Library module routes
 Route::prefix('library')->name('library.')->group(function () {
     Route::get('/leads', [LeadController::class, 'index'])->middleware(['auth'])->name('leads.index');
+    Route::get('/leads/export', [LeadController::class, 'export'])->middleware(['auth'])->name('leads.export');
+    Route::patch('/leads/{id}/status', [LeadController::class, 'updateStatus'])->middleware(['auth'])->name('leads.status');
     Route::get('/contact', [LeadController::class, 'create'])->name('leads.create');
-    Route::post('/contact', [LeadController::class, 'store'])->name('leads.store');
+    Route::post('/contact', [LeadController::class, 'store'])->middleware('throttle:3,60')->name('leads.store');
     Route::get('/docs', [LeadController::class, 'docs'])->name('docs');
 });
 

@@ -11,11 +11,11 @@ const showingNavigationDropdown = ref(false);
 </script>
 
 <template>
-    <div>
-        <div class="min-h-screen bg-gray-100">
-            <nav
-                class="border-b border-gray-100 bg-white"
-            >
+    <div class="db-shell text-[var(--db-text)]">
+        <div class="db-progress" />
+        <div class="db-grid-overlay" />
+        <div class="min-h-screen bg-transparent text-[#e7efff]">
+            <nav class="sticky top-0 z-40 border-b border-[#b8c9e633] bg-[#233246df] backdrop-blur-xl">
                 <!-- Primary Navigation Menu -->
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="flex h-16 justify-between">
@@ -24,7 +24,7 @@ const showingNavigationDropdown = ref(false);
                             <div class="flex shrink-0 items-center">
                                 <Link :href="route('dashboard')">
                                     <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800"
+                                        class="block h-9 w-auto"
                                     />
                                 </Link>
                             </div>
@@ -39,6 +39,18 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Dashboard
                                 </NavLink>
+                                <NavLink
+                                    :href="route('profile.edit')"
+                                    :active="route().current('profile.edit')"
+                                >
+                                    Profile
+                                </NavLink>
+                                <NavLink
+                                    :href="route('library.leads.index')"
+                                    :active="route().current('library.leads.index')"
+                                >
+                                    Leads
+                                </NavLink>
                             </div>
                         </div>
 
@@ -50,7 +62,7 @@ const showingNavigationDropdown = ref(false);
                                         <span class="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
+                                                class="inline-flex items-center rounded-xl border border-[#b8c9e640] bg-[#2b3a4fc9] px-3 py-2 text-sm font-medium leading-4 text-[#d5e2f8] transition duration-150 ease-in-out hover:border-[#d1b5ff66] hover:text-white focus:outline-none"
                                             >
                                                 {{ $page.props.auth.user.name }}
 
@@ -95,7 +107,7 @@ const showingNavigationDropdown = ref(false);
                                     showingNavigationDropdown =
                                         !showingNavigationDropdown
                                 "
-                                class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
+                                class="inline-flex items-center justify-center rounded-md p-2 text-[#b4c3de] transition duration-150 ease-in-out hover:bg-[#2b3a4f] hover:text-white focus:bg-[#2b3a4f] focus:text-white focus:outline-none"
                             >
                                 <svg
                                     class="h-6 w-6"
@@ -137,7 +149,7 @@ const showingNavigationDropdown = ref(false);
                         block: showingNavigationDropdown,
                         hidden: !showingNavigationDropdown,
                     }"
-                    class="sm:hidden"
+                    class="border-t border-[#b8c9e620] bg-[#1f2b3be8] sm:hidden"
                 >
                     <div class="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
@@ -146,19 +158,31 @@ const showingNavigationDropdown = ref(false);
                         >
                             Dashboard
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('profile.edit')"
+                            :active="route().current('profile.edit')"
+                        >
+                            Profile
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('library.leads.index')"
+                            :active="route().current('library.leads.index')"
+                        >
+                            Leads
+                        </ResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->
                     <div
-                        class="border-t border-gray-200 pb-1 pt-4"
+                        class="border-t border-[#b8c9e633] pb-1 pt-4"
                     >
                         <div class="px-4">
                             <div
-                                class="text-base font-medium text-gray-800"
+                                class="text-base font-medium text-[#e7efff]"
                             >
                                 {{ $page.props.auth.user.name }}
                             </div>
-                            <div class="text-sm font-medium text-gray-500">
+                            <div class="text-sm font-medium text-[#b4c3de]">
                                 {{ $page.props.auth.user.email }}
                             </div>
                         </div>
@@ -181,7 +205,7 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Heading -->
             <header
-                class="bg-white shadow"
+                class="border-b border-[#b8c9e633] bg-[#233246c2]"
                 v-if="$slots.header"
             >
                 <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -190,7 +214,7 @@ const showingNavigationDropdown = ref(false);
             </header>
 
             <!-- Page Content -->
-            <main>
+            <main class="db-reveal">
                 <slot />
             </main>
         </div>

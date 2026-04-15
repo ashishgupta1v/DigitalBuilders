@@ -23,14 +23,19 @@ const verificationLinkSent = computed(
     <GuestLayout>
         <Head title="Email Verification" />
 
-        <div class="mb-4 text-sm text-gray-600">
+        <div class="mb-6">
+            <span class="db-chip">Verification required</span>
+            <h1 class="mt-4 text-2xl font-semibold text-white">Confirm your email to continue</h1>
+        </div>
+
+        <div class="mb-4 text-sm text-[#b4c3de]">
             Thanks for signing up! Before getting started, could you verify your
             email address by clicking on the link we just emailed to you? If you
             didn't receive the email, we will gladly send you another.
         </div>
 
         <div
-            class="mb-4 text-sm font-medium text-green-600"
+            class="mb-4 text-sm font-medium text-[#9feac5]"
             v-if="verificationLinkSent"
         >
             A new verification link has been sent to the email address you
@@ -38,7 +43,7 @@ const verificationLinkSent = computed(
         </div>
 
         <form @submit.prevent="submit">
-            <div class="mt-4 flex items-center justify-between">
+            <div class="mt-6 flex items-center justify-between">
                 <PrimaryButton
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
@@ -50,7 +55,7 @@ const verificationLinkSent = computed(
                     :href="route('logout')"
                     method="post"
                     as="button"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    class="rounded-md text-sm text-[#bcd0ef] underline decoration-[#8ea4ff80] underline-offset-4 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#a6b0ff] focus:ring-offset-0"
                     >Log Out</Link
                 >
             </div>
