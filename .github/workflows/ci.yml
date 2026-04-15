@@ -10,27 +10,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: testing
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     env:
       DB_CONNECTION: sqlite
       DB_DATABASE: ":memory:"
-
-    defaults:
-      run:
-        working-directory: DigitalBuilders
 
     steps:
       - uses: actions/checkout@v4
@@ -47,7 +29,7 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-          cache-dependency-path: DigitalBuilders/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
