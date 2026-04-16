@@ -13,7 +13,7 @@ final class MailLeadNotifier implements LeadNotifierInterface
 {
     public function notify(Lead $lead): void
     {
-        $to = config('mail.from.address', 'hello@digitalbuilders.in');
+        $to = config('mail.lead_inbox', 'hello@digitalbuilders.in');
 
         Mail::to($to)->send(new NewLeadMail($lead));
     }

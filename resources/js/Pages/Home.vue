@@ -78,7 +78,7 @@ function submitLead() {
     form.post(route('library.leads.store'), {
         preserveScroll: true,
         onSuccess: () => {
-            form.reset('description');
+            form.reset();
         },
     });
 }

@@ -1,3 +1,23 @@
+## DigitalBuilders Quote Email Setup
+
+The "Request a Project Quote" form sends structured lead emails to `hello@digitalbuilders.in`.
+
+Set these variables in production (Vercel Project Settings -> Environment Variables):
+
+```bash
+MAIL_MAILER=smtp
+MAIL_HOST=<your-smtp-host>
+MAIL_PORT=<your-smtp-port>
+MAIL_USERNAME=<your-smtp-username>
+MAIL_PASSWORD=<your-smtp-password>
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=hello@digitalbuilders.in
+MAIL_FROM_NAME="DigitalBuilders"
+MAIL_LEAD_INBOX=hello@digitalbuilders.in
+```
+
+If `MAIL_MAILER=log`, emails are only written to logs and are not delivered.
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">

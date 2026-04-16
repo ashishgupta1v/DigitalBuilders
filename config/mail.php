@@ -115,4 +115,16 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Lead Inbox Address
+    |--------------------------------------------------------------------------
+    |
+    | Contact/quote requests from website forms are always delivered to this
+    | inbox. Keep this separate from MAIL_FROM_ADDRESS.
+    |
+    */
+
+    'lead_inbox' => env('MAIL_LEAD_INBOX', 'hello@digitalbuilders.in'),
+
 ];
