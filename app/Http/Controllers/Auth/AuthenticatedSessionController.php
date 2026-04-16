@@ -18,7 +18,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Login', [
+        return Inertia::render('Auth/AuthPortal', [
+            'initialMode' => 'login',
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
         ]);
@@ -26,13 +27,18 @@ class AuthenticatedSessionController extends Controller
 
     /**
      * Handle an incoming authentication request.
+     * Optimized for fast authentication and redirect.
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Authenticate user (includes rate limiting check)
         $request->authenticate();
 
+        // Regenerate session for security
         $request->session()->regenerate();
 
+        // Redirect to intended destination or dashboard
+        // Using absolute: false for relative URL generation
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

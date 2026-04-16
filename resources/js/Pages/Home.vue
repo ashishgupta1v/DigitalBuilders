@@ -13,7 +13,6 @@ const motionAnimate = animate as unknown as MotionAnimate;
 
 defineProps<{
     canLogin?: boolean;
-    canRegister?: boolean;
 }>();
 
 const mobileMenuOpen = ref(false);
@@ -26,16 +25,16 @@ const form = useForm({
     description: '',
 });
 
-const projectTypes = [
+const projectTypes: Array<{ value: string; label: string }> = [
     { value: 'web_app', label: 'Web Application' },
     { value: 'mobile_app', label: 'Mobile App' },
     { value: 'erp_crm', label: 'ERP / CRM' },
     { value: 'saas', label: 'SaaS Platform' },
     { value: 'ai_solutions', label: 'AI Solutions' },
     { value: 'other', label: 'Other' },
-];
+] as const;
 
-const services = [
+const services: Array<{ title: string; summary: string }> = [
     {
         title: 'Custom Web Application Development',
         summary: 'Blazing-fast, scalable web applications engineered with modern architecture.',
@@ -56,9 +55,9 @@ const services = [
         title: 'Enterprise-Grade Systems (ERP and CRM)',
         summary: 'Centralized software to streamline operations and unify data.',
     },
-];
+] as const;
 
-const studies = [
+const studies: Array<{ client: string; result: string }> = [
     {
         client: 'Habuilt',
         result: 'High-traffic platform stabilized and accelerated through architecture-first engineering.',
@@ -71,7 +70,7 @@ const studies = [
         client: 'SSKnitwear',
         result: 'Legacy brand modernized with a high-performance enterprise storefront.',
     },
-];
+] as const;
 
 const canonicalUrl = 'https://www.digitalbuilders.in/';
 
@@ -85,8 +84,8 @@ function submitLead() {
 }
 
 onMounted(() => {
+    // Hero title animation
     const hero = document.querySelector('[data-hero-title]');
-
     if (hero) {
         motionAnimate(
             hero,
@@ -95,6 +94,7 @@ onMounted(() => {
         );
     }
 
+    // Reveal section animations (lazy loaded)
     inView('[data-reveal]', (element) => {
         motionAnimate(
             element,
@@ -103,31 +103,39 @@ onMounted(() => {
         );
     });
 
+    // Staggered item animations
     inView('[data-stagger]', (element) => {
         const items = element.querySelectorAll('[data-stagger-item]');
-
-        motionAnimate(
-            items,
-            { opacity: [0, 1], transform: ['translateY(18px)', 'translateY(0px)'] },
-            { duration: 0.55, delay: stagger(0.08), ease: 'ease-out' },
-        );
+        if (items.length > 0) {
+            motionAnimate(
+                items,
+                { opacity: [0, 1], transform: ['translateY(18px)', 'translateY(0px)'] },
+                { duration: 0.55, delay: stagger(0.08), ease: 'ease-out' },
+            );
+        }
     });
 
-    // Animated counters
-    inView('[data-counter]', (el) => {
-        const target = parseInt((el as HTMLElement).dataset.counter ?? '0', 10);
-        const suffix = (el as HTMLElement).dataset.suffix ?? '';
+    // Animated counter values (only initialize visible counters)
+    inView('[data-counter]', (el: Element) => {
+        const htmlEl = el as HTMLElement;
+        const target = parseInt(htmlEl.dataset.counter ?? '0', 10);
+        const suffix = htmlEl.dataset.suffix ?? '';
         const start = Date.now();
         const duration = 1400;
-        const frame = () => {
+        
+        const updateCounter = () => {
             const elapsed = Date.now() - start;
             const progress = Math.min(elapsed / duration, 1);
-            const ease = 1 - Math.pow(1 - progress, 3);
-            const current = Math.round(ease * target);
-            (el as HTMLElement).textContent = `${current}${suffix}`;
-            if (progress < 1) requestAnimationFrame(frame);
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(easeOut * target);
+            htmlEl.textContent = `${current}${suffix}`;
+            
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+            }
         };
-        requestAnimationFrame(frame);
+        
+        requestAnimationFrame(updateCounter);
     });
 });
 </script>
@@ -165,9 +173,6 @@ onMounted(() => {
                     <Link v-if="canLogin" :href="route('login')" class="hidden rounded-full border border-white/20 px-4 py-2 text-xs font-semibold text-[var(--db-muted)] transition hover:border-white/50 hover:text-[var(--db-text)] sm:inline-flex">
                         Log in
                     </Link>
-                    <Link v-if="canRegister" :href="route('register')" class="hidden rounded-full border border-[#b8c9e640] bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-4 py-2 text-xs font-semibold text-[#1a2231] shadow-[0_10px_24px_rgba(13,18,28,0.3)] transition hover:brightness-110 sm:inline-flex">
-                        Register
-                    </Link>
                     <!-- Mobile hamburger -->
                     <button
                         @click="mobileMenuOpen = !mobileMenuOpen"
@@ -198,12 +203,9 @@ onMounted(() => {
                         <a href="#about" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">About</a>
                         <a href="#contact" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Contact</a>
                     </nav>
-                    <div class="mt-4 flex flex-col gap-2 border-t border-[#b8c9e622] pt-4" v-if="canLogin || canRegister">
-                        <Link v-if="canLogin" :href="route('login')" class="inline-flex w-full items-center justify-center rounded-full border border-white/20 px-4 py-2 text-xs font-semibold text-[var(--db-muted)] transition hover:border-white/50 hover:text-[var(--db-text)]">
+                    <div v-if="canLogin" class="mt-4 flex flex-col gap-2 border-t border-[#b8c9e622] pt-4">
+                        <Link :href="route('login')" class="inline-flex w-full items-center justify-center rounded-full border border-white/20 px-4 py-2 text-xs font-semibold text-[var(--db-muted)] transition hover:border-white/50 hover:text-[var(--db-text)]">
                             Log in
-                        </Link>
-                        <Link v-if="canRegister" :href="route('register')" class="inline-flex w-full items-center justify-center rounded-full border border-[#b8c9e640] bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-4 py-2 text-xs font-semibold text-[#1a2231] shadow-[0_10px_24px_rgba(13,18,28,0.3)] transition hover:brightness-110">
-                            Register
                         </Link>
                     </div>
                 </div>

@@ -68,18 +68,21 @@ createInertiaApp({
             import.meta.glob<DefineComponent>('./Pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
-        const vueApp = createApp({ render: () => h(App, props) })
+        createApp({ render: () => h(App, props) })
             .use(plugin)
-            .use(ZiggyVue);
+            .use(ZiggyVue)
+            .mount(el);
 
-        // Mount global Toast after the app
-        vueApp.mount(el);
-
-        const toastMount = document.createElement('div');
-        document.body.appendChild(toastMount);
-        createApp(Toast).mount(toastMount);
+        // Mount global Toast component
+        setTimeout(() => {
+            const toastMount = document.createElement('div');
+            toastMount.id = 'app-toast';
+            document.body.appendChild(toastMount);
+            createApp(Toast).mount(toastMount);
+        }, 0);
     },
     progress: {
         color: '#9BA7FF',
+        delay: 750,
     },
-});
+}) as any;

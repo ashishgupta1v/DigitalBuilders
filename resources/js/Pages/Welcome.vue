@@ -3,7 +3,6 @@ import { Head, Link } from '@inertiajs/vue3';
 
 defineProps<{
     canLogin?: boolean;
-    canRegister?: boolean;
     laravelVersion: string;
     phpVersion: string;
 }>();
@@ -46,14 +45,6 @@ defineProps<{
                         class="db-action inline-flex items-center rounded-full border border-[#b8c9e640] bg-[#2b3a4fd9] px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#e7efff]"
                     >
                         Login
-                    </Link>
-
-                    <Link
-                        v-if="canRegister && !$page.props.auth.user"
-                        :href="route('register')"
-                        class="db-action inline-flex items-center rounded-full border border-[#b8c9e640] bg-[#2b3a4fd9] px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#e7efff]"
-                    >
-                        Register
                     </Link>
                 </div>
             </section>
