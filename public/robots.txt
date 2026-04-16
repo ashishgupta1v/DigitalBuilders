@@ -1,2 +1,7 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /library/leads
+Disallow: /library/leads/export
+Sitemap: https://www.digitalbuilders.in/sitemap.xml

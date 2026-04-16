@@ -53,4 +53,20 @@ putenv('APP_EVENTS_CACHE='.$bootstrapCachePath.'/events.php');
 $_ENV['APP_EVENTS_CACHE'] = $bootstrapCachePath.'/events.php';
 $_SERVER['APP_EVENTS_CACHE'] = $bootstrapCachePath.'/events.php';
 
+// Serverless-safe runtime defaults: on Vercel, avoid hard dependency on
+// database-backed session/cache/queue drivers for basic web requests.
+if (getenv('VERCEL')) {
+	putenv('SESSION_DRIVER=cookie');
+	$_ENV['SESSION_DRIVER'] = 'cookie';
+	$_SERVER['SESSION_DRIVER'] = 'cookie';
+
+	putenv('CACHE_STORE=file');
+	$_ENV['CACHE_STORE'] = 'file';
+	$_SERVER['CACHE_STORE'] = 'file';
+
+	putenv('QUEUE_CONNECTION=sync');
+	$_ENV['QUEUE_CONNECTION'] = 'sync';
+	$_SERVER['QUEUE_CONNECTION'] = 'sync';
+}
+
 require __DIR__.'/../public/index.php';
