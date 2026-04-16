@@ -48,6 +48,7 @@ function switchMode(nextMode: AuthMode) {
 
 function submitLogin() {
     loginForm.post(route('login'), {
+        preserveScroll: true,
         onFinish: () => {
             loginForm.reset('password');
         },
@@ -56,6 +57,7 @@ function submitLogin() {
 
 function submitRegister() {
     registerForm.post(route('register'), {
+        preserveScroll: true,
         onFinish: () => {
             registerForm.reset('password', 'password_confirmation');
         },
