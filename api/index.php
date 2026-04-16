@@ -56,6 +56,18 @@ $_SERVER['APP_EVENTS_CACHE'] = $bootstrapCachePath.'/events.php';
 // Serverless-safe runtime defaults: on Vercel, avoid hard dependency on
 // database-backed session/cache/queue drivers for basic web requests.
 if (getenv('VERCEL')) {
+	// Some preview deployments may miss APP_KEY and fail before rendering.
+	// Use a deterministic preview-only fallback key to keep public pages available.
+	$existingKey = getenv('APP_KEY');
+	$vercelEnv = (string) getenv('VERCEL_ENV');
+	if (($existingKey === false || trim((string) $existingKey) === '') && $vercelEnv !== 'production') {
+		$seed = (string) (getenv('VERCEL_PROJECT_PRODUCTION_URL') ?: getenv('VERCEL_URL') ?: 'digitalbuilders-preview');
+		$fallbackKey = 'base64:'.base64_encode(hash('sha256', $seed, true));
+		putenv('APP_KEY='.$fallbackKey);
+		$_ENV['APP_KEY'] = $fallbackKey;
+		$_SERVER['APP_KEY'] = $fallbackKey;
+	}
+
 	putenv('SESSION_DRIVER=cookie');
 	$_ENV['SESSION_DRIVER'] = 'cookie';
 	$_SERVER['SESSION_DRIVER'] = 'cookie';
