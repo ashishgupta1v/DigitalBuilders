@@ -1,6 +1,54 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    @php($hasViteManifest = file_exists(public_path('build/manifest.json')))
+    @php
+        $manifestPath = public_path('build/manifest.json');
+        $entryApp = 'resources/js/app.ts';
+        $entryPage = "resources/js/Pages/{$page['component']}.vue";
+
+        $hasLocalManifest = file_exists($manifestPath);
+        $hasViteHot = file_exists(public_path('hot'));
+
+        $assetMode = 'none';
+        $manifest = null;
+        $cssFiles = [];
+        $jsFiles = [];
+
+        if ($hasViteHot || $hasLocalManifest) {
+            $assetMode = 'local';
+        } else {
+            $manifestUrl = rtrim(url('/'), '/').'/build/manifest.json';
+            $context = stream_context_create([
+                'http' => [
+                    'timeout' => 1,
+                ],
+            ]);
+
+            $manifestJson = @file_get_contents($manifestUrl, false, $context);
+            $decoded = is_string($manifestJson) ? json_decode($manifestJson, true) : null;
+
+            if (is_array($decoded)) {
+                $appChunk = $decoded[$entryApp] ?? null;
+                $pageChunk = $decoded[$entryPage] ?? null;
+
+                if (is_array($appChunk) && is_array($pageChunk)) {
+                    $assetMode = 'remote';
+                    $manifest = $decoded;
+
+                    $cssFiles = array_values(array_unique(array_merge(
+                        $appChunk['css'] ?? [],
+                        $pageChunk['css'] ?? [],
+                    )));
+
+                    $jsFiles = array_values(array_unique(array_filter([
+                        $appChunk['file'] ?? null,
+                        $pageChunk['file'] ?? null,
+                    ])));
+                }
+            }
+        }
+
+        $hasAssets = $assetMode !== 'none';
+    @endphp
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,13 +83,20 @@
 
         <!-- Scripts -->
         @routes
-        @if ($hasViteManifest)
+        @if ($assetMode === 'local')
             @vite(['resources/js/app.ts', "resources/js/Pages/{$page['component']}.vue"])
+        @elseif ($assetMode === 'remote')
+            @foreach ($cssFiles as $cssFile)
+                <link rel="stylesheet" href="{{ '/build/'.$cssFile }}">
+            @endforeach
+            @foreach ($jsFiles as $jsFile)
+                <script type="module" src="{{ '/build/'.$jsFile }}"></script>
+            @endforeach
         @endif
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
-        @if ($hasViteManifest)
+        @if ($hasAssets)
             @inertia
         @else
             <main style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:#0f172a;color:#e2e8f0;font-family:Inter,Segoe UI,Arial,sans-serif;">
