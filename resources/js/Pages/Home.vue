@@ -2,6 +2,7 @@
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { animate, inView, stagger } from 'motion';
 import { onMounted, ref } from 'vue';
+import LogoCloudDemo from '@/Components/ui/logo-cloud-2-demo.vue';
 
 type MotionAnimate = (
     target: Element | NodeListOf<Element>,
@@ -49,28 +50,85 @@ const services: Array<{ title: string; summary: string }> = [
     },
     {
         title: 'AI Development and Workflows',
-        summary: 'Custom enterprise automation and retrieval-enhanced AI systems.',
+        summary: 'Practical AI workflows to automate repetitive tasks and improve speed.',
     },
     {
         title: 'Enterprise-Grade Systems (ERP and CRM)',
-        summary: 'Centralized software to streamline operations and unify data.',
+        summary: 'Centralized ERP and CRM systems to keep your data, sales, and operations in one place.',
     },
 ] as const;
 
-const studies: Array<{ client: string; result: string }> = [
+type CaseStudy = {
+    id: string;
+    client: string;
+    tldr: string;
+    problem: string;
+    challenge: string;
+    architectureActions: string[];
+    businessImpact: string[];
+    quote: string;
+    quoteAuthor: string;
+};
+
+const studies: CaseStudy[] = [
     {
+        id: 'a',
         client: 'Habuilt',
-        result: 'High-traffic platform stabilized and accelerated through architecture-first engineering.',
+        tldr: 'A high-traffic consumer platform stabilized and accelerated through elite engineering.',
+        problem: 'Needed a consumer-facing platform that could handle high-volume traffic and complex interactions.',
+        challenge: 'Severe latency during spikes caused bounce and capped growth.',
+        architectureActions: [
+            'Built a high-performance application for speed and reliability.',
+            'Implemented modular monolith separation between heavy backend processing and user interface.',
+            'Optimized data access and automated caching for faster retrieval.',
+        ],
+        businessImpact: [
+            'Resilient performance under traffic surges.',
+            'Secure, scalable foundation for expansion.',
+            'Improved retention through seamless interactions.',
+        ],
+        quote: 'The new architecture is incredibly fast and highly stable under pressure.',
+        quoteAuthor: 'Operations Lead, Habuilt',
     },
     {
-        client: 'ZoetiCoach',
-        result: 'Fragmented operations unified into a custom CRM with AI workflow automation.',
+        id: 'b',
+        client: 'ZoetiCouch',
+        tldr: 'Fragmented operations unified into a custom CRM with AI workflow automation.',
+        problem: 'Inventory, customer relationships, and sales channels were disconnected.',
+        challenge: 'Manual entry, lost leads, delayed fulfillment, and scaling limits.',
+        architectureActions: [
+            'Designed a centralized custom CRM and ERP platform.',
+            'Added AI-driven workflow automations for lead sync.',
+            'Unified all data streams into one interface.',
+        ],
+        businessImpact: [
+            'Removed hundreds of hours of manual admin work.',
+            'Enabled real-time inventory and sales visibility.',
+            'Streamlined follow-ups with automated lead capture.',
+        ],
+        quote: 'Managing our operations is finally unified; the automation saves us daily.',
+        quoteAuthor: 'Director, ZoetiCouch',
     },
     {
+        id: 'c',
         client: 'SSKnitwear',
-        result: 'Legacy brand modernized with a high-performance enterprise storefront.',
+        tldr: 'A legacy brand modernized through a high-performance enterprise storefront.',
+        problem: 'Needed a modern digital presence to compete in B2B and B2C.',
+        challenge: 'Outdated storefront failed premium positioning and made bulk ordering hard.',
+        architectureActions: [
+            'Designed an enterprise-grade storefront focused on speed and visual quality.',
+            'Built a highly responsive premium interface.',
+            'Added robust ordering and catalog logic for complex localized requirements.',
+        ],
+        businessImpact: [
+            'Digital experience now reflects brand legacy.',
+            'Bulk ordering simplified for B2B partners.',
+            'Opened scalable revenue streams.',
+        ],
+        quote: 'A digital storefront that finally matches the premium quality of our legacy products.',
+        quoteAuthor: 'Operations Lead, SSKnitwear',
     },
-] as const;
+];
 
 const canonicalUrl = 'https://www.digitalbuilders.in/';
 
@@ -141,7 +199,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head title="DigitalBuilders — Enterprise Web, Mobile & AI Architecture">
+        <Head title="DigitalBuilders — Enterprise Web, Mobile & AI Architecture">
         <meta head-key="description" name="description" content="DigitalBuilders delivers enterprise-grade web applications, mobile apps, and AI solutions engineered for scale. Based in Ludhiana, Punjab, India." />
         <meta head-key="robots" name="robots" content="index, follow" />
         <link head-key="canonical" rel="canonical" :href="canonicalUrl" />
@@ -236,8 +294,8 @@ onMounted(() => {
                     <p class="mt-3 text-sm text-slate-300">Sections move users from discovery to trust to conversion without friction.</p>
                 </article>
                 <article data-stagger-item class="rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6 shadow-[0_18px_30px_rgba(10,16,24,0.28)]">
-                    <h3 class="text-lg font-bold text-[#b7d3ff]">Unified Motion Choreography</h3>
-                    <p class="mt-3 text-sm text-slate-300">One animation language across all sections keeps the journey coherent.</p>
+                    <h3 class="text-lg font-bold text-[#b7d3ff]">Smooth User Experience</h3>
+                    <p class="mt-3 text-sm text-slate-300">Clean animations and flow keep the experience easy and professional.</p>
                 </article>
                 <article data-stagger-item class="rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6 shadow-[0_18px_30px_rgba(10,16,24,0.28)]">
                     <h3 class="text-lg font-bold text-[#b7d3ff]">Conversion-Ready Structure</h3>
@@ -247,13 +305,13 @@ onMounted(() => {
 
             <section class="mt-16 sm:mt-20" data-reveal>
                 <p class="text-sm uppercase tracking-[0.2em] text-[#9dc5ff]">Why DigitalBuilders</p>
-                <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl md:text-4xl">Architecture First. Business Impact Always.</h2>
+                <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl md:text-4xl">Strong Tech. Real Business Results.</h2>
                 <p class="mt-5 max-w-4xl text-slate-300">
-                    Most agencies build fragile templates. We bring a Staff Engineer mindset to your business, engineering robust systems built to withstand high traffic, complex data pipelines, and rapid local market scaling.
+                    We do not build short-term templates. We bring a Staff Engineer mindset to your business, handling growth, engineering robust systems built to withstand high traffic, complex data pipelines, and rapid local market scaling.
                 </p>
                 <ul class="mt-6 grid gap-3 text-sm text-slate-200 sm:grid-cols-3">
-                    <li class="db-mini rounded-xl border border-[#b8c9e633] bg-[#27374dcc] px-4 py-3">Custom Modular Monoliths</li>
-                    <li class="db-mini rounded-xl border border-[#b8c9e633] bg-[#27374dcc] px-4 py-3">Zero Legacy Tech Debt</li>
+                    <li class="db-mini rounded-xl border border-[#b8c9e633] bg-[#27374dcc] px-4 py-3">Custom Software for Your Business with Modular Monoliths</li>
+                    <li class="db-mini rounded-xl border border-[#b8c9e633] bg-[#27374dcc] px-4 py-3">Clean and Maintainable Code with Zero Legacy Tech Debt</li>
                     <li class="db-mini rounded-xl border border-[#b8c9e633] bg-[#27374dcc] px-4 py-3">Autonomous AI Agent Integration</li>
                 </ul>
             </section>
@@ -279,7 +337,7 @@ onMounted(() => {
 
             <section id="services" class="mt-20 sm:mt-24" data-reveal>
                 <p class="text-sm uppercase tracking-[0.2em] text-[#9dc5ff]">Our Services</p>
-                <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl md:text-4xl">Elite Digital Ecosystems Engineered For Scale</h2>
+                <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl md:text-4xl">Complete Digital Solutions for Growing Brands</h2>
                 <div class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3" data-stagger>
                     <article v-for="service in services" :key="service.title" data-stagger-item class="rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6">
                         <h3 class="text-lg font-bold text-white">{{ service.title }}</h3>
@@ -290,12 +348,72 @@ onMounted(() => {
 
             <section id="portfolio" class="mt-20 sm:mt-24" data-reveal>
                 <p class="text-sm uppercase tracking-[0.2em] text-[#9dc5ff]">Case Studies</p>
-                <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl md:text-4xl">Proof Through Architecture Outcomes</h2>
-                <div class="mt-8 space-y-4" data-stagger>
-                    <article v-for="study in studies" :key="study.client" data-stagger-item class="rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6">
-                        <p class="text-xs font-bold uppercase tracking-[0.14em] text-[#bfd2ff]">{{ study.client }}</p>
-                        <p class="mt-3 text-base text-slate-200">{{ study.result }}</p>
+                <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl md:text-4xl">Real Results from Real Client Projects</h2>
+                <p class="mt-4 max-w-3xl text-sm text-slate-300">
+                    Swipe horizontally to explore each project in detail.
+                </p>
+
+                <div class="case-scroll mt-8 flex gap-5 overflow-x-auto pb-5" data-stagger>
+                    <article
+                        v-for="study in studies"
+                        :key="study.client"
+                        data-stagger-item
+                        class="case-card snap-start rounded-3xl border border-[#b8c9e640] bg-[linear-gradient(165deg,#27374de6_0%,#1f2d3fe8_100%)] p-4 sm:p-6"
+                    >
+
+                        <div class="mt-5 flex items-center justify-between gap-2">
+                            <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9dc5ff]">Project {{ study.id.toUpperCase() }}</p>
+                            <span class="rounded-full border border-[#b8c9e633] px-3 py-1 text-xs text-[#d0ddff]">{{ study.client }}</span>
+                        </div>
+
+                        <p class="mt-4 text-sm font-semibold text-white">{{ study.tldr }}</p>
+
+                        <div class="mt-4 space-y-2 text-sm text-slate-300">
+                            <p><span class="font-semibold text-[#dce6ff]">Problem:</span> {{ study.problem }}</p>
+                            <p><span class="font-semibold text-[#dce6ff]">Challenge:</span> {{ study.challenge }}</p>
+                        </div>
+
+                        <div class="mt-5 rounded-2xl border border-[#9ba7ff33] bg-[#1d2a3f9a] p-4">
+                            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#a8bbff]">Architecture Actions</p>
+                            <ul class="mt-3 space-y-2 text-sm text-slate-200">
+                                <li v-for="(item, idx) in study.architectureActions" :key="`${study.client}-arch-${idx}`" class="flex gap-2">
+                                    <span class="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#7ac4ff]" />
+                                    <span>{{ item }}</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="mt-4 rounded-2xl border border-[#8bd5b333] bg-[#1e2f409c] p-4">
+                            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#9feac5]">Business Impact</p>
+                            <ul class="mt-3 space-y-2 text-sm text-slate-200">
+                                <li v-for="(item, idx) in study.businessImpact" :key="`${study.client}-impact-${idx}`" class="flex gap-2">
+                                    <span class="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#8bd5b3]" />
+                                    <span>{{ item }}</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <blockquote class="mt-5 rounded-2xl border border-[#c593ff44] bg-[#2a26459e] p-4 text-sm text-[#e4d3ff]">
+                            "{{ study.quote }}"
+                            <footer class="mt-2 text-xs text-[#d3c3ff]">{{ study.quoteAuthor }}</footer>
+                        </blockquote>
                     </article>
+                </div>
+            </section>
+
+            <section id="collaboration" class="mt-20 sm:mt-24" data-reveal>
+                <p class="text-sm uppercase tracking-[0.2em] text-[#9dc5ff]">Collaboration Network</p>
+                <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl md:text-4xl">Acceleration Platforms</h2>
+                <p class="mt-4 max-w-3xl text-sm text-slate-300">
+                    We work with modern AI, cloud, and developer platforms to speed up delivery and build reliable products.
+                </p>
+                <div class="mt-8">
+                    <LogoCloudDemo />
+                </div>
+
+                <div class="mt-8 rounded-2xl border border-[#b8c9e640] bg-[#27374d7f] p-5 text-center sm:p-6">
+                    <p class="text-lg font-semibold text-white sm:text-xl">Ready to architect your success story?</p>
+                    <a href="#contact" class="mt-4 inline-flex w-full items-center justify-center rounded-full border border-[#b8c9e640] bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-6 py-3 text-sm font-bold text-[#1a2231] transition hover:brightness-110 sm:w-auto">Start Your Project</a>
                 </div>
             </section>
 
@@ -311,9 +429,9 @@ onMounted(() => {
                 <div class="db-mini rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-5 sm:p-7">
                     <p class="text-sm uppercase tracking-[0.2em] text-[#9dc5ff]">How We Work</p>
                     <ol class="mt-4 space-y-4 text-sm text-slate-200">
-                        <li><span class="font-bold text-white">01 Discovery and Audit</span> — Identify highest ROI opportunities.</li>
-                        <li><span class="font-bold text-white">02 System Architecture</span> — Blueprint systems before coding.</li>
-                        <li><span class="font-bold text-white">03 Disciplined Delivery</span> — Execute with tests and transparent milestones.</li>
+                        <li><span class="font-bold text-white">01 Understand Your Needs</span> — We discuss goals, challenges, and priorities.</li>
+                        <li><span class="font-bold text-white">02 Plan the Right Solution</span> — We design the system before development starts.</li>
+                        <li><span class="font-bold text-white">03 Build and Deliver</span> — We deliver in clear phases with regular updates.</li>
                     </ol>
                 </div>
             </section>
@@ -337,7 +455,7 @@ onMounted(() => {
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-slate-200">Corporate Email</label>
+                            <label class="block text-sm font-medium text-slate-200">Email Address</label>
                             <input v-model="form.email" type="email" placeholder="you@company.com" class="mt-2 w-full rounded-xl border border-[#b8c9e640] bg-[#1f2d3fe6] px-4 py-3 text-sm text-white placeholder:text-slate-400 focus:border-[#9ba7ff] focus:outline-none" />
                             <p v-if="form.errors.email" class="mt-1 text-xs text-red-300">{{ form.errors.email }}</p>
                         </div>
@@ -384,8 +502,8 @@ onMounted(() => {
                     </div>
                     <div class="db-mini rounded-2xl border border-[#b8c9e633] bg-[#27374dde] p-5 sm:p-7">
                         <h3 class="text-xl font-bold text-white">Quick Access</h3>
-                        <p class="mt-4 text-sm text-slate-300">Visit ashgpt.dev to view the complete architectural portfolio.</p>
-                        <a href="https://www.ashgpt.dev/" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-sm font-semibold text-[#c8d6ff] hover:text-[#e8efff]">View Full Portfolio</a>
+                        <p class="mt-4 text-sm text-slate-300">Visit ashgpt.dev to explore more projects and technical work.</p>
+                        <a href="https://www.ashgpt.dev/" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-sm font-semibold text-[#c8d6ff] hover:text-[#e8efff]">View More Projects</a>
                     </div>
                 </aside>
             </section>
@@ -417,5 +535,30 @@ html {
 [data-stagger-item],
 [data-hero-title] {
     opacity: 0;
+}
+
+.case-scroll {
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(154, 173, 255, 0.8) rgba(39, 55, 77, 0.4);
+}
+
+.case-scroll::-webkit-scrollbar {
+    height: 10px;
+}
+
+.case-scroll::-webkit-scrollbar-track {
+    background: rgba(39, 55, 77, 0.35);
+    border-radius: 999px;
+}
+
+.case-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, rgba(122, 196, 255, 0.85), rgba(197, 147, 255, 0.9));
+    border-radius: 999px;
+}
+
+.case-card {
+    min-width: min(90vw, 560px);
+    scroll-snap-align: start;
 }
 </style>
