@@ -1,0 +1,1 @@
+import{N as e,x as t}from"./index.esm-CRerGu4e.js";import{t as n}from"./_plugin-vue_export-helper-B80Cc4Ui.js";var r={},i={src:`/brand/db-logo.svg`,alt:`DigitalBuilders logo`,class:`block object-contain`};function a(n,r){return e(),t(`img`,i)}var o=n(r,[[`render`,a]]);export{o as t};
