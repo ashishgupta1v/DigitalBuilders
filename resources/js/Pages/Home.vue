@@ -409,7 +409,6 @@ onMounted(() => {
                 </p>
                 <div class="mt-8">
                     <LogoCloudDemo />
-                    <br>
                 </div>
 
                 <div class="mt-8 rounded-2xl border border-[#b8c9e640] bg-[#27374d7f] p-5 text-center sm:p-6">
