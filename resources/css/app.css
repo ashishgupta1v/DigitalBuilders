@@ -61,10 +61,12 @@
 
 	html {
 		scroll-behavior: smooth;
+		-webkit-text-size-adjust: 100%;
 	}
 
 	body {
 		min-height: 100vh;
+		min-height: 100dvh;
 		background: var(--db-body-bg);
 		color: var(--db-text);
 		font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
@@ -111,6 +113,7 @@
 		position: relative;
 		isolation: isolate;
 		min-height: 100vh;
+		min-height: 100dvh;
 	}
 
 	.db-shell::before,
@@ -157,6 +160,7 @@
 		background: var(--db-glass-bg);
 		border: 1px solid var(--db-border);
 		box-shadow: 0 24px 48px rgba(13, 19, 29, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+		-webkit-backdrop-filter: blur(8px);
 		backdrop-filter: blur(8px);
 	}
 
@@ -164,6 +168,7 @@
 		background: var(--db-panel-bg);
 		border: 1px solid var(--db-border);
 		box-shadow: 0 20px 40px rgba(12, 18, 27, 0.3);
+		-webkit-backdrop-filter: blur(10px);
 		backdrop-filter: blur(10px);
 	}
 
@@ -317,10 +322,62 @@
 		border: 1px solid var(--db-border);
 		background: var(--db-panel-bg);
 		padding: 0.9rem 1rem;
+		-webkit-backdrop-filter: blur(16px);
 		backdrop-filter: blur(16px);
 		box-shadow: 0 16px 40px rgba(10, 16, 26, 0.38);
 		font-size: 0.85rem;
 		color: var(--db-text);
+	}
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+	.db-glass,
+	.db-panel,
+	.db-toast {
+		background: rgba(36, 50, 69, 0.96);
+	}
+}
+
+@media (max-width: 767px) {
+	.db-shell::before {
+		top: -170px;
+		left: -160px;
+		height: 300px;
+		width: 300px;
+	}
+
+	.db-shell::after {
+		right: -180px;
+		bottom: -200px;
+		height: 340px;
+		width: 340px;
+	}
+
+	.db-grid-overlay {
+		opacity: 0.24;
+	}
+
+	.db-toast {
+		left: 1rem;
+		right: 1rem;
+		bottom: 1rem;
+		max-width: none;
+	}
+}
+
+@media (hover: none) and (pointer: coarse) {
+	.db-mini:hover,
+	[data-stagger-item]:hover,
+	.db-action:hover {
+		transform: none;
+		filter: none;
+		box-shadow: none;
+	}
+
+	.db-mini::after,
+	[data-stagger-item]::after,
+	.db-action::before {
+		display: none;
 	}
 }
 

@@ -75,32 +75,6 @@ const studies = [
 
 const canonicalUrl = 'https://www.digitalbuilders.in/';
 
-const organizationLd = JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'ProfessionalService',
-    name: 'DigitalBuilders',
-    url: canonicalUrl,
-    image: 'https://www.digitalbuilders.in/brand/db-logo.svg',
-    description: 'DigitalBuilders delivers enterprise-grade web applications, mobile apps, and AI solutions.',
-    areaServed: 'IN',
-    address: {
-        '@type': 'PostalAddress',
-        addressLocality: 'Ludhiana',
-        addressRegion: 'Punjab',
-        addressCountry: 'IN',
-    },
-    sameAs: [
-        canonicalUrl,
-    ],
-});
-
-const websiteLd = JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'DigitalBuilders',
-    url: canonicalUrl,
-});
-
 function submitLead() {
     form.post(route('library.leads.store'), {
         preserveScroll: true,
@@ -171,18 +145,16 @@ onMounted(() => {
         <meta head-key="twitter-card" name="twitter:card" content="summary_large_image" />
         <meta head-key="twitter-title" name="twitter:title" content="DigitalBuilders" />
         <meta head-key="twitter-description" name="twitter:description" content="Enterprise-grade web, mobile, and AI architecture for ambitious businesses." />
-        <script head-key="ld-org" type="application/ld+json" v-html="organizationLd" />
-        <script head-key="ld-website" type="application/ld+json" v-html="websiteLd" />
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)]">
         <div class="db-progress" />
         <div class="db-grid-overlay" />
         <header class="sticky top-0 z-50 border-b border-[#b8c9e633] bg-[var(--db-nav-bg)] backdrop-blur-md">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
+            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
                 <a href="#top" class="db-gradient-text text-lg font-semibold tracking-wide">DigitalBuilders</a>
 
-                <nav class="hidden items-center gap-6 text-sm font-medium lg:flex">
+                <nav class="hidden items-center gap-5 text-sm font-medium md:flex lg:gap-6">
                     <a href="#services" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Services</a>
                     <a href="#portfolio" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Portfolio</a>
                     <a href="#about" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">About</a>
@@ -190,16 +162,16 @@ onMounted(() => {
                 </nav>
 
                 <div class="flex items-center gap-2">
-                    <Link v-if="canLogin" :href="route('login')" class="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold text-[var(--db-muted)] transition hover:border-white/50 hover:text-[var(--db-text)]">
+                    <Link v-if="canLogin" :href="route('login')" class="hidden rounded-full border border-white/20 px-4 py-2 text-xs font-semibold text-[var(--db-muted)] transition hover:border-white/50 hover:text-[var(--db-text)] sm:inline-flex">
                         Log in
                     </Link>
-                    <Link v-if="canRegister" :href="route('register')" class="rounded-full border border-[#b8c9e640] bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-4 py-2 text-xs font-semibold text-[#1a2231] shadow-[0_10px_24px_rgba(13,18,28,0.3)] transition hover:brightness-110">
+                    <Link v-if="canRegister" :href="route('register')" class="hidden rounded-full border border-[#b8c9e640] bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-4 py-2 text-xs font-semibold text-[#1a2231] shadow-[0_10px_24px_rgba(13,18,28,0.3)] transition hover:brightness-110 sm:inline-flex">
                         Register
                     </Link>
                     <!-- Mobile hamburger -->
                     <button
                         @click="mobileMenuOpen = !mobileMenuOpen"
-                        class="flex h-8 w-8 items-center justify-center rounded-full border border-[#b8c9e633] text-[var(--db-muted)] transition hover:text-[var(--db-text)] lg:hidden focus:outline-none"
+                        class="flex h-11 w-11 items-center justify-center rounded-full border border-[#b8c9e633] text-[var(--db-muted)] transition hover:text-[var(--db-text)] md:hidden focus:outline-none"
                         :aria-expanded="mobileMenuOpen"
                         aria-label="Toggle menu"
                     >
@@ -219,31 +191,39 @@ onMounted(() => {
                 leave-active-class="transition-all duration-200 ease-in"
                 leave-to-class="opacity-0 -translate-y-3"
             >
-                <div v-if="mobileMenuOpen" class="border-t border-[#b8c9e622] bg-[var(--db-nav-bg)] px-5 pb-5 pt-4 lg:hidden">
+                <div v-if="mobileMenuOpen" class="border-t border-[#b8c9e622] bg-[var(--db-nav-bg)] px-4 pb-5 pt-4 sm:px-5 md:hidden">
                     <nav class="flex flex-col gap-3 text-sm font-medium">
                         <a href="#services" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Services</a>
                         <a href="#portfolio" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Portfolio</a>
                         <a href="#about" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">About</a>
                         <a href="#contact" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Contact</a>
                     </nav>
+                    <div class="mt-4 flex flex-col gap-2 border-t border-[#b8c9e622] pt-4" v-if="canLogin || canRegister">
+                        <Link v-if="canLogin" :href="route('login')" class="inline-flex w-full items-center justify-center rounded-full border border-white/20 px-4 py-2 text-xs font-semibold text-[var(--db-muted)] transition hover:border-white/50 hover:text-[var(--db-text)]">
+                            Log in
+                        </Link>
+                        <Link v-if="canRegister" :href="route('register')" class="inline-flex w-full items-center justify-center rounded-full border border-[#b8c9e640] bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-4 py-2 text-xs font-semibold text-[#1a2231] shadow-[0_10px_24px_rgba(13,18,28,0.3)] transition hover:brightness-110">
+                            Register
+                        </Link>
+                    </div>
                 </div>
             </Transition>
         </header>
 
-        <main id="top" class="mx-auto max-w-7xl px-5 pb-20 lg:px-8">
-            <section class="pt-16 lg:pt-20">
+        <main id="top" class="mx-auto max-w-7xl px-4 pb-16 sm:px-5 sm:pb-20 lg:px-8">
+            <section class="pt-12 sm:pt-16 lg:pt-20">
                 <p class="db-chip mb-5">
                     Enterprise Architecture
                 </p>
-                <h1 data-hero-title class="max-w-4xl text-4xl font-black leading-tight text-white md:text-6xl">
+                <h1 data-hero-title class="max-w-4xl text-3xl font-black leading-tight text-white sm:text-4xl md:text-6xl">
                     We Build Your Digital Future.
                 </h1>
                 <p class="mt-6 max-w-3xl text-base leading-relaxed text-slate-300 md:text-lg">
                     Stop settling for standard web design. Get enterprise-grade web, mobile, and AI architecture engineered to scale your business.
                 </p>
                 <div class="mt-8 flex flex-wrap items-center gap-3">
-                    <a href="#contact" class="rounded-full border border-[#b8c9e640] bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-6 py-3 text-sm font-bold text-[#1a2231] transition hover:brightness-110">Book a Discovery Call</a>
-                    <a href="#portfolio" class="rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition hover:border-white/50">View Our Portfolio</a>
+                    <a href="#contact" class="inline-flex w-full items-center justify-center rounded-full border border-[#b8c9e640] bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-6 py-3 text-sm font-bold text-[#1a2231] transition hover:brightness-110 sm:w-auto">Book a Discovery Call</a>
+                    <a href="#portfolio" class="inline-flex w-full items-center justify-center rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition hover:border-white/50 sm:w-auto">View Our Portfolio</a>
                 </div>
                 <p class="mt-6 text-sm text-slate-400">Bringing Silicon Valley engineering discipline and AI automation right here to Ludhiana.</p>
             </section>
@@ -263,9 +243,9 @@ onMounted(() => {
                 </article>
             </section>
 
-            <section class="mt-20" data-reveal>
+            <section class="mt-16 sm:mt-20" data-reveal>
                 <p class="text-sm uppercase tracking-[0.2em] text-[#9dc5ff]">Why DigitalBuilders</p>
-                <h2 class="mt-3 text-3xl font-black text-white md:text-4xl">Architecture First. Business Impact Always.</h2>
+                <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl md:text-4xl">Architecture First. Business Impact Always.</h2>
                 <p class="mt-5 max-w-4xl text-slate-300">
                     Most agencies build fragile templates. We bring a Staff Engineer mindset to your business, engineering robust systems built to withstand high traffic, complex data pipelines, and rapid local market scaling.
                 </p>
@@ -295,9 +275,9 @@ onMounted(() => {
                 </div>
             </section>
 
-            <section id="services" class="mt-24" data-reveal>
+            <section id="services" class="mt-20 sm:mt-24" data-reveal>
                 <p class="text-sm uppercase tracking-[0.2em] text-[#9dc5ff]">Our Services</p>
-                <h2 class="mt-3 text-3xl font-black text-white md:text-4xl">Elite Digital Ecosystems Engineered For Scale</h2>
+                <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl md:text-4xl">Elite Digital Ecosystems Engineered For Scale</h2>
                 <div class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3" data-stagger>
                     <article v-for="service in services" :key="service.title" data-stagger-item class="rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6">
                         <h3 class="text-lg font-bold text-white">{{ service.title }}</h3>
@@ -306,9 +286,9 @@ onMounted(() => {
                 </div>
             </section>
 
-            <section id="portfolio" class="mt-24" data-reveal>
+            <section id="portfolio" class="mt-20 sm:mt-24" data-reveal>
                 <p class="text-sm uppercase tracking-[0.2em] text-[#9dc5ff]">Case Studies</p>
-                <h2 class="mt-3 text-3xl font-black text-white md:text-4xl">Proof Through Architecture Outcomes</h2>
+                <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl md:text-4xl">Proof Through Architecture Outcomes</h2>
                 <div class="mt-8 space-y-4" data-stagger>
                     <article v-for="study in studies" :key="study.client" data-stagger-item class="rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6">
                         <p class="text-xs font-bold uppercase tracking-[0.14em] text-[#bfd2ff]">{{ study.client }}</p>
@@ -317,16 +297,16 @@ onMounted(() => {
                 </div>
             </section>
 
-            <section id="about" class="mt-24 grid gap-8 lg:grid-cols-[1.2fr_1fr]" data-reveal>
-                <div class="db-mini rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-7">
+            <section id="about" class="mt-20 grid gap-6 sm:mt-24 sm:gap-8 lg:grid-cols-[1.2fr_1fr]" data-reveal>
+                <div class="db-mini rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-5 sm:p-7">
                     <p class="text-sm uppercase tracking-[0.2em] text-[#9dc5ff]">About Us</p>
-                    <h2 class="mt-3 text-3xl font-black text-white">Ashish Gupta</h2>
+                    <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl">Ashish Gupta</h2>
                     <p class="mt-1 text-sm text-[#d8c3ff]">Lead Digital Architect · Founder</p>
                     <p class="mt-5 text-slate-300">
                         Over 8 years in enterprise IT designing and deploying complex large-scale software systems. DigitalBuilders was founded to deliver production-grade architecture, not fragile templates.
                     </p>
                 </div>
-                <div class="db-mini rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-7">
+                <div class="db-mini rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-5 sm:p-7">
                     <p class="text-sm uppercase tracking-[0.2em] text-[#9dc5ff]">How We Work</p>
                     <ol class="mt-4 space-y-4 text-sm text-slate-200">
                         <li><span class="font-bold text-white">01 Discovery and Audit</span> — Identify highest ROI opportunities.</li>
@@ -336,15 +316,15 @@ onMounted(() => {
                 </div>
             </section>
 
-            <section class="db-mini mt-24 rounded-2xl border border-[#b8c9e655] bg-[linear-gradient(120deg,rgba(122,196,255,0.16),rgba(197,147,255,0.16))] p-8 text-center" data-reveal>
-                <h2 class="text-3xl font-black text-white md:text-4xl">Ready to Architect Your Solution?</h2>
+            <section class="db-mini mt-20 rounded-2xl border border-[#b8c9e655] bg-[linear-gradient(120deg,rgba(122,196,255,0.16),rgba(197,147,255,0.16))] p-5 text-center sm:mt-24 sm:p-8" data-reveal>
+                <h2 class="text-2xl font-black text-white sm:text-3xl md:text-4xl">Ready to Architect Your Solution?</h2>
                 <p class="mx-auto mt-4 max-w-3xl text-slate-200">Stop settling. Start building. Engineer the digital systems your business needs.</p>
-                <a href="#contact" class="mt-7 inline-flex rounded-full border border-[#b8c9e640] bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-6 py-3 text-sm font-bold text-[#1a2231] transition hover:brightness-110">Schedule Your Strategy Session</a>
+                <a href="#contact" class="mt-7 inline-flex w-full items-center justify-center rounded-full border border-[#b8c9e640] bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-6 py-3 text-sm font-bold text-[#1a2231] transition hover:brightness-110 sm:w-auto">Schedule Your Strategy Session</a>
             </section>
 
-            <section id="contact" class="mt-24 grid gap-8 lg:grid-cols-[1.15fr_0.85fr]" data-reveal>
-                <div class="db-mini rounded-2xl border border-[#b8c9e633] bg-[#27374dde] p-7">
-                    <h2 class="text-3xl font-black text-white">Let's Connect</h2>
+            <section id="contact" class="mt-20 grid gap-6 sm:mt-24 sm:gap-8 lg:grid-cols-[1.15fr_0.85fr]" data-reveal>
+                <div class="db-mini rounded-2xl border border-[#b8c9e633] bg-[#27374dde] p-5 sm:p-7">
+                    <h2 class="text-2xl font-black text-white sm:text-3xl">Let's Connect</h2>
                     <p class="mt-4 text-slate-300">Your business requires software that works as hard as you do. Let's map your bottlenecks into a robust digital solution.</p>
 
                     <form class="mt-8 space-y-5" @submit.prevent="submitLead">
@@ -394,23 +374,23 @@ onMounted(() => {
                 </div>
 
                 <aside class="space-y-4">
-                    <div class="db-mini rounded-2xl border border-[#b8c9e633] bg-[#27374dde] p-7">
+                    <div class="db-mini rounded-2xl border border-[#b8c9e633] bg-[#27374dde] p-5 sm:p-7">
                         <h3 class="text-xl font-bold text-white">Get In Touch</h3>
                         <p class="mt-4 text-sm text-slate-300">Phone: +91 90870 21592</p>
-                        <p class="mt-2 text-sm text-slate-300">Email: hello@digitalbuilders.in</p>
+                        <p class="mt-2 break-all text-sm text-slate-300">Email: hello@digitalbuilders.in</p>
                         <p class="mt-2 text-sm text-slate-300">Location: Ludhiana, Punjab, India</p>
                     </div>
-                    <div class="db-mini rounded-2xl border border-[#b8c9e633] bg-[#27374dde] p-7">
+                    <div class="db-mini rounded-2xl border border-[#b8c9e633] bg-[#27374dde] p-5 sm:p-7">
                         <h3 class="text-xl font-bold text-white">Quick Access</h3>
                         <p class="mt-4 text-sm text-slate-300">Visit ashgpt.dev to view the complete architectural portfolio.</p>
-                        <a href="https://www.ashgpt.dev/" target="_blank" class="mt-4 inline-block text-sm font-semibold text-[#c8d6ff] hover:text-[#e8efff]">View Full Portfolio</a>
+                        <a href="https://www.ashgpt.dev/" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-sm font-semibold text-[#c8d6ff] hover:text-[#e8efff]">View Full Portfolio</a>
                     </div>
                 </aside>
             </section>
         </main>
 
         <footer class="border-t border-[#b8c9e633] bg-[#233246d9]">
-            <div class="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-8 text-sm text-slate-400 lg:px-8 lg:flex-row lg:items-center lg:justify-between">
+            <div class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-center text-sm text-slate-400 sm:px-5 lg:px-8 lg:flex-row lg:items-center lg:justify-between lg:text-left">
                 <p>© {{ new Date().getFullYear() }} DigitalBuilders. All rights reserved.</p>
                 <p>Designed and Engineered by Ashish Gupta</p>
             </div>
