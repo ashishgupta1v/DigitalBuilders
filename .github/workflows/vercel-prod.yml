@@ -42,5 +42,13 @@ jobs:
       - name: Build Vercel output from same workspace
         run: vercel build --prod --token=$VERCEL_TOKEN
 
+      - name: Inject frontend assets into Vercel prebuilt output
+        run: |
+          mkdir -p .vercel/output/static/public/build
+          cp -R public/build/. .vercel/output/static/public/build/
+
+      - name: Health check final deploy artifact
+        run: test -f .vercel/output/static/public/build/manifest.json
+
       - name: Deploy prebuilt output to production
         run: vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
