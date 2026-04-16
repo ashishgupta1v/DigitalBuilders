@@ -3,6 +3,17 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="DigitalBuilders delivers enterprise-grade web applications, mobile apps, and AI solutions engineered for scale.">
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+        <link rel="canonical" href="{{ url()->current() }}">
+        <meta property="og:site_name" content="DigitalBuilders">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="DigitalBuilders — Enterprise Web, Mobile and AI Architecture">
+        <meta property="og:description" content="Custom software engineered with a Staff Engineer mindset to scale your business.">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="DigitalBuilders">
+        <meta name="twitter:description" content="Enterprise-grade web, mobile, and AI architecture for ambitious businesses.">
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
