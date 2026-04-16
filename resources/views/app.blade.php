@@ -14,6 +14,14 @@
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="DigitalBuilders">
         <meta name="twitter:description" content="Enterprise-grade web, mobile, and AI architecture for ambitious businesses.">
+        @verbatim
+        <script type="application/ld+json">
+            {"@context":"https://schema.org","@type":"ProfessionalService","name":"DigitalBuilders","url":"https://www.digitalbuilders.in/","image":"https://www.digitalbuilders.in/brand/db-logo.svg","description":"DigitalBuilders delivers enterprise-grade web applications, mobile apps, and AI solutions.","areaServed":"IN","address":{"@type":"PostalAddress","addressLocality":"Ludhiana","addressRegion":"Punjab","addressCountry":"IN"}}
+        </script>
+        <script type="application/ld+json">
+            {"@context":"https://schema.org","@type":"WebSite","name":"DigitalBuilders","url":"https://www.digitalbuilders.in/"}
+        </script>
+        @endverbatim
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 

@@ -98,20 +98,20 @@ function exportCsv() {
             </div>
         </template>
 
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div class="py-8 sm:py-12">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="db-mini db-panel db-reveal overflow-hidden rounded-[1.5rem]">
-                    <div class="p-6">
+                    <div class="p-4 sm:p-6">
 
                         <!-- Toolbar -->
                         <div class="mb-5 flex flex-wrap items-center gap-3">
                             <!-- Status Tabs -->
-                            <div class="flex rounded-xl border border-[#b8c9e633] p-1 gap-1">
+                            <div class="flex w-full flex-wrap gap-1 rounded-xl border border-[#b8c9e633] p-1 lg:w-auto">
                                 <button
                                     v-for="tab in STATUS_TABS"
                                     :key="tab.value"
                                     @click="applyFilter(tab.value)"
-                                    class="rounded-lg px-3 py-1 text-xs font-semibold uppercase tracking-wider transition"
+                                    class="flex-1 rounded-lg px-3 py-2 text-xs font-semibold uppercase tracking-wider transition sm:flex-none"
                                     :class="(filters?.status ?? '') === tab.value
                                         ? 'bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff,#c593ff)] text-[#1a2231]'
                                         : 'text-[#bcd0ef] hover:text-white'"
@@ -119,7 +119,7 @@ function exportCsv() {
                             </div>
 
                             <!-- Search -->
-                            <div class="flex-1 min-w-[180px]">
+                            <div class="w-full lg:min-w-[220px] lg:flex-1">
                                 <input
                                     v-model="search"
                                     @input="onSearch"
@@ -129,7 +129,7 @@ function exportCsv() {
                                 />
                             </div>
 
-                            <div class="flex items-center gap-2 ml-auto">
+                            <div class="ml-auto flex w-full items-center justify-between gap-2 sm:w-auto">
                                 <p class="text-[11px] uppercase tracking-[0.2em] text-[#bcd0ef]">{{ leads.length }} records</p>
                                 <!-- CSV Export -->
                                 <button
@@ -167,8 +167,41 @@ function exportCsv() {
                         </div>
 
                         <!-- Actual content -->
-                        <div v-else-if="leads.length" class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-[#b8c9e633]">
+                        <div v-else-if="leads.length" class="space-y-4">
+                            <div class="md:hidden space-y-3">
+                                <article v-for="lead in leads" :key="`mobile-${lead.id}`" class="rounded-xl border border-[#b8c9e633] bg-[#27374d55] p-4">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <div class="min-w-0">
+                                            <p class="truncate text-sm font-semibold text-[#e7efff]">{{ lead.name }}</p>
+                                            <p class="mt-1 break-all text-xs text-[#bfd0eb]">{{ lead.email }}</p>
+                                        </div>
+                                        <span
+                                            class="shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider"
+                                            :class="STATUS_STYLES[lead.status] ?? STATUS_STYLES['new']"
+                                        >{{ lead.status }}</span>
+                                    </div>
+                                    <div class="mt-3 grid gap-2 text-xs text-[#bfd0eb] sm:grid-cols-2">
+                                        <p><span class="text-[#d8e4fa]">Phone:</span> {{ lead.phone }}</p>
+                                        <p><span class="text-[#d8e4fa]">Project:</span> {{ lead.projectTypeLabel }}</p>
+                                        <p><span class="text-[#d8e4fa]">Submitted:</span> {{ lead.createdAt }}</p>
+                                    </div>
+                                    <div class="mt-3">
+                                        <label class="mb-1 block text-[11px] uppercase tracking-[0.18em] text-[#bcd0ef]">Update status</label>
+                                        <select
+                                            :value="lead.status"
+                                            @change="updateStatus(lead, ($event.target as HTMLSelectElement).value)"
+                                            class="w-full rounded-lg border border-[#b8c9e633] bg-[#27374d90] px-3 py-2 text-xs text-[#e7efff] focus:border-[#9ba7ff] focus:outline-none"
+                                        >
+                                            <option value="new">New</option>
+                                            <option value="contacted">Contacted</option>
+                                            <option value="converted">Converted</option>
+                                        </select>
+                                    </div>
+                                </article>
+                            </div>
+
+                            <div class="hidden overflow-x-auto md:block">
+                            <table class="min-w-[920px] w-full divide-y divide-[#b8c9e633]">
                                 <thead class="bg-[#2f425ab5]">
                                     <tr>
                                         <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#bcd0ef]">Name</th>
@@ -207,6 +240,7 @@ function exportCsv() {
                                     </tr>
                                 </tbody>
                             </table>
+                            </div>
                         </div>
 
                         <!-- Empty state -->

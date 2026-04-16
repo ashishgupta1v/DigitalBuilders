@@ -32,11 +32,11 @@ onMounted(() => {
         <!-- Flash toast trigger -->
         <div v-if="flash?.success" class="sr-only" :data-flash-msg="flash.success" />
 
-        <div class="py-12">
+        <div class="py-8 sm:py-12">
             <div class="mx-auto grid max-w-7xl gap-6 px-4 sm:px-6 lg:grid-cols-3 lg:px-8">
-                <section class="db-panel db-reveal rounded-[1.5rem] p-7 lg:col-span-2">
+                <section class="db-panel db-reveal rounded-[1.5rem] p-5 sm:p-7 lg:col-span-2">
                     <p class="text-xs uppercase tracking-[0.24em] text-[#b9cae6]">Mission overview</p>
-                    <h3 class="mt-3 text-3xl font-semibold leading-tight text-white">Your premium operating surface is now active.</h3>
+                    <h3 class="mt-3 text-2xl font-semibold leading-tight text-white sm:text-3xl">Your premium operating surface is now active.</h3>
                     <p class="mt-4 max-w-2xl text-sm leading-relaxed text-[#bfd0eb]">
                         This dashboard follows the DigitalBuilders visual language with elevated surfaces, nuanced gradients, and cohesive animation behavior.
                     </p>
@@ -57,7 +57,7 @@ onMounted(() => {
                     </div>
                 </section>
 
-                <aside class="db-panel db-reveal-fast rounded-[1.5rem] p-7" style="animation-delay: 0.12s">
+                <aside class="db-panel db-reveal-fast rounded-[1.5rem] p-5 sm:p-7" style="animation-delay: 0.12s">
                     <p class="text-xs uppercase tracking-[0.24em] text-[#b9cae6]">Status</p>
                     <h3 class="mt-3 text-xl font-semibold text-white">Authenticated</h3>
                     <p class="mt-4 text-sm leading-relaxed text-[#bfd0eb]">
