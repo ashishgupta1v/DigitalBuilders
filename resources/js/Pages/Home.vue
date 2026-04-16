@@ -73,6 +73,34 @@ const studies = [
     },
 ];
 
+const canonicalUrl = 'https://www.digitalbuilders.in/';
+
+const organizationLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    name: 'DigitalBuilders',
+    url: canonicalUrl,
+    image: 'https://www.digitalbuilders.in/brand/db-logo.svg',
+    description: 'DigitalBuilders delivers enterprise-grade web applications, mobile apps, and AI solutions.',
+    areaServed: 'IN',
+    address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Ludhiana',
+        addressRegion: 'Punjab',
+        addressCountry: 'IN',
+    },
+    sameAs: [
+        canonicalUrl,
+    ],
+});
+
+const websiteLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'DigitalBuilders',
+    url: canonicalUrl,
+});
+
 function submitLead() {
     form.post(route('library.leads.store'), {
         preserveScroll: true,
@@ -132,13 +160,19 @@ onMounted(() => {
 
 <template>
     <Head title="DigitalBuilders — Enterprise Web, Mobile & AI Architecture">
-        <meta name="description" content="DigitalBuilders delivers enterprise-grade web applications, mobile apps, and AI solutions engineered for scale. Based in Ludhiana, Punjab, India." />
-        <meta property="og:title" content="DigitalBuilders — Enterprise Web, Mobile & AI Architecture" />
-        <meta property="og:description" content="Custom software engineered with a Staff Engineer mindset. Web apps, mobile apps, AI agents, ERP/CRM — built to scale your business." />
-        <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="DigitalBuilders" />
-        <meta name="twitter:description" content="Enterprise-grade web, mobile, and AI architecture for ambitious businesses." />
+        <meta head-key="description" name="description" content="DigitalBuilders delivers enterprise-grade web applications, mobile apps, and AI solutions engineered for scale. Based in Ludhiana, Punjab, India." />
+        <meta head-key="robots" name="robots" content="index, follow" />
+        <link head-key="canonical" rel="canonical" :href="canonicalUrl" />
+        <meta head-key="og-title" property="og:title" content="DigitalBuilders — Enterprise Web, Mobile & AI Architecture" />
+        <meta head-key="og-description" property="og:description" content="Custom software engineered with a Staff Engineer mindset. Web apps, mobile apps, AI agents, ERP/CRM — built to scale your business." />
+        <meta head-key="og-type" property="og:type" content="website" />
+        <meta head-key="og-url" property="og:url" :content="canonicalUrl" />
+        <meta head-key="og-locale" property="og:locale" content="en_IN" />
+        <meta head-key="twitter-card" name="twitter:card" content="summary_large_image" />
+        <meta head-key="twitter-title" name="twitter:title" content="DigitalBuilders" />
+        <meta head-key="twitter-description" name="twitter:description" content="Enterprise-grade web, mobile, and AI architecture for ambitious businesses." />
+        <script head-key="ld-org" type="application/ld+json" v-html="organizationLd" />
+        <script head-key="ld-website" type="application/ld+json" v-html="websiteLd" />
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)]">

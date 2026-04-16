@@ -1,0 +1,9 @@
+public/hot
+node_modules
+.git
+storage/logs
+storage/framework/cache
+storage/framework/views
+storage/framework/sessions
+vercel-home.html
+*.log

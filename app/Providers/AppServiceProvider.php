@@ -23,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
     {
         if ($this->app->environment('production')) {
             URL::forceScheme('https');
+            // Prevent accidental use of public/hot on production deployments.
+            Vite::useHotFile(storage_path('framework/vite.hot'));
         }
 
         Vite::prefetch(concurrency: 3);
