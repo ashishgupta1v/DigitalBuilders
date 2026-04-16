@@ -42,13 +42,38 @@ jobs:
       - name: Build Vercel output from same workspace
         run: vercel build --prod --token=$VERCEL_TOKEN
 
-      - name: Inject frontend assets into Vercel prebuilt output
+      - name: Inject frontend assets into static and function output
         run: |
           mkdir -p .vercel/output/static/public/build
           cp -R public/build/. .vercel/output/static/public/build/
 
-      - name: Health check final deploy artifact
-        run: test -f .vercel/output/static/public/build/manifest.json
+          for func_dir in .vercel/output/functions/*.func; do
+            if [ -d "$func_dir" ]; then
+              mkdir -p "$func_dir/public/build"
+              cp -R public/build/. "$func_dir/public/build/"
+            fi
+          done
+
+      - name: Health check final deploy artifact (static + function)
+        run: |
+          test -f .vercel/output/static/public/build/manifest.json
+          find .vercel/output/functions -type d -name '*.func' -exec test -f '{}/public/build/manifest.json' ';'
 
       - name: Deploy prebuilt output to production
-        run: vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+        run: |
+          vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN | tee .vercel/deploy.log
+          DEPLOY_URL=$(grep -Eo 'https://[^ ]+\.vercel\.app' .vercel/deploy.log | tail -n1)
+          if [ -z "$DEPLOY_URL" ]; then
+            echo "Failed to detect deployment URL from Vercel output"
+            exit 1
+          fi
+          echo "DEPLOY_URL=$DEPLOY_URL" >> "$GITHUB_ENV"
+
+      - name: Post-deploy smoke check (manifest + safe-mode)
+        run: |
+          curl -fsSL "$DEPLOY_URL/build/manifest.json" > /dev/null
+          PAGE_HTML=$(curl -fsSL "$DEPLOY_URL")
+          echo "$PAGE_HTML" | grep -q "DigitalBuilders is updating" && {
+            echo "Safe-mode fallback detected in deployed page"
+            exit 1
+          }
