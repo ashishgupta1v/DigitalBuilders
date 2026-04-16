@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    @php($hasViteManifest = file_exists(public_path('build/manifest.json')))
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -34,10 +35,22 @@
 
         <!-- Scripts -->
         @routes
-        @vite(['resources/js/app.ts', "resources/js/Pages/{$page['component']}.vue"])
+        @if ($hasViteManifest)
+            @vite(['resources/js/app.ts', "resources/js/Pages/{$page['component']}.vue"])
+        @endif
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
-        @inertia
+        @if ($hasViteManifest)
+            @inertia
+        @else
+            <main style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:#0f172a;color:#e2e8f0;font-family:Inter,Segoe UI,Arial,sans-serif;">
+                <section style="max-width:640px;border:1px solid rgba(148,163,184,.35);border-radius:16px;padding:24px;background:rgba(15,23,42,.92);">
+                    <h1 style="margin:0 0 12px;font-size:24px;line-height:1.2;">DigitalBuilders is updating</h1>
+                    <p style="margin:0 0 10px;line-height:1.6;">A deployment finished without frontend assets, so the application switched to safe mode to avoid server errors.</p>
+                    <p style="margin:0;line-height:1.6;">Please redeploy with prebuilt assets (npm run build + vercel deploy --prebuilt) or use the configured CI workflow.</p>
+                </section>
+            </main>
+        @endif
     </body>
 </html>
