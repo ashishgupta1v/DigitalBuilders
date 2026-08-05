@@ -393,13 +393,13 @@ onBeforeUnmount(() => {
                     <p class="db-chip mb-4">Enterprise Architecture</p>
                     <h1
                         data-hero-title
-                        class="max-w-4xl text-3xl font-black leading-tight text-slate-900 dark:text-white sm:text-4xl md:text-5xl lg:text-6xl"
+                        class="max-w-4xl text-3xl font-black leading-tight text-[var(--db-text)] sm:text-4xl md:text-5xl lg:text-6xl"
                         style="font-family: 'Libre Baskerville', Georgia, serif; font-weight: 700;"
                     >
                         We Build Your
                         <span class="db-gradient-text">Digital Future.</span>
                     </h1>
-                    <p class="mt-5 max-w-2xl text-base leading-relaxed text-slate-600 dark:text-slate-300 md:text-lg"
+                    <p class="mt-5 max-w-2xl text-base leading-relaxed text-slate-300 dark:text-slate-300 md:text-lg"
                         style="font-family: 'Outfit', sans-serif; font-weight: 300;">
                         Stop settling for standard templates. Get enterprise-grade web, mobile, and AI architecture engineered to scale your business.
                     </p>
@@ -411,7 +411,7 @@ onBeforeUnmount(() => {
                             View Our Portfolio
                         </a>
                     </div>
-                    <p class="mt-5 text-sm text-slate-500 dark:text-slate-400">Bringing Silicon Valley engineering discipline and AI automation right here to Ludhiana.</p>
+                    <p class="mt-5 text-sm text-slate-400">Bringing Silicon Valley engineering discipline and AI automation right here to Ludhiana.</p>
                 </div>
             </section>
 
@@ -422,8 +422,8 @@ onBeforeUnmount(() => {
                         <div class="h-10 w-10 mb-4 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center font-bold">
                             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                         </div>
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-[#b7d3ff]">Staff Engineer Architecture</h3>
-                        <p class="mt-2.5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Engineered with domain-driven modular monoliths for zero technical debt and sub-100ms response times.</p>
+                        <h3 class="text-lg font-bold text-[var(--db-text)]">Staff Engineer Architecture</h3>
+                        <p class="mt-2.5 text-sm text-slate-300 leading-relaxed">Engineered with domain-driven modular monoliths for zero technical debt and sub-100ms response times.</p>
                     </div>
                 </article>
                 <article data-stagger-item class="db-antigravity-card rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6 shadow-md flex flex-col justify-between">
@@ -431,8 +431,8 @@ onBeforeUnmount(() => {
                         <div class="h-10 w-10 mb-4 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
                             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
                         </div>
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-[#b7d3ff]">Autonomous AI Integration</h3>
-                        <p class="mt-2.5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Voice agents, intelligent lead qualification, and automated workflow pipelines fitted seamlessly into your stack.</p>
+                        <h3 class="text-lg font-bold text-[var(--db-text)]">Autonomous AI Integration</h3>
+                        <p class="mt-2.5 text-sm text-slate-300 leading-relaxed">Voice agents, intelligent lead qualification, and automated workflow pipelines fitted seamlessly into your stack.</p>
                     </div>
                 </article>
                 <article data-stagger-item class="db-antigravity-card rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6 shadow-md flex flex-col justify-between">
@@ -440,8 +440,8 @@ onBeforeUnmount(() => {
                         <div class="h-10 w-10 mb-4 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
                             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                         </div>
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-[#b7d3ff]">Production-Grade Delivery</h3>
-                        <p class="mt-2.5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Transparent weekly sprint demos, full test coverage, zero-downtime deployment, and 30-day post-launch warranty.</p>
+                        <h3 class="text-lg font-bold text-[var(--db-text)]">Production-Grade Delivery</h3>
+                        <p class="mt-2.5 text-sm text-slate-300 leading-relaxed">Transparent weekly sprint demos, full test coverage, zero-downtime deployment, and 30-day post-launch warranty.</p>
                     </div>
                 </article>
             </section>
@@ -449,8 +449,8 @@ onBeforeUnmount(() => {
             <!-- Why DigitalBuilders Authority Section -->
             <section class="mt-16 sm:mt-20" data-reveal>
                 <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-[#9dc5ff] font-semibold">Why DigitalBuilders</p>
-                <h2 class="mt-3 text-2xl font-black text-slate-900 dark:text-white sm:text-3xl md:text-4xl">Strong Tech. Real Business Results.</h2>
-                <p class="mt-4 max-w-4xl text-slate-600 dark:text-slate-300 leading-relaxed">
+                <h2 class="mt-3 text-2xl font-black text-[var(--db-text)] sm:text-3xl md:text-4xl">Strong Tech. Real Business Results.</h2>
+                <p class="mt-4 max-w-4xl text-slate-300 leading-relaxed">
                     We do not build short-term templates. We bring a Staff Engineer mindset to your business, engineering robust systems built to withstand high traffic, complex data pipelines, and rapid scaling.
                 </p>
             </section>
@@ -459,30 +459,30 @@ onBeforeUnmount(() => {
             <section class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-stagger data-reveal>
                 <div data-stagger-item class="db-antigravity-card rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6 text-center sm:text-left">
                     <p class="text-3xl font-black db-gradient-text" data-counter="8" data-suffix="+">8+</p>
-                    <p class="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Years IT Experience</p>
-                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Enterprise software & cloud systems</p>
+                    <p class="mt-2 text-sm font-semibold text-[var(--db-text)]">Years IT Experience</p>
+                    <p class="mt-1 text-xs text-slate-400">Enterprise software & cloud systems</p>
                 </div>
                 <div data-stagger-item class="db-antigravity-card rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6 text-center sm:text-left">
                     <p class="text-3xl font-black db-gradient-text" data-counter="25" data-suffix="+">25+</p>
-                    <p class="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Projects Delivered</p>
-                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Web, mobile, AI & ERP platforms</p>
+                    <p class="mt-2 text-sm font-semibold text-[var(--db-text)]">Projects Delivered</p>
+                    <p class="mt-1 text-xs text-slate-400">Web, mobile, AI & ERP platforms</p>
                 </div>
                 <div data-stagger-item class="db-antigravity-card rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6 text-center sm:text-left">
                     <p class="text-3xl font-black db-gradient-text" data-counter="99.9" data-suffix="%">99.9%</p>
-                    <p class="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Architecture Uptime</p>
-                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Resilient infrastructure scaling</p>
+                    <p class="mt-2 text-sm font-semibold text-[var(--db-text)]">Architecture Uptime</p>
+                    <p class="mt-1 text-xs text-slate-400">Resilient infrastructure scaling</p>
                 </div>
                 <div data-stagger-item class="db-antigravity-card rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6 text-center sm:text-left">
                     <p class="text-3xl font-black db-gradient-text">100%</p>
-                    <p class="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Sprint Delivery Rate</p>
-                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Zero broken deadlines</p>
+                    <p class="mt-2 text-sm font-semibold text-[var(--db-text)]">Sprint Delivery Rate</p>
+                    <p class="mt-1 text-xs text-slate-400">Zero broken deadlines</p>
                 </div>
             </section>
 
             <!-- Services Section -->
             <section id="services" class="mt-20 sm:mt-24" data-reveal>
                 <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-[#9dc5ff] font-semibold">Our Services</p>
-                <h2 class="mt-3 text-2xl font-black text-slate-900 dark:text-white sm:text-3xl md:text-4xl">Complete Digital Solutions for Growing Brands</h2>
+                <h2 class="mt-3 text-2xl font-black text-[var(--db-text)] sm:text-3xl md:text-4xl">Complete Digital Solutions for Growing Brands</h2>
                 <div class="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3" data-stagger>
                     <article v-for="service in services" :key="service.title" data-stagger-item class="db-antigravity-card rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6 flex flex-col justify-between">
                         <div>
@@ -494,8 +494,8 @@ onBeforeUnmount(() => {
                                 <svg v-else-if="service.link.includes('erp-crm')" class="h-6 w-6 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
                                 <svg v-else class="h-6 w-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                             </div>
-                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">{{ service.title }}</h3>
-                            <p class="mt-2.5 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{{ service.summary }}</p>
+                            <h3 class="text-lg font-bold text-[var(--db-text)]">{{ service.title }}</h3>
+                            <p class="mt-2.5 text-sm leading-relaxed text-slate-300">{{ service.summary }}</p>
                         </div>
                         <a :href="service.link" class="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-sky-600 dark:text-[#9ba7ff] hover:text-indigo-600 dark:hover:text-[#c593ff] transition-colors">
                             Learn More
