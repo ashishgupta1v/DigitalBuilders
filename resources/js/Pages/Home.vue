@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { animate, inView, stagger } from 'motion';
-import { onMounted, ref } from 'vue';
-import LogoCloudDemo from '@/Components/ui/logo-cloud-2-demo.vue';
+import { onMounted, onBeforeUnmount, ref } from 'vue';
 
 type MotionAnimate = (
     target: Element | NodeListOf<Element>,
@@ -17,6 +16,27 @@ defineProps<{
 }>();
 
 const mobileMenuOpen = ref(false);
+const showBackToTop = ref(false);
+const isDarkMode = ref(true);
+
+function toggleTheme() {
+    isDarkMode.value = !isDarkMode.value;
+    if (isDarkMode.value) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.removeItem('db-theme');
+    } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('db-theme', 'light');
+    }
+}
+
+function handleScroll() {
+    showBackToTop.value = window.scrollY > 600;
+}
+
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 const form = useForm({
     name: '',
@@ -142,6 +162,25 @@ function submitLead() {
 }
 
 onMounted(() => {
+    // Restore saved theme
+    const savedTheme = localStorage.getItem('db-theme');
+    if (savedTheme === 'light') {
+        isDarkMode.value = false;
+        document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+        isDarkMode.value = true;
+        document.documentElement.removeAttribute('data-theme');
+    }
+
+    // Scroll listener for back-to-top + scroll progress
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', () => {
+        const scrolled = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const pct = docHeight > 0 ? (scrolled / docHeight) * 100 : 0;
+        document.documentElement.style.setProperty('--db-scroll', `${pct}%`);
+    }, { passive: true });
+
     // Hero title animation
     const hero = document.querySelector('[data-hero-title]');
     if (hero) {
@@ -196,6 +235,10 @@ onMounted(() => {
         requestAnimationFrame(updateCounter);
     });
 });
+
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', handleScroll);
+});
 </script>
 
 <template>
@@ -216,19 +259,41 @@ onMounted(() => {
     <div class="db-shell site-bg text-[var(--db-text)]">
         <div class="db-progress" />
         <div class="db-grid-overlay" />
-        <header class="sticky top-0 z-50 border-b border-[#b8c9e633] bg-[var(--db-nav-bg)] backdrop-blur-md">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <a href="#top" class="db-gradient-text text-lg font-semibold tracking-wide">DigitalBuilders</a>
+        <header class="sticky top-0 z-50 border-b border-[#b8c9e622] bg-[var(--db-nav-bg)] backdrop-blur-xl transition-colors duration-300">
+            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-3.5 lg:px-8">
+                <!-- Logo: icon + brand name balanced -->
+                <a href="#top" class="flex items-center gap-2.5 group">
+                    <img
+                        src="/images/db-logo.png"
+                        alt="DigitalBuilders Logo"
+                        class="h-10 w-10 object-contain flex-shrink-0 transition-transform duration-300 group-hover:scale-105 filter drop-shadow-[0_0_8px_rgba(125,211,252,0.4)]"
+                        onerror="this.style.display='none'"
+                    />
+                    <span
+                        class="db-brand-logo-text text-xl font-black tracking-tight"
+                        style="font-family: 'Libre Baskerville', Georgia, serif; font-weight: 700; letter-spacing: -0.02em;"
+                    >Digital Builders</span>
+                </a>
 
-                <nav class="hidden items-center gap-5 text-sm font-medium md:flex lg:gap-6">
-                    <a href="#services" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Services</a>
-                    <a href="#portfolio" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Portfolio</a>
-                    <a href="#about" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">About</a>
-                    <a href="#contact" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Contact</a>
+                <nav class="hidden items-center gap-1.5 text-sm font-medium md:flex lg:gap-2">
+                    <a href="#services" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">Services</a>
+                    <a href="#portfolio" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">Portfolio</a>
+                    <a href="/blog" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">Blog</a>
+                    <a href="#about" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">About</a>
+                    <a href="#contact" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">Contact</a>
                 </nav>
 
                 <div class="flex items-center gap-2">
-                    <Link v-if="canLogin" :href="route('login')" class="hidden rounded-full border border-white/20 px-4 py-2 text-xs font-semibold text-[var(--db-muted)] transition hover:border-white/50 hover:text-[var(--db-text)] sm:inline-flex">
+                    <!-- Theme Toggle -->
+                    <button
+                        @click="toggleTheme"
+                        class="hidden h-9 w-9 items-center justify-center rounded-full border border-white/10 text-slate-400 transition hover:text-white sm:inline-flex"
+                        :aria-label="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
+                    >
+                        <svg v-if="isDarkMode" class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                        <svg v-else class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                    </button>
+                    <Link v-if="canLogin" :href="route('login')" class="hidden rounded-full border border-white/15 px-4 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-white/40 hover:text-white sm:inline-flex">
                         Log in
                     </Link>
                     <!-- Mobile hamburger -->
@@ -270,22 +335,27 @@ onMounted(() => {
             </Transition>
         </header>
 
-        <main id="top" class="mx-auto max-w-7xl px-4 pb-16 sm:px-5 sm:pb-20 lg:px-8">
-            <section class="pt-12 sm:pt-16 lg:pt-20">
-                <p class="db-chip mb-5">
-                    Enterprise Architecture
-                </p>
-                <h1 data-hero-title class="max-w-4xl text-3xl font-black leading-tight text-white sm:text-4xl md:text-6xl">
-                    We Build Your Digital Future.
+        <main id="top" class="mx-auto max-w-7xl px-4 pb-12 sm:px-5 sm:pb-16 lg:px-8">
+            <!-- Hero Section -->
+            <section class="pt-10 sm:pt-14 lg:pt-16">
+                <p class="db-chip mb-4">Enterprise Architecture</p>
+                <h1
+                    data-hero-title
+                    class="max-w-4xl text-3xl font-black leading-tight sm:text-4xl md:text-5xl lg:text-6xl"
+                    style="font-family: 'Libre Baskerville', Georgia, serif; font-weight: 700; color: #f8fafc;"
+                >
+                    We Build Your
+                    <span class="bg-gradient-to-r from-sky-300 via-indigo-300 to-purple-300 bg-clip-text text-transparent">Digital Future.</span>
                 </h1>
-                <p class="mt-6 max-w-3xl text-base leading-relaxed text-slate-300 md:text-lg">
+                <p class="mt-5 max-w-2xl text-base leading-relaxed text-slate-300/90 md:text-lg"
+                    style="font-family: 'Outfit', sans-serif; font-weight: 300;">
                     Stop settling for standard web design. Get enterprise-grade web, mobile, and AI architecture engineered to scale your business.
                 </p>
-                <div class="mt-8 flex flex-wrap items-center gap-3">
-                    <a href="#contact" class="inline-flex w-full items-center justify-center rounded-full border border-[#b8c9e640] bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-6 py-3 text-sm font-bold text-[#1a2231] transition hover:brightness-110 sm:w-auto">Book a Discovery Call</a>
-                    <a href="#portfolio" class="inline-flex w-full items-center justify-center rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition hover:border-white/50 sm:w-auto">View Our Portfolio</a>
+                <div class="mt-7 flex flex-wrap items-center gap-3">
+                    <a href="#contact" class="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-sky-400/90 via-indigo-400/90 to-purple-400/90 px-7 py-3.5 text-sm font-semibold text-slate-950 shadow-[0_4px_20px_rgba(56,189,248,0.2)] transition-all hover:from-sky-300 hover:to-purple-300 hover:scale-[1.02] sm:w-auto">Book a Discovery Call</a>
+                    <a href="#portfolio" class="inline-flex w-full items-center justify-center rounded-full border border-white/20 bg-white/5 backdrop-blur-md px-7 py-3.5 text-sm font-medium text-white transition-all hover:border-white/40 hover:bg-white/10 sm:w-auto">View Our Portfolio</a>
                 </div>
-                <p class="mt-6 text-sm text-slate-400">Bringing Silicon Valley engineering discipline and AI automation right here to Ludhiana.</p>
+                <p class="mt-5 text-sm text-slate-400">Bringing Silicon Valley engineering discipline and AI automation right here to Ludhiana.</p>
             </section>
 
             <section class="mt-16 grid gap-4 md:grid-cols-3" data-stagger data-reveal>
@@ -520,15 +590,24 @@ onMounted(() => {
 
 <style scoped>
 .site-bg {
-    background:
-        radial-gradient(1200px 700px at -10% -5%, rgba(122, 196, 255, 0.28), transparent 55%),
-        radial-gradient(900px 700px at 105% 10%, rgba(197, 147, 255, 0.25), transparent 50%),
-        linear-gradient(180deg, #1f2b3b 0%, #1c2938 56%, #1e2a3a 100%);
-    font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+    background: var(--db-body-bg);
+    color: var(--db-text);
+    transition: background-color 0.35s ease, color 0.35s ease;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
 }
 
 html {
     scroll-behavior: smooth;
+}
+
+/* Brand name gradient in header */
+.db-brand-logo-text {
+    background: linear-gradient(100deg, #7ac4ff 0%, #a78bfa 50%, #c084fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
 }
 
 [data-reveal],

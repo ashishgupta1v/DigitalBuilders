@@ -1,0 +1,1 @@
+import{N as e,x as t}from"./index.esm-nykIiI8l.js";import{t as n}from"./_plugin-vue_export-helper-B80Cc4Ui.js";var r={},i={src:`/images/db-logo.png`,alt:`DigitalBuilders Logo`,class:`block h-12 w-auto object-contain filter drop-shadow-[0_0_15px_rgba(0,210,255,0.4)]`};function a(n,r){return e(),t(`img`,i)}var o=n(r,[[`render`,a]]);export{o as t};

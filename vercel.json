@@ -31,8 +31,16 @@
       "dest": "/public/build/$1"
     },
     {
+      "src": "/images/(.*)",
+      "dest": "/public/images/$1"
+    },
+    {
       "src": "/brand/(.*)",
       "dest": "/public/brand/$1"
+    },
+    {
+      "src": "/favicon\\.png",
+      "dest": "/public/favicon.png"
     },
     {
       "src": "/(favicon\\.ico|robots\\.txt|sitemap\\.xml)",
