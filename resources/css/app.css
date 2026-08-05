@@ -738,6 +738,13 @@ html.dark select {
 	border-color: rgba(184, 201, 230, 0.25) !important;
 }
 
+html.dark details,
+html.dark summary {
+	background-color: #162232 !important;
+	color: #ffffff !important;
+	border-color: rgba(184, 201, 230, 0.2) !important;
+}
+
 html.dark footer {
 	background-color: #0b0f19 !important;
 	border-color: rgba(184, 201, 230, 0.15) !important;

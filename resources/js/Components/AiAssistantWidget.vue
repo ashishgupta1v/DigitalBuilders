@@ -148,7 +148,7 @@ function handleOptionClick(action: string, label: string) {
                 isOpen.value = false;
             }
         } else if (action === 'portfolio_link') {
-            window.open('https://www.ashgpt.dev/', '_blank');
+            window.open('https://ashishgupta.dev', '_blank');
         } else if (action === 'lead_form') {
             showLeadCapture.value = true;
             messages.value.push({
