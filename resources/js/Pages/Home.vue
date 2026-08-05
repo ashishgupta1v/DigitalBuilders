@@ -27,9 +27,13 @@ function toggleTheme() {
     isDarkMode.value = !isDarkMode.value;
     if (isDarkMode.value) {
         document.documentElement.removeAttribute('data-theme');
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
         localStorage.removeItem('db-theme');
     } else {
         document.documentElement.setAttribute('data-theme', 'light');
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
         localStorage.setItem('db-theme', 'light');
     }
 }
@@ -220,9 +224,13 @@ onMounted(() => {
     if (savedTheme === 'light') {
         isDarkMode.value = false;
         document.documentElement.setAttribute('data-theme', 'light');
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
     } else {
         isDarkMode.value = true;
         document.documentElement.removeAttribute('data-theme');
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
     }
 
     // Scroll listener for back-to-top + scroll progress
@@ -518,12 +526,12 @@ onBeforeUnmount(() => {
                         v-for="study in studies"
                         :key="study.client"
                         data-stagger-item
-                        class="case-card snap-start rounded-3xl border border-slate-200 dark:border-[#b8c9e640] bg-white dark:bg-[linear-gradient(165deg,#27374de6_0%,#1f2d3fe8_100%)] p-5 sm:p-7 flex flex-col justify-between shadow-md"
+                        class="case-card snap-start rounded-3xl border border-slate-200 dark:border-[#b8c9e640] bg-white dark:bg-[linear-gradient(165deg,#1c2838_0%,#121b27_100%)] p-5 sm:p-7 flex flex-col justify-between shadow-md"
                     >
                         <div>
                             <div class="flex items-center justify-between gap-2">
                                 <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-sky-600 dark:text-[#9dc5ff]">Project {{ study.id.toUpperCase() }}</p>
-                                <span class="rounded-full border border-slate-300 dark:border-[#b8c9e633] bg-slate-100 dark:bg-transparent px-3 py-1 text-xs font-semibold text-slate-700 dark:text-[#d0ddff]">{{ study.client }}</span>
+                                <span class="rounded-full border border-slate-300 dark:border-[#b8c9e633] bg-slate-100 dark:bg-[#1f2d3f] px-3 py-1 text-xs font-semibold text-slate-700 dark:text-[#d0ddff]">{{ study.client }}</span>
                             </div>
 
                             <p class="mt-4 text-base font-bold text-slate-900 dark:text-white">{{ study.tldr }}</p>
@@ -533,7 +541,7 @@ onBeforeUnmount(() => {
                                 <p><span class="font-bold text-slate-900 dark:text-[#dce6ff]">Challenge:</span> {{ study.challenge }}</p>
                             </div>
 
-                            <div class="mt-5 rounded-2xl border border-sky-200 dark:border-[#9ba7ff33] bg-sky-50/70 dark:bg-[#1d2a3f9a] p-4">
+                            <div class="mt-5 rounded-2xl border border-sky-200 dark:border-[#9ba7ff33] bg-sky-50 dark:bg-[#1a2638] p-4">
                                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-sky-700 dark:text-[#a8bbff]">Architecture Actions</p>
                                 <ul class="mt-3 space-y-2 text-sm text-slate-700 dark:text-slate-200">
                                     <li v-for="(item, idx) in study.architectureActions" :key="`${study.client}-arch-${idx}`" class="flex gap-2">
@@ -543,7 +551,7 @@ onBeforeUnmount(() => {
                                 </ul>
                             </div>
 
-                            <div class="mt-4 rounded-2xl border border-emerald-200 dark:border-[#8bd5b333] bg-emerald-50/70 dark:bg-[#1e2f409c] p-4">
+                            <div class="mt-4 rounded-2xl border border-emerald-200 dark:border-[#8bd5b333] bg-emerald-50 dark:bg-[#132620] p-4">
                                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700 dark:text-[#9feac5]">Business Impact</p>
                                 <ul class="mt-3 space-y-2 text-sm text-slate-700 dark:text-slate-200">
                                     <li v-for="(item, idx) in study.businessImpact" :key="`${study.client}-impact-${idx}`" class="flex gap-2">
@@ -553,13 +561,13 @@ onBeforeUnmount(() => {
                                 </ul>
                             </div>
 
-                            <blockquote class="mt-5 rounded-2xl border border-purple-200 dark:border-[#c593ff44] bg-purple-50/70 dark:bg-[#2a26459e] p-4 text-sm text-purple-900 dark:text-[#e4d3ff] italic">
+                            <blockquote class="mt-5 rounded-2xl border border-purple-200 dark:border-[#c593ff44] bg-purple-50 dark:bg-[#231c36] p-4 text-sm text-purple-900 dark:text-[#e4d3ff] italic">
                                 "{{ study.quote }}"
                                 <footer class="mt-2 text-xs font-semibold text-purple-700 dark:text-[#d3c3ff] not-italic">— {{ study.quoteAuthor }}</footer>
                             </blockquote>
                         </div>
 
-                        <Link :href="`/portfolio/${study.portfolioSlug}`" class="mt-6 inline-flex items-center gap-1.5 self-start rounded-full border border-sky-300 dark:border-[#9ba7ff44] bg-sky-50 dark:bg-[#9ba7ff15] px-4 py-2 text-xs font-bold text-sky-700 dark:text-[#c8d6ff] transition hover:bg-sky-100 dark:hover:border-[#9ba7ff88] dark:hover:text-white">
+                        <Link :href="`/portfolio/${study.portfolioSlug}`" class="mt-6 inline-flex items-center gap-1.5 self-start rounded-full border border-sky-300 dark:border-[#9ba7ff44] bg-sky-50 dark:bg-[#9ba7ff20] px-4 py-2 text-xs font-bold text-sky-700 dark:text-[#c8d6ff] transition hover:bg-sky-100 dark:hover:border-[#9ba7ff88] dark:hover:text-white">
                             View Full Case Study
                             <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         </Link>

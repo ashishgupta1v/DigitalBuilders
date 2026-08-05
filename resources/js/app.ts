@@ -41,6 +41,12 @@ const updateScrollProgress = () => {
 const savedTheme = typeof localStorage !== 'undefined' ? localStorage.getItem('db-theme') : null;
 if (savedTheme === 'light') {
     document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.add('light');
+} else {
+    document.documentElement.removeAttribute('data-theme');
+    document.documentElement.classList.add('dark');
+    document.documentElement.classList.remove('light');
 }
 
 if (typeof document !== 'undefined') {

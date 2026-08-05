@@ -146,7 +146,7 @@ function formatMoney(val: number): string {
 </script>
 
 <template>
-    <div :class="props.isStandalone ? '' : 'db-antigravity-card rounded-3xl border border-slate-200 dark:border-[#b8c9e633] bg-white dark:bg-[#27374dcb] p-6 sm:p-8 lg:p-10 shadow-lg'">
+    <div :class="props.isStandalone ? '' : 'db-antigravity-card rounded-3xl border border-slate-200 dark:border-[#b8c9e633] bg-white dark:bg-[#172230] p-6 sm:p-8 lg:p-10 shadow-lg'">
         <!-- Header -->
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -155,7 +155,7 @@ function formatMoney(val: number): string {
                 <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Configure your project requirements to calculate instant ballpark estimates.</p>
             </div>
             <!-- Currency Toggle -->
-            <div class="flex items-center self-start rounded-full border border-slate-300 dark:border-[#b8c9e640] bg-slate-100 dark:bg-[#1a2533] p-1">
+            <div class="flex items-center self-start rounded-full border border-slate-300 dark:border-[#b8c9e640] bg-slate-100 dark:bg-[#101824] p-1">
                 <button
                     @click="currency = 'INR'"
                     class="rounded-full px-3 py-1 text-xs font-bold transition"
@@ -183,8 +183,8 @@ function formatMoney(val: number): string {
                             @click="selectedType = p.id"
                             class="flex flex-col items-start rounded-2xl border p-4 text-left transition"
                             :class="selectedType === p.id
-                                ? 'border-sky-500 bg-sky-50/80 text-sky-950 shadow-md dark:border-[#9ba7ff] dark:bg-[#2d3f57] dark:text-white'
-                                : 'border-slate-200 bg-slate-50/60 text-slate-700 hover:border-sky-300 dark:border-[#b8c9e626] dark:bg-[#1f2d3f90] dark:text-slate-300 dark:hover:border-[#b8c9e650]'"
+                                ? 'border-sky-500 bg-sky-50 text-sky-950 shadow-md dark:border-[#9ba7ff] dark:bg-[#28384e] dark:text-white'
+                                : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-sky-300 dark:border-[#b8c9e626] dark:bg-[#1e2a3b] dark:text-slate-300 dark:hover:border-[#b8c9e650]'"
                         >
                             <span class="text-sm font-bold text-slate-900 dark:text-white">{{ p.label }}</span>
                             <span class="mt-1 text-xs text-slate-500 dark:text-slate-400 leading-snug">{{ p.description }}</span>
@@ -203,8 +203,8 @@ function formatMoney(val: number): string {
                             @click="selectedScale = s.id"
                             class="flex flex-col items-start rounded-xl border p-3 text-left transition"
                             :class="selectedScale === s.id
-                                ? 'border-sky-500 bg-sky-50/80 text-sky-950 dark:border-[#9ba7ff] dark:bg-[#2d3f57] dark:text-white'
-                                : 'border-slate-200 bg-slate-50/60 text-slate-700 hover:border-sky-300 dark:border-[#b8c9e626] dark:bg-[#1f2d3f90] dark:text-slate-300 dark:hover:border-[#b8c9e650]'"
+                                ? 'border-sky-500 bg-sky-50 text-sky-950 dark:border-[#9ba7ff] dark:bg-[#28384e] dark:text-white'
+                                : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-sky-300 dark:border-[#b8c9e626] dark:bg-[#1e2a3b] dark:text-slate-300 dark:hover:border-[#b8c9e650]'"
                         >
                             <span class="text-xs font-bold text-slate-900 dark:text-white">{{ s.label }}</span>
                             <span class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{{ s.description }}</span>
@@ -224,7 +224,7 @@ function formatMoney(val: number): string {
                             class="flex items-center justify-between rounded-xl border p-3 text-left transition"
                             :class="selectedFeatures.includes(f.id)
                                 ? 'border-purple-400 bg-purple-50 text-purple-950 dark:border-[#c593ff] dark:bg-[#342e47] dark:text-white'
-                                : 'border-slate-200 bg-slate-50/60 text-slate-700 hover:border-purple-300 dark:border-[#b8c9e626] dark:bg-[#1f2d3f90] dark:text-slate-300 dark:hover:border-[#b8c9e650]'"
+                                : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-purple-300 dark:border-[#b8c9e626] dark:bg-[#1e2a3b] dark:text-slate-300 dark:hover:border-[#b8c9e650]'"
                         >
                             <span class="text-xs font-medium text-slate-900 dark:text-white">{{ f.label }}</span>
                             <span
@@ -239,7 +239,7 @@ function formatMoney(val: number): string {
             </div>
 
             <!-- Live Calculation Summary Card -->
-            <div class="flex flex-col justify-between rounded-2xl border border-sky-200 dark:border-[#9ba7ff44] bg-[linear-gradient(160deg,#f0f9ff,#e0e7ff)] dark:bg-[linear-gradient(160deg,#243449,#1b2737)] p-6 shadow-md">
+            <div class="flex flex-col justify-between rounded-2xl border border-sky-200 dark:border-[#9ba7ff44] bg-[linear-gradient(160deg,#f0f9ff,#e0e7ff)] dark:bg-[linear-gradient(160deg,#1c2838,#121b27)] p-6 shadow-md">
                 <div>
                     <p class="text-xs font-bold uppercase tracking-[0.2em] text-sky-700 dark:text-[#9dc5ff]">Estimated Investment</p>
                     <div class="mt-3">

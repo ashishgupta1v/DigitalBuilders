@@ -50,6 +50,20 @@
         @if ($assetMode === 'local')
             @vite(['resources/js/app.ts', "resources/js/Pages/{$page['component']}.vue"])
         @endif
+        <script>
+            (function() {
+                var theme = localStorage.getItem('db-theme');
+                if (theme === 'light') {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.remove('light');
+                }
+            })();
+        </script>
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
