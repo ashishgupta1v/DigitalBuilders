@@ -1,6 +1,15 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, ref } from 'vue';
+import { onMounted, onBeforeUnmount, ref, watch } from 'vue';
 import * as THREE from 'three';
+
+const props = withDefaults(
+    defineProps<{
+        isDarkMode?: boolean;
+    }>(),
+    {
+        isDarkMode: true,
+    },
+);
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 
@@ -15,6 +24,31 @@ let clock: THREE.Clock;
 
 const PARTICLE_COUNT = typeof window !== 'undefined' && window.innerWidth < 768 ? 60 : 120;
 const CONNECTION_DISTANCE = 3.5;
+
+function applyThemeColors() {
+    if (!particles || !lines) return;
+    const isDark = props.isDarkMode;
+
+    const c1 = new THREE.Color(isDark ? '#7ac4ff' : '#0284c7');
+    const c2 = new THREE.Color(isDark ? '#9ba7ff' : '#4f46e5');
+    const c3 = new THREE.Color(isDark ? '#c593ff' : '#7c3aed');
+
+    const pGeo = particles.geometry;
+    const colors: number[] = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const t = i / PARTICLE_COUNT;
+        const c = t < 0.5 ? c1.clone().lerp(c2, t * 2) : c2.clone().lerp(c3, (t - 0.5) * 2);
+        colors.push(c.r, c.g, c.b);
+    }
+    pGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    (pGeo.attributes.color as THREE.BufferAttribute).needsUpdate = true;
+
+    ((lines.material) as THREE.LineBasicMaterial).color = c1;
+}
+
+watch(() => props.isDarkMode, () => {
+    applyThemeColors();
+});
 
 function buildScene(w: number, h: number) {
     scene = new THREE.Scene();
@@ -79,6 +113,8 @@ function buildScene(w: number, h: number) {
 
     // Store velocities for animation
     (pGeo as any)._velocities = velArr;
+
+    applyThemeColors();
 }
 
 function updateConnections() {

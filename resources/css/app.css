@@ -737,6 +737,33 @@ html[data-theme='light'] .site-bg {
 	border-color: rgba(15, 23, 42, 0.08) !important;
 }
 
+/* Case Study Cards in Light Mode */
+[data-theme='light'] .case-card {
+	background: #ffffff !important;
+	border-color: rgba(15, 23, 42, 0.12) !important;
+	box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06) !important;
+}
+
+[data-theme='light'] .case-card div[class*='bg-\[\#1d2a3f'] {
+	background: #f8fafc !important;
+	border-color: rgba(2, 132, 199, 0.2) !important;
+}
+
+[data-theme='light'] .case-card div[class*='bg-\[\#1e2f40'] {
+	background: #f0fdf4 !important;
+	border-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+[data-theme='light'] .case-card blockquote {
+	background: #faf5ff !important;
+	border-color: rgba(147, 51, 234, 0.2) !important;
+	color: #581c87 !important;
+}
+
+[data-theme='light'] .case-card blockquote footer {
+	color: #7e22ce !important;
+}
+
 /* Estimator Live Summary Card (Right Column) */
 [data-theme='light'] .db-dark-card {
 	background: linear-gradient(145deg, #0f172a 0%, #1e1b4b 100%) !important;
