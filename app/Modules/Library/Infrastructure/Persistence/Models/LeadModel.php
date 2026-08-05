@@ -20,7 +20,14 @@ class LeadModel extends Model
         'project_type',
         'description',
         'status',
+        'score',
+        'notes_count',
     ];
+
+    public function notes(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\LeadNote::class, 'lead_id')->orderBy('created_at', 'desc');
+    }
 
     protected static function newFactory(): \App\Modules\Library\Infrastructure\Persistence\Factories\LeadModelFactory
     {

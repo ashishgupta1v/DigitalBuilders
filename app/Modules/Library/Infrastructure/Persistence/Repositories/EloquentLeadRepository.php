@@ -15,12 +15,23 @@ final class EloquentLeadRepository implements LeadRepositoryInterface
 {
     public function save(Lead $lead): Lead
     {
+        $scorer = new \App\Services\LeadScoringService();
+        $score = $scorer->calculateScore([
+            'name' => $lead->name(),
+            'email' => $lead->email()->value(),
+            'phone' => $lead->phone()->value(),
+            'project_type' => $lead->projectType()->value(),
+            'description' => $lead->description(),
+        ]);
+
         $model = LeadModel::create([
             'name'         => $lead->name(),
             'email'        => $lead->email()->value(),
             'phone'        => $lead->phone()->value(),
             'project_type' => $lead->projectType()->value(),
             'description'  => $lead->description(),
+            'score'        => $score,
+            'notes_count'  => 0,
         ]);
 
         return $this->toDomain($model);
@@ -71,6 +82,8 @@ final class EloquentLeadRepository implements LeadRepositoryInterface
             description: $model->description,
             createdAt: new \DateTimeImmutable($model->created_at->toDateTimeString()),
             status: $model->status ?? 'new',
+            score: (int) ($model->score ?? 50),
+            notesCount: (int) ($model->notes_count ?? 0),
         );
     }
 }

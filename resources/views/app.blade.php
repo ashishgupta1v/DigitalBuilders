@@ -24,7 +24,7 @@
         <meta name="twitter:description" content="Enterprise-grade web, mobile, and AI architecture for ambitious businesses.">
         @verbatim
         <script type="application/ld+json">
-            {"@context":"https://schema.org","@type":"ProfessionalService","name":"DigitalBuilders","url":"https://www.digitalbuilders.in/","image":"https://www.digitalbuilders.in/brand/db-logo.svg","description":"DigitalBuilders delivers enterprise-grade web applications, mobile apps, and AI solutions.","areaServed":"IN","address":{"@type":"PostalAddress","addressLocality":"Ludhiana","addressRegion":"Punjab","addressCountry":"IN"}}
+            {"@context":"https://schema.org","@type":"ProfessionalService","name":"DigitalBuilders","url":"https://www.digitalbuilders.in/","image":"https://www.digitalbuilders.in/images/db-logo.png","description":"DigitalBuilders delivers enterprise-grade web applications, mobile apps, and AI solutions.","areaServed":"IN","address":{"@type":"PostalAddress","addressLocality":"Ludhiana","addressRegion":"Punjab","addressCountry":"IN"}}
         </script>
         <script type="application/ld+json">
             {"@context":"https://schema.org","@type":"WebSite","name":"DigitalBuilders","url":"https://www.digitalbuilders.in/"}
@@ -33,12 +33,13 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-        <link rel="icon" type="image/svg+xml" href="{{ asset('brand/db-logo.svg') }}">
-        <link rel="alternate icon" href="{{ asset('favicon.ico') }}">
+        <link rel="icon" type="image/png" href="{{ asset('images/db-logo.png') }}">
+        <link rel="alternate icon" href="{{ asset('favicon.png') }}">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <!-- Google Fonts: Libre Baskerville (Headings & Display), Outfit (Body & UI), JetBrains Mono (Prices & Data) -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
         @routes

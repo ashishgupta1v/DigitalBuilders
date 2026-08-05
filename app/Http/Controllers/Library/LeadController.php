@@ -19,7 +19,7 @@ use Inertia\Response;
 
 class LeadController extends Controller
 {
-    private const VALID_STATUSES = ['new', 'contacted', 'converted'];
+    private const VALID_STATUSES = ['new', 'contacted', 'proposal', 'converted', 'archived'];
 
     public function index(Request $request, ListLeadsUseCase $useCase): Response
     {
@@ -59,6 +59,36 @@ class LeadController extends Controller
         $repository->updateStatus($id, $status);
 
         return back()->with('success', 'Lead status updated.');
+    }
+
+    public function getNotes(int $id): \Illuminate\Http\JsonResponse
+    {
+        $notes = \App\Models\LeadNote::query()
+            ->where('lead_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($notes);
+    }
+
+    public function addNote(Request $request, int $id): RedirectResponse
+    {
+        $validated = $request->validate([
+            'note' => ['required', 'string', 'max:1000'],
+        ]);
+
+        $user = $request->user();
+
+        \App\Models\LeadNote::create([
+            'lead_id' => $id,
+            'user_id' => $user?->id,
+            'author_name' => $user?->name ?? 'Admin',
+            'note' => $validated['note'],
+        ]);
+
+        \App\Modules\Library\Infrastructure\Persistence\Models\LeadModel::where('id', $id)->increment('notes_count');
+
+        return back()->with('success', 'Note added to lead.');
     }
 
     public function export(ListLeadsUseCase $useCase): HttpResponse

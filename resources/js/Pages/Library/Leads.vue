@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, router } from '@inertiajs/vue3';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 interface LeadDTO {
     id: number;
@@ -13,6 +13,16 @@ interface LeadDTO {
     description: string | null;
     status: string;
     createdAt: string | null;
+    score?: number;
+    notesCount?: number;
+}
+
+interface LeadNote {
+    id: number;
+    lead_id: number;
+    author_name: string;
+    note: string;
+    created_at: string;
 }
 
 const props = defineProps<{
@@ -20,249 +30,411 @@ const props = defineProps<{
     filters?: { status?: string; search?: string };
 }>();
 
+const viewMode = ref<'kanban' | 'table'>('kanban');
 const isLoading = ref(false);
+const search = ref(props.filters?.search ?? '');
+let searchTimer: ReturnType<typeof setTimeout> | null = null;
 
-const STATUS_TABS = [
-    { value: '', label: 'All' },
-    { value: 'new', label: 'New' },
-    { value: 'contacted', label: 'Contacted' },
-    { value: 'converted', label: 'Converted' },
+// Selected Lead for Drawer
+const selectedLead = ref<LeadDTO | null>(null);
+const drawerOpen = ref(false);
+const leadNotes = ref<LeadNote[]>([]);
+const newNoteText = ref('');
+const isSubmittingNote = ref(false);
+
+const KANBAN_COLUMNS = [
+    { key: 'new', label: 'New Inquiries', badge: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
+    { key: 'contacted', label: 'Contacted', badge: 'bg-amber-500/20 text-amber-300 border-amber-500/30' },
+    { key: 'proposal', label: 'Proposal Sent', badge: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
+    { key: 'converted', label: 'Converted (Won)', badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
+    { key: 'archived', label: 'Archived', badge: 'bg-slate-500/20 text-slate-300 border-slate-500/30' },
 ] as const;
 
 const STATUS_STYLES: Record<string, string> = {
     new: 'bg-blue-500/20 text-blue-300 border border-blue-500/30',
-    contacted: 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30',
+    contacted: 'bg-amber-500/20 text-amber-300 border border-amber-500/30',
+    proposal: 'bg-purple-500/20 text-purple-300 border border-purple-500/30',
     converted: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30',
+    archived: 'bg-slate-500/20 text-slate-300 border border-slate-500/30',
 };
 
-const search = ref(props.filters?.search ?? '');
-let searchTimer: ReturnType<typeof setTimeout> | null = null;
-
 onMounted(() => {
-    router.on('start', () => {
-        isLoading.value = true;
-    });
-    router.on('finish', () => {
-        isLoading.value = false;
-    });
+    router.on('start', () => { isLoading.value = true; });
+    router.on('finish', () => { isLoading.value = false; });
 });
-
-function applyFilter(status?: string) {
-    router.get(route('leads.index'), {
-        status: status ?? props.filters?.status ?? '',
-        search: search.value,
-    }, { preserveState: true, replace: true });
-}
 
 function onSearch() {
     if (searchTimer) clearTimeout(searchTimer);
     searchTimer = setTimeout(() => {
-        router.get(route('leads.index'), {
+        router.get(route('library.leads.index'), {
             status: props.filters?.status ?? '',
             search: search.value,
         }, { preserveState: true, replace: true });
     }, 400);
 }
 
-function updateStatus(lead: LeadDTO, status: string) {
-    router.patch(route('leads.status', { id: lead.id }), { status }, {
+function updateStatus(lead: LeadDTO, newStatus: string) {
+    router.patch(route('library.leads.status', { id: lead.id }), { status: newStatus }, {
         preserveScroll: true,
         onSuccess: () => {
+            if (selectedLead.value && selectedLead.value.id === lead.id) {
+                selectedLead.value.status = newStatus;
+            }
             window.dispatchEvent(new CustomEvent('db:toast', {
-                detail: { message: `${lead.name} marked as ${status}`, type: 'success' },
-            }));
-        },
-        onError: () => {
-            window.dispatchEvent(new CustomEvent('db:toast', {
-                detail: { message: 'Failed to update status', type: 'error' },
+                detail: { message: `${lead.name} status updated to ${newStatus}`, type: 'success' },
             }));
         },
     });
 }
 
 function exportCsv() {
-    window.location.href = route('leads.export');
+    window.location.href = route('library.leads.export');
+}
+
+function getScoreBadge(score?: number) {
+    const s = score ?? 50;
+    if (s >= 75) return { text: `🔥 ${s}`, class: 'bg-rose-500/20 text-rose-300 border-rose-500/40' };
+    if (s >= 45) return { text: `⚡ ${s}`, class: 'bg-amber-500/20 text-amber-300 border-amber-500/40' };
+    return { text: `📋 ${s}`, class: 'bg-slate-500/20 text-slate-300 border-slate-500/40' };
+}
+
+// Group leads by status for Kanban view
+const groupedLeads = computed(() => {
+    const map: Record<string, LeadDTO[]> = {
+        new: [],
+        contacted: [],
+        proposal: [],
+        converted: [],
+        archived: [],
+    };
+    props.leads.forEach((l) => {
+        const st = l.status || 'new';
+        if (!map[st]) map[st] = [];
+        map[st].push(l);
+    });
+    return map;
+});
+
+// Open Drawer & Fetch Notes
+async function openDrawer(lead: LeadDTO) {
+    selectedLead.value = lead;
+    drawerOpen.value = true;
+    newNoteText.value = '';
+    leadNotes.value = [];
+
+    try {
+        const res = await fetch(route('library.leads.notes', { id: lead.id }));
+        if (res.ok) {
+            leadNotes.value = await res.json();
+        }
+    } catch {
+        // notes fetch fallback
+    }
+}
+
+async function addNote() {
+    if (!selectedLead.value || !newNoteText.value.trim()) return;
+    isSubmittingNote.value = true;
+
+    router.post(route('library.leads.notes.store', { id: selectedLead.value.id }), {
+        note: newNoteText.value.trim(),
+    }, {
+        preserveScroll: true,
+        onSuccess: () => {
+            newNoteText.value = '';
+            isSubmittingNote.value = false;
+            // Refetch notes
+            openDrawer(selectedLead.value!);
+            window.dispatchEvent(new CustomEvent('db:toast', {
+                detail: { message: 'Internal staff note added', type: 'success' },
+            }));
+        },
+        onFinish: () => {
+            isSubmittingNote.value = false;
+        },
+    });
 }
 </script>
 
 <template>
-    <Head title="Leads" />
+    <Head title="Leads Vault & CRM Pipeline — DigitalBuilders" />
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <h2 class="text-xl font-semibold leading-tight text-[#e7efff]">
-                    Leads Vault
-                </h2>
-                <span class="db-chip">Pipeline intelligence</span>
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-xl font-black leading-tight text-[#e7efff]">
+                        CRM Pipeline & Leads Vault
+                    </h2>
+                    <p class="text-xs text-slate-400">Manage client acquisition, pipeline stages, lead scores & staff notes.</p>
+                </div>
+                <span class="db-chip">Real-Time CRM Deck</span>
             </div>
         </template>
 
-        <div class="py-8 sm:py-12">
+        <div class="py-6 sm:py-8">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="db-mini db-panel db-reveal overflow-hidden rounded-[1.5rem]">
-                    <div class="p-4 sm:p-6">
-
-                        <!-- Toolbar -->
-                        <div class="mb-5 flex flex-wrap items-center gap-3">
-                            <!-- Status Tabs -->
-                            <div class="flex w-full flex-wrap gap-1 rounded-xl border border-[#b8c9e633] p-1 lg:w-auto">
-                                <button
-                                    v-for="tab in STATUS_TABS"
-                                    :key="tab.value"
-                                    @click="applyFilter(tab.value)"
-                                    class="flex-1 rounded-lg px-3 py-2 text-xs font-semibold uppercase tracking-wider transition sm:flex-none"
-                                    :class="(filters?.status ?? '') === tab.value
-                                        ? 'bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff,#c593ff)] text-[#1a2231]'
-                                        : 'text-[#bcd0ef] hover:text-white'"
-                                >{{ tab.label }}</button>
-                            </div>
-
-                            <!-- Search -->
-                            <div class="w-full lg:min-w-[220px] lg:flex-1">
-                                <input
-                                    v-model="search"
-                                    @input="onSearch"
-                                    type="search"
-                                    placeholder="Search by name or email…"
-                                    class="w-full rounded-xl border border-[#b8c9e633] bg-[#27374d60] px-4 py-2 text-sm text-[#e7efff] placeholder:text-[#6b82a0] focus:border-[#9ba7ff] focus:outline-none"
-                                />
-                            </div>
-
-                            <div class="ml-auto flex w-full items-center justify-between gap-2 sm:w-auto">
-                                <p class="text-[11px] uppercase tracking-[0.2em] text-[#bcd0ef]">{{ leads.length }} records</p>
-                                <!-- CSV Export -->
-                                <button
-                                    @click="exportCsv"
-                                    class="flex items-center gap-1.5 rounded-xl border border-[#b8c9e633] px-3 py-2 text-xs font-semibold text-[#bcd0ef] transition hover:border-[#9ba7ff] hover:text-white"
-                                >
-                                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                    </svg>
-                                    Export CSV
-                                </button>
-                            </div>
+                <div class="db-mini db-panel overflow-hidden rounded-[1.5rem] p-4 sm:p-6">
+                    
+                    <!-- Toolbar & Controls -->
+                    <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+                        <!-- View Toggle (Kanban vs Table) -->
+                        <div class="flex items-center rounded-xl border border-[#b8c9e633] bg-[#1a2534] p-1">
+                            <button
+                                @click="viewMode = 'kanban'"
+                                class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition"
+                                :class="viewMode === 'kanban' ? 'bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff)] text-[#1a2231]' : 'text-slate-400 hover:text-white'"
+                            >
+                                📊 Kanban Pipeline
+                            </button>
+                            <button
+                                @click="viewMode = 'table'"
+                                class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition"
+                                :class="viewMode === 'table' ? 'bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff)] text-[#1a2231]' : 'text-slate-400 hover:text-white'"
+                            >
+                                📋 Tabular Vault
+                            </button>
                         </div>
 
-                        <!-- Table with skeleton loading -->
-                        <div v-if="isLoading" class="space-y-2" aria-busy="true" aria-label="Loading leads...">
-                            <div class="flex gap-4 border-b border-[#b8c9e626] px-5 py-4">
-                                <div class="db-skeleton h-4 w-32 rounded" />
-                                <div class="db-skeleton h-4 w-48 rounded" />
-                                <div class="db-skeleton h-4 w-40 rounded" />
-                                <div class="db-skeleton h-4 flex-1 rounded" />
-                            </div>
-                            <div class="flex gap-4 border-b border-[#b8c9e626] px-5 py-4">
-                                <div class="db-skeleton h-4 w-32 rounded" />
-                                <div class="db-skeleton h-4 w-48 rounded" />
-                                <div class="db-skeleton h-4 w-40 rounded" />
-                                <div class="db-skeleton h-4 flex-1 rounded" />
-                            </div>
-                            <div class="flex gap-4 border-b border-[#b8c9e626] px-5 py-4">
-                                <div class="db-skeleton h-4 w-32 rounded" />
-                                <div class="db-skeleton h-4 w-48 rounded" />
-                                <div class="db-skeleton h-4 w-40 rounded" />
-                                <div class="db-skeleton h-4 flex-1 rounded" />
-                            </div>
+                        <!-- Search Input -->
+                        <div class="flex-1 min-w-[200px] max-w-md">
+                            <input
+                                v-model="search"
+                                @input="onSearch"
+                                type="search"
+                                placeholder="Search by client name, email or project..."
+                                class="w-full rounded-xl border border-[#b8c9e633] bg-[#27374d60] px-4 py-2 text-xs text-[#e7efff] placeholder:text-[#6b82a0] focus:border-[#9ba7ff] focus:outline-none"
+                            />
                         </div>
 
-                        <!-- Actual content -->
-                        <div v-else-if="leads.length" class="space-y-4">
-                            <div class="md:hidden space-y-3">
-                                <article v-for="lead in leads" :key="`mobile-${lead.id}`" class="rounded-xl border border-[#b8c9e633] bg-[#27374d55] p-4">
-                                    <div class="flex items-start justify-between gap-3">
-                                        <div class="min-w-0">
-                                            <p class="truncate text-sm font-semibold text-[#e7efff]">{{ lead.name }}</p>
-                                            <p class="mt-1 break-all text-xs text-[#bfd0eb]">{{ lead.email }}</p>
-                                        </div>
-                                        <span
-                                            class="shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider"
-                                            :class="STATUS_STYLES[lead.status] ?? STATUS_STYLES['new']"
-                                        >{{ lead.status }}</span>
-                                    </div>
-                                    <div class="mt-3 grid gap-2 text-xs text-[#bfd0eb] sm:grid-cols-2">
-                                        <p><span class="text-[#d8e4fa]">Phone:</span> {{ lead.phone }}</p>
-                                        <p><span class="text-[#d8e4fa]">Project:</span> {{ lead.projectTypeLabel }}</p>
-                                        <p><span class="text-[#d8e4fa]">Submitted:</span> {{ lead.createdAt }}</p>
-                                    </div>
-                                    <div class="mt-3">
-                                        <label class="mb-1 block text-[11px] uppercase tracking-[0.18em] text-[#bcd0ef]">Update status</label>
-                                        <select
-                                            :value="lead.status"
-                                            @change="updateStatus(lead, ($event.target as HTMLSelectElement).value)"
-                                            class="w-full rounded-lg border border-[#b8c9e633] bg-[#27374d90] px-3 py-2 text-xs text-[#e7efff] focus:border-[#9ba7ff] focus:outline-none"
-                                        >
-                                            <option value="new">New</option>
-                                            <option value="contacted">Contacted</option>
-                                            <option value="converted">Converted</option>
-                                        </select>
-                                    </div>
-                                </article>
-                            </div>
+                        <!-- Export CSV & Count -->
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-[#bcd0ef]">{{ props.leads.length }} Prospects</span>
+                            <button
+                                @click="exportCsv"
+                                class="flex items-center gap-1.5 rounded-xl border border-[#b8c9e633] px-3.5 py-2 text-xs font-bold text-[#bcd0ef] transition hover:border-[#9ba7ff] hover:text-white"
+                            >
+                                📥 Export CSV
+                            </button>
+                        </div>
+                    </div>
 
-                            <div class="hidden overflow-x-auto md:block">
-                            <table class="min-w-[920px] w-full divide-y divide-[#b8c9e633]">
-                                <thead class="bg-[#2f425ab5]">
-                                    <tr>
-                                        <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#bcd0ef]">Name</th>
-                                        <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#bcd0ef]">Email</th>
-                                        <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#bcd0ef]">Phone</th>
-                                        <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#bcd0ef]">Project</th>
-                                        <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#bcd0ef]">Status</th>
-                                        <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#bcd0ef]">Submitted</th>
-                                        <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#bcd0ef]">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-[#b8c9e626] bg-transparent">
-                                    <tr v-for="lead in leads" :key="lead.id" class="transition hover:bg-[#27374d40]">
-                                        <td class="whitespace-nowrap px-5 py-4 text-sm font-medium text-[#e7efff]">{{ lead.name }}</td>
-                                        <td class="whitespace-nowrap px-5 py-4 text-sm text-[#bfd0eb]">{{ lead.email }}</td>
-                                        <td class="whitespace-nowrap px-5 py-4 text-sm text-[#bfd0eb]">{{ lead.phone }}</td>
-                                        <td class="whitespace-nowrap px-5 py-4 text-sm text-[#bfd0eb]">{{ lead.projectTypeLabel }}</td>
-                                        <td class="whitespace-nowrap px-5 py-4">
+                    <!-- 1. KANBAN PIPELINE VIEW -->
+                    <div v-if="viewMode === 'kanban'" class="overflow-x-auto pb-4">
+                        <div class="grid min-w-[1100px] grid-cols-5 gap-4">
+                            <div
+                                v-for="col in KANBAN_COLUMNS"
+                                :key="col.key"
+                                class="flex flex-col rounded-2xl border border-[#b8c9e622] bg-[#1a253480] p-3 min-h-[500px]"
+                            >
+                                <!-- Column Header -->
+                                <div class="mb-3 flex items-center justify-between border-b border-[#b8c9e622] pb-2.5">
+                                    <div class="flex items-center gap-1.5 text-xs font-bold text-white">
+                                        <svg v-if="col.key === 'new'" class="h-4 w-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                        <svg v-else-if="col.key === 'contacted'" class="h-4 w-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                                        <svg v-else-if="col.key === 'proposal'" class="h-4 w-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                        <svg v-else-if="col.key === 'converted'" class="h-4 w-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        <svg v-else class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 012-2h10a2 2 0 012 2M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+                                        <span>{{ col.label }}</span>
+                                    </div>
+                                    <span class="rounded-full bg-[#27374d] px-2 py-0.5 text-[10px] font-bold text-[#9ba7ff]">
+                                        {{ groupedLeads[col.key]?.length ?? 0 }}
+                                    </span>
+                                </div>
+
+                                <!-- Cards List -->
+                                <div class="flex-1 space-y-3">
+                                    <div
+                                        v-for="lead in groupedLeads[col.key]"
+                                        :key="lead.id"
+                                        @click="openDrawer(lead)"
+                                        class="group cursor-pointer rounded-xl border border-[#b8c9e633] bg-[#27374dcb] p-3.5 shadow-md transition hover:-translate-y-0.5 hover:border-[#9ba7ff]"
+                                    >
+                                        <div class="flex items-start justify-between gap-2">
+                                            <h4 class="text-xs font-bold text-white group-hover:text-[#b7d3ff] truncate">{{ lead.name }}</h4>
+                                            <!-- Score Badge -->
                                             <span
-                                                class="rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider"
-                                                :class="STATUS_STYLES[lead.status] ?? STATUS_STYLES['new']"
-                                            >{{ lead.status }}</span>
-                                        </td>
-                                        <td class="whitespace-nowrap px-5 py-4 text-sm text-[#bfd0eb]">{{ lead.createdAt }}</td>
-                                        <td class="whitespace-nowrap px-5 py-4">
+                                                class="rounded-full border px-2 py-0.5 text-[10px] font-extrabold"
+                                                :class="getScoreBadge(lead.score).class"
+                                            >
+                                                {{ getScoreBadge(lead.score).text }}
+                                            </span>
+                                        </div>
+
+                                        <p class="mt-1 truncate text-[11px] text-slate-300">{{ lead.email }}</p>
+                                        
+                                        <div class="mt-2.5 flex items-center justify-between text-[10px] text-slate-400">
+                                            <span class="rounded bg-[#1a2534] px-2 py-0.5 text-[#9ba7ff] font-semibold truncate max-w-[110px]">{{ lead.projectTypeLabel }}</span>
+                                            <span>💬 {{ lead.notesCount ?? 0 }}</span>
+                                        </div>
+
+                                        <!-- Quick Move Dropdown -->
+                                        <div class="mt-3 border-t border-[#b8c9e618] pt-2" @click.stop>
                                             <select
                                                 :value="lead.status"
                                                 @change="updateStatus(lead, ($event.target as HTMLSelectElement).value)"
-                                                class="rounded-lg border border-[#b8c9e633] bg-[#27374d90] px-2 py-1 text-xs text-[#e7efff] focus:border-[#9ba7ff] focus:outline-none"
+                                                class="w-full rounded-lg border border-[#b8c9e626] bg-[#1a2534] px-2 py-1 text-[10px] text-slate-200 focus:outline-none"
                                             >
-                                                <option value="new">New</option>
-                                                <option value="contacted">Contacted</option>
-                                                <option value="converted">Converted</option>
+                                                <option value="new">Move to New</option>
+                                                <option value="contacted">Move to Contacted</option>
+                                                <option value="proposal">Move to Proposal</option>
+                                                <option value="converted">Move to Converted</option>
+                                                <option value="archived">Move to Archived</option>
                                             </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Empty state -->
-                        <div v-else class="flex flex-col items-center justify-center py-16 text-center">
-                            <svg class="mb-4 h-20 w-20 text-[#3d5575]" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="8" y="24" width="80" height="56" rx="8" stroke="currentColor" stroke-width="3" fill="none"/>
-                                <path d="M8 36h80" stroke="currentColor" stroke-width="3"/>
-                                <rect x="18" y="48" width="20" height="4" rx="2" fill="currentColor" opacity="0.4"/>
-                                <rect x="18" y="58" width="36" height="4" rx="2" fill="currentColor" opacity="0.3"/>
-                                <rect x="18" y="68" width="28" height="4" rx="2" fill="currentColor" opacity="0.2"/>
-                                <circle cx="72" cy="20" r="12" stroke="currentColor" stroke-width="3" fill="none"/>
-                                <path d="M68 20h8M72 16v8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-                            </svg>
-                            <p class="text-base font-semibold text-[#dce7ff]">No leads yet</p>
-                            <p class="mt-1 text-sm text-[#7a95b8]">
-                                {{ filters?.status ? `No leads with status "${filters.status}"` : 'New inquiries from your contact form will appear here.' }}
-                            </p>
-                        </div>
-
+                    <!-- 2. TABULAR VAULT VIEW -->
+                    <div v-else class="overflow-x-auto">
+                        <table class="w-full min-w-[900px] divide-y divide-[#b8c9e626]">
+                            <thead class="bg-[#1a2534]">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-400">Score</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-400">Client Name</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-400">Email</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-400">Project Type</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-400">Status Stage</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-400">Notes</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-400">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[#b8c9e618]">
+                                <tr
+                                    v-for="lead in props.leads"
+                                    :key="lead.id"
+                                    @click="openDrawer(lead)"
+                                    class="cursor-pointer transition hover:bg-[#27374d60]"
+                                >
+                                    <td class="whitespace-nowrap px-4 py-3">
+                                        <span class="rounded-full border px-2.5 py-1 text-xs font-bold" :class="getScoreBadge(lead.score).class">
+                                            {{ getScoreBadge(lead.score).text }}
+                                        </span>
+                                    </td>
+                                    <td class="whitespace-nowrap px-4 py-3 text-xs font-bold text-white">{{ lead.name }}</td>
+                                    <td class="whitespace-nowrap px-4 py-3 text-xs text-slate-300">{{ lead.email }}</td>
+                                    <td class="whitespace-nowrap px-4 py-3 text-xs text-[#b7d3ff]">{{ lead.projectTypeLabel }}</td>
+                                    <td class="whitespace-nowrap px-4 py-3">
+                                        <span class="rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase" :class="STATUS_STYLES[lead.status] ?? STATUS_STYLES['new']">
+                                            {{ lead.status }}
+                                        </span>
+                                    </td>
+                                    <td class="whitespace-nowrap px-4 py-3 text-xs text-slate-400">💬 {{ lead.notesCount ?? 0 }}</td>
+                                    <td class="whitespace-nowrap px-4 py-3" @click.stop>
+                                        <select
+                                            :value="lead.status"
+                                            @change="updateStatus(lead, ($event.target as HTMLSelectElement).value)"
+                                            class="rounded-lg border border-[#b8c9e626] bg-[#1a2534] px-2 py-1 text-xs text-white focus:outline-none"
+                                        >
+                                            <option value="new">New</option>
+                                            <option value="contacted">Contacted</option>
+                                            <option value="proposal">Proposal</option>
+                                            <option value="converted">Converted</option>
+                                            <option value="archived">Archived</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- 3. SLIDE-OVER LEAD DETAIL & NOTES DRAWER -->
+        <Transition
+            enter-active-class="transition-all duration-300 ease-out"
+            enter-from-class="translate-x-full"
+            leave-active-class="transition-all duration-200 ease-in"
+            leave-to-class="translate-x-full"
+        >
+            <div
+                v-if="drawerOpen && selectedLead"
+                class="fixed inset-y-0 right-0 z-[9000] flex w-full max-w-md flex-col border-l border-[#b8c9e640] bg-[#1a2534] p-6 shadow-2xl backdrop-blur-xl"
+            >
+                <!-- Drawer Header -->
+                <div class="flex items-center justify-between border-b border-[#b8c9e622] pb-4">
+                    <div>
+                        <span class="db-chip">Lead Intelligence</span>
+                        <h3 class="mt-1 text-lg font-bold text-white">{{ selectedLead.name }}</h3>
+                    </div>
+                    <button @click="drawerOpen = false" class="text-slate-400 hover:text-white">✕</button>
+                </div>
+
+                <!-- Drawer Content -->
+                <div class="flex-1 overflow-y-auto py-4 space-y-6 text-xs">
+                    <!-- Score & Contact Cards -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="rounded-xl border border-[#b8c9e622] bg-[#27374d60] p-3">
+                            <span class="text-[10px] uppercase tracking-wider text-slate-400">Quality Score</span>
+                            <p class="mt-1 text-lg font-black" :class="getScoreBadge(selectedLead.score).class">
+                                {{ getScoreBadge(selectedLead.score).text }} / 100
+                            </p>
+                        </div>
+                        <div class="rounded-xl border border-[#b8c9e622] bg-[#27374d60] p-3">
+                            <span class="text-[10px] uppercase tracking-wider text-slate-400">Current Stage</span>
+                            <p class="mt-1 text-xs font-bold uppercase text-[#9ba7ff]">{{ selectedLead.status }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Contact Details -->
+                    <div class="rounded-xl border border-[#b8c9e622] bg-[#27374d60] p-4 space-y-2 text-slate-200">
+                        <p><strong>Email:</strong> <a :href="`mailto:${selectedLead.email}`" class="text-[#9ba7ff] hover:underline">{{ selectedLead.email }}</a></p>
+                        <p><strong>Phone:</strong> <a :href="`tel:${selectedLead.phone}`" class="text-[#9ba7ff] hover:underline">{{ selectedLead.phone }}</a></p>
+                        <p><strong>Project Category:</strong> {{ selectedLead.projectTypeLabel }}</p>
+                        <p><strong>Submitted:</strong> {{ selectedLead.createdAt }}</p>
+                    </div>
+
+                    <!-- Description -->
+                    <div v-if="selectedLead.description">
+                        <h4 class="font-bold text-white uppercase text-[10px] tracking-wider text-slate-400">Project Requirements & Scope</h4>
+                        <div class="mt-2 rounded-xl border border-[#b8c9e622] bg-[#17212d] p-3.5 leading-relaxed text-slate-200 whitespace-pre-line">
+                            {{ selectedLead.description }}
+                        </div>
+                    </div>
+
+                    <!-- Internal Staff Notes Thread -->
+                    <div>
+                        <h4 class="font-bold text-white uppercase text-[10px] tracking-wider text-slate-400 mb-2">Internal Staff Notes</h4>
+                        
+                        <!-- Notes List -->
+                        <div class="space-y-2 mb-4 max-h-48 overflow-y-auto">
+                            <div
+                                v-for="note in leadNotes"
+                                :key="note.id"
+                                class="rounded-xl border border-[#b8c9e618] bg-[#243449] p-3"
+                            >
+                                <div class="flex items-center justify-between text-[10px] text-[#9ba7ff]">
+                                    <span class="font-bold">{{ note.author_name }}</span>
+                                    <span>{{ note.created_at }}</span>
+                                </div>
+                                <p class="mt-1 text-slate-200 leading-normal">{{ note.note }}</p>
+                            </div>
+                            <p v-if="!leadNotes.length" class="text-slate-500 italic text-[11px]">No internal notes added yet.</p>
+                        </div>
+
+                        <!-- Add Note Form -->
+                        <form @submit.prevent="addNote" class="space-y-2">
+                            <textarea
+                                v-model="newNoteText"
+                                rows="2"
+                                placeholder="Add internal note for sales team..."
+                                class="w-full rounded-xl border border-[#b8c9e633] bg-[#17212d] p-3 text-xs text-white focus:border-[#9ba7ff] focus:outline-none"
+                            ></textarea>
+                            <button
+                                type="submit"
+                                :disabled="isSubmittingNote || !newNoteText.trim()"
+                                class="w-full rounded-full bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff)] py-2 text-xs font-bold text-[#1a2231] hover:brightness-110 disabled:opacity-50"
+                            >
+                                {{ isSubmittingNote ? 'Saving Note...' : 'Post Internal Note' }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </Transition>
     </AuthenticatedLayout>
 </template>

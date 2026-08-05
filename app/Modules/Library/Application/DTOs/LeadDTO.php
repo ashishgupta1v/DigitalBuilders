@@ -18,6 +18,8 @@ final class LeadDTO
         public readonly ?string $description,
         public readonly ?string $createdAt,
         public readonly string $status = 'new',
+        public readonly int $score = 50,
+        public readonly int $notesCount = 0,
     ) {}
 
     public static function fromEntity(Lead $lead): self
@@ -32,6 +34,8 @@ final class LeadDTO
             description: $lead->description(),
             createdAt: $lead->createdAt()?->format('Y-m-d H:i:s'),
             status: $lead->status(),
+            score: $lead->score(),
+            notesCount: $lead->notesCount(),
         );
     }
 }

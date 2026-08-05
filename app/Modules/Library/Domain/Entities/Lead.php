@@ -19,6 +19,8 @@ final class Lead
         private ?string $description,
         private ?\DateTimeImmutable $createdAt = null,
         private string $status = 'new',
+        private int $score = 50,
+        private int $notesCount = 0,
     ) {}
 
     public static function create(
@@ -84,6 +86,16 @@ final class Lead
         $this->status = $status;
     }
 
+    public function score(): int
+    {
+        return $this->score;
+    }
+
+    public function notesCount(): int
+    {
+        return $this->notesCount;
+    }
+
     /**
      * Reconstitute from persistence (used by repository).
      */
@@ -96,7 +108,9 @@ final class Lead
         ?string $description,
         \DateTimeImmutable $createdAt,
         string $status = 'new',
+        int $score = 50,
+        int $notesCount = 0,
     ): self {
-        return new self($id, $name, $email, $phone, $projectType, $description, $createdAt, $status);
+        return new self($id, $name, $email, $phone, $projectType, $description, $createdAt, $status, $score, $notesCount);
     }
 }
