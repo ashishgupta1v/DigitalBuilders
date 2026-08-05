@@ -17,110 +17,181 @@ let renderer: THREE.WebGLRenderer | null = null;
 let scene: THREE.Scene | null = null;
 let camera: THREE.PerspectiveCamera | null = null;
 let animFrameId: number | null = null;
-let particles: THREE.Points | null = null;
-let lines: THREE.LineSegments | null = null;
-let mouse = new THREE.Vector2(0, 0);
-let clock: THREE.Clock;
 
-const PARTICLE_COUNT = typeof window !== 'undefined' && window.innerWidth < 768 ? 60 : 120;
-const CONNECTION_DISTANCE = 3.5;
+let particleSystem: THREE.Points | null = null;
+let lineSegments: THREE.LineSegments | null = null;
+let centerPolyhedron: THREE.Mesh | null = null;
+let polyWireframe: THREE.LineSegments | null = null;
+
+const mouse = new THREE.Vector2(-9999, -9999);
+const targetMouse = new THREE.Vector2(-9999, -9999);
+
+const PARTICLE_COUNT = typeof window !== 'undefined' && window.innerWidth < 768 ? 70 : 130;
+const CONNECTION_DIST = 3.6;
+
+// Original particle positions and velocities
+let basePositions: Float32Array;
+let currentPositions: Float32Array;
+let velocities: THREE.Vector3[];
 
 function applyThemeColors() {
-    if (!particles || !lines) return;
+    if (!particleSystem || !lineSegments || !centerPolyhedron || !polyWireframe) return;
     const isDark = props.isDarkMode;
 
-    const c1 = new THREE.Color(isDark ? '#7ac4ff' : '#0284c7');
-    const c2 = new THREE.Color(isDark ? '#9ba7ff' : '#4f46e5');
-    const c3 = new THREE.Color(isDark ? '#c593ff' : '#7c3aed');
+    const color1 = new THREE.Color(isDark ? '#38bdf8' : '#0284c7'); // Sky blue
+    const color2 = new THREE.Color(isDark ? '#818cf8' : '#4f46e5'); // Indigo
+    const color3 = new THREE.Color(isDark ? '#c084fc' : '#7c3aed'); // Purple
 
-    const pGeo = particles.geometry;
+    // Particle colors
+    const pGeo = particleSystem.geometry;
     const colors: number[] = [];
     for (let i = 0; i < PARTICLE_COUNT; i++) {
         const t = i / PARTICLE_COUNT;
-        const c = t < 0.5 ? c1.clone().lerp(c2, t * 2) : c2.clone().lerp(c3, (t - 0.5) * 2);
+        const c = t < 0.5 ? color1.clone().lerp(color2, t * 2) : color2.clone().lerp(color3, (t - 0.5) * 2);
         colors.push(c.r, c.g, c.b);
     }
     pGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     (pGeo.attributes.color as THREE.BufferAttribute).needsUpdate = true;
 
-    ((lines.material) as THREE.LineBasicMaterial).color = c1;
+    // Line material
+    (lineSegments.material as THREE.LineBasicMaterial).color = color1;
+
+    // Central Polyhedron material
+    (centerPolyhedron.material as THREE.MeshBasicMaterial).color = color2;
+    (polyWireframe.material as THREE.LineBasicMaterial).color = color1;
 }
 
 watch(() => props.isDarkMode, () => {
     applyThemeColors();
 });
 
-function buildScene(w: number, h: number) {
+function initScene(w: number, h: number) {
     scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(55, w / h, 0.1, 100);
-    camera.position.set(0, 0, 14);
+    camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 100);
+    camera.position.set(0, 0, 13);
 
-    // ---------- Particles ----------
-    const posArr: number[] = [];
-    const velArr: THREE.Vector3[] = [];
+    // 1. Central 3D Floating Polyhedron (Icosahedron)
+    const polyGeo = new THREE.IcosahedronGeometry(2.4, 1);
+    const polyMat = new THREE.MeshBasicMaterial({
+        wireframe: true,
+        transparent: true,
+        opacity: props.isDarkMode ? 0.18 : 0.12,
+    });
+    centerPolyhedron = new THREE.Mesh(polyGeo, polyMat);
+    centerPolyhedron.position.set(3.5, 0.5, -2);
+    scene.add(centerPolyhedron);
+
+    const wireGeo = new THREE.WireframeGeometry(polyGeo);
+    const wireMat = new THREE.LineBasicMaterial({
+        transparent: true,
+        opacity: props.isDarkMode ? 0.35 : 0.25,
+    });
+    polyWireframe = new THREE.LineSegments(wireGeo, wireMat);
+    polyWireframe.position.copy(centerPolyhedron.position);
+    scene.add(polyWireframe);
+
+    // 2. Particle Network setup
+    basePositions = new Float32Array(PARTICLE_COUNT * 3);
+    currentPositions = new Float32Array(PARTICLE_COUNT * 3);
+    velocities = [];
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-        const x = (Math.random() - 0.5) * 20;
-        const y = (Math.random() - 0.5) * 12;
-        const z = (Math.random() - 0.5) * 8;
-        posArr.push(x, y, z);
-        velArr.push(
+        const x = (Math.random() - 0.5) * 22;
+        const y = (Math.random() - 0.5) * 13;
+        const z = (Math.random() - 0.5) * 9;
+
+        basePositions[i * 3] = x;
+        basePositions[i * 3 + 1] = y;
+        basePositions[i * 3 + 2] = z;
+
+        currentPositions[i * 3] = x;
+        currentPositions[i * 3 + 1] = y;
+        currentPositions[i * 3 + 2] = z;
+
+        velocities.push(
             new THREE.Vector3(
+                (Math.random() - 0.5) * 0.008,
                 (Math.random() - 0.5) * 0.006,
                 (Math.random() - 0.5) * 0.004,
-                (Math.random() - 0.5) * 0.003,
             ),
         );
     }
 
     const pGeo = new THREE.BufferGeometry();
-    pGeo.setAttribute('position', new THREE.Float32BufferAttribute(posArr, 3));
-
-    // Per-particle color: blend from electric-blue → violet → purple
-    const colors: number[] = [];
-    const c1 = new THREE.Color('#7ac4ff');
-    const c2 = new THREE.Color('#9ba7ff');
-    const c3 = new THREE.Color('#c593ff');
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-        const t = i / PARTICLE_COUNT;
-        const c = t < 0.5 ? c1.clone().lerp(c2, t * 2) : c2.clone().lerp(c3, (t - 0.5) * 2);
-        colors.push(c.r, c.g, c.b);
-    }
-    pGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    pGeo.setAttribute('position', new THREE.Float32BufferAttribute(currentPositions, 3));
 
     const pMat = new THREE.PointsMaterial({
-        size: 0.12,
+        size: 0.14,
         vertexColors: true,
         transparent: true,
-        opacity: 0.85,
+        opacity: 0.9,
         sizeAttenuation: true,
     });
-    particles = new THREE.Points(pGeo, pMat);
-    scene.add(particles);
+    particleSystem = new THREE.Points(pGeo, pMat);
+    scene.add(particleSystem);
 
-    // ---------- Connection lines (start empty) ----------
+    // 3. Line Connections
+    const maxConnections = PARTICLE_COUNT * PARTICLE_COUNT;
     const lGeo = new THREE.BufferGeometry();
-    const maxLines = PARTICLE_COUNT * PARTICLE_COUNT;
-    lGeo.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(maxLines * 6), 3));
+    lGeo.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(maxConnections * 6), 3));
     const lMat = new THREE.LineBasicMaterial({
-        color: new THREE.Color('#7ac4ff'),
         transparent: true,
-        opacity: 0.18,
+        opacity: 0.2,
     });
-    lines = new THREE.LineSegments(lGeo, lMat);
-    scene.add(lines);
-
-    // Store velocities for animation
-    (pGeo as any)._velocities = velArr;
+    lineSegments = new THREE.LineSegments(lGeo, lMat);
+    scene.add(lineSegments);
 
     applyThemeColors();
 }
 
-function updateConnections() {
-    if (!particles || !lines) return;
-    const pPos = (particles.geometry.attributes.position as THREE.BufferAttribute).array as Float32Array;
-    const lPos = (lines.geometry.attributes.position as THREE.BufferAttribute).array as Float32Array;
+function updatePhysics() {
+    if (!particleSystem || !lineSegments) return;
+
+    // Smooth mouse lerp
+    mouse.x += (targetMouse.x - mouse.x) * 0.08;
+    mouse.y += (targetMouse.y - mouse.y) * 0.08;
+
+    const pPosAttr = particleSystem.geometry.attributes.position as THREE.BufferAttribute;
+    const pPos = pPosAttr.array as Float32Array;
+
+    // Convert mouse screen coords to 3D world space approx at Z=0
+    const mouseWorldX = (mouse.x * 12);
+    const mouseWorldY = (-mouse.y * 7);
+
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+        // Base drift
+        basePositions[i * 3]     += velocities[i].x;
+        basePositions[i * 3 + 1] += velocities[i].y;
+        basePositions[i * 3 + 2] += velocities[i].z;
+
+        // Bounce drift inside bounding box
+        if (Math.abs(basePositions[i * 3])     > 11) velocities[i].x *= -1;
+        if (Math.abs(basePositions[i * 3 + 1]) > 7.5) velocities[i].y *= -1;
+        if (Math.abs(basePositions[i * 3 + 2]) > 5)   velocities[i].z *= -1;
+
+        // Interactive mouse repulsion force
+        const dx = basePositions[i * 3] - mouseWorldX;
+        const dy = basePositions[i * 3 + 1] - mouseWorldY;
+        const distToMouse = Math.sqrt(dx * dx + dy * dy);
+
+        let pushX = 0;
+        let pushY = 0;
+        if (distToMouse < 3.2 && distToMouse > 0.01) {
+            const force = (3.2 - distToMouse) / 3.2;
+            pushX = (dx / distToMouse) * force * 1.8;
+            pushY = (dy / distToMouse) * force * 1.8;
+        }
+
+        pPos[i * 3]     = basePositions[i * 3] + pushX;
+        pPos[i * 3 + 1] = basePositions[i * 3 + 1] + pushY;
+        pPos[i * 3 + 2] = basePositions[i * 3 + 2];
+    }
+    pPosAttr.needsUpdate = true;
+
+    // Line connections update
+    const lPosAttr = lineSegments.geometry.attributes.position as THREE.BufferAttribute;
+    const lPos = lPosAttr.array as Float32Array;
     let lineIdx = 0;
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
@@ -129,58 +200,51 @@ function updateConnections() {
             const bx = pPos[j * 3], by = pPos[j * 3 + 1], bz = pPos[j * 3 + 2];
             const dist = Math.sqrt((ax - bx) ** 2 + (ay - by) ** 2 + (az - bz) ** 2);
 
-            if (dist < CONNECTION_DISTANCE) {
+            if (dist < CONNECTION_DIST) {
                 lPos[lineIdx++] = ax; lPos[lineIdx++] = ay; lPos[lineIdx++] = az;
                 lPos[lineIdx++] = bx; lPos[lineIdx++] = by; lPos[lineIdx++] = bz;
             }
         }
     }
-    // Fill rest with zeros
     while (lineIdx < lPos.length) lPos[lineIdx++] = 0;
-    (lines.geometry.attributes.position as THREE.BufferAttribute).needsUpdate = true;
-
-    // Adjust opacity based on total connections
-    const connectedFraction = lineIdx / lPos.length;
-    ((lines.material) as THREE.LineBasicMaterial).opacity = 0.1 + connectedFraction * 0.2;
+    lPosAttr.needsUpdate = true;
 }
 
+let clock = 0;
 function animate() {
-    if (!renderer || !scene || !camera || !particles) return;
+    if (!renderer || !scene || !camera) return;
     animFrameId = requestAnimationFrame(animate);
 
-    const pPos = (particles.geometry.attributes.position as THREE.BufferAttribute).array as Float32Array;
-    const vels: THREE.Vector3[] = (particles.geometry as any)._velocities;
+    clock += 0.01;
 
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-        pPos[i * 3]     += vels[i].x;
-        pPos[i * 3 + 1] += vels[i].y;
-        pPos[i * 3 + 2] += vels[i].z;
+    // Rotate Polyhedron
+    if (centerPolyhedron && polyWireframe) {
+        centerPolyhedron.rotation.x = Math.sin(clock * 0.5) * 0.3;
+        centerPolyhedron.rotation.y += 0.005;
+        centerPolyhedron.position.y = 0.5 + Math.sin(clock * 0.8) * 0.3;
 
-        // Bounce off invisible box
-        if (Math.abs(pPos[i * 3])     > 10) vels[i].x *= -1;
-        if (Math.abs(pPos[i * 3 + 1]) > 6)  vels[i].y *= -1;
-        if (Math.abs(pPos[i * 3 + 2]) > 4)  vels[i].z *= -1;
+        polyWireframe.rotation.copy(centerPolyhedron.rotation);
+        polyWireframe.position.copy(centerPolyhedron.position);
     }
-    (particles.geometry.attributes.position as THREE.BufferAttribute).needsUpdate = true;
 
-    // Mouse parallax: gently shift camera target
-    camera.position.x += (mouse.x * 1.5 - camera.position.x) * 0.03;
-    camera.position.y += (-mouse.y * 1.0 - camera.position.y) * 0.03;
+    // Gentle camera parallax
+    camera.position.x += (mouse.x * 1.8 - camera.position.x) * 0.03;
+    camera.position.y += (-mouse.y * 1.2 - camera.position.y) * 0.03;
     camera.lookAt(0, 0, 0);
 
-    // Slow global rotation
-    particles.rotation.y += 0.0008;
-    if (lines) lines.rotation.y += 0.0008;
-
-    updateConnections();
+    updatePhysics();
     renderer.render(scene, camera);
 }
 
 function onMouseMove(e: MouseEvent) {
     const w = window.innerWidth;
     const h = window.innerHeight;
-    mouse.x = (e.clientX / w - 0.5) * 2;
-    mouse.y = (e.clientY / h - 0.5) * 2;
+    targetMouse.x = (e.clientX / w - 0.5) * 2;
+    targetMouse.y = (e.clientY / h - 0.5) * 2;
+}
+
+function onMouseLeave() {
+    targetMouse.set(-9999, -9999);
 }
 
 function onResize() {
@@ -204,11 +268,11 @@ onMounted(() => {
     renderer.setSize(w, h, false);
     renderer.setClearColor(0x000000, 0);
 
-    clock = new THREE.Clock();
-    buildScene(w, h);
+    initScene(w, h);
     animate();
 
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('mouseleave', onMouseLeave, { passive: true });
     window.addEventListener('resize', onResize, { passive: true });
 });
 
@@ -219,15 +283,24 @@ onBeforeUnmount(() => {
         renderer = null;
     }
     window.removeEventListener('mousemove', onMouseMove);
+    window.removeEventListener('mouseleave', onMouseLeave);
     window.removeEventListener('resize', onResize);
-    // Dispose Three.js objects
-    if (particles) {
-        particles.geometry.dispose();
-        (particles.material as THREE.Material).dispose();
+
+    if (particleSystem) {
+        particleSystem.geometry.dispose();
+        (particleSystem.material as THREE.Material).dispose();
     }
-    if (lines) {
-        lines.geometry.dispose();
-        (lines.material as THREE.Material).dispose();
+    if (lineSegments) {
+        lineSegments.geometry.dispose();
+        (lineSegments.material as THREE.Material).dispose();
+    }
+    if (centerPolyhedron) {
+        centerPolyhedron.geometry.dispose();
+        (centerPolyhedron.material as THREE.Material).dispose();
+    }
+    if (polyWireframe) {
+        polyWireframe.geometry.dispose();
+        (polyWireframe.material as THREE.Material).dispose();
     }
 });
 </script>

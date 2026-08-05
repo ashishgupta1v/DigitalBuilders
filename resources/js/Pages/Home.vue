@@ -842,11 +842,11 @@ html {
     scroll-snap-align: start;
 }
 
-/* WhatsApp Floating Action Button */
+/* WhatsApp Floating Action Button (Positioned Bottom-Left to avoid collision with AI Assistant) */
 .whatsapp-fab {
     position: fixed;
-    bottom: 5rem;
-    right: 1.25rem;
+    bottom: 1.5rem;
+    left: 1.25rem;
     z-index: 50;
     display: flex;
     align-items: center;
