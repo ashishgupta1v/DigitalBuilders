@@ -34,9 +34,16 @@ function toggleTheme() {
     }
 }
 
-function handleScroll() {
+const handleScroll = () => {
     showBackToTop.value = window.scrollY > 600;
-}
+};
+
+const handleScrollProgress = () => {
+    const scrolled = window.scrollY;
+    const docHeight = document.body.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrolled / docHeight) * 100 : 0;
+    document.documentElement.style.setProperty('--db-scroll', `${pct}%`);
+};
 
 function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -59,32 +66,43 @@ const projectTypes: Array<{ value: string; label: string }> = [
     { value: 'other', label: 'Other' },
 ] as const;
 
-const services: Array<{ title: string; summary: string }> = [
+const services: Array<{ title: string; summary: string; link: string }> = [
     {
         title: 'Custom Web Application Development',
-        summary: 'Blazing-fast, scalable web applications engineered with modern architecture.',
+        summary: 'Blazing-fast, scalable web applications engineered with modern Laravel + Vue architecture.',
+        link: '/services/web-applications',
     },
     {
-        title: 'Mobile App Development (iOS and Android)',
-        summary: 'Native-feeling, robust mobile apps connecting brand and customers.',
+        title: 'Mobile App Development (iOS & Android)',
+        summary: 'Native-feeling, robust mobile apps connecting your brand and customers seamlessly.',
+        link: '/services/mobile-apps',
     },
     {
-        title: 'AI Voice Agents and Chatbots',
+        title: 'AI Voice Agents & Chatbots',
         summary: 'Autonomous conversational agents that capture leads and reduce manual support load.',
+        link: '/services/ai-solutions',
     },
     {
-        title: 'AI Development and Workflows',
-        summary: 'Practical AI workflows to automate repetitive tasks and improve speed.',
+        title: 'AI Development & Workflows',
+        summary: 'Practical AI workflows to automate repetitive tasks and dramatically improve speed.',
+        link: '/services/ai-solutions',
     },
     {
-        title: 'Enterprise-Grade Systems (ERP and CRM)',
+        title: 'Enterprise ERP & CRM Systems',
         summary: 'Centralized ERP and CRM systems to keep your data, sales, and operations in one place.',
+        link: '/services/erp-crm',
+    },
+    {
+        title: 'High-Scale SaaS Platforms',
+        summary: 'Multi-tenant SaaS with subscription engines, billing, and role-based access built to scale.',
+        link: '/services/saas-platforms',
     },
 ] as const;
 
 type CaseStudy = {
     id: string;
     client: string;
+    portfolioSlug: string;
     tldr: string;
     problem: string;
     challenge: string;
@@ -98,6 +116,7 @@ const studies: CaseStudy[] = [
     {
         id: 'a',
         client: 'Habuilt',
+        portfolioSlug: 'habuilt',
         tldr: 'A high-traffic consumer platform stabilized and accelerated through elite engineering.',
         problem: 'Needed a consumer-facing platform that could handle high-volume traffic and complex interactions.',
         challenge: 'Severe latency during spikes caused bounce and capped growth.',
@@ -107,7 +126,7 @@ const studies: CaseStudy[] = [
             'Optimized data access and automated caching for faster retrieval.',
         ],
         businessImpact: [
-            'Resilient performance under traffic surges.',
+            'Resilient performance under traffic surges — 70% latency drop.',
             'Secure, scalable foundation for expansion.',
             'Improved retention through seamless interactions.',
         ],
@@ -116,7 +135,8 @@ const studies: CaseStudy[] = [
     },
     {
         id: 'b',
-        client: 'ZoetiCouch',
+        client: 'ZoetiCoach',
+        portfolioSlug: 'zoeticoach',
         tldr: 'Fragmented operations unified into a custom CRM with AI workflow automation.',
         problem: 'Inventory, customer relationships, and sales channels were disconnected.',
         challenge: 'Manual entry, lost leads, delayed fulfillment, and scaling limits.',
@@ -127,15 +147,16 @@ const studies: CaseStudy[] = [
         ],
         businessImpact: [
             'Removed hundreds of hours of manual admin work.',
-            'Enabled real-time inventory and sales visibility.',
+            'Enabled real-time inventory and sales visibility — 4x release velocity.',
             'Streamlined follow-ups with automated lead capture.',
         ],
         quote: 'Managing our operations is finally unified; the automation saves us daily.',
-        quoteAuthor: 'Director, ZoetiCouch',
+        quoteAuthor: 'Director, ZoetiCoach',
     },
     {
         id: 'c',
         client: 'SSKnitwear',
+        portfolioSlug: 'ssknitwear',
         tldr: 'A legacy brand modernized through a high-performance enterprise storefront.',
         problem: 'Needed a modern digital presence to compete in B2B and B2C.',
         challenge: 'Outdated storefront failed premium positioning and made bulk ordering hard.',
@@ -146,7 +167,7 @@ const studies: CaseStudy[] = [
         ],
         businessImpact: [
             'Digital experience now reflects brand legacy.',
-            'Bulk ordering simplified for B2B partners.',
+            'Bulk ordering simplified for B2B partners — 180% sales growth.',
             'Opened scalable revenue streams.',
         ],
         quote: 'A digital storefront that finally matches the premium quality of our legacy products.',
@@ -154,7 +175,35 @@ const studies: CaseStudy[] = [
     },
 ];
 
+const faqs: Array<{ q: string; a: string }> = [
+    {
+        q: 'How long does a typical web application project take?',
+        a: 'Timelines vary by complexity. A standard web application typically takes 4–8 weeks. Enterprise-grade platforms with custom ERP/CRM integrations can take 3–6 months. We break every project into clear sprints so you see progress weekly from day one.',
+    },
+    {
+        q: 'Do you work with startups, or only established companies?',
+        a: 'We work with both. For startups, we focus on building a scalable MVP that won\'t need to be rebuilt as you grow. For established companies, we focus on performance, security, and integrating with existing systems.',
+    },
+    {
+        q: 'What makes DigitalBuilders different from other agencies?',
+        a: 'We operate with a Staff Engineer mindset — we design systems before writing a single line of code. Unlike most agencies, we don\'t use fragile templates or boilerplate. Every system we build is custom-engineered for your specific domain and scale requirements.',
+    },
+    {
+        q: 'Can you integrate AI into my existing application?',
+        a: 'Yes. We specialize in practical AI integrations — not just chatbots. This includes AI voice agents, automated lead qualification, intelligent document processing, workflow automation, and custom LLM-powered features fitted into your existing stack.',
+    },
+    {
+        q: 'What happens after the project is launched?',
+        a: 'Every project includes a 30-day post-launch warranty where we fix any bugs at no charge. After that, we offer flexible retainer plans for ongoing feature development, monitoring, and performance optimization.',
+    },
+    {
+        q: 'How do you handle pricing?',
+        a: 'We offer project-based pricing for well-defined scopes, and time-and-materials for evolving projects. Use our Project Cost Estimator to get a ballpark, then book a free 30-minute strategy session to discuss specifics.',
+    },
+];
+
 const canonicalUrl = 'https://www.digitalbuilders.in/';
+
 
 function submitLead() {
     form.post(route('library.leads.store'), {
@@ -178,12 +227,7 @@ onMounted(() => {
 
     // Scroll listener for back-to-top + scroll progress
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('scroll', () => {
-        const scrolled = window.scrollY;
-        const docHeight = document.body.scrollHeight - window.innerHeight;
-        const pct = docHeight > 0 ? (scrolled / docHeight) * 100 : 0;
-        document.documentElement.style.setProperty('--db-scroll', `${pct}%`);
-    }, { passive: true });
+    window.addEventListener('scroll', handleScrollProgress, { passive: true });
 
     // Hero title animation
     const hero = document.querySelector('[data-hero-title]');
@@ -242,6 +286,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     window.removeEventListener('scroll', handleScroll);
+    window.removeEventListener('scroll', handleScrollProgress);
 });
 </script>
 
@@ -327,6 +372,7 @@ onBeforeUnmount(() => {
                     <nav class="flex flex-col gap-3 text-sm font-medium">
                         <a href="#services" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Services</a>
                         <a href="#portfolio" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Portfolio</a>
+                        <Link href="/blog" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Blog</Link>
                         <a href="#about" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">About</a>
                         <a href="#contact" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Contact</a>
                     </nav>
@@ -416,9 +462,13 @@ onBeforeUnmount(() => {
                 <p class="text-sm uppercase tracking-[0.2em] text-[#9dc5ff]">Our Services</p>
                 <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl md:text-4xl">Complete Digital Solutions for Growing Brands</h2>
                 <div class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3" data-stagger>
-                    <article v-for="service in services" :key="service.title" data-stagger-item class="rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6">
+                    <article v-for="service in services" :key="service.title" data-stagger-item class="db-antigravity-card rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6 flex flex-col">
                         <h3 class="text-lg font-bold text-white">{{ service.title }}</h3>
-                        <p class="mt-3 text-sm leading-relaxed text-slate-300">{{ service.summary }}</p>
+                        <p class="mt-3 text-sm leading-relaxed text-slate-300 flex-1">{{ service.summary }}</p>
+                        <a :href="service.link" class="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-[#9ba7ff] hover:text-[#c593ff] transition-colors">
+                            Learn More
+                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </a>
                     </article>
                 </div>
             </section>
@@ -435,7 +485,7 @@ onBeforeUnmount(() => {
                         v-for="study in studies"
                         :key="study.client"
                         data-stagger-item
-                        class="case-card snap-start rounded-3xl border border-[#b8c9e640] bg-[linear-gradient(165deg,#27374de6_0%,#1f2d3fe8_100%)] p-4 sm:p-6"
+                        class="case-card snap-start rounded-3xl border border-[#b8c9e640] bg-[linear-gradient(165deg,#27374de6_0%,#1f2d3fe8_100%)] p-4 sm:p-6 flex flex-col"
                     >
 
                         <div class="mt-5 flex items-center justify-between gap-2">
@@ -474,6 +524,11 @@ onBeforeUnmount(() => {
                             "{{ study.quote }}"
                             <footer class="mt-2 text-xs text-[#d3c3ff]">{{ study.quoteAuthor }}</footer>
                         </blockquote>
+
+                        <Link :href="`/portfolio/${study.portfolioSlug}`" class="mt-5 inline-flex items-center gap-1.5 self-start rounded-full border border-[#9ba7ff44] bg-[#9ba7ff15] px-4 py-2 text-xs font-semibold text-[#c8d6ff] transition hover:border-[#9ba7ff88] hover:text-white">
+                            View Full Case Study
+                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </Link>
                     </article>
                 </div>
             </section>
@@ -496,6 +551,21 @@ onBeforeUnmount(() => {
                     <p class="mt-5 text-slate-300">
                         Over 8 years in enterprise IT designing and deploying complex large-scale software systems. DigitalBuilders was founded to deliver production-grade architecture, not fragile templates.
                     </p>
+                    <!-- Social Links -->
+                    <div class="mt-6 flex items-center gap-3">
+                        <a href="https://www.linkedin.com/in/ashishgupta1v/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="flex h-9 w-9 items-center justify-center rounded-full border border-[#b8c9e633] text-slate-400 hover:border-[#0a66c2] hover:text-[#0a66c2] transition-colors">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                        <a href="https://github.com/ashishgupta1v" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="flex h-9 w-9 items-center justify-center rounded-full border border-[#b8c9e633] text-slate-400 hover:border-white hover:text-white transition-colors">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        </a>
+                        <a href="https://wa.me/919087021592" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="flex h-9 w-9 items-center justify-center rounded-full border border-[#b8c9e633] text-slate-400 hover:border-[#25d366] hover:text-[#25d366] transition-colors">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        </a>
+                        <a href="https://www.ashgpt.dev/" target="_blank" rel="noopener noreferrer" aria-label="Personal Website" class="flex h-9 w-9 items-center justify-center rounded-full border border-[#b8c9e633] text-slate-400 hover:border-[#9ba7ff] hover:text-[#9ba7ff] transition-colors">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                        </a>
+                    </div>
                 </div>
                 <div class="db-mini rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-5 sm:p-7">
                     <p class="text-sm uppercase tracking-[0.2em] text-[#9dc5ff]">How We Work</p>
@@ -503,7 +573,25 @@ onBeforeUnmount(() => {
                         <li><span class="font-bold text-white">01 Understand Your Needs</span> — We discuss goals, challenges, and priorities.</li>
                         <li><span class="font-bold text-white">02 Plan the Right Solution</span> — We design the system before development starts.</li>
                         <li><span class="font-bold text-white">03 Build and Deliver</span> — We deliver in clear phases with regular updates.</li>
+                        <li><span class="font-bold text-white">04 Support & Scale</span> — Post-launch monitoring, 30-day warranty, and ongoing support.</li>
                     </ol>
+                </div>
+            </section>
+
+            <!-- FAQ Section -->
+            <section id="faq" class="mt-20 sm:mt-24" data-reveal>
+                <p class="text-sm uppercase tracking-[0.2em] text-[#9dc5ff]">Common Questions</p>
+                <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl md:text-4xl">Frequently Asked Questions</h2>
+                <div class="mt-8 space-y-3" data-stagger>
+                    <details v-for="faq in faqs" :key="faq.q" data-stagger-item class="group rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] overflow-hidden">
+                        <summary class="flex cursor-pointer items-center justify-between gap-4 p-5 text-sm font-semibold text-white hover:text-[#b7d3ff] transition-colors list-none">
+                            {{ faq.q }}
+                            <svg class="h-4 w-4 shrink-0 text-[#9dc5ff] transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </summary>
+                        <div class="border-t border-[#b8c9e622] px-5 pb-5 pt-4 text-sm leading-relaxed text-slate-300">
+                            {{ faq.a }}
+                        </div>
+                    </details>
                 </div>
             </section>
 
@@ -567,14 +655,31 @@ onBeforeUnmount(() => {
                 <aside class="space-y-4">
                     <div class="db-mini rounded-2xl border border-[#b8c9e633] bg-[#27374dde] p-5 sm:p-7">
                         <h3 class="text-xl font-bold text-white">Get In Touch</h3>
-                        <p class="mt-4 text-sm text-slate-300">Phone: +91 90870 21592</p>
-                        <p class="mt-2 break-all text-sm text-slate-300">Email: hello@digitalbuilders.in</p>
-                        <p class="mt-2 text-sm text-slate-300">Location: Ludhiana, Punjab, India</p>
+                        <a href="tel:+919087021592" class="mt-4 flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-colors">
+                            <svg class="h-4 w-4 shrink-0 text-[#9dc5ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                            +91 90870 21592
+                        </a>
+                        <a href="mailto:hello@digitalbuilders.in" class="mt-3 flex items-center gap-2 break-all text-sm text-slate-300 hover:text-white transition-colors">
+                            <svg class="h-4 w-4 shrink-0 text-[#9dc5ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            hello@digitalbuilders.in
+                        </a>
+                        <p class="mt-3 flex items-center gap-2 text-sm text-slate-300">
+                            <svg class="h-4 w-4 shrink-0 text-[#9dc5ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            Ludhiana, Punjab, India
+                        </p>
+                        <!-- WhatsApp Quick Contact -->
+                        <a href="https://wa.me/919087021592?text=Hi%20DigitalBuilders!%20I'm%20interested%20in%20discussing%20a%20project." target="_blank" rel="noopener noreferrer" class="mt-5 flex items-center gap-2 rounded-full bg-[#25d366] px-4 py-2.5 text-sm font-bold text-white shadow-[0_4px_20px_rgba(37,211,102,0.25)] hover:bg-[#20ba5a] transition-all hover:scale-[1.02]">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            Chat on WhatsApp
+                        </a>
                     </div>
                     <div class="db-mini rounded-2xl border border-[#b8c9e633] bg-[#27374dde] p-5 sm:p-7">
                         <h3 class="text-xl font-bold text-white">Quick Access</h3>
-                        <p class="mt-4 text-sm text-slate-300">Visit ashgpt.dev to explore more projects and technical work.</p>
-                        <a href="https://www.ashgpt.dev/" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-sm font-semibold text-[#c8d6ff] hover:text-[#e8efff]">View More Projects</a>
+                        <p class="mt-4 text-sm text-slate-300">Visit ashgpt.dev to explore more projects and technical work by our founder Ashish Gupta.</p>
+                        <a href="https://www.ashgpt.dev/" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[#c8d6ff] hover:text-[#e8efff]">
+                            View More Projects
+                            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                        </a>
                     </div>
                 </aside>
             </section>
@@ -583,10 +688,63 @@ onBeforeUnmount(() => {
         <!-- Floating AI Assistant Widget -->
         <AiAssistantWidget />
 
+        <!-- Floating WhatsApp CTA -->
+        <a
+            href="https://wa.me/919087021592?text=Hi%20DigitalBuilders!%20I%27m%20interested%20in%20discussing%20a%20project."
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Chat on WhatsApp"
+            class="whatsapp-fab"
+        >
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            <span>WhatsApp</span>
+        </a>
+
+        <!-- Back to Top Button -->
+        <Transition enter-active-class="transition-all duration-300" enter-from-class="opacity-0 translate-y-4" leave-active-class="transition-all duration-200" leave-to-class="opacity-0 translate-y-4">
+            <button
+                v-if="showBackToTop"
+                @click="scrollToTop"
+                aria-label="Back to top"
+                class="fixed bottom-24 right-5 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-[#b8c9e633] bg-[#27374dde] text-[#9dc5ff] shadow-lg backdrop-blur-md transition hover:border-[#9ba7ff] hover:text-white"
+            >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+            </button>
+        </Transition>
+
         <footer class="border-t border-[#b8c9e633] bg-[#111827e6] backdrop-blur-md">
-            <div class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-center text-sm text-slate-400 sm:px-5 lg:px-8 lg:flex-row lg:items-center lg:justify-between lg:text-left">
-                <p>© {{ new Date().getFullYear() }} Balaji Enterprises. All rights reserved.</p>
-                <p>DigitalBuilders — Enterprise Software & AI Architecture</p>
+            <div class="mx-auto max-w-7xl px-4 py-10 sm:px-5 lg:px-8">
+                <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+                    <!-- Brand -->
+                    <div>
+                        <a href="#top" class="flex items-center gap-2.5">
+                            <img src="/images/db-logo.png" alt="DigitalBuilders Logo" class="h-8 w-8 object-contain" onerror="this.style.display='none'" />
+                            <span class="db-brand-logo-text text-lg font-black tracking-tight">Digital Builders</span>
+                        </a>
+                        <p class="mt-2 max-w-xs text-xs text-slate-500">Enterprise Software & AI Architecture. Based in Ludhiana, Punjab, India.</p>
+                    </div>
+                    <!-- Social Links -->
+                    <div class="flex items-center gap-3">
+                        <a href="https://www.linkedin.com/in/ashishgupta1v/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="flex h-9 w-9 items-center justify-center rounded-full border border-[#b8c9e622] text-slate-500 hover:border-[#0a66c2] hover:text-[#0a66c2] transition-colors">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                        <a href="https://github.com/ashishgupta1v" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="flex h-9 w-9 items-center justify-center rounded-full border border-[#b8c9e622] text-slate-500 hover:border-white hover:text-white transition-colors">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        </a>
+                        <a href="https://wa.me/919087021592" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="flex h-9 w-9 items-center justify-center rounded-full border border-[#b8c9e622] text-slate-500 hover:border-[#25d366] hover:text-[#25d366] transition-colors">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="mt-8 border-t border-[#b8c9e615] pt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-xs text-slate-500">
+                    <p>© {{ new Date().getFullYear() }} Balaji Enterprises. All rights reserved.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <Link href="/library/privacy-policy" class="hover:text-slate-300 transition-colors">Privacy Policy</Link>
+                        <Link href="/library/terms-of-service" class="hover:text-slate-300 transition-colors">Terms of Service</Link>
+                        <Link href="/blog" class="hover:text-slate-300 transition-colors">Blog</Link>
+                        <a href="mailto:hello@digitalbuilders.in" class="hover:text-slate-300 transition-colors">hello@digitalbuilders.in</a>
+                    </div>
+                </div>
             </div>
         </footer>
     </div>
@@ -644,4 +802,49 @@ html {
     min-width: min(90vw, 560px);
     scroll-snap-align: start;
 }
+
+/* WhatsApp Floating Action Button */
+.whatsapp-fab {
+    position: fixed;
+    bottom: 5rem;
+    right: 1.25rem;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #25d366;
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.7rem 1.1rem 0.7rem 0.9rem;
+    border-radius: 9999px;
+    box-shadow: 0 4px 24px rgba(37, 211, 102, 0.4);
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    animation: wa-bounce 2s ease-in-out 3s 2;
+}
+
+.whatsapp-fab:hover {
+    background-color: #20ba5a;
+    transform: scale(1.05);
+    box-shadow: 0 6px 32px rgba(37, 211, 102, 0.55);
+}
+
+@keyframes wa-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+/* Card hover lift effect */
+.db-antigravity-card {
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.db-antigravity-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(122, 196, 255, 0.12);
+    border-color: rgba(184, 201, 230, 0.5);
+}
+
+/* FAQ summary marker hidden */
+details summary::-webkit-details-marker { display: none; }
 </style>

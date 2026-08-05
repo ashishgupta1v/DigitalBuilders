@@ -19,9 +19,13 @@
         <meta property="og:title" content="DigitalBuilders — Enterprise Web, Mobile and AI Architecture">
         <meta property="og:description" content="Custom software engineered with a Staff Engineer mindset to scale your business.">
         <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:image" content="https://www.digitalbuilders.in/images/db-logo.png">
+        <meta property="og:image:width" content="512">
+        <meta property="og:image:height" content="512">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="DigitalBuilders">
         <meta name="twitter:description" content="Enterprise-grade web, mobile, and AI architecture for ambitious businesses.">
+        <meta name="twitter:image" content="https://www.digitalbuilders.in/images/db-logo.png">
         @verbatim
         <script type="application/ld+json">
             {"@context":"https://schema.org","@type":"ProfessionalService","name":"DigitalBuilders","url":"https://www.digitalbuilders.in/","image":"https://www.digitalbuilders.in/images/db-logo.png","description":"DigitalBuilders delivers enterprise-grade web applications, mobile apps, and AI solutions.","areaServed":"IN","address":{"@type":"PostalAddress","addressLocality":"Ludhiana","addressRegion":"Punjab","addressCountry":"IN"}}

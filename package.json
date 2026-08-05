@@ -23,9 +23,11 @@
         "vue-tsc": "^2.0.24"
     },
     "dependencies": {
+        "@types/three": "^0.185.4",
         "@vueuse/motion": "^3.0.3",
         "dompurify": "^3.4.0",
         "lucide-vue-next": "^1.0.0",
-        "motion": "^12.38.0"
+        "motion": "^12.38.0",
+        "three": "^0.185.1"
     }
 }
