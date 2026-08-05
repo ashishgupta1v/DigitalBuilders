@@ -716,36 +716,155 @@ html[data-theme='light'] .db-ai-widget-panel h4 {
 	color: #0f172a !important;
 }
 
-/* --- GUARANTEED DARK MODE OVERRIDES (html.dark) --- */
-html.dark .db-antigravity-card {
+/* --- GUARANTEED DARK MODE OVERRIDES (html.dark & html:not([data-theme='light'])) --- */
+html.dark,
+html:not([data-theme='light']) {
+	background-color: #0b0f19 !important;
+	color: #f8fafc !important;
+}
+
+html.dark .db-antigravity-card,
+html:not([data-theme='light']) .db-antigravity-card {
 	background-color: #172230 !important;
 	border-color: rgba(184, 201, 230, 0.2) !important;
 	color: #ffffff !important;
 }
 
-html.dark .case-card {
+html.dark .case-card,
+html:not([data-theme='light']) .case-card {
 	background-color: #121b27 !important;
 	background-image: linear-gradient(165deg, #1c2838 0%, #121b27 100%) !important;
 	border-color: rgba(184, 201, 230, 0.25) !important;
 	color: #ffffff !important;
 }
 
+html.dark .case-card h3,
+html.dark .case-card p,
+html.dark .case-card span,
+html.dark .case-card li,
+html:not([data-theme='light']) .case-card h3,
+html:not([data-theme='light']) .case-card p,
+html:not([data-theme='light']) .case-card span,
+html:not([data-theme='light']) .case-card li {
+	color: #cbd5e1 !important;
+}
+
+html.dark .case-card h3,
+html.dark .case-card p.text-base,
+html.dark .case-card .font-bold,
+html:not([data-theme='light']) .case-card h3,
+html:not([data-theme='light']) .case-card p.text-base,
+html:not([data-theme='light']) .case-card .font-bold {
+	color: #ffffff !important;
+}
+
+/* Inner Action Box inside Case Study Card */
+html.dark .case-card div.bg-sky-50,
+html:not([data-theme='light']) .case-card div.bg-sky-50 {
+	background-color: #172638 !important;
+	border-color: rgba(122, 196, 255, 0.25) !important;
+	color: #f8fafc !important;
+}
+
+/* Inner Business Impact Box inside Case Study Card */
+html.dark .case-card div.bg-emerald-50,
+html:not([data-theme='light']) .case-card div.bg-emerald-50 {
+	background-color: #112820 !important;
+	border-color: rgba(52, 211, 153, 0.25) !important;
+	color: #f8fafc !important;
+}
+
+/* Inner Quote Box inside Case Study Card */
+html.dark .case-card blockquote,
+html:not([data-theme='light']) .case-card blockquote {
+	background-color: #211a30 !important;
+	border-color: rgba(197, 147, 255, 0.25) !important;
+	color: #e4d3ff !important;
+}
+
+html.dark .case-card blockquote footer,
+html:not([data-theme='light']) .case-card blockquote footer {
+	background-color: transparent !important;
+	background: transparent !important;
+	border: none !important;
+	color: #c593ff !important;
+}
+
+/* View Full Case Study Button */
+html.dark .case-card a,
+html:not([data-theme='light']) .case-card a {
+	background-color: #1f2d3f !important;
+	border-color: rgba(155, 167, 255, 0.3) !important;
+	color: #ffffff !important;
+}
+
+/* Client Badge (Habuilt / ZoetiCoach) */
+html.dark .case-card span.bg-white,
+html.dark .case-card span[class*='bg-white'],
+html:not([data-theme='light']) .case-card span.bg-white,
+html:not([data-theme='light']) .case-card span[class*='bg-white'] {
+	background-color: #1f2d3f !important;
+	color: #ffffff !important;
+	border: 1px solid rgba(184, 201, 230, 0.25) !important;
+}
+
+/* Project Estimator Buttons & Inputs in Dark Mode */
+html.dark .db-antigravity-card button.bg-slate-50,
+html:not([data-theme='light']) .db-antigravity-card button.bg-slate-50 {
+	background-color: #1e2a3b !important;
+	border-color: rgba(184, 201, 230, 0.18) !important;
+	color: #e2e8f0 !important;
+}
+
+html.dark .db-antigravity-card button.bg-slate-50 span,
+html:not([data-theme='light']) .db-antigravity-card button.bg-slate-50 span {
+	color: #ffffff !important;
+}
+
+html.dark .db-antigravity-card button.bg-sky-50,
+html:not([data-theme='light']) .db-antigravity-card button.bg-sky-50 {
+	background-color: #28384e !important;
+	border-color: #9ba7ff !important;
+	color: #ffffff !important;
+}
+
+/* Estimator Right Summary Card */
+html.dark .db-antigravity-card div.shadow-md,
+html:not([data-theme='light']) .db-antigravity-card div.shadow-md {
+	background: linear-gradient(160deg, #1c2838 0%, #121b27 100%) !important;
+	border-color: rgba(155, 167, 255, 0.3) !important;
+	color: #ffffff !important;
+}
+
+html.dark .db-antigravity-card div.shadow-md span,
+html.dark .db-antigravity-card div.shadow-md p,
+html:not([data-theme='light']) .db-antigravity-card div.shadow-md span,
+html:not([data-theme='light']) .db-antigravity-card div.shadow-md p {
+	color: #ffffff !important;
+}
+
 html.dark input,
 html.dark textarea,
-html.dark select {
-	background-color: #1f2d3f !important;
+html.dark select,
+html:not([data-theme='light']) input,
+html:not([data-theme='light']) textarea,
+html:not([data-theme='light']) select {
+	background-color: #192434 !important;
 	color: #ffffff !important;
 	border-color: rgba(184, 201, 230, 0.25) !important;
 }
 
 html.dark details,
-html.dark summary {
+html.dark summary,
+html:not([data-theme='light']) details,
+html:not([data-theme='light']) summary {
 	background-color: #162232 !important;
 	color: #ffffff !important;
 	border-color: rgba(184, 201, 230, 0.2) !important;
 }
 
-html.dark footer {
+html.dark footer.site-footer,
+html:not([data-theme='light']) footer.site-footer {
 	background-color: #0b0f19 !important;
 	border-color: rgba(184, 201, 230, 0.15) !important;
 }
