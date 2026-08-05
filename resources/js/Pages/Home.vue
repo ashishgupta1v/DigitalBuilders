@@ -2,6 +2,10 @@
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { animate, inView, stagger } from 'motion';
 import { onMounted, onBeforeUnmount, ref } from 'vue';
+import HeroCanvas from '@/Components/HeroCanvas.vue';
+import ProjectEstimator from '@/Components/ProjectEstimator.vue';
+import TestimonialsCarousel from '@/Components/TestimonialsCarousel.vue';
+import AiAssistantWidget from '@/Components/AiAssistantWidget.vue';
 
 type MotionAnimate = (
     target: Element | NodeListOf<Element>,
@@ -336,26 +340,29 @@ onBeforeUnmount(() => {
         </header>
 
         <main id="top" class="mx-auto max-w-7xl px-4 pb-12 sm:px-5 sm:pb-16 lg:px-8">
-            <!-- Hero Section -->
-            <section class="pt-10 sm:pt-14 lg:pt-16">
-                <p class="db-chip mb-4">Enterprise Architecture</p>
-                <h1
-                    data-hero-title
-                    class="max-w-4xl text-3xl font-black leading-tight sm:text-4xl md:text-5xl lg:text-6xl"
-                    style="font-family: 'Libre Baskerville', Georgia, serif; font-weight: 700; color: #f8fafc;"
-                >
-                    We Build Your
-                    <span class="bg-gradient-to-r from-sky-300 via-indigo-300 to-purple-300 bg-clip-text text-transparent">Digital Future.</span>
-                </h1>
-                <p class="mt-5 max-w-2xl text-base leading-relaxed text-slate-300/90 md:text-lg"
-                    style="font-family: 'Outfit', sans-serif; font-weight: 300;">
-                    Stop settling for standard web design. Get enterprise-grade web, mobile, and AI architecture engineered to scale your business.
-                </p>
-                <div class="mt-7 flex flex-wrap items-center gap-3">
-                    <a href="#contact" class="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-sky-400/90 via-indigo-400/90 to-purple-400/90 px-7 py-3.5 text-sm font-semibold text-slate-950 shadow-[0_4px_20px_rgba(56,189,248,0.2)] transition-all hover:from-sky-300 hover:to-purple-300 hover:scale-[1.02] sm:w-auto">Book a Discovery Call</a>
-                    <a href="#portfolio" class="inline-flex w-full items-center justify-center rounded-full border border-white/20 bg-white/5 backdrop-blur-md px-7 py-3.5 text-sm font-medium text-white transition-all hover:border-white/40 hover:bg-white/10 sm:w-auto">View Our Portfolio</a>
+            <!-- Hero Section with Canvas Particle Network -->
+            <section class="relative mt-4 overflow-hidden rounded-3xl border border-[#b8c9e625] bg-[var(--db-card-gradient)] p-6 pt-12 sm:p-10 sm:pt-16 lg:p-14 lg:pt-20 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+                <HeroCanvas :is-dark-mode="isDarkMode" />
+                <div class="relative z-10">
+                    <p class="db-chip mb-4">Enterprise Architecture</p>
+                    <h1
+                        data-hero-title
+                        class="max-w-4xl text-3xl font-black leading-tight sm:text-4xl md:text-5xl lg:text-6xl"
+                        style="font-family: 'Libre Baskerville', Georgia, serif; font-weight: 700; color: #f8fafc;"
+                    >
+                        We Build Your
+                        <span class="bg-gradient-to-r from-sky-300 via-indigo-300 to-purple-300 bg-clip-text text-transparent">Digital Future.</span>
+                    </h1>
+                    <p class="mt-5 max-w-2xl text-base leading-relaxed text-slate-300/90 md:text-lg"
+                        style="font-family: 'Outfit', sans-serif; font-weight: 300;">
+                        Stop settling for standard web design. Get enterprise-grade web, mobile, and AI architecture engineered to scale your business.
+                    </p>
+                    <div class="mt-7 flex flex-wrap items-center gap-3">
+                        <a href="#contact" class="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-sky-400/90 via-indigo-400/90 to-purple-400/90 px-7 py-3.5 text-sm font-semibold text-slate-950 shadow-[0_4px_20px_rgba(56,189,248,0.2)] transition-all hover:from-sky-300 hover:to-purple-300 hover:scale-[1.02] sm:w-auto">Book a Discovery Call</a>
+                        <a href="#portfolio" class="inline-flex w-full items-center justify-center rounded-full border border-white/20 bg-white/5 backdrop-blur-md px-7 py-3.5 text-sm font-medium text-white transition-all hover:border-white/40 hover:bg-white/10 sm:w-auto">View Our Portfolio</a>
+                    </div>
+                    <p class="mt-5 text-sm text-slate-400">Bringing Silicon Valley engineering discipline and AI automation right here to Ludhiana.</p>
                 </div>
-                <p class="mt-5 text-sm text-slate-400">Bringing Silicon Valley engineering discipline and AI automation right here to Ludhiana.</p>
             </section>
 
             <section class="mt-16 grid gap-4 md:grid-cols-3" data-stagger data-reveal>
@@ -471,20 +478,14 @@ onBeforeUnmount(() => {
                 </div>
             </section>
 
-            <section id="collaboration" class="mt-20 sm:mt-24" data-reveal>
-                <p class="text-sm uppercase tracking-[0.2em] text-[#9dc5ff]">Collaboration Network</p>
-                <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl md:text-4xl">Acceleration Platforms</h2>
-                <p class="mt-4 max-w-3xl text-sm text-slate-300">
-                    We work with modern AI, cloud, and developer platforms to speed up delivery and build reliable products.
-                </p>
-                <div class="mt-8">
-                    <LogoCloudDemo />
-                </div>
+            <!-- Testimonials Section -->
+            <section id="testimonials" class="mt-16 sm:mt-20" data-reveal>
+                <TestimonialsCarousel />
+            </section>
 
-                <div class="mt-8 rounded-2xl border border-[#b8c9e640] bg-[#27374d7f] p-5 text-center sm:p-6">
-                    <p class="text-lg font-semibold text-white sm:text-xl">Ready to architect your success story?</p>
-                    <a href="#contact" class="mt-4 inline-flex w-full items-center justify-center rounded-full border border-[#b8c9e640] bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-6 py-3 text-sm font-bold text-[#1a2231] transition hover:brightness-110 sm:w-auto">Start Your Project</a>
-                </div>
+            <!-- Project Cost Estimator Section -->
+            <section id="estimator" class="mt-16 sm:mt-20" data-reveal>
+                <ProjectEstimator />
             </section>
 
             <section id="about" class="mt-20 grid gap-6 sm:mt-24 sm:gap-8 lg:grid-cols-[1.2fr_1fr]" data-reveal>
@@ -579,10 +580,13 @@ onBeforeUnmount(() => {
             </section>
         </main>
 
-        <footer class="border-t border-[#b8c9e633] bg-[#233246d9]">
+        <!-- Floating AI Assistant Widget -->
+        <AiAssistantWidget />
+
+        <footer class="border-t border-[#b8c9e633] bg-[#111827e6] backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-center text-sm text-slate-400 sm:px-5 lg:px-8 lg:flex-row lg:items-center lg:justify-between lg:text-left">
-                <p>© {{ new Date().getFullYear() }} DigitalBuilders. All rights reserved.</p>
-                <p>Designed and Engineered by Ashish Gupta</p>
+                <p>© {{ new Date().getFullYear() }} Balaji Enterprises. All rights reserved.</p>
+                <p>DigitalBuilders — Enterprise Software & AI Architecture</p>
             </div>
         </footer>
     </div>
