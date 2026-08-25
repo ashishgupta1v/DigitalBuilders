@@ -15,9 +15,39 @@ class PortfolioController extends Controller
         return Inertia::render('Portfolio/Habuilt');
     }
 
+    public function dhandadiary(): Response
+    {
+        return Inertia::render('Portfolio/DhandaDiary');
+    }
+
     public function zoeticoach(): Response
     {
         return Inertia::render('Portfolio/ZoetiCoach');
+    }
+
+    public function guttalks(): Response
+    {
+        return Inertia::render('Portfolio/GutTalks');
+    }
+
+    public function myastrova(): Response
+    {
+        return Inertia::render('Portfolio/MyAstrova');
+    }
+
+    public function gaushala(): Response
+    {
+        return Inertia::render('Portfolio/Gaushala');
+    }
+
+    public function sportsClub(): Response
+    {
+        return Inertia::render('Portfolio/SportsClub');
+    }
+
+    public function gargEnterprises(): Response
+    {
+        return Inertia::render('Portfolio/GargEnterprises');
     }
 
     public function ssknitwear(): Response

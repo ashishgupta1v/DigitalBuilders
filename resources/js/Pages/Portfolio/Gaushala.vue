@@ -3,8 +3,8 @@ import { Head, Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="SSKnitwear Case Study — DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders modernized SSKnitwear with a high-performance enterprise storefront, resulting in +180% sales growth." />
+    <Head title="Krishan Balram Gaushala Case Study — DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders engineered a high-trust digital donation portal with automated 80G tax receipts and seva event booking for Krishan Balram Gaushala." />
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">
@@ -16,8 +16,8 @@ import { Head, Link } from '@inertiajs/vue3';
                 <Link href="/" class="db-gradient-text text-lg font-semibold tracking-wide">DigitalBuilders</Link>
                 <div class="flex items-center gap-4">
                     <Link href="/" class="text-sm font-medium text-slate-300 hover:text-white">← Home</Link>
-                    <a href="https://ashishgupta.dev/" target="_blank" rel="noopener noreferrer" class="rounded-full bg-sky-500/20 border border-sky-500/40 px-4 py-2 text-xs font-semibold text-sky-300 hover:bg-sky-500/30 inline-flex items-center gap-1.5">
-                        Visit Live App
+                    <a href="https://krishanbalramgaushala.com/" target="_blank" rel="noopener noreferrer" class="rounded-full bg-amber-500/20 border border-amber-500/40 px-4 py-2 text-xs font-semibold text-amber-300 hover:bg-amber-500/30 inline-flex items-center gap-1.5">
+                        Visit Live Portal
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     </a>
                 </div>
@@ -26,20 +26,20 @@ import { Head, Link } from '@inertiajs/vue3';
 
         <main class="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
             <div class="text-center">
-                <span class="db-chip">Case Study · Enterprise Architecture & VILT Stack</span>
+                <span class="db-chip">Case Study · Trust & Philanthropy Portal</span>
                 <h1 class="mt-4 text-3xl font-black text-white sm:text-5xl leading-tight">
-                    Ashish Gupta Architecture Hub
+                    Krishan Balram Gaushala
                 </h1>
                 <p class="mt-4 text-lg font-semibold text-[#b7d3ff]">
-                    Senior Full-Stack Architect Showcase, Domain-Driven Design & Enterprise Modernization
+                    High-Trust Digital Donation Infrastructure & Automated 80G Tax Exemption Portal
                 </p>
             </div>
 
             <!-- Screenshot Hero Container -->
             <div class="mt-8 overflow-hidden rounded-3xl border border-slate-200/20 shadow-2xl bg-slate-950">
                 <img
-                    src="/images/portfolio/ashishgupta.jpg"
-                    alt="Ashish Gupta Portfolio & Architecture Hub Snapshot"
+                    src="/images/portfolio/gaushala.jpg"
+                    alt="Krishan Balram Gaushala GauSeva Connect Snapshot"
                     class="w-full h-auto object-cover object-top"
                 />
             </div>
@@ -47,78 +47,83 @@ import { Head, Link } from '@inertiajs/vue3';
             <!-- Key Metrics Bar -->
             <div class="mt-12 grid gap-4 sm:grid-cols-4 text-center">
                 <div class="rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6">
-                    <p class="text-3xl font-black text-emerald-400">9+ Yrs</p>
-                    <p class="mt-1 text-xs text-slate-300">Enterprise IT Experience</p>
+                    <p class="text-3xl font-black text-emerald-400">100%</p>
+                    <p class="mt-1 text-xs text-slate-300">WhatsApp Birthday Blessings Automated</p>
                 </div>
                 <div class="rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6">
-                    <p class="text-3xl font-black text-[#7ac4ff]">$1M+</p>
-                    <p class="mt-1 text-xs text-slate-300">Cloud Cost Savings Delivered</p>
+                    <p class="text-3xl font-black text-[#7ac4ff]">3.5x</p>
+                    <p class="mt-1 text-xs text-slate-300">Online Seva Participation</p>
                 </div>
                 <div class="rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6">
-                    <p class="text-3xl font-black text-[#c593ff]">&lt;0.5s</p>
-                    <p class="mt-1 text-xs text-slate-300">Initial Page Load Benchmark</p>
+                    <p class="text-3xl font-black text-[#c593ff]">Instant</p>
+                    <p class="mt-1 text-xs text-slate-300">80G Tax Exemption PDF</p>
                 </div>
                 <div class="rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6">
-                    <p class="text-3xl font-black text-amber-400">VILT</p>
-                    <p class="mt-1 text-xs text-slate-300">Vue 3, Inertia, Laravel, Tailwind</p>
+                    <p class="text-3xl font-black text-amber-400">99%</p>
+                    <p class="mt-1 text-xs text-slate-300">Image Compression Bandwidth Saved</p>
                 </div>
             </div>
 
             <!-- Breakdown Cards -->
             <div class="mt-12 space-y-8">
                 <div class="rounded-3xl border border-[#b8c9e626] bg-[#27374d80] p-8">
-                    <h3 class="text-xl font-bold text-white">The Engineering Challenge</h3>
+                    <h3 class="text-xl font-bold text-white">The Non-Profit Operational Challenge</h3>
                     <p class="mt-3 text-sm text-slate-300 leading-relaxed">
-                        Enterprise clients and technical founders needed transparent, verified proof of modern architectural competence — specifically breaking down monolithic legacy systems in healthcare, aviation, and e-commerce into high-resilience, cost-efficient modular engines.
+                        Krishan Balram Gaushala in Ludhiana cares for thousands of cows and receives daily seva contributions from devotees across the globe. Volunteers struggled to manually track devotee birthdays, dispatch personalized blessings, issue verifiable 80G tax exemption receipts, and post daily seva photos on social channels.
                     </p>
                 </div>
 
                 <div class="rounded-3xl border border-[#b8c9e626] bg-[#27374d80] p-8">
                     <h3 class="text-xl font-bold text-white">Our Architectural Solution</h3>
                     <p class="mt-3 text-sm text-slate-300 leading-relaxed">
-                        DigitalBuilders engineered a high-velocity VILT stack hub featuring live GitHub metrics, interactive architecture models, visitor telemetry, and an interactive terminal console.
+                        DigitalBuilders engineered "GauSeva Connect" — an automated philanthropic portal built on Laravel 13, Vue 3, and Inertia.js.
                     </p>
                     <ul class="mt-4 space-y-2.5 text-sm text-slate-200">
                         <li class="flex items-start gap-2.5">
                             <span class="mt-1 h-2 w-2 rounded-full bg-emerald-400 shrink-0" />
-                            <span><strong>Domain-Driven Design (DDD):</strong> Clear bounded contexts, repository layers, and transactional outbox patterns.</span>
+                            <span><strong>Meta WhatsApp Cloud API Dispatcher:</strong> Automatically queries daily birthday and anniversary records and dispatches personalized temple blessings via WhatsApp.</span>
                         </li>
                         <li class="flex items-start gap-2.5">
                             <span class="mt-1 h-2 w-2 rounded-full bg-sky-400 shrink-0" />
-                            <span><strong>Zero-Bloat Performance:</strong> Self-hosted typography, SVG telemetry charts, and sub-0.5s time-to-interactive.</span>
+                            <span><strong>Automated 80G Tax Exemption Engine:</strong> Single-click official PDF receipt generation delivering instant tax deduction certificates to donors.</span>
                         </li>
                         <li class="flex items-start gap-2.5">
                             <span class="mt-1 h-2 w-2 rounded-full bg-purple-400 shrink-0" />
-                            <span><strong>PWA Offline Support:</strong> Service worker caching guaranteeing instant loads on high-latency mobile networks.</span>
+                            <span><strong>PWA Offline with HTML5 Canvas Compression:</strong> In-browser photo compression reducing 10MB camera uploads to 100KB before transmission to reduce server load.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <span class="mt-1 h-2 w-2 rounded-full bg-amber-400 shrink-0" />
+                            <span><strong>SQLite WAL Concurrency Tuning:</strong> High-speed local database operations supporting thousands of concurrent reads and writes with zero lock contention.</span>
                         </li>
                     </ul>
                     <div class="mt-6 flex flex-wrap gap-2">
-                        <span class="rounded-full bg-[#1f2d3f] px-3 py-1 text-xs font-bold text-[#9ba7ff]">Laravel 12/13</span>
+                        <span class="rounded-full bg-[#1f2d3f] px-3 py-1 text-xs font-bold text-[#9ba7ff]">Laravel 13</span>
                         <span class="rounded-full bg-[#1f2d3f] px-3 py-1 text-xs font-bold text-[#9ba7ff]">Vue 3</span>
                         <span class="rounded-full bg-[#1f2d3f] px-3 py-1 text-xs font-bold text-[#9ba7ff]">Inertia.js</span>
-                        <span class="rounded-full bg-[#1f2d3f] px-3 py-1 text-xs font-bold text-[#9ba7ff]">Tailwind CSS</span>
-                        <span class="rounded-full bg-[#1f2d3f] px-3 py-1 text-xs font-bold text-[#9ba7ff]">Filament CMS</span>
+                        <span class="rounded-full bg-[#1f2d3f] px-3 py-1 text-xs font-bold text-[#9ba7ff]">Meta WhatsApp Cloud API</span>
                         <span class="rounded-full bg-[#1f2d3f] px-3 py-1 text-xs font-bold text-[#9ba7ff]">PWA Offline</span>
+                        <span class="rounded-full bg-[#1f2d3f] px-3 py-1 text-xs font-bold text-[#9ba7ff]">80G PDF Generator</span>
                     </div>
                 </div>
 
                 <div class="rounded-3xl border border-[#9ba7ff44] bg-[linear-gradient(135deg,#243449,#1b2737)] p-8">
                     <blockquote class="text-base italic text-slate-100 sm:text-lg">
-                        "Engineering excellence is about building scalable, resilient systems that eliminate complexity. Every application in our portfolio is engineered for zero technical debt and high business impact."
+                        "The GauSeva Connect platform gave our devotees automated blessings on their special days and instant 80G tax receipts. It transformed how our shelter connects with donors and eliminated thousands of hours of manual paperwork for our volunteers."
                     </blockquote>
-                    <p class="mt-4 text-xs font-bold text-white">— Ashish Gupta, Lead Architect & Founder, DigitalBuilders</p>
+                    <p class="mt-4 text-xs font-bold text-white">— Trust Management, Krishan Balram Gaushala Ludhiana</p>
                 </div>
             </div>
 
+            <!-- CTA -->
             <div class="mt-16 text-center">
-                <h3 class="text-2xl font-black text-white">Need an Enterprise Software Architect?</h3>
+                <h3 class="text-2xl font-black text-white">Need High-Trust Platform or Community Automation?</h3>
                 <div class="mt-6 flex flex-wrap justify-center gap-4">
-                    <a href="https://ashishgupta.dev/" target="_blank" rel="noopener noreferrer" class="rounded-full border border-white/25 px-6 py-3.5 text-sm font-bold text-white hover:border-white/50 inline-flex items-center gap-2">
-                        Visit ashishgupta.dev
+                    <a href="https://krishanbalramgaushala.com/" target="_blank" rel="noopener noreferrer" class="rounded-full border border-white/25 px-6 py-3.5 text-sm font-bold text-white hover:border-white/50 inline-flex items-center gap-2">
+                        Visit Gaushala Live
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     </a>
                     <a href="/#contact" class="rounded-full bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff,#c593ff)] px-8 py-3.5 text-sm font-bold text-[#1a2231] hover:brightness-110 shadow-lg">
-                        Schedule Architecture Review
+                        Schedule Strategy Session
                     </a>
                 </div>
             </div>
@@ -133,8 +138,8 @@ import { Head, Link } from '@inertiajs/vue3';
 <style scoped>
 .site-bg {
     background:
-        radial-gradient(1200px 700px at -10% -5%, rgba(122, 196, 255, 0.28), transparent 55%),
-        radial-gradient(900px 700px at 105% 10%, rgba(197, 147, 255, 0.25), transparent 50%),
+        radial-gradient(1200px 700px at -10% -5%, rgba(245, 158, 11, 0.22), transparent 55%),
+        radial-gradient(900px 700px at 105% 10%, rgba(16, 185, 129, 0.20), transparent 50%),
         linear-gradient(180deg, #1f2b3b 0%, #1c2938 56%, #1e2a3a 100%);
 }
 </style>

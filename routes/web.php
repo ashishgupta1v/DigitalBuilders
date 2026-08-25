@@ -38,7 +38,13 @@ Route::prefix('services')->name('services.')->group(function () {
 // Portfolio Case Study Detail Pages (Public)
 Route::prefix('portfolio')->name('portfolio.')->group(function () {
     Route::get('/habuilt', [PortfolioController::class, 'habuilt'])->name('habuilt');
+    Route::get('/dhandadiary', [PortfolioController::class, 'dhandadiary'])->name('dhandadiary');
     Route::get('/zoeticoach', [PortfolioController::class, 'zoeticoach'])->name('zoeticoach');
+    Route::get('/guttalks', [PortfolioController::class, 'guttalks'])->name('guttalks');
+    Route::get('/myastrova', [PortfolioController::class, 'myastrova'])->name('myastrova');
+    Route::get('/gaushala', [PortfolioController::class, 'gaushala'])->name('gaushala');
+    Route::get('/sports-club', [PortfolioController::class, 'sportsClub'])->name('sports-club');
+    Route::get('/garg-enterprises', [PortfolioController::class, 'gargEnterprises'])->name('garg-enterprises');
     Route::get('/ssknitwear', [PortfolioController::class, 'ssknitwear'])->name('ssknitwear');
 });
 
