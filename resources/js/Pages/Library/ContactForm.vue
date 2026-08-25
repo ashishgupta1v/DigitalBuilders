@@ -51,6 +51,11 @@ function submit() {
                 {{ flash.success }}
             </div>
 
+            <div v-if="flash?.error" role="alert" aria-live="assertive" class="mt-6 rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-200">
+                <p class="font-bold">{{ flash.error }}</p>
+                <p class="mt-1 text-xs text-rose-300">Need instant assistance? Reach Ashish directly on WhatsApp at <a href="https://wa.me/919087021592" class="underline font-bold">+91 90870 21592</a>.</p>
+            </div>
+
             <form @submit.prevent="submit" class="db-mini db-panel db-reveal mt-8 space-y-6 rounded-[1.5rem] p-7" style="animation-delay: 0.08s">
                 <div>
                     <label for="name" class="block text-sm font-medium text-[#cfdcf3]">Full Name</label>

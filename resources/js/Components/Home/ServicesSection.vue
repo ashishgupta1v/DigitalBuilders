@@ -19,7 +19,7 @@ defineProps<{
                 <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-[#9dc5ff] font-semibold">Our Services</p>
                 <h2 class="mt-3 text-2xl font-black text-[var(--db-text)] sm:text-3xl md:text-4xl">Complete Digital Solutions for Growing Brands</h2>
             </div>
-            <Link href="/estimator" class="rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-2 text-xs font-bold text-sky-600 dark:text-sky-300 hover:bg-sky-500/20 transition-all inline-flex items-center gap-1.5 self-start md:self-auto">
+            <Link href="/estimator" class="rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-2.5 min-h-[44px] text-xs font-bold text-sky-600 dark:text-sky-300 hover:bg-sky-500/20 transition-all inline-flex items-center gap-1.5 self-start md:self-auto">
                 <span>Scope Your Project</span>
                 <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </Link>
@@ -44,7 +44,7 @@ defineProps<{
                     <h3 class="text-lg font-bold text-[var(--db-text)]">{{ service.title }}</h3>
                     <p class="mt-2.5 text-sm leading-relaxed text-slate-300">{{ service.summary }}</p>
                 </div>
-                <Link :href="service.link" class="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-sky-600 dark:text-[#9ba7ff] hover:text-indigo-600 dark:hover:text-[#c593ff] transition-colors">
+                <Link :href="service.link" class="mt-5 inline-flex items-center gap-1.5 min-h-[44px] py-2 text-xs font-bold text-sky-600 dark:text-[#9ba7ff] hover:text-indigo-600 dark:hover:text-[#c593ff] transition-colors">
                     Learn More
                     <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </Link>

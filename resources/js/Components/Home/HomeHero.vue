@@ -28,19 +28,20 @@ defineProps<{
                     Stop settling for standard templates. Get enterprise-grade web, mobile, and AI architecture engineered to scale your business.
                 </p>
                 <div class="mt-7 flex flex-wrap items-center gap-3">
-                    <a href="#contact" class="db-action inline-flex w-full items-center justify-center rounded-full bg-[linear-gradient(95deg,#0284c7_0%,#4f46e5_48%,#7c3aed_100%)] dark:bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-7 py-3.5 text-sm font-bold text-white dark:text-[#1a2231] shadow-[0_4px_20px_rgba(2,132,199,0.25)] transition-all hover:scale-[1.02] sm:w-auto">
+                    <a href="#contact" class="db-action inline-flex w-full items-center justify-center rounded-full bg-[linear-gradient(95deg,#0284c7_0%,#4f46e5_48%,#7c3aed_100%)] dark:bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-7 py-3.5 min-h-[44px] text-sm font-bold text-white dark:text-[#1a2231] shadow-[0_4px_20px_rgba(2,132,199,0.25)] transition-all hover:scale-[1.02] sm:w-auto">
                         Book a Discovery Call
                     </a>
-                    <a href="#portfolio" class="inline-flex w-full items-center justify-center rounded-full border border-slate-300 dark:border-white/20 bg-white/60 dark:bg-white/5 backdrop-blur-md px-7 py-3.5 text-sm font-semibold text-slate-800 dark:text-white transition-all hover:border-slate-400 dark:hover:border-white/40 hover:bg-white/80 dark:hover:bg-white/10 sm:w-auto">
+                    <a href="#portfolio" class="inline-flex w-full items-center justify-center rounded-full border border-slate-300 dark:border-white/20 bg-white/60 dark:bg-white/5 backdrop-blur-md px-7 py-3.5 min-h-[44px] text-sm font-semibold text-slate-800 dark:text-white transition-all hover:border-slate-400 dark:hover:border-white/40 hover:bg-white/80 dark:hover:bg-white/10 sm:w-auto">
                         View Our Portfolio
                     </a>
                 </div>
-                <p class="mt-5 text-sm text-slate-500 dark:text-slate-400">Bringing Silicon Valley engineering discipline and AI automation right here to Ludhiana.</p>
+                <p class="mt-5 text-sm font-medium text-slate-700 dark:text-slate-200">Bringing Silicon Valley engineering discipline and AI automation right here to Ludhiana.</p>
             </div>
         </section>
 
         <!-- Key Architectural Pillars -->
         <section class="mt-12 grid gap-5 md:grid-cols-3" data-stagger data-reveal>
+            <h2 class="sr-only">Core Architectural Capabilities</h2>
             <article data-stagger-item class="db-antigravity-card rounded-2xl border border-slate-200 dark:border-[#b8c9e633] bg-white dark:bg-[#27374dcb] p-6 shadow-md flex flex-col justify-between">
                 <div>
                     <div class="h-10 w-10 mb-4 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center font-bold">

@@ -409,7 +409,7 @@ const filteredStudies = computed(() => {
                         :href="study.liveUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex items-center gap-1.5 rounded-full bg-[linear-gradient(95deg,#0284c7_0%,#4f46e5_100%)] dark:bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_100%)] px-4 py-2 text-xs font-bold text-white dark:text-[#1a2231] shadow transition hover:scale-105"
+                        class="inline-flex items-center gap-1.5 min-h-[44px] rounded-full bg-[linear-gradient(95deg,#0284c7_0%,#4f46e5_100%)] dark:bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_100%)] px-4 py-2.5 text-xs font-bold text-white dark:text-[#1a2231] shadow transition hover:scale-105"
                     >
                         <span>Visit Live App</span>
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
@@ -417,7 +417,7 @@ const filteredStudies = computed(() => {
                     <a
                         v-else
                         href="#contact"
-                        class="inline-flex items-center gap-1.5 rounded-full bg-indigo-600 px-4 py-2 text-xs font-bold text-white shadow transition hover:scale-105"
+                        class="inline-flex items-center gap-1.5 min-h-[44px] rounded-full bg-indigo-600 px-4 py-2.5 text-xs font-bold text-white shadow transition hover:scale-105"
                     >
                         <span>Request APK / Demo</span>
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
@@ -426,7 +426,7 @@ const filteredStudies = computed(() => {
                     <!-- Quick View Modal Trigger -->
                     <button
                         @click="openStudyModal(study)"
-                        class="inline-flex items-center gap-1 rounded-full border border-slate-300 dark:border-white/20 bg-white dark:bg-white/5 px-3.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 transition hover:bg-slate-100 dark:hover:bg-white/10"
+                        class="inline-flex items-center gap-1 min-h-[44px] rounded-full border border-slate-300 dark:border-white/20 bg-white dark:bg-white/5 px-3.5 py-2.5 text-xs font-semibold text-slate-700 dark:text-slate-200 transition hover:bg-slate-100 dark:hover:bg-white/10 cursor-pointer"
                     >
                         <span>Quick View</span>
                         <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -435,7 +435,7 @@ const filteredStudies = computed(() => {
                     <!-- Deep Page Case Study Link -->
                     <Link
                         :href="`/portfolio/${study.portfolioSlug}`"
-                        class="inline-flex items-center gap-1 rounded-full px-3 py-2 text-xs font-bold text-sky-600 dark:text-[#9ba7ff] hover:text-indigo-600 dark:hover:text-[#c593ff] transition-colors ml-auto"
+                        class="inline-flex items-center gap-1 min-h-[44px] rounded-full px-3 py-2 text-xs font-bold text-sky-600 dark:text-[#9ba7ff] hover:text-indigo-600 dark:hover:text-[#c593ff] transition-colors ml-auto"
                     >
                         <span>Full Case Study</span>
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>

@@ -191,7 +191,7 @@ async function fetchTestimonials() {
                                 class="h-12 w-12 rounded-full object-cover border border-[#9ba7ff44]"
                             />
                             <div>
-                                <h4 class="text-sm font-bold text-white">{{ testimonials[currentIndex].client_name }}</h4>
+                                <h3 class="text-sm font-bold text-white">{{ testimonials[currentIndex].client_name }}</h3>
                                 <p class="text-xs text-slate-400">{{ testimonials[currentIndex].role }} · <span class="text-[#b7d3ff]">{{ testimonials[currentIndex].company }}</span></p>
                             </div>
                         </div>
@@ -203,16 +203,20 @@ async function fetchTestimonials() {
             </Transition>
         </div>
 
-        <!-- Dots Indicator -->
-        <div class="mt-8 flex justify-center gap-2">
+        <!-- Dots Indicator with Accessible 36px Touch Targets -->
+        <div class="mt-8 flex items-center justify-center gap-1.5">
             <button
                 v-for="(_, idx) in testimonials"
                 :key="idx"
                 @click="goTo(idx)"
-                class="h-2 rounded-full transition-all cursor-pointer"
-                :class="currentIndex === idx ? 'w-8 bg-[#9ba7ff]' : 'w-2 bg-[#b8c9e633] hover:bg-slate-400'"
+                class="flex h-9 w-9 items-center justify-center rounded-full transition-all cursor-pointer focus:outline-none"
                 :aria-label="`Go to slide ${idx + 1}`"
-            />
+            >
+                <span
+                    class="h-2.5 rounded-full transition-all"
+                    :class="currentIndex === idx ? 'w-8 bg-[#9ba7ff]' : 'w-2.5 bg-[#b8c9e644] hover:bg-slate-400'"
+                />
+            </button>
         </div>
     </div>
 </template>

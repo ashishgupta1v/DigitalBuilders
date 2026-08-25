@@ -59,6 +59,7 @@ const selectedScale = ref<string>('growth');
 const selectedFeatures = ref<string[]>(['auth_oauth', 'admin_analytics']);
 
 const showLeadModal = ref(false);
+const modalSubmissionError = ref<string | null>(null);
 
 const form = useForm({
     name: '',
@@ -119,6 +120,7 @@ function toggleFeature(id: string) {
 }
 
 function openInquiryModal() {
+    modalSubmissionError.value = null;
     const symbol = currency.value === 'INR' ? '₹' : '$';
     form.project_type = currentProjectTypeObj.value.id;
     form.estimated_budget = `${symbol}${calculatedTotal.value.min.toLocaleString()} - ${symbol}${calculatedTotal.value.max.toLocaleString()} (${currency.value})`;
@@ -128,14 +130,25 @@ function openInquiryModal() {
 }
 
 function submitInquiry() {
+    modalSubmissionError.value = null;
     form.post(route('estimator.submit'), {
         preserveScroll: true,
         onSuccess: () => {
+            modalSubmissionError.value = null;
             showLeadModal.value = false;
             form.reset();
             window.dispatchEvent(new CustomEvent('db:toast', {
                 detail: { message: 'Estimate inquiry submitted successfully! We will contact you within 24 hours.', type: 'success' },
             }));
+        },
+        onError: (errors) => {
+            if (errors && Object.keys(errors).length > 0) {
+                const firstKey = Object.keys(errors)[0];
+                const msg = errors.message || errors.error || errors[firstKey];
+                modalSubmissionError.value = typeof msg === 'string' ? msg : 'Please review and correct the fields above.';
+            } else {
+                modalSubmissionError.value = 'Submission failed or rate limit reached. Please wait 60 seconds or contact us directly on WhatsApp (+91 90870 21592).';
+            }
         },
     });
 }
@@ -322,6 +335,19 @@ function formatMoney(val: number): string {
                 <p class="mt-2 text-xs text-slate-600 dark:text-slate-300">
                     We'll attach your configured estimate ({{ form.estimated_budget }}, {{ form.estimated_timeline }}) directly to your inquiry.
                 </p>
+
+                <!-- Modal Error Alert Banner -->
+                <div
+                    v-if="modalSubmissionError"
+                    role="alert"
+                    aria-live="assertive"
+                    class="mt-4 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-3.5 text-xs text-rose-800 dark:text-rose-200"
+                >
+                    <div class="flex items-start gap-2">
+                        <svg class="h-4 w-4 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        <p class="font-semibold leading-relaxed">{{ modalSubmissionError }}</p>
+                    </div>
+                </div>
 
                 <form @submit.prevent="submitInquiry" class="mt-6 space-y-4">
                     <input v-model="form._hp_company" type="text" name="_hp_company" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none !important;" />

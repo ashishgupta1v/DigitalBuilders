@@ -122,22 +122,22 @@ function initScene(w: number, h: number) {
     pGeo.setAttribute('position', new THREE.Float32BufferAttribute(currentPositions, 3));
 
     const pMat = new THREE.PointsMaterial({
-        size: 0.14,
+        size: 0.12,
         vertexColors: true,
         transparent: true,
-        opacity: 0.9,
+        opacity: props.isDarkMode ? 0.65 : 0.45,
         sizeAttenuation: true,
     });
     particleSystem = new THREE.Points(pGeo, pMat);
     scene.add(particleSystem);
 
-    // 3. Line Connections
+    // 3. Line Connections (subtle, non-distracting background depth)
     const maxConnections = PARTICLE_COUNT * PARTICLE_COUNT;
     const lGeo = new THREE.BufferGeometry();
     lGeo.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(maxConnections * 6), 3));
     const lMat = new THREE.LineBasicMaterial({
         transparent: true,
-        opacity: 0.2,
+        opacity: props.isDarkMode ? 0.10 : 0.07,
     });
     lineSegments = new THREE.LineSegments(lGeo, lMat);
     scene.add(lineSegments);

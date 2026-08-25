@@ -140,7 +140,7 @@ onBeforeUnmount(() => {
 
                     <!-- Architecture Actions -->
                     <div class="mt-6">
-                        <h4 class="text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">Our Architectural Solution</h4>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">Our Architectural Solution</h3>
                         <ul class="mt-3 space-y-2 text-sm text-slate-700 dark:text-slate-300">
                             <li
                                 v-for="(action, idx) in study.architectureActions"
@@ -155,7 +155,7 @@ onBeforeUnmount(() => {
 
                     <!-- Business Impact -->
                     <div class="mt-6">
-                        <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Measurable Business Impact</h4>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Measurable Business Impact</h3>
                         <ul class="mt-3 space-y-2 text-sm text-slate-700 dark:text-slate-300">
                             <li
                                 v-for="(impact, idx) in study.businessImpact"
