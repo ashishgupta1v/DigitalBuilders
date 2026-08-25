@@ -21,6 +21,11 @@ class EstimatorController extends Controller
 
     public function submitEstimate(Request $request, CreateLeadUseCase $useCase): RedirectResponse
     {
+        // Honeypot anti-spam check
+        if (! empty($request->input('_hp_company'))) {
+            return back()->with('success', 'Your project estimate and inquiry have been received!');
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
@@ -30,6 +35,7 @@ class EstimatorController extends Controller
             'estimated_timeline' => ['nullable', 'string', 'max:100'],
             'features' => ['nullable', 'array'],
             'description' => ['nullable', 'string', 'max:2000'],
+            '_hp_company' => ['nullable', 'string', 'max:0'],
         ]);
 
         $fullDescription = "Estimated Budget: " . ($validated['estimated_budget'] ?? 'Not specified') . "\n"

@@ -2,6 +2,5 @@ User-agent: *
 Allow: /
 Disallow: /dashboard
 Disallow: /profile
-Disallow: /library/leads
-Disallow: /library/leads/export
+Disallow: /library/
 Sitemap: https://www.digitalbuilders.in/sitemap.xml

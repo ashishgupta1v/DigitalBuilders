@@ -8,8 +8,6 @@ excerpt: How real-time AI voice agents and retrieval-augmented generation (RAG) 
 cover_image: https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1200
 ---
 
-# Integrating Autonomous AI Voice Agents into Legacy ERP & CRM Systems
-
 The era of static push-button IVR menus ("Press 1 for Sales, Press 2 for Support") is officially dead. 
 
 Modern enterprise clients expect natural, context-aware human voice interactions that can query inventory, check invoice status, update CRM records, and schedule meetings in real time.
@@ -41,7 +39,7 @@ Building a production-ready AI voice agent requires combining three low-latency 
 ### 1. Automated Order Status & Tracking
 Instead of customer support staff manually opening the ERP to check shipment numbers, the AI Agent authenticates the caller via OTP, queries the ERP database, and responds naturally:
 
-> *"Hello Simran, your shipment #8492 with SSKnitwear was dispatched yesterday via BlueDart and is scheduled for delivery tomorrow by 3 PM."*
+> *"Hello Simran, your shipment #8492 with Dhanda Diary Cloud was dispatched yesterday via BlueDart and is scheduled for delivery tomorrow by 3 PM."*
 
 ### 2. Autonomous Lead Qualification
 The agent handles inbound calls, asks structured discovery questions, scores the prospect, and creates a lead entry directly in the CRM pipeline.

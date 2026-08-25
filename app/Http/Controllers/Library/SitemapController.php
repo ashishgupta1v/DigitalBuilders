@@ -103,12 +103,12 @@ class SitemapController extends Controller
                 'priority' => '0.9',
             ],
             [
-                'loc' => $baseUrl . '/portfolio/ssknitwear',
+                'loc' => $baseUrl . '/portfolio/ashishgupta',
                 'lastmod' => $now,
                 'changefreq' => 'weekly',
                 'priority' => '0.9',
             ],
-            // Estimator & Blog Hub
+            // Estimator, Blog Hub & RSS Feed
             [
                 'loc' => $baseUrl . '/estimator',
                 'lastmod' => $now,
@@ -117,6 +117,12 @@ class SitemapController extends Controller
             ],
             [
                 'loc' => $baseUrl . '/blog',
+                'lastmod' => $now,
+                'changefreq' => 'daily',
+                'priority' => '0.8',
+            ],
+            [
+                'loc' => $baseUrl . '/feed.xml',
                 'lastmod' => $now,
                 'changefreq' => 'daily',
                 'priority' => '0.8',

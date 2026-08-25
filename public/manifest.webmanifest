@@ -1,0 +1,21 @@
+{
+  "name": "DigitalBuilders — Enterprise Software & AI Architecture",
+  "short_name": "DigitalBuilders",
+  "description": "Enterprise-grade web applications, high-throughput SaaS platforms, mobile apps, and autonomous AI agents.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0f19",
+  "theme_color": "#0b0f19",
+  "icons": [
+    {
+      "src": "/images/db-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/db-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

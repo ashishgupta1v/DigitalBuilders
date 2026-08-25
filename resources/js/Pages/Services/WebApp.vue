@@ -148,7 +148,7 @@ import { Head, Link } from '@inertiajs/vue3';
                             </div>
                             <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
                                 <a href="https://ashishgupta.dev/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-purple-300 hover:text-white flex items-center gap-1">Visit Live App ↗</a>
-                                <Link href="/portfolio/ssknitwear" class="text-xs font-bold text-slate-300 hover:text-white">Case Study →</Link>
+                                <Link href="/portfolio/ashishgupta" class="text-xs font-bold text-slate-300 hover:text-white">Case Study →</Link>
                             </div>
                         </div>
                     </div>

@@ -105,15 +105,20 @@ class PortfolioController extends Controller
         ]);
     }
 
-    public function ssknitwear(): Response
+    public function ashishgupta(): Response
     {
-        return $this->renderWithMeta('Portfolio/SSKnitwear', [
+        return $this->renderWithMeta('Portfolio/AshishGupta', [
             'title' => 'Ashish Gupta Hub Case Study — Senior Full-Stack Architect Showcase | DigitalBuilders',
             'description' => 'High-performance engineering showcase demonstrating Domain-Driven Design (DDD), legacy modernization, and $1M+ cloud savings on the VILT stack.',
             'image' => asset('images/portfolio/ashishgupta.jpg'),
-            'url' => url('/portfolio/ssknitwear'),
+            'url' => url('/portfolio/ashishgupta'),
             'type' => 'article',
         ]);
+    }
+
+    public function ssknitwear(): \Illuminate\Http\RedirectResponse
+    {
+        return redirect()->route('portfolio.ashishgupta', [], 301);
     }
 }
 

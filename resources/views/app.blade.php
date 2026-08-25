@@ -18,9 +18,12 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#0b0f19">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="description" content="{{ $currentMetaDesc }}">
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
         <link rel="canonical" href="{{ $currentMetaUrl }}">
+        <link rel="alternate" type="application/rss+xml" title="DigitalBuilders Engineering & Architecture Insights" href="{{ url('/feed.xml') }}">
         <meta property="og:site_name" content="DigitalBuilders">
         <meta property="og:type" content="{{ $currentMetaType }}">
         <meta property="og:title" content="{{ $currentMetaTitle }}">
@@ -128,16 +131,25 @@
                         "name": "Garg Enterprises B2B Wholesale Ordering App",
                         "url": "https://www.digitalbuilders.in/portfolio/garg-enterprises",
                         "applicationCategory": "BusinessApplication"
+                    },
+                    {
+                        "@type": "SoftwareApplication",
+                        "position": 9,
+                        "name": "Ashish Gupta Architecture Hub & VILT Showcase",
+                        "url": "https://www.digitalbuilders.in/portfolio/ashishgupta",
+                        "applicationCategory": "DeveloperApplication"
                     }
                 ]
             }
         </script>
         @endverbatim
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ config('app.name', 'DigitalBuilders') }}</title>
 
         <link rel="icon" type="image/png" href="{{ asset('images/db-logo.png') }}">
+        <link rel="apple-touch-icon" href="{{ asset('images/db-logo.png') }}">
         <link rel="alternate icon" href="{{ asset('favicon.png') }}">
+        <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
 
         <!-- Google Fonts: Libre Baskerville (Headings & Display), Outfit (Body & UI), JetBrains Mono (Prices & Data) -->
         <link rel="preconnect" href="https://fonts.googleapis.com">

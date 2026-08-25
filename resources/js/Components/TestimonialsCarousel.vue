@@ -28,24 +28,24 @@ const testimonials = ref<TestimonialItem[]>([
     {
         id: 2,
         client_name: 'Rajesh Sharma',
-        company: 'ZoetiCoach ERP',
+        company: 'ZoetiCoach AI',
         role: 'Managing Director',
         avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=250',
         rating: 5,
-        content: 'We needed a complex custom ERP system integrated with automated AI workflows. DigitalBuilders delivered ahead of schedule with zero legacy tech debt. Their architecture-first mindset is unmatched.',
+        content: 'We needed a complex custom ERP system integrated with automated AI habit verification. DigitalBuilders delivered ahead of schedule with zero legacy tech debt. Their architecture-first mindset is unmatched.',
         project_type: 'ERP / CRM & AI Automation',
         metric_highlight: '4x Operational Velocity',
     },
     {
         id: 3,
-        client_name: 'Simran Kaur',
-        company: 'SSKnitwear International',
-        role: 'Head of Digital Transformation',
-        avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=250',
+        client_name: 'Harpreet Singh',
+        company: 'Dhanda Diary Cloud',
+        role: 'Co-Founder & Product Lead',
+        avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=250',
         rating: 5,
-        content: 'Modernizing a 25-year legacy retail brand was a daunting challenge. Ashish designed an ultra-fast storefront with seamless inventory synchronization. Sales grew 180% in the first quarter post-launch.',
-        project_type: 'Enterprise E-Commerce Platform',
-        metric_highlight: '+180% Sales Growth',
+        content: 'Dhanda Diary transformed daily execution and habit discipline for our teams. The cockpit is responsive, fast (<50ms sync), and gives us instant visibility over every operational KPI.',
+        project_type: 'Execution Cockpit & Compliance SaaS',
+        metric_highlight: '+85% Routine Compliance',
     },
     {
         id: 4,
@@ -99,15 +99,22 @@ onBeforeUnmount(() => {
 
 async function fetchTestimonials() {
     try {
-        const res = await fetch('/api/testimonials');
+        let res = await fetch('/ajax/testimonials', {
+            headers: { 'Accept': 'application/json' },
+        });
+        if (!res.ok) {
+            res = await fetch('/api/testimonials', {
+                headers: { 'Accept': 'application/json' },
+            });
+        }
         if (res.ok) {
             const data = await res.json();
-            if (data && data.length) {
+            if (Array.isArray(data) && data.length > 0) {
                 testimonials.value = data;
             }
         }
     } catch {
-        // Fallback to initial data if endpoint fails
+        // Fallback to pre-seeded social proof
     }
 }
 </script>
@@ -202,7 +209,7 @@ async function fetchTestimonials() {
                 v-for="(_, idx) in testimonials"
                 :key="idx"
                 @click="goTo(idx)"
-                class="h-2 rounded-full transition-all"
+                class="h-2 rounded-full transition-all cursor-pointer"
                 :class="currentIndex === idx ? 'w-8 bg-[#9ba7ff]' : 'w-2 bg-[#b8c9e633] hover:bg-slate-400'"
                 :aria-label="`Go to slide ${idx + 1}`"
             />

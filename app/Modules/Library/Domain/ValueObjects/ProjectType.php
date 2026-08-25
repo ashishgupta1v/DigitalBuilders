@@ -26,15 +26,41 @@ final class ProjectType
         'other'        => 'Other',
     ];
 
+    private const LABEL_MAP = [
+        'web_app'                                => 'web_app',
+        'web application'                        => 'web_app',
+        'custom web application development'     => 'web_app',
+        'mobile_app'                             => 'mobile_app',
+        'mobile app'                             => 'mobile_app',
+        'mobile app (ios & android)'             => 'mobile_app',
+        'mobile app development (ios and android)' => 'mobile_app',
+        'erp_crm'                                => 'erp_crm',
+        'erp/crm'                                => 'erp_crm',
+        'enterprise erp / crm'                   => 'erp_crm',
+        'enterprise erp & crm systems'           => 'erp_crm',
+        'saas'                                   => 'saas',
+        'saas platform'                          => 'saas',
+        'saas platform architecture'             => 'saas',
+        'high-scale saas platforms'              => 'saas',
+        'ai_solutions'                           => 'ai_solutions',
+        'ai solutions'                           => 'ai_solutions',
+        'ai voice/chat agent'                    => 'ai_solutions',
+        'ai voice agents and chatbots'           => 'ai_solutions',
+        'other'                                  => 'other',
+    ];
+
     private string $value;
 
     public function __construct(string $value)
     {
-        if (!in_array($value, self::ALLOWED, true)) {
+        $normalized = strtolower(trim($value));
+        $mapped = self::LABEL_MAP[$normalized] ?? (in_array($value, self::ALLOWED, true) ? $value : null);
+
+        if ($mapped === null) {
             throw new InvalidProjectTypeException("Invalid project type: {$value}");
         }
 
-        $this->value = $value;
+        $this->value = $mapped;
     }
 
     public function value(): string

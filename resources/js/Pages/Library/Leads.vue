@@ -31,6 +31,7 @@ const props = defineProps<{
 }>();
 
 const viewMode = ref<'kanban' | 'table'>('kanban');
+const selectedScoreTier = ref<'all' | 'hot' | 'warm' | 'standard'>('all');
 const isLoading = ref(false);
 const search = ref(props.filters?.search ?? '');
 let searchTimer: ReturnType<typeof setTimeout> | null = null;
@@ -98,6 +99,17 @@ function getScoreBadge(score?: number) {
     return { text: `📋 ${s}`, class: 'bg-slate-500/20 text-slate-300 border-slate-500/40' };
 }
 
+// Filter leads by search & score tier
+const filteredLeads = computed(() => {
+    return props.leads.filter((lead) => {
+        const s = lead.score ?? 50;
+        if (selectedScoreTier.value === 'hot') return s >= 75;
+        if (selectedScoreTier.value === 'warm') return s >= 45 && s < 75;
+        if (selectedScoreTier.value === 'standard') return s < 45;
+        return true;
+    });
+});
+
 // Group leads by status for Kanban view
 const groupedLeads = computed(() => {
     const map: Record<string, LeadDTO[]> = {
@@ -107,13 +119,32 @@ const groupedLeads = computed(() => {
         converted: [],
         archived: [],
     };
-    props.leads.forEach((l) => {
+    filteredLeads.value.forEach((l) => {
         const st = l.status || 'new';
         if (!map[st]) map[st] = [];
         map[st].push(l);
     });
     return map;
 });
+
+// WhatsApp template URL helper
+function getWhatsAppUrl(lead: LeadDTO): string {
+    const phoneClean = lead.phone.replace(/[^0-9]/g, '');
+    const phoneWithCountry = phoneClean.length === 10 ? `91${phoneClean}` : phoneClean;
+    const text = encodeURIComponent(
+        `Hi ${lead.name}, this is Ashish from DigitalBuilders. I reviewed your inquiry regarding ${lead.projectTypeLabel || 'your project'} and would love to discuss next steps. When is a good time for a quick 10-minute discovery call?`
+    );
+    return `https://wa.me/${phoneWithCountry}?text=${text}`;
+}
+
+// Email template URL helper
+function getMailtoUrl(lead: LeadDTO): string {
+    const subject = encodeURIComponent(`DigitalBuilders Follow-up: ${lead.projectTypeLabel || 'Project Inquiry'}`);
+    const body = encodeURIComponent(
+        `Hi ${lead.name},\n\nThank you for reaching out to DigitalBuilders regarding ${lead.projectTypeLabel || 'your project'}.\n\nI have reviewed your inquiry and would be glad to schedule a 15-minute discovery session to walk through our technical approach, architecture recommendations, and sprint estimate.\n\nLooking forward to hearing from you.\n\nBest regards,\nAshish Gupta\nLead Digital Architect, DigitalBuilders\nhttps://www.digitalbuilders.in`
+    );
+    return `mailto:${lead.email}?subject=${subject}&body=${body}`;
+}
 
 // Open Drawer & Fetch Notes
 async function openDrawer(lead: LeadDTO) {
@@ -196,8 +227,40 @@ async function addNote() {
                             </button>
                         </div>
 
+                        <!-- Score Tier Tabs -->
+                        <div class="flex items-center gap-1.5 rounded-xl border border-[#b8c9e625] bg-[#172230] p-1 text-xs">
+                            <button
+                                @click="selectedScoreTier = 'all'"
+                                class="rounded-lg px-2.5 py-1 font-semibold transition"
+                                :class="selectedScoreTier === 'all' ? 'bg-sky-500/20 text-sky-300 font-bold' : 'text-slate-400 hover:text-white'"
+                            >
+                                All ({{ props.leads.length }})
+                            </button>
+                            <button
+                                @click="selectedScoreTier = 'hot'"
+                                class="rounded-lg px-2.5 py-1 font-semibold transition"
+                                :class="selectedScoreTier === 'hot' ? 'bg-rose-500/20 text-rose-300 font-bold' : 'text-slate-400 hover:text-white'"
+                            >
+                                🔥 Hot ({{ props.leads.filter(l => (l.score ?? 50) >= 75).length }})
+                            </button>
+                            <button
+                                @click="selectedScoreTier = 'warm'"
+                                class="rounded-lg px-2.5 py-1 font-semibold transition"
+                                :class="selectedScoreTier === 'warm' ? 'bg-amber-500/20 text-amber-300 font-bold' : 'text-slate-400 hover:text-white'"
+                            >
+                                ⚡ Warm ({{ props.leads.filter(l => (l.score ?? 50) >= 45 && (l.score ?? 50) < 75).length }})
+                            </button>
+                            <button
+                                @click="selectedScoreTier = 'standard'"
+                                class="rounded-lg px-2.5 py-1 font-semibold transition"
+                                :class="selectedScoreTier === 'standard' ? 'bg-slate-500/20 text-slate-300 font-bold' : 'text-slate-400 hover:text-white'"
+                            >
+                                📋 Standard ({{ props.leads.filter(l => (l.score ?? 50) < 45).length }})
+                            </button>
+                        </div>
+
                         <!-- Search Input -->
-                        <div class="flex-1 min-w-[200px] max-w-md">
+                        <div class="flex-1 min-w-[200px] max-w-xs">
                             <input
                                 v-model="search"
                                 @input="onSearch"
@@ -207,9 +270,8 @@ async function addNote() {
                             />
                         </div>
 
-                        <!-- Export CSV & Count -->
+                        <!-- Export CSV -->
                         <div class="flex items-center gap-3">
-                            <span class="text-xs font-bold uppercase tracking-wider text-[#bcd0ef]">{{ props.leads.length }} Prospects</span>
                             <button
                                 @click="exportCsv"
                                 class="flex items-center gap-1.5 rounded-xl border border-[#b8c9e633] px-3.5 py-2 text-xs font-bold text-[#bcd0ef] transition hover:border-[#9ba7ff] hover:text-white"
@@ -268,12 +330,12 @@ async function addNote() {
                                             <span>💬 {{ lead.notesCount ?? 0 }}</span>
                                         </div>
 
-                                        <!-- Quick Move Dropdown -->
-                                        <div class="mt-3 border-t border-[#b8c9e618] pt-2" @click.stop>
+                                        <!-- Quick Move Dropdown & 1-Click Action Icons -->
+                                        <div class="mt-3 flex items-center gap-2 border-t border-[#b8c9e618] pt-2" @click.stop>
                                             <select
                                                 :value="lead.status"
                                                 @change="updateStatus(lead, ($event.target as HTMLSelectElement).value)"
-                                                class="w-full rounded-lg border border-[#b8c9e626] bg-[#1a2534] px-2 py-1 text-[10px] text-slate-200 focus:outline-none"
+                                                class="flex-1 rounded-lg border border-[#b8c9e626] bg-[#1a2534] px-2 py-1 text-[10px] text-slate-200 focus:outline-none"
                                             >
                                                 <option value="new">Move to New</option>
                                                 <option value="contacted">Move to Contacted</option>
@@ -281,6 +343,15 @@ async function addNote() {
                                                 <option value="converted">Move to Converted</option>
                                                 <option value="archived">Move to Archived</option>
                                             </select>
+                                            <a
+                                                :href="getWhatsAppUrl(lead)"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                title="1-Click WhatsApp Direct Chat"
+                                                class="rounded-lg bg-[#25d366]/20 border border-[#25d366]/40 p-1 text-[#25d366] hover:bg-[#25d366] hover:text-white transition-colors"
+                                            >
+                                                <svg class="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.815 11.815 0 018.413 3.479 11.821 11.821 0 013.48 8.413c-.003 6.558-5.339 11.893-11.893 11.893h-.005a11.882 11.882 0 01-5.683-1.448L0 24h.057z"/></svg>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -299,12 +370,12 @@ async function addNote() {
                                     <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-400">Project Type</th>
                                     <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-400">Status Stage</th>
                                     <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-400">Notes</th>
-                                    <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-400">Action</th>
+                                    <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-400">1-Click Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-[#b8c9e618]">
                                 <tr
-                                    v-for="lead in props.leads"
+                                    v-for="lead in filteredLeads"
                                     :key="lead.id"
                                     @click="openDrawer(lead)"
                                     class="cursor-pointer transition hover:bg-[#27374d60]"
@@ -323,7 +394,23 @@ async function addNote() {
                                         </span>
                                     </td>
                                     <td class="whitespace-nowrap px-4 py-3 text-xs text-slate-400">💬 {{ lead.notesCount ?? 0 }}</td>
-                                    <td class="whitespace-nowrap px-4 py-3" @click.stop>
+                                    <td class="whitespace-nowrap px-4 py-3 flex items-center gap-2" @click.stop>
+                                        <a
+                                            :href="getWhatsAppUrl(lead)"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            title="1-Click WhatsApp"
+                                            class="rounded-lg bg-[#25d366]/20 border border-[#25d366]/40 p-1.5 text-[#25d366] hover:bg-[#25d366] hover:text-white transition"
+                                        >
+                                            <svg class="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.815 11.815 0 018.413 3.479 11.821 11.821 0 013.48 8.413c-.003 6.558-5.339 11.893-11.893 11.893h-.005a11.882 11.882 0 01-5.683-1.448L0 24h.057z"/></svg>
+                                        </a>
+                                        <a
+                                            :href="getMailtoUrl(lead)"
+                                            title="1-Click Email Template"
+                                            class="rounded-lg bg-sky-500/20 border border-sky-500/40 p-1.5 text-sky-400 hover:bg-sky-500 hover:text-white transition"
+                                        >
+                                            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                        </a>
                                         <select
                                             :value="lead.status"
                                             @change="updateStatus(lead, ($event.target as HTMLSelectElement).value)"
@@ -366,6 +453,26 @@ async function addNote() {
 
                 <!-- Drawer Content -->
                 <div class="flex-1 overflow-y-auto py-4 space-y-6 text-xs">
+                    <!-- 1-Click Outreach Action Bar -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <a
+                            :href="getWhatsAppUrl(selectedLead)"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="flex items-center justify-center gap-2 rounded-xl bg-[#25d366] px-3 py-2.5 text-xs font-bold text-white shadow hover:bg-[#20ba5a] transition"
+                        >
+                            <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.815 11.815 0 018.413 3.479 11.821 11.821 0 013.48 8.413c-.003 6.558-5.339 11.893-11.893 11.893h-.005a11.882 11.882 0 01-5.683-1.448L0 24h.057z"/></svg>
+                            <span>WhatsApp Pitch</span>
+                        </a>
+                        <a
+                            :href="getMailtoUrl(selectedLead)"
+                            class="flex items-center justify-center gap-2 rounded-xl bg-[linear-gradient(95deg,#0284c7,#4f46e5)] px-3 py-2.5 text-xs font-bold text-white shadow hover:scale-[1.02] transition"
+                        >
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            <span>Email Pitch</span>
+                        </a>
+                    </div>
+
                     <!-- Score & Contact Cards -->
                     <div class="grid grid-cols-2 gap-3">
                         <div class="rounded-xl border border-[#b8c9e622] bg-[#27374d60] p-3">

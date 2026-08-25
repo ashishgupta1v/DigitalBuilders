@@ -7,7 +7,7 @@ import { createApp, DefineComponent, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import Toast from './Components/Toast.vue';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'DigitalBuilders';
 const spotlightSelector = '.db-mini, [data-stagger-item]';
 
 const updateSpotlight = (event: MouseEvent) => {
@@ -67,7 +67,10 @@ if (typeof document !== 'undefined') {
 }
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    title: (title) => {
+        if (!title) return appName;
+        return title.includes(appName) ? title : `${title} — ${appName}`;
+    },
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.vue`,

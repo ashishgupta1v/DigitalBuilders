@@ -39,11 +39,7 @@
       "dest": "/public/brand/$1"
     },
     {
-      "src": "/favicon\\.png",
-      "dest": "/public/favicon.png"
-    },
-    {
-      "src": "/(favicon\\.ico|robots\\.txt|sitemap\\.xml)",
+      "src": "/(favicon\\.ico|favicon\\.png|robots\\.txt|manifest\\.webmanifest)",
       "dest": "/public/$1"
     },
     {

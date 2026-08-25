@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use DateTime;
+use DateTimeZone;
+use Illuminate\Support\Facades\Cache;
 use Parsedown;
 
 class BlogService
@@ -25,27 +28,29 @@ class BlogService
      */
     public function getAllPosts(): array
     {
-        if (! is_dir($this->contentPath)) {
-            return [];
-        }
-
-        $files = glob($this->contentPath . '/*.md');
-        if (! $files) {
-            return [];
-        }
-
-        $posts = [];
-        foreach ($files as $file) {
-            $post = $this->parseFile($file);
-            if ($post) {
-                $posts[] = $post;
+        return Cache::remember('blog_posts_all', 3600, function (): array {
+            if (! is_dir($this->contentPath)) {
+                return [];
             }
-        }
 
-        // Sort posts by date descending
-        usort($posts, fn ($a, $b) => strcmp($b['date'], $a['date']));
+            $files = glob($this->contentPath . '/*.md');
+            if (! $files) {
+                return [];
+            }
 
-        return $posts;
+            $posts = [];
+            foreach ($files as $file) {
+                $post = $this->parseFile($file);
+                if ($post) {
+                    $posts[] = $post;
+                }
+            }
+
+            // Sort posts by date descending
+            usort($posts, fn ($a, $b) => strcmp($b['date'], $a['date']));
+
+            return $posts;
+        });
     }
 
     /**
@@ -55,12 +60,66 @@ class BlogService
      */
     public function getPostBySlug(string $slug): ?array
     {
-        $filePath = $this->contentPath . '/' . $slug . '.md';
-        if (! file_exists($filePath)) {
-            return null;
-        }
+        return Cache::remember("blog_post_{$slug}", 3600, function () use ($slug): ?array {
+            $filePath = $this->contentPath . '/' . $slug . '.md';
+            if (! file_exists($filePath)) {
+                return null;
+            }
 
-        return $this->parseFile($filePath, includeHtml: true);
+            return $this->parseFile($filePath, includeHtml: true);
+        });
+    }
+
+    /**
+     * Generate standard RSS 2.0 XML feed for blog articles.
+     */
+    public function generateRssFeed(): string
+    {
+        return Cache::remember('blog_rss_feed_xml', 3600, function (): string {
+            $posts = $this->getAllPosts();
+            $baseUrl = rtrim(config('app.url', 'https://www.digitalbuilders.in'), '/');
+            $feedUrl = $baseUrl . '/feed.xml';
+            $nowRfc = (new DateTime('now', new DateTimeZone('UTC')))->format(DateTime::RSS);
+
+            $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+            $xml .= '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">' . "\n";
+            $xml .= "  <channel>\n";
+            $xml .= "    <title>DigitalBuilders Blog — Enterprise Software &amp; AI Architecture</title>\n";
+            $xml .= "    <link>{$baseUrl}/blog</link>\n";
+            $xml .= "    <description>In-depth architectural breakdowns, DDD case studies, AI workflows, and software engineering insights by DigitalBuilders.</description>\n";
+            $xml .= "    <language>en-in</language>\n";
+            $xml .= "    <lastBuildDate>{$nowRfc}</lastBuildDate>\n";
+            $xml .= "    <atom:link href=\"{$feedUrl}\" rel=\"self\" type=\"application/rss+xml\" />\n";
+
+            foreach ($posts as $post) {
+                $postUrl = $baseUrl . '/blog/' . htmlspecialchars($post['slug']);
+                $title = htmlspecialchars((string) $post['title']);
+                $excerpt = htmlspecialchars((string) ($post['excerpt'] ?? ''));
+                $author = htmlspecialchars((string) ($post['author'] ?? 'Ashish Gupta'));
+                $category = htmlspecialchars((string) ($post['category'] ?? 'Engineering'));
+
+                try {
+                    $pubDate = (new DateTime((string) $post['date'], new DateTimeZone('UTC')))->format(DateTime::RSS);
+                } catch (\Throwable) {
+                    $pubDate = $nowRfc;
+                }
+
+                $xml .= "    <item>\n";
+                $xml .= "      <title>{$title}</title>\n";
+                $xml .= "      <link>{$postUrl}</link>\n";
+                $xml .= "      <guid isPermaLink=\"true\">{$postUrl}</guid>\n";
+                $xml .= "      <pubDate>{$pubDate}</pubDate>\n";
+                $xml .= "      <author>hello@digitalbuilders.in ({$author})</author>\n";
+                $xml .= "      <category>{$category}</category>\n";
+                $xml .= "      <description>{$excerpt}</description>\n";
+                $xml .= "    </item>\n";
+            }
+
+            $xml .= "  </channel>\n";
+            $xml .= '</rss>';
+
+            return $xml;
+        });
     }
 
     /**

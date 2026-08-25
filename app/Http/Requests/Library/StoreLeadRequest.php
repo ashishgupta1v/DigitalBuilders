@@ -23,6 +23,7 @@ class StoreLeadRequest extends FormRequest
             'phone'        => ['required', 'string', 'max:20'],
             'project_type' => ['required', Rule::in(ProjectType::allowed())],
             'description'  => ['nullable', 'string', 'max:2000'],
+            '_hp_company'  => ['nullable', 'string', 'max:0'],
         ];
     }
 

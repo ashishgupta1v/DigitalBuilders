@@ -9,18 +9,27 @@ use App\Models\Testimonial;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class TestimonialController extends Controller
 {
     public function index(): JsonResponse
     {
-        $testimonials = Testimonial::query()
-            ->where('is_featured', true)
-            ->orderBy('sort_order', 'asc')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        try {
+            if (!Schema::hasTable('testimonials')) {
+                return response()->json([]);
+            }
 
-        return response()->json($testimonials);
+            $testimonials = Testimonial::query()
+                ->where('is_featured', true)
+                ->orderBy('sort_order', 'asc')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json($testimonials);
+        } catch (\Throwable $e) {
+            return response()->json([]);
+        }
     }
 
     public function store(Request $request): RedirectResponse

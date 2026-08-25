@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
-import { nextTick, ref } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 
 interface Message {
     id: number;
@@ -35,6 +35,7 @@ const leadForm = useForm({
     phone: '',
     project_type: 'web_app',
     description: '',
+    _hp_company: '',
 });
 
 function toggleWidget() {
@@ -53,6 +54,20 @@ function scrollToBottom() {
     });
 }
 
+function handleKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Escape' && isOpen.value) {
+        isOpen.value = false;
+    }
+}
+
+onMounted(() => {
+    window.addEventListener('keydown', handleKeyDown);
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeyDown);
+});
+
 const customInput = ref('');
 const isThinking = ref(false);
 
@@ -67,14 +82,30 @@ async function sendCustomMessage() {
 
     try {
         const history = messages.value.slice(-6).map((m) => ({ sender: m.sender, text: m.text }));
-        const res = await fetch('/api/ai-chat', {
+        const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '';
+
+        let res = await fetch('/ajax/ai-chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
             },
             body: JSON.stringify({ message: text, history }),
         });
+
+        if (!res.ok) {
+            // Fallback to /api/ai-chat
+            res = await fetch('/api/ai-chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ message: text, history }),
+            });
+        }
 
         if (res.ok) {
             const data = await res.json();
@@ -94,7 +125,7 @@ async function sendCustomMessage() {
         messages.value.push({
             id: Date.now() + 1,
             sender: 'bot',
-            text: "Thanks for your inquiry! Would you like to estimate your project cost or book a discovery call?",
+            text: "Thanks for your inquiry! We engineer custom Web Apps, Mobile Apps, AI Agents, ERP/CRM, and SaaS platforms with sub-100ms response times. Would you like to estimate your project cost or speak with our Lead Architect?",
             options: [
                 { label: 'View Cost Estimator', action: 'pricing' },
                 { label: 'Book a Discovery Call', action: 'lead_form' },
@@ -115,7 +146,7 @@ function handleOptionClick(action: string, label: string) {
             messages.value.push({
                 id: Date.now() + 1,
                 sender: 'bot',
-                text: 'We engineer 5 core digital systems:\n1. Custom Web Applications (Laravel, Vue, React, Next.js)\n2. Mobile Apps (iOS & Android native feeling)\n3. Autonomous AI Voice Agents & Chatbots\n4. Custom Enterprise ERP & CRM systems\n5. SaaS Platforms built to scale.',
+                text: 'We engineer 5 core digital systems:\n1. Custom Web Applications (Laravel, Vue 3, Inertia, React, Next.js)\n2. Mobile Apps (iOS & Android native feeling in Flutter / React Native)\n3. Autonomous AI Voice Agents & RAG Pipelines\n4. Custom Enterprise ERP & CRM systems\n5. Scalable SaaS Platforms.',
                 options: [
                     { label: 'View Cost Estimator', action: 'pricing' },
                     { label: 'Request a Project Quote', action: 'lead_form' },
@@ -125,7 +156,7 @@ function handleOptionClick(action: string, label: string) {
             messages.value.push({
                 id: Date.now() + 1,
                 sender: 'bot',
-                text: 'Our custom software projects typically start around ₹1,25,000 ($1,500 USD) for MVPs, and scaled enterprise architecture ranges from ₹3,500,000+. You can use our interactive estimator on this page for an exact breakdown!',
+                text: 'Our custom software projects typically start around ₹1,25,000 ($1,500 USD) for MVPs, and scaled enterprise architecture ranges from ₹2,50,000 to ₹5,00,000+. You can use our interactive estimator on this page for an exact breakdown!',
                 options: [
                     { label: 'Calculate My Scope Now', action: 'estimator_scroll' },
                     { label: 'Connect with Lead Architect', action: 'lead_form' },
@@ -142,12 +173,12 @@ function handleOptionClick(action: string, label: string) {
                 ],
             });
         } else if (action === 'case_studies') {
-            const el = document.getElementById('case-studies');
+            const el = document.getElementById('portfolio');
             if (el) {
                 el.scrollIntoView({ behavior: 'smooth' });
                 isOpen.value = false;
             } else {
-                window.location.href = '/#case-studies';
+                window.location.href = '/#portfolio';
             }
         } else if (action === 'whatsapp_chat') {
             window.open('https://wa.me/919087021592?text=' + encodeURIComponent('Hi Ashish, I was chatting with the DigitalBuilders AI and would like to discuss my project directly.'), '_blank');
@@ -170,7 +201,7 @@ function handleOptionClick(action: string, label: string) {
             });
         }
         scrollToBottom();
-    }, 400);
+    }, 300);
 }
 
 function submitLeadFromChat() {
@@ -197,6 +228,7 @@ function submitLeadFromChat() {
         <button
             @click="toggleWidget"
             class="relative flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-[#9ba7ff66] bg-[linear-gradient(135deg,#24354a,#1a2636)] shadow-[0_8px_25px_rgba(155,167,255,0.35)] transition-all hover:scale-110"
+            :aria-expanded="isOpen"
             aria-label="Open AI Assistant"
         >
             <span v-if="hasUnread" class="absolute -right-1 -top-1 flex h-4 w-4">
@@ -218,6 +250,8 @@ function submitLeadFromChat() {
     >
         <div
             v-if="isOpen"
+            role="dialog"
+            aria-label="DigitalBuilders AI Assistant"
             class="db-ai-widget-panel fixed bottom-24 right-6 z-[8500] flex h-[540px] w-[360px] flex-col rounded-3xl border border-[#b8c9e640] bg-[#1a2534] shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-xl sm:w-[400px]"
         >
             <!-- Header -->
@@ -228,14 +262,14 @@ function submitLeadFromChat() {
                     </div>
                     <div>
                         <h4 class="text-sm font-bold text-white">DigitalBuilders AI</h4>
-                        <p class="text-[11px] text-emerald-400">● Powered by OpenAI</p>
+                        <p class="text-[11px] text-emerald-400">● Active Assistant</p>
                     </div>
                 </div>
-                <button @click="isOpen = false" class="cursor-pointer text-slate-400 hover:text-white">✕</button>
+                <button @click="isOpen = false" aria-label="Close AI Assistant" class="cursor-pointer text-slate-400 hover:text-white">✕</button>
             </div>
 
             <!-- Messages Area -->
-            <div ref="chatContainer" class="flex-1 overflow-y-auto p-4 space-y-3 text-xs">
+            <div ref="chatContainer" aria-live="polite" class="flex-1 overflow-y-auto p-4 space-y-3 text-xs">
                 <div
                     v-for="msg in messages"
                     :key="msg.id"
@@ -273,10 +307,10 @@ function submitLeadFromChat() {
                 <!-- Embedded Lead Capture Form inside Chat -->
                 <div v-if="showLeadCapture" class="rounded-2xl border border-[#c593ff44] bg-[#27263c] p-4 text-xs space-y-2.5">
                     <p class="font-bold text-white">Quick Discovery Intake</p>
-                    <input v-model="leadForm.name" type="text" placeholder="Your Name *" class="w-full rounded-xl border border-[#b8c9e633] bg-[#1a2534] px-3 py-2 text-white placeholder:text-slate-500 focus:outline-none" />
-                    <input v-model="leadForm.email" type="email" placeholder="Corporate Email *" class="w-full rounded-xl border border-[#b8c9e633] bg-[#1a2534] px-3 py-2 text-white placeholder:text-slate-500 focus:outline-none" />
-                    <input v-model="leadForm.phone" type="text" placeholder="Phone Number *" class="w-full rounded-xl border border-[#b8c9e633] bg-[#1a2534] px-3 py-2 text-white placeholder:text-slate-500 focus:outline-none" />
-                    <select v-model="leadForm.project_type" class="w-full rounded-xl border border-[#b8c9e633] bg-[#1a2534] px-3 py-2 text-white focus:outline-none">
+                    <input v-model="leadForm.name" type="text" placeholder="Your Name *" aria-label="Your Name" class="w-full rounded-xl border border-[#b8c9e633] bg-[#1a2534] px-3 py-2 text-white placeholder:text-slate-500 focus:outline-none" />
+                    <input v-model="leadForm.email" type="email" placeholder="Corporate Email *" aria-label="Corporate Email" class="w-full rounded-xl border border-[#b8c9e633] bg-[#1a2534] px-3 py-2 text-white placeholder:text-slate-500 focus:outline-none" />
+                    <input v-model="leadForm.phone" type="text" placeholder="Phone Number *" aria-label="Phone Number" class="w-full rounded-xl border border-[#b8c9e633] bg-[#1a2534] px-3 py-2 text-white placeholder:text-slate-500 focus:outline-none" />
+                    <select v-model="leadForm.project_type" aria-label="Project Type" class="w-full rounded-xl border border-[#b8c9e633] bg-[#1a2534] px-3 py-2 text-white focus:outline-none">
                         <option value="web_app">Web Application</option>
                         <option value="mobile_app">Mobile App</option>
                         <option value="ai_solutions">AI Solution</option>
@@ -300,11 +334,13 @@ function submitLeadFromChat() {
                         v-model="customInput"
                         type="text"
                         placeholder="Ask AI anything about your project..."
+                        aria-label="Chat input message"
                         class="flex-1 rounded-xl border border-[#b8c9e633] bg-[#1a2534] px-3.5 py-2 text-xs text-white placeholder:text-slate-400 focus:border-[#9ba7ff] focus:outline-none"
                     />
                     <button
                         type="submit"
                         :disabled="!customInput.trim() || isThinking"
+                        aria-label="Send message"
                         class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff)] text-[#1a2231] transition hover:brightness-110 disabled:opacity-40"
                     >
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>

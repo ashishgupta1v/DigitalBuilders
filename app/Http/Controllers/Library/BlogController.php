@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Library;
 
 use App\Http\Controllers\Controller;
 use App\Services\BlogService;
+use Illuminate\Http\Response as HttpResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -34,6 +35,16 @@ class BlogController extends Controller
         return Inertia::render('Blog/Show', [
             'post' => $post,
             'related' => array_slice($related, 0, 2),
+        ]);
+    }
+
+    public function feed(BlogService $service): HttpResponse
+    {
+        $xml = $service->generateRssFeed();
+
+        return response($xml, 200, [
+            'Content-Type' => 'application/xml; charset=utf-8',
+            'Cache-Control' => 'public, max-age=3600',
         ]);
     }
 }

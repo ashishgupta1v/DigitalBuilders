@@ -27,6 +27,8 @@ Route::get('/dashboard', function () {
 
 // Blog Routes (Public)
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/feed.xml', [BlogController::class, 'feed'])->name('blog.feed');
+Route::get('/blog/feed.xml', [BlogController::class, 'feed']);
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 // Service Landing Pages (Public)
@@ -48,6 +50,7 @@ Route::prefix('portfolio')->name('portfolio.')->group(function () {
     Route::get('/gaushala', [PortfolioController::class, 'gaushala'])->name('gaushala');
     Route::get('/sports-club', [PortfolioController::class, 'sportsClub'])->name('sports-club');
     Route::get('/garg-enterprises', [PortfolioController::class, 'gargEnterprises'])->name('garg-enterprises');
+    Route::get('/ashishgupta', [PortfolioController::class, 'ashishgupta'])->name('ashishgupta');
     Route::get('/ssknitwear', [PortfolioController::class, 'ssknitwear'])->name('ssknitwear');
 });
 
@@ -55,9 +58,11 @@ Route::prefix('portfolio')->name('portfolio.')->group(function () {
 Route::get('/estimator', [EstimatorController::class, 'index'])->name('estimator.index');
 Route::post('/estimator/submit', [EstimatorController::class, 'submitEstimate'])->middleware('throttle:5,60')->name('estimator.submit');
 
-// Public Testimonials & AI Chat API
+// Public Testimonials & AI Chat API (Dual-routed for Vercel Serverless compatibility)
 Route::get('/api/testimonials', [TestimonialController::class, 'index'])->name('api.testimonials');
+Route::get('/ajax/testimonials', [TestimonialController::class, 'index'])->name('ajax.testimonials');
 Route::post('/api/ai-chat', [AiChatController::class, 'chat'])->middleware('throttle:15,60')->name('api.ai-chat');
+Route::post('/ajax/ai-chat', [AiChatController::class, 'chat'])->middleware('throttle:15,60')->name('ajax.ai-chat');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

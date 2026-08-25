@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
 const props = defineProps<{
     isStandalone?: boolean;
@@ -64,11 +64,12 @@ const form = useForm({
     name: '',
     email: '',
     phone: '',
-    project_type: '',
+    project_type: 'web_app',
     estimated_budget: '',
     estimated_timeline: '',
     features: [] as string[],
     description: '',
+    _hp_company: '',
 });
 
 const currentProjectTypeObj = computed(() =>
@@ -119,7 +120,7 @@ function toggleFeature(id: string) {
 
 function openInquiryModal() {
     const symbol = currency.value === 'INR' ? '₹' : '$';
-    form.project_type = currentProjectTypeObj.value.label;
+    form.project_type = currentProjectTypeObj.value.id;
     form.estimated_budget = `${symbol}${calculatedTotal.value.min.toLocaleString()} - ${symbol}${calculatedTotal.value.max.toLocaleString()} (${currency.value})`;
     form.estimated_timeline = calculatedDays.value;
     form.features = selectedFeatures.value.map((fId) => FEATURES_LIST.find((f) => f.id === fId)?.label ?? fId);
@@ -138,6 +139,19 @@ function submitInquiry() {
         },
     });
 }
+function handleKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Escape' && showLeadModal.value) {
+        showLeadModal.value = false;
+    }
+}
+
+onMounted(() => {
+    window.addEventListener('keydown', handleKeyDown);
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeyDown);
+});
 
 function formatMoney(val: number): string {
     const symbol = currency.value === 'INR' ? '₹' : '$';
@@ -158,82 +172,90 @@ function formatMoney(val: number): string {
             <div class="flex items-center self-start rounded-full border border-slate-300 dark:border-[#b8c9e640] bg-slate-100 dark:bg-[#101824] p-1">
                 <button
                     @click="currency = 'INR'"
-                    class="rounded-full px-3 py-1 text-xs font-bold transition"
-                    :class="currency === 'INR' ? 'bg-[linear-gradient(95deg,#0284c7,#4f46e5)] dark:bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff)] text-white dark:text-[#1a2231]' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'"
-                >₹ INR</button>
+                    class="rounded-full px-4 py-1 text-xs font-bold transition-all cursor-pointer"
+                    :class="currency === 'INR' ? 'bg-[linear-gradient(95deg,#0284c7,#4f46e5)] text-white shadow' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'"
+                >
+                    ₹ INR
+                </button>
                 <button
                     @click="currency = 'USD'"
-                    class="rounded-full px-3 py-1 text-xs font-bold transition"
-                    :class="currency === 'USD' ? 'bg-[linear-gradient(95deg,#0284c7,#4f46e5)] dark:bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff)] text-white dark:text-[#1a2231]' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'"
-                >$ USD</button>
+                    class="rounded-full px-4 py-1 text-xs font-bold transition-all cursor-pointer"
+                    :class="currency === 'USD' ? 'bg-[linear-gradient(95deg,#0284c7,#4f46e5)] text-white shadow' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'"
+                >
+                    $ USD
+                </button>
             </div>
         </div>
 
-        <div class="mt-8 grid gap-8 lg:grid-cols-[1.3fr_0.7fr]">
-            <!-- Controls -->
+        <div class="mt-8 grid gap-8 lg:grid-cols-[1.5fr_1fr]">
+            <!-- Controls Column -->
             <div class="space-y-6">
-                <!-- 1. Project Type -->
+                <!-- 1. Project Type Selector -->
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-[0.16em] text-sky-600 dark:text-[#9dc5ff]">1. Select Project Type</label>
-                    <div class="mt-3 grid gap-2.5 sm:grid-cols-2">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">1. Select Architecture Archetype</label>
+                    <div class="mt-3 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                         <button
-                            v-for="p in PROJECT_TYPES"
-                            :key="p.id"
+                            v-for="opt in PROJECT_TYPES"
+                            :key="opt.id"
                             type="button"
-                            @click="selectedType = p.id"
-                            class="flex flex-col items-start rounded-2xl border p-4 text-left transition"
-                            :class="selectedType === p.id
-                                ? 'border-sky-500 bg-sky-50 text-sky-950 shadow-md dark:border-[#9ba7ff] dark:bg-[#28384e] dark:text-white'
-                                : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-sky-300 dark:border-[#b8c9e626] dark:bg-[#1e2a3b] dark:text-slate-300 dark:hover:border-[#b8c9e650]'"
+                            @click="selectedType = opt.id"
+                            class="flex flex-col items-start rounded-2xl border p-3.5 text-left transition-all cursor-pointer"
+                            :class="selectedType === opt.id
+                                ? 'border-sky-500 dark:border-[#9ba7ff] bg-sky-50 dark:bg-[#24354a] shadow-[0_0_15px_rgba(2,132,199,0.15)] dark:shadow-[0_0_15px_rgba(155,167,255,0.2)]'
+                                : 'border-slate-200 dark:border-[#b8c9e622] bg-slate-50 dark:bg-[#121c27] hover:border-slate-300 dark:hover:border-[#b8c9e644]'"
                         >
-                            <span class="text-sm font-bold text-slate-900 dark:text-white">{{ p.label }}</span>
-                            <span class="mt-1 text-xs text-slate-500 dark:text-slate-400 leading-snug">{{ p.description }}</span>
+                            <span class="text-xs font-bold text-slate-900 dark:text-white">{{ opt.label }}</span>
+                            <span class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{{ opt.description }}</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- 2. Scale & Complexity -->
+                <!-- 2. Scale Tier Selector -->
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-[0.16em] text-sky-600 dark:text-[#9dc5ff]">2. Select System Scale</label>
-                    <div class="mt-3 grid gap-2.5 sm:grid-cols-3">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">2. Select Scale & Complexity Tier</label>
+                    <div class="mt-3 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
                         <button
-                            v-for="s in SCALE_OPTIONS"
-                            :key="s.id"
+                            v-for="scale in SCALE_OPTIONS"
+                            :key="scale.id"
                             type="button"
-                            @click="selectedScale = s.id"
-                            class="flex flex-col items-start rounded-xl border p-3 text-left transition"
-                            :class="selectedScale === s.id
-                                ? 'border-sky-500 bg-sky-50 text-sky-950 dark:border-[#9ba7ff] dark:bg-[#28384e] dark:text-white'
-                                : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-sky-300 dark:border-[#b8c9e626] dark:bg-[#1e2a3b] dark:text-slate-300 dark:hover:border-[#b8c9e650]'"
+                            @click="selectedScale = scale.id"
+                            class="flex flex-col items-start rounded-2xl border p-3 text-left transition-all cursor-pointer"
+                            :class="selectedScale === scale.id
+                                ? 'border-sky-500 dark:border-[#9ba7ff] bg-sky-50 dark:bg-[#24354a] shadow-[0_0_15px_rgba(2,132,199,0.15)] dark:shadow-[0_0_15px_rgba(155,167,255,0.2)]'
+                                : 'border-slate-200 dark:border-[#b8c9e622] bg-slate-50 dark:bg-[#121c27] hover:border-slate-300 dark:hover:border-[#b8c9e644]'"
                         >
-                            <span class="text-xs font-bold text-slate-900 dark:text-white">{{ s.label }}</span>
-                            <span class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{{ s.description }}</span>
+                            <span class="text-xs font-bold text-slate-900 dark:text-white">{{ scale.label }}</span>
+                            <span class="mt-1 text-[10px] text-slate-500 dark:text-slate-400">{{ scale.description }}</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- 3. Key Modules & Features -->
+                <!-- 3. Add-on Architectural Modules -->
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-[0.16em] text-sky-600 dark:text-[#9dc5ff]">3. Additional Modules & Capabilities</label>
-                    <div class="mt-3 grid gap-2.5 sm:grid-cols-2">
-                        <button
-                            v-for="f in FEATURES_LIST"
-                            :key="f.id"
-                            type="button"
-                            @click="toggleFeature(f.id)"
-                            class="flex items-center justify-between rounded-xl border p-3 text-left transition"
-                            :class="selectedFeatures.includes(f.id)
-                                ? 'border-purple-400 bg-purple-50 text-purple-950 dark:border-[#c593ff] dark:bg-[#342e47] dark:text-white'
-                                : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-purple-300 dark:border-[#b8c9e626] dark:bg-[#1e2a3b] dark:text-slate-300 dark:hover:border-[#b8c9e650]'"
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">3. Architectural Modules & Add-ons</label>
+                    <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                        <div
+                            v-for="feat in FEATURES_LIST"
+                            :key="feat.id"
+                            @click="toggleFeature(feat.id)"
+                            class="flex items-center justify-between rounded-xl border p-2.5 transition-all cursor-pointer select-none"
+                            :class="selectedFeatures.includes(feat.id)
+                                ? 'border-purple-400 dark:border-[#c593ff] bg-purple-50 dark:bg-[#231b33]'
+                                : 'border-slate-200 dark:border-[#b8c9e618] bg-slate-50 dark:bg-[#101720] hover:border-slate-300 dark:hover:border-[#b8c9e633]'"
                         >
-                            <span class="text-xs font-medium text-slate-900 dark:text-white">{{ f.label }}</span>
-                            <span
-                                class="ml-2 shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold transition"
-                                :class="selectedFeatures.includes(f.id)
-                                    ? 'bg-purple-600 text-white dark:bg-[#c593ff] dark:text-black'
-                                    : 'bg-slate-200 text-slate-600 dark:bg-[#2b3a4f] dark:text-slate-400'"
-                            >{{ selectedFeatures.includes(f.id) ? '✓ Added' : '+ Add' }}</span>
-                        </button>
+                            <div class="flex items-center gap-2">
+                                <div
+                                    class="flex h-4 w-4 items-center justify-center rounded border"
+                                    :class="selectedFeatures.includes(feat.id) ? 'border-purple-600 bg-purple-600 dark:border-[#c593ff] dark:bg-[#c593ff] text-white dark:text-[#1a2231]' : 'border-slate-300 dark:border-slate-600'"
+                                >
+                                    <span v-if="selectedFeatures.includes(feat.id)" class="text-[10px] font-black">✓</span>
+                                </div>
+                                <span class="text-xs text-slate-800 dark:text-slate-200">{{ feat.label }}</span>
+                            </div>
+                            <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                                +{{ formatMoney(currency === 'INR' ? feat.priceInr : feat.priceUsd) }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -274,7 +296,7 @@ function formatMoney(val: number): string {
                 <div class="mt-8 space-y-3">
                     <button
                         @click="openInquiryModal"
-                        class="db-action w-full rounded-full bg-[linear-gradient(95deg,#0284c7_0%,#4f46e5_48%,#7c3aed_100%)] dark:bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-6 py-3.5 text-center text-sm font-bold text-white dark:text-[#1a2231] transition hover:scale-[1.01] shadow-lg"
+                        class="db-action w-full rounded-full bg-[linear-gradient(95deg,#0284c7_0%,#4f46e5_48%,#7c3aed_100%)] dark:bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-6 py-3.5 text-center text-sm font-bold text-white dark:text-[#1a2231] transition hover:scale-[1.01] shadow-lg cursor-pointer"
                     >
                         Request Formal Proposal for this Scope →
                     </button>
@@ -284,37 +306,79 @@ function formatMoney(val: number): string {
         </div>
 
         <!-- Modal overlay for submitting estimate inquiry -->
-        <div v-if="showLeadModal" class="fixed inset-0 z-[999] flex items-center justify-center bg-slate-900/80 p-4 backdrop-blur-md">
+        <div
+            v-if="showLeadModal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="estimator-inquiry-modal-title"
+            class="fixed inset-0 z-[999] flex items-center justify-center bg-slate-900/80 p-4 backdrop-blur-md"
+            @click.self="showLeadModal = false"
+        >
             <div class="w-full max-w-lg rounded-3xl border border-slate-200 dark:border-[#b8c9e640] bg-white dark:bg-[#1f2d3f] p-6 shadow-2xl sm:p-8">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Submit Estimate Inquiry</h3>
-                    <button @click="showLeadModal = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-white">✕</button>
+                    <h3 id="estimator-inquiry-modal-title" class="text-xl font-bold text-slate-900 dark:text-white">Submit Estimate Inquiry</h3>
+                    <button @click="showLeadModal = false" aria-label="Close modal" class="text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer">✕</button>
                 </div>
                 <p class="mt-2 text-xs text-slate-600 dark:text-slate-300">
                     We'll attach your configured estimate ({{ form.estimated_budget }}, {{ form.estimated_timeline }}) directly to your inquiry.
                 </p>
 
                 <form @submit.prevent="submitInquiry" class="mt-6 space-y-4">
+                    <input v-model="form._hp_company" type="text" name="_hp_company" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none !important;" />
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-200">Full Name *</label>
-                        <input v-model="form.name" required type="text" placeholder="First and Last Name" class="mt-1 w-full rounded-xl border border-slate-300 dark:border-[#b8c9e633] bg-slate-50 dark:bg-[#27374d] px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:border-sky-500 focus:outline-none" />
+                        <label for="estimator-name" class="block text-xs font-semibold text-slate-700 dark:text-slate-200">Full Name *</label>
+                        <input
+                            id="estimator-name"
+                            name="name"
+                            v-model="form.name"
+                            required
+                            type="text"
+                            autocomplete="name"
+                            placeholder="First and Last Name"
+                            class="mt-1 w-full rounded-xl border border-slate-300 dark:border-[#b8c9e633] bg-slate-50 dark:bg-[#27374d] px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:border-sky-500 focus:outline-none"
+                        />
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-200">Email Address *</label>
-                        <input v-model="form.email" required type="email" placeholder="you@company.com" class="mt-1 w-full rounded-xl border border-slate-300 dark:border-[#b8c9e633] bg-slate-50 dark:bg-[#27374d] px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:border-sky-500 focus:outline-none" />
+                        <label for="estimator-email" class="block text-xs font-semibold text-slate-700 dark:text-slate-200">Email Address *</label>
+                        <input
+                            id="estimator-email"
+                            name="email"
+                            v-model="form.email"
+                            required
+                            type="email"
+                            autocomplete="email"
+                            placeholder="you@company.com"
+                            class="mt-1 w-full rounded-xl border border-slate-300 dark:border-[#b8c9e633] bg-slate-50 dark:bg-[#27374d] px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:border-sky-500 focus:outline-none"
+                        />
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-200">Phone Number *</label>
-                        <input v-model="form.phone" required type="text" placeholder="+91 XXXXX XXXXX" class="mt-1 w-full rounded-xl border border-slate-300 dark:border-[#b8c9e633] bg-slate-50 dark:bg-[#27374d] px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:border-sky-500 focus:outline-none" />
+                        <label for="estimator-phone" class="block text-xs font-semibold text-slate-700 dark:text-slate-200">Phone Number *</label>
+                        <input
+                            id="estimator-phone"
+                            name="phone"
+                            v-model="form.phone"
+                            required
+                            type="tel"
+                            autocomplete="tel"
+                            placeholder="+91 XXXXX XXXXX"
+                            class="mt-1 w-full rounded-xl border border-slate-300 dark:border-[#b8c9e633] bg-slate-50 dark:bg-[#27374d] px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:border-sky-500 focus:outline-none"
+                        />
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-200">Additional Project Notes (Optional)</label>
-                        <textarea v-model="form.description" rows="3" placeholder="Tell us more about your timeline or target launch date..." class="mt-1 w-full rounded-xl border border-slate-300 dark:border-[#b8c9e633] bg-slate-50 dark:bg-[#27374d] px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:border-sky-500 focus:outline-none"></textarea>
+                        <label for="estimator-description" class="block text-xs font-semibold text-slate-700 dark:text-slate-200">Additional Project Notes (Optional)</label>
+                        <textarea
+                            id="estimator-description"
+                            name="description"
+                            v-model="form.description"
+                            rows="3"
+                            placeholder="Tell us more about your timeline or target launch date..."
+                            class="mt-1 w-full rounded-xl border border-slate-300 dark:border-[#b8c9e633] bg-slate-50 dark:bg-[#27374d] px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:border-sky-500 focus:outline-none"
+                        ></textarea>
                     </div>
 
                     <div class="mt-6 flex gap-3">
-                        <button type="button" @click="showLeadModal = false" class="flex-1 rounded-full border border-slate-300 dark:border-white/20 px-4 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">Cancel</button>
-                        <button type="submit" :disabled="form.processing" class="flex-1 rounded-full bg-[linear-gradient(95deg,#0284c7_0%,#4f46e5_48%,#7c3aed_100%)] dark:bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff,#c593ff)] px-4 py-2.5 text-xs font-bold text-white dark:text-[#1a2231] hover:scale-[1.01] disabled:opacity-50">
+                        <button type="button" @click="showLeadModal = false" class="flex-1 rounded-full border border-slate-300 dark:border-white/20 px-4 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white cursor-pointer">Cancel</button>
+                        <button type="submit" :disabled="form.processing" class="flex-1 rounded-full bg-[linear-gradient(95deg,#0284c7_0%,#4f46e5_48%,#7c3aed_100%)] dark:bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff,#c593ff)] px-4 py-2.5 text-xs font-bold text-white dark:text-[#1a2231] hover:scale-[1.01] disabled:opacity-50 cursor-pointer">
                             {{ form.processing ? 'Submitting...' : 'Send Inquiry' }}
                         </button>
                     </div>
