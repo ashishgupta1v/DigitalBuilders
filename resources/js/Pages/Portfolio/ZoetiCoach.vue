@@ -3,8 +3,17 @@ import { Head, Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="ZoetiCoach Case Study — DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders unified fragmented operations for ZoetiCoach into a custom ERP with AI workflow automation." />
+    <Head title="ZoetiCoach AI Case Study — WhatsApp-Native Coaching ERP & RAG Agent | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders engineered a WhatsApp-first B2B2C accountability SaaS with OpenAI RAG habit verification, reducing client drop-off by 65%." />
+        <meta property="og:title" content="ZoetiCoach AI Case Study — WhatsApp-Native Coaching ERP & RAG Agent | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders engineered a WhatsApp-first B2B2C accountability SaaS with OpenAI RAG habit verification, reducing client drop-off by 65%." />
+        <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/zoeticoach.jpg" />
+        <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/zoeticoach" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="ZoetiCoach AI Case Study — WhatsApp Coaching ERP | DigitalBuilders" />
+        <meta name="twitter:description" content="WhatsApp-native habit verification SaaS powered by OpenAI RAG and event-sourced ledgers." />
+        <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/zoeticoach.jpg" />
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">

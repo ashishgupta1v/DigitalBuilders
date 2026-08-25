@@ -3,8 +3,17 @@ import { Head, Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="GutTalks Case Study — DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders built a modern telehealth & nutrition assessment web platform for GutTalks with seamless consultation funnels." />
+    <Head title="GutTalks Case Study — Telehealth Portal, Root Rx & GutMap Complete™ | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders built an evidence-based gut health telehealth platform with ₹499 Root Rx booking and at-home microbiome sequencing for 10k+ clients." />
+        <meta property="og:title" content="GutTalks Case Study — Telehealth Portal, Root Rx & GutMap Complete™ | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders built an evidence-based gut health telehealth platform with ₹499 Root Rx booking and at-home microbiome sequencing for 10k+ clients." />
+        <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/guttalks.jpg" />
+        <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/guttalks" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="GutTalks Case Study — Telehealth Portal & Root Rx | DigitalBuilders" />
+        <meta name="twitter:description" content="Evidence-based telehealth platform with ₹499 Root Rx booking and at-home microbiome diagnostics." />
+        <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/guttalks.jpg" />
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">

@@ -3,8 +3,17 @@ import { Head, Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="SportsEntertainmentClub Mobile App Case Study — DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders engineered a cross-platform mobile application for facility booking, membership management, and tournament scheduling." />
+    <Head title="SportsEntertainmentClub Case Study — Court Booking & QR Pass App | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders engineered a 60 FPS mobile app with atomic slot reservation concurrency locks, digital QR member passes, and tournament brackets." />
+        <meta property="og:title" content="SportsEntertainmentClub Case Study — Court Booking & QR Pass App | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders engineered a 60 FPS mobile app with atomic slot reservation concurrency locks, digital QR member passes, and tournament brackets." />
+        <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/sportsclub.jpg" />
+        <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/sports-club" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="SportsEntertainmentClub Case Study — Mobile App | DigitalBuilders" />
+        <meta name="twitter:description" content="Cross-platform court booking app with 0 collision locks and digital QR member wallet." />
+        <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/sportsclub.jpg" />
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">

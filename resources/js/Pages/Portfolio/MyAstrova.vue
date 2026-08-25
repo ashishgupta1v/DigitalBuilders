@@ -3,8 +3,17 @@ import { Head, Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="MyAstrova Case Study — DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders engineered an AstroTech computational platform with automated kundali generation, daily horoscopes, and live Vedic consultations." />
+    <Head title="MyAstrova Case Study — Vedic AstroTech Engine & Energized Crystal Mall | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders engineered a sub-200ms mathematical ephemeris Kundli engine, live astrologer call/chat routing, and crystal remedy e-commerce." />
+        <meta property="og:title" content="MyAstrova Case Study — Vedic AstroTech Engine & Energized Crystal Mall | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders engineered a sub-200ms mathematical ephemeris Kundli engine, live astrologer call/chat routing, and crystal remedy e-commerce." />
+        <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/myastrova.jpg" />
+        <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/myastrova" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="MyAstrova Case Study — Vedic AstroTech Engine | DigitalBuilders" />
+        <meta name="twitter:description" content="Sub-200ms mathematical Kundli engine, live astrologer consultations, and energized crystal mall." />
+        <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/myastrova.jpg" />
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">

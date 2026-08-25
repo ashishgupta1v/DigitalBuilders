@@ -3,8 +3,17 @@ import { Head, Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="Garg Enterprises Mobile App Case Study — DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders engineered an enterprise B2B Android ordering app with real-time dealer ledger sync and warehouse dispatch automation." />
+    <Head title="Garg Enterprises Case Study — B2B Wholesale Ordering & Ledger App | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders built a rugged Android B2B ordering app with offline SQLite sync, dealer credit ledger, and 1-tap GST invoice downloads for 10k+ SKUs." />
+        <meta property="og:title" content="Garg Enterprises Case Study — B2B Wholesale Ordering & Ledger App | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders built a rugged Android B2B ordering app with offline SQLite sync, dealer credit ledger, and 1-tap GST invoice downloads for 10k+ SKUs." />
+        <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/gargenterprises.jpg" />
+        <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/garg-enterprises" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Garg Enterprises Case Study — B2B Android App | DigitalBuilders" />
+        <meta name="twitter:description" content="B2B wholesale ordering app with offline SQLite drafting, dealer credit ledger, and GST PDF downloads." />
+        <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/gargenterprises.jpg" />
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">

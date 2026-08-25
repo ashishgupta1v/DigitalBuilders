@@ -8,24 +8,31 @@
         $assetMode = ($hasViteHot || $hasLocalManifest) ? 'local' : 'none';
         $hasAssets = $assetMode === 'local';
     @endphp
+    @php
+        $currentMetaTitle = $pageMeta['title'] ?? 'DigitalBuilders — Enterprise Web, Mobile and AI Architecture';
+        $currentMetaDesc = $pageMeta['description'] ?? 'DigitalBuilders delivers enterprise-grade web applications, mobile apps, and AI solutions engineered for scale.';
+        $currentMetaImage = $pageMeta['image'] ?? 'https://www.digitalbuilders.in/images/db-logo.png';
+        $currentMetaType = $pageMeta['type'] ?? 'website';
+        $currentMetaUrl = $pageMeta['url'] ?? url()->current();
+    @endphp
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="DigitalBuilders delivers enterprise-grade web applications, mobile apps, and AI solutions engineered for scale.">
+        <meta name="description" content="{{ $currentMetaDesc }}">
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-        <link rel="canonical" href="{{ url()->current() }}">
+        <link rel="canonical" href="{{ $currentMetaUrl }}">
         <meta property="og:site_name" content="DigitalBuilders">
-        <meta property="og:type" content="website">
-        <meta property="og:title" content="DigitalBuilders — Enterprise Web, Mobile and AI Architecture">
-        <meta property="og:description" content="Custom software engineered with a Staff Engineer mindset to scale your business.">
-        <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:image" content="https://www.digitalbuilders.in/images/db-logo.png">
-        <meta property="og:image:width" content="512">
-        <meta property="og:image:height" content="512">
+        <meta property="og:type" content="{{ $currentMetaType }}">
+        <meta property="og:title" content="{{ $currentMetaTitle }}">
+        <meta property="og:description" content="{{ $currentMetaDesc }}">
+        <meta property="og:url" content="{{ $currentMetaUrl }}">
+        <meta property="og:image" content="{{ $currentMetaImage }}">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="DigitalBuilders">
-        <meta name="twitter:description" content="Enterprise-grade web, mobile, and AI architecture for ambitious businesses.">
-        <meta name="twitter:image" content="https://www.digitalbuilders.in/images/db-logo.png">
+        <meta name="twitter:title" content="{{ $currentMetaTitle }}">
+        <meta name="twitter:description" content="{{ $currentMetaDesc }}">
+        <meta name="twitter:image" content="{{ $currentMetaImage }}">
         @verbatim
         <script type="application/ld+json">
             {"@context":"https://schema.org","@type":"ProfessionalService","name":"DigitalBuilders","url":"https://www.digitalbuilders.in/","image":"https://www.digitalbuilders.in/images/db-logo.png","description":"DigitalBuilders delivers enterprise-grade web applications, mobile apps, and AI solutions.","areaServed":"IN","address":{"@type":"PostalAddress","addressLocality":"Ludhiana","addressRegion":"Punjab","addressCountry":"IN"}}

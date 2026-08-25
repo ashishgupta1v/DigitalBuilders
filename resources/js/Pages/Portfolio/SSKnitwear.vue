@@ -3,8 +3,17 @@ import { Head, Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="SSKnitwear Case Study — DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders modernized SSKnitwear with a high-performance enterprise storefront, resulting in +180% sales growth." />
+    <Head title="Ashish Gupta Hub Case Study — Senior Full-Stack Architect Showcase | DigitalBuilders">
+        <meta name="description" content="High-performance engineering showcase demonstrating Domain-Driven Design (DDD), legacy modernization, and $1M+ cloud savings on the VILT stack." />
+        <meta property="og:title" content="Ashish Gupta Hub Case Study — Senior Full-Stack Architect Showcase | DigitalBuilders" />
+        <meta property="og:description" content="High-performance engineering showcase demonstrating Domain-Driven Design (DDD), legacy modernization, and $1M+ cloud savings on the VILT stack." />
+        <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/ashishgupta.jpg" />
+        <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/ssknitwear" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Ashish Gupta Hub Case Study — Architecture Showcase | DigitalBuilders" />
+        <meta name="twitter:description" content="Senior Full-Stack Architect portfolio demonstrating Domain-Driven Design and $1M+ cloud savings." />
+        <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/ashishgupta.jpg" />
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">

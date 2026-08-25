@@ -3,8 +3,17 @@ import { Head, Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="Habuilt Case Study — DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders re-architected Habuilt's high-traffic platform to reduce server latencies by 70% and double database throughput." />
+    <Head title="Habuilt Case Study — 50 Habits, 4 Tiers & 99.99% Uptime | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders stabilized Habuilt's high-traffic wellness platform, reducing server latency by 70% with 26-week progression tiers and mobile deep linking." />
+        <meta property="og:title" content="Habuilt Case Study — 50 Habits, 4 Progression Tiers & 99.99% Uptime | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders stabilized Habuilt's high-traffic wellness platform, reducing server latency by 70% with 26-week progression tiers and mobile deep linking." />
+        <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/habuilt.jpg" />
+        <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/habuilt" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Habuilt Case Study — 50 Habits, 4 Progression Tiers | DigitalBuilders" />
+        <meta name="twitter:description" content="High-traffic atomic habit platform stabilized with 70% lower latency and 99.99% uptime." />
+        <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/habuilt.jpg" />
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">

@@ -3,8 +3,17 @@ import { Head, Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="Dhanda Diary Case Study — DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders engineered a multi-tenant cloud accounting and ledger SaaS with automated invoice calculation and real-time financial synchronization." />
+    <Head title="Dhanda Diary Case Study — Execution Cockpit & Business Ledger SaaS | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders engineered a real-time execution cockpit with Daily Compliance Reports (DCR), ApexCharts KPI telemetry, and <50ms sync latency." />
+        <meta property="og:title" content="Dhanda Diary Case Study — Daily Compliance & Execution Cockpit SaaS | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders engineered a real-time execution cockpit with Daily Compliance Reports (DCR), ApexCharts KPI telemetry, and <50ms sync latency." />
+        <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/dhandadiary.jpg" />
+        <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/dhandadiary" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Dhanda Diary Case Study — Execution Cockpit SaaS | DigitalBuilders" />
+        <meta name="twitter:description" content="Execution cockpit with automated DCR routines, Kanban task boards, and ApexCharts KPI trackers." />
+        <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/dhandadiary.jpg" />
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">

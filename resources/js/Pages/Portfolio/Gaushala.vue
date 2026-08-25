@@ -3,8 +3,17 @@ import { Head, Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="Krishan Balram Gaushala Case Study — DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders engineered a high-trust digital donation portal with automated 80G tax receipts and seva event booking for Krishan Balram Gaushala." />
+    <Head title="Krishan Balram Gaushala Case Study — GauSeva Connect & WhatsApp API | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders built GauSeva Connect: automated daily WhatsApp birthday blessings via Meta Cloud API and instant 80G tax exemption PDF receipts." />
+        <meta property="og:title" content="Krishan Balram Gaushala Case Study — GauSeva Connect & WhatsApp API | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders built GauSeva Connect: automated daily WhatsApp birthday blessings via Meta Cloud API and instant 80G tax exemption PDF receipts." />
+        <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/gaushala.jpg" />
+        <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/gaushala" />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Krishan Balram Gaushala Case Study — GauSeva Connect | DigitalBuilders" />
+        <meta name="twitter:description" content="GauSeva Connect: Automated devotee WhatsApp blessings and instant 80G tax receipts." />
+        <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/gaushala.jpg" />
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">

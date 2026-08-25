@@ -231,7 +231,7 @@
     ]
   },
   "resources/js/Pages/Portfolio/DhandaDiary.vue": {
-    "file": "assets/DhandaDiary-CcYoy0PU.js",
+    "file": "assets/DhandaDiary-bifFtlOp.js",
     "name": "DhandaDiary",
     "src": "resources/js/Pages/Portfolio/DhandaDiary.vue",
     "isDynamicEntry": true,
@@ -240,11 +240,11 @@
       "_index.esm-CRerGu4e.js"
     ],
     "css": [
-      "assets/DhandaDiary-CWKRZO_u.css"
+      "assets/DhandaDiary-mpoeOBuk.css"
     ]
   },
   "resources/js/Pages/Portfolio/GargEnterprises.vue": {
-    "file": "assets/GargEnterprises-BKpfPwH1.js",
+    "file": "assets/GargEnterprises-Om7_I88W.js",
     "name": "GargEnterprises",
     "src": "resources/js/Pages/Portfolio/GargEnterprises.vue",
     "isDynamicEntry": true,
@@ -253,11 +253,11 @@
       "_index.esm-CRerGu4e.js"
     ],
     "css": [
-      "assets/GargEnterprises-B_7qLJ8W.css"
+      "assets/GargEnterprises-Bsq5V-RE.css"
     ]
   },
   "resources/js/Pages/Portfolio/Gaushala.vue": {
-    "file": "assets/Gaushala-Cpbr1N1a.js",
+    "file": "assets/Gaushala-BThir9G9.js",
     "name": "Gaushala",
     "src": "resources/js/Pages/Portfolio/Gaushala.vue",
     "isDynamicEntry": true,
@@ -266,11 +266,11 @@
       "_index.esm-CRerGu4e.js"
     ],
     "css": [
-      "assets/Gaushala-xsxLjd7J.css"
+      "assets/Gaushala-BZCCly6g.css"
     ]
   },
   "resources/js/Pages/Portfolio/GutTalks.vue": {
-    "file": "assets/GutTalks-Dv_rGpv3.js",
+    "file": "assets/GutTalks-CqBRZFvt.js",
     "name": "GutTalks",
     "src": "resources/js/Pages/Portfolio/GutTalks.vue",
     "isDynamicEntry": true,
@@ -279,11 +279,11 @@
       "_index.esm-CRerGu4e.js"
     ],
     "css": [
-      "assets/GutTalks-C38i70-h.css"
+      "assets/GutTalks-BqTicCaY.css"
     ]
   },
   "resources/js/Pages/Portfolio/Habuilt.vue": {
-    "file": "assets/Habuilt-3a_Yihv6.js",
+    "file": "assets/Habuilt-B4kT5T6Z.js",
     "name": "Habuilt",
     "src": "resources/js/Pages/Portfolio/Habuilt.vue",
     "isDynamicEntry": true,
@@ -292,11 +292,11 @@
       "_index.esm-CRerGu4e.js"
     ],
     "css": [
-      "assets/Habuilt-CKmOjS57.css"
+      "assets/Habuilt-DHxTQwoG.css"
     ]
   },
   "resources/js/Pages/Portfolio/MyAstrova.vue": {
-    "file": "assets/MyAstrova-CPBXXBXn.js",
+    "file": "assets/MyAstrova-D-yOxhyW.js",
     "name": "MyAstrova",
     "src": "resources/js/Pages/Portfolio/MyAstrova.vue",
     "isDynamicEntry": true,
@@ -305,11 +305,11 @@
       "_index.esm-CRerGu4e.js"
     ],
     "css": [
-      "assets/MyAstrova-G0gNMJh9.css"
+      "assets/MyAstrova-PMi-OqXl.css"
     ]
   },
   "resources/js/Pages/Portfolio/SSKnitwear.vue": {
-    "file": "assets/SSKnitwear-BJ45j7zV.js",
+    "file": "assets/SSKnitwear-Dc2Zf_JL.js",
     "name": "SSKnitwear",
     "src": "resources/js/Pages/Portfolio/SSKnitwear.vue",
     "isDynamicEntry": true,
@@ -318,11 +318,11 @@
       "_index.esm-CRerGu4e.js"
     ],
     "css": [
-      "assets/SSKnitwear-Bud9xnSC.css"
+      "assets/SSKnitwear-CTVi7HXo.css"
     ]
   },
   "resources/js/Pages/Portfolio/SportsClub.vue": {
-    "file": "assets/SportsClub-D8cRV3lg.js",
+    "file": "assets/SportsClub-UX_fFP3T.js",
     "name": "SportsClub",
     "src": "resources/js/Pages/Portfolio/SportsClub.vue",
     "isDynamicEntry": true,
@@ -331,11 +331,11 @@
       "_index.esm-CRerGu4e.js"
     ],
     "css": [
-      "assets/SportsClub-BB0mQeM2.css"
+      "assets/SportsClub-qVAsep2r.css"
     ]
   },
   "resources/js/Pages/Portfolio/ZoetiCoach.vue": {
-    "file": "assets/ZoetiCoach-BGRWjyLT.js",
+    "file": "assets/ZoetiCoach-DNAcRzP0.js",
     "name": "ZoetiCoach",
     "src": "resources/js/Pages/Portfolio/ZoetiCoach.vue",
     "isDynamicEntry": true,
@@ -344,7 +344,7 @@
       "_index.esm-CRerGu4e.js"
     ],
     "css": [
-      "assets/ZoetiCoach-Dhv8SeIR.css"
+      "assets/ZoetiCoach-DJ7k6Tv5.css"
     ]
   },
   "resources/js/Pages/Profile/Edit.vue": {
@@ -453,7 +453,7 @@
     ]
   },
   "resources/js/app.ts": {
-    "file": "assets/app-CDejZKT5.js",
+    "file": "assets/app-BqL1Hdlv.js",
     "name": "app",
     "src": "resources/js/app.ts",
     "isEntry": true,
