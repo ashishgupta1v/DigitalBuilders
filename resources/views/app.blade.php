@@ -35,10 +35,102 @@
         <meta name="twitter:image" content="{{ $currentMetaImage }}">
         @verbatim
         <script type="application/ld+json">
-            {"@context":"https://schema.org","@type":"ProfessionalService","name":"DigitalBuilders","url":"https://www.digitalbuilders.in/","image":"https://www.digitalbuilders.in/images/db-logo.png","description":"DigitalBuilders delivers enterprise-grade web applications, mobile apps, and AI solutions.","areaServed":"IN","address":{"@type":"PostalAddress","addressLocality":"Ludhiana","addressRegion":"Punjab","addressCountry":"IN"}}
+            {
+                "@context": "https://schema.org",
+                "@type": "ProfessionalService",
+                "name": "DigitalBuilders",
+                "url": "https://www.digitalbuilders.in/",
+                "logo": "https://www.digitalbuilders.in/images/db-logo.png",
+                "image": "https://www.digitalbuilders.in/images/portfolio/habuilt.jpg",
+                "description": "DigitalBuilders delivers enterprise-grade web applications, high-throughput SaaS platforms, mobile apps, and autonomous AI agents.",
+                "founder": {
+                    "@type": "Person",
+                    "name": "Ashish Gupta",
+                    "url": "https://ashishgupta.dev"
+                },
+                "telephone": "+919087021592",
+                "email": "hello@digitalbuilders.in",
+                "areaServed": ["IN", "US", "GB", "AE", "CA", "SG"],
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Ludhiana",
+                    "addressRegion": "Punjab",
+                    "addressCountry": "IN"
+                },
+                "priceRange": "$$"
+            }
         </script>
         <script type="application/ld+json">
-            {"@context":"https://schema.org","@type":"WebSite","name":"DigitalBuilders","url":"https://www.digitalbuilders.in/"}
+            {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "name": "DigitalBuilders",
+                "url": "https://www.digitalbuilders.in/"
+            }
+        </script>
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "itemListElement": [
+                    {
+                        "@type": "SoftwareApplication",
+                        "position": 1,
+                        "name": "Habuilt Wellness & Habit Platform",
+                        "url": "https://www.digitalbuilders.in/portfolio/habuilt",
+                        "applicationCategory": "HealthApplication"
+                    },
+                    {
+                        "@type": "SoftwareApplication",
+                        "position": 2,
+                        "name": "Dhanda Diary Execution Cockpit SaaS",
+                        "url": "https://www.digitalbuilders.in/portfolio/dhandadiary",
+                        "applicationCategory": "BusinessApplication"
+                    },
+                    {
+                        "@type": "SoftwareApplication",
+                        "position": 3,
+                        "name": "ZoetiCoach AI WhatsApp Coaching ERP",
+                        "url": "https://www.digitalbuilders.in/portfolio/zoeticoach",
+                        "applicationCategory": "BusinessApplication"
+                    },
+                    {
+                        "@type": "SoftwareApplication",
+                        "position": 4,
+                        "name": "GutTalks Telehealth & Microbiome Portal",
+                        "url": "https://www.digitalbuilders.in/portfolio/guttalks",
+                        "applicationCategory": "HealthApplication"
+                    },
+                    {
+                        "@type": "SoftwareApplication",
+                        "position": 5,
+                        "name": "MyAstrova Vedic AstroTech Computation Engine",
+                        "url": "https://www.digitalbuilders.in/portfolio/myastrova",
+                        "applicationCategory": "LifestyleApplication"
+                    },
+                    {
+                        "@type": "SoftwareApplication",
+                        "position": 6,
+                        "name": "Krishan Balram Gaushala GauSeva Connect",
+                        "url": "https://www.digitalbuilders.in/portfolio/gaushala",
+                        "applicationCategory": "BusinessApplication"
+                    },
+                    {
+                        "@type": "SoftwareApplication",
+                        "position": 7,
+                        "name": "SportsEntertainmentClub Mobile Booking App",
+                        "url": "https://www.digitalbuilders.in/portfolio/sports-club",
+                        "applicationCategory": "SportsApplication"
+                    },
+                    {
+                        "@type": "SoftwareApplication",
+                        "position": 8,
+                        "name": "Garg Enterprises B2B Wholesale Ordering App",
+                        "url": "https://www.digitalbuilders.in/portfolio/garg-enterprises",
+                        "applicationCategory": "BusinessApplication"
+                    }
+                ]
+            }
         </script>
         @endverbatim
 

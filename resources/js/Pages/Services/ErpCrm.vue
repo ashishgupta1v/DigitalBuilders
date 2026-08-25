@@ -5,6 +5,11 @@ import { Head, Link } from '@inertiajs/vue3';
 <template>
     <Head title="Enterprise ERP & CRM Systems — DigitalBuilders">
         <meta name="description" content="Custom ERP and CRM operations engines engineered to unify inventory, logistics, sales pipelines, and customer support." />
+        <meta property="og:title" content="Enterprise ERP & Custom CRM Engineering | DigitalBuilders" />
+        <meta property="og:description" content="Unify fragmented operational spreadsheets and software into a high-performance custom ERP/CRM dashboard." />
+        <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/dhandadiary.jpg" />
+        <meta property="og:url" content="https://www.digitalbuilders.in/services/erp-crm" />
+        <meta name="twitter:card" content="summary_large_image" />
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">
@@ -58,6 +63,74 @@ import { Head, Link } from '@inertiajs/vue3';
                     <div class="text-2xl mb-3">📊</div>
                     <h3 class="text-xl font-bold text-white">Executive BI Dashboards</h3>
                     <p class="mt-3 text-sm text-slate-300 leading-relaxed">Real-time revenue, profit margin, operational bottlenecks, and automated CSV/PDF export.</p>
+                </div>
+            </div>
+
+            <!-- Featured Case Studies -->
+            <div class="mt-24">
+                <div class="text-center max-w-3xl mx-auto">
+                    <span class="text-xs uppercase tracking-[0.2em] text-[#9dc5ff] font-bold">Custom Workflows In Production</span>
+                    <h2 class="mt-2 text-2xl font-black text-white sm:text-4xl">Featured ERP & CRM Systems</h2>
+                    <p class="mt-3 text-sm text-slate-300">Custom business operational systems replacing messy spreadsheets with automated execution pipelines.</p>
+                </div>
+
+                <div class="mt-12 grid gap-8 md:grid-cols-3">
+                    <!-- Dhanda Diary -->
+                    <div class="group rounded-3xl border border-[#b8c9e633] bg-[#27374dcb] overflow-hidden shadow-xl flex flex-col">
+                        <div class="relative h-48 overflow-hidden bg-slate-900">
+                            <img src="/images/portfolio/dhandadiary.jpg" alt="Dhanda Diary" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <span class="absolute top-3 right-3 rounded-full bg-emerald-500/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">DCR Compliance</span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Business Execution CRM</span>
+                                <h3 class="mt-1 text-xl font-bold text-white">Dhanda Diary</h3>
+                                <p class="mt-2 text-xs text-slate-300 leading-relaxed">Centralized business management cockpit with daily routines, ApexCharts KPI trackers, and Kanban boards.</p>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                                <a href="https://dhandadiary.cloud/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-emerald-300 hover:text-white flex items-center gap-1">Visit Live App ↗</a>
+                                <Link href="/portfolio/dhandadiary" class="text-xs font-bold text-slate-300 hover:text-white">Case Study →</Link>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Garg Enterprises -->
+                    <div class="group rounded-3xl border border-[#b8c9e633] bg-[#27374dcb] overflow-hidden shadow-xl flex flex-col">
+                        <div class="relative h-48 overflow-hidden bg-slate-900">
+                            <img src="/images/portfolio/gargenterprises.jpg" alt="Garg Enterprises" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <span class="absolute top-3 right-3 rounded-full bg-indigo-500/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">Dealer Ledger</span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Distribution ERP</span>
+                                <h3 class="mt-1 text-xl font-bold text-white">Garg Enterprises</h3>
+                                <p class="mt-2 text-xs text-slate-300 leading-relaxed">Wholesale dealer credit ledger, outstanding balance sync, and dispatch management across 10,000+ SKUs.</p>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                                <Link href="/portfolio/garg-enterprises" class="text-xs font-bold text-indigo-300 hover:text-white flex items-center gap-1">Read Case Study ↗</Link>
+                                <a href="/#contact" class="text-xs font-bold text-slate-300 hover:text-white">Request Demo →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Krishan Balram Gaushala -->
+                    <div class="group rounded-3xl border border-[#b8c9e633] bg-[#27374dcb] overflow-hidden shadow-xl flex flex-col">
+                        <div class="relative h-48 overflow-hidden bg-slate-900">
+                            <img src="/images/portfolio/gaushala.jpg" alt="Gaushala Connect" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <span class="absolute top-3 right-3 rounded-full bg-amber-500/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">80G Tax Engine</span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Trust & Seva ERP</span>
+                                <h3 class="mt-1 text-xl font-bold text-white">Krishan Balram Gaushala</h3>
+                                <p class="mt-2 text-xs text-slate-300 leading-relaxed">Integrated donor management with instant 80G tax receipt PDF generation and automated WhatsApp blessings.</p>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                                <a href="https://krishanbalramgaushala.com/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-amber-300 hover:text-white flex items-center gap-1">Visit Live Portal ↗</a>
+                                <Link href="/portfolio/gaushala" class="text-xs font-bold text-slate-300 hover:text-white">Case Study →</Link>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>

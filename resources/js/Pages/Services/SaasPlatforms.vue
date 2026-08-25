@@ -5,6 +5,11 @@ import { Head, Link } from '@inertiajs/vue3';
 <template>
     <Head title="SaaS Platform Engineering — DigitalBuilders">
         <meta name="description" content="Multi-tenant SaaS platform engineering with subscription billing, tenant data isolation, and global auto-scaling." />
+        <meta property="og:title" content="High-Scale SaaS Platform Engineering | DigitalBuilders" />
+        <meta property="og:description" content="Multi-tenant SaaS platform engineering with subscription billing, tenant data isolation, and global auto-scaling." />
+        <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/dhandadiary.jpg" />
+        <meta property="og:url" content="https://www.digitalbuilders.in/services/saas-platforms" />
+        <meta name="twitter:card" content="summary_large_image" />
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">
@@ -58,6 +63,74 @@ import { Head, Link } from '@inertiajs/vue3';
                     <div class="text-2xl mb-3">📈</div>
                     <h3 class="text-xl font-bold text-white">Auto-Scaling Infrastructure</h3>
                     <p class="mt-3 text-sm text-slate-300 leading-relaxed">Serverless deployment, Redis queue workers, CDN edge caching, and automated error logging.</p>
+                </div>
+            </div>
+
+            <!-- Featured Case Studies -->
+            <div class="mt-24">
+                <div class="text-center max-w-3xl mx-auto">
+                    <span class="text-xs uppercase tracking-[0.2em] text-[#9dc5ff] font-bold">Production SaaS Proven</span>
+                    <h2 class="mt-2 text-2xl font-black text-white sm:text-4xl">Featured SaaS Implementations</h2>
+                    <p class="mt-3 text-sm text-slate-300">Live multi-tenant platforms delivering real business metrics across finance, fitness, and wellness.</p>
+                </div>
+
+                <div class="mt-12 grid gap-8 md:grid-cols-3">
+                    <!-- Dhanda Diary -->
+                    <div class="group rounded-3xl border border-[#b8c9e633] bg-[#27374dcb] overflow-hidden shadow-xl flex flex-col">
+                        <div class="relative h-48 overflow-hidden bg-slate-900">
+                            <img src="/images/portfolio/dhandadiary.jpg" alt="Dhanda Diary SaaS" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <span class="absolute top-3 right-3 rounded-full bg-emerald-500/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">&lt;50ms Sync</span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Business Cockpit SaaS</span>
+                                <h3 class="mt-1 text-xl font-bold text-white">Dhanda Diary</h3>
+                                <p class="mt-2 text-xs text-slate-300 leading-relaxed">Execution cockpit with Daily Compliance Reports (DCR), ApexCharts KPI telemetry, and VAPID Push.</p>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                                <a href="https://dhandadiary.cloud/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-emerald-300 hover:text-white flex items-center gap-1">Visit Live App ↗</a>
+                                <Link href="/portfolio/dhandadiary" class="text-xs font-bold text-slate-300 hover:text-white">Case Study →</Link>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ZoetiCoach AI -->
+                    <div class="group rounded-3xl border border-[#b8c9e633] bg-[#27374dcb] overflow-hidden shadow-xl flex flex-col">
+                        <div class="relative h-48 overflow-hidden bg-slate-900">
+                            <img src="/images/portfolio/zoeticoach.jpg" alt="ZoetiCoach AI" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <span class="absolute top-3 right-3 rounded-full bg-cyan-500/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">-65% Dropout</span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Coaching Accountability</span>
+                                <h3 class="mt-1 text-xl font-bold text-white">ZoetiCoach AI</h3>
+                                <p class="mt-2 text-xs text-slate-300 leading-relaxed">WhatsApp-first B2B2C coaching accountability SaaS with OpenAI RAG habit verification and event ledgers.</p>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                                <a href="https://zoeticoach.com/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-cyan-300 hover:text-white flex items-center gap-1">Visit Live App ↗</a>
+                                <Link href="/portfolio/zoeticoach" class="text-xs font-bold text-slate-300 hover:text-white">Case Study →</Link>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Habuilt -->
+                    <div class="group rounded-3xl border border-[#b8c9e633] bg-[#27374dcb] overflow-hidden shadow-xl flex flex-col">
+                        <div class="relative h-48 overflow-hidden bg-slate-900">
+                            <img src="/images/portfolio/habuilt.jpg" alt="Habuilt Platform" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <span class="absolute top-3 right-3 rounded-full bg-sky-500/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">99.99% Uptime</span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-sky-400 uppercase tracking-wider">Habit Platform</span>
+                                <h3 class="mt-1 text-xl font-bold text-white">Habuilt</h3>
+                                <p class="mt-2 text-xs text-slate-300 leading-relaxed">High-traffic atomic habit platform with 26-week progression tiers. Reduced server latencies by 70%.</p>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                                <a href="https://www.habuilt.com/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-sky-300 hover:text-white flex items-center gap-1">Visit Live App ↗</a>
+                                <Link href="/portfolio/habuilt" class="text-xs font-bold text-slate-300 hover:text-white">Case Study →</Link>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>

@@ -189,7 +189,7 @@
     ]
   },
   "resources/js/Pages/Home.vue": {
-    "file": "assets/Home-CyYW1y7S.js",
+    "file": "assets/Home-BgTBMAhC.js",
     "name": "Home",
     "src": "resources/js/Pages/Home.vue",
     "isDynamicEntry": true,
@@ -199,7 +199,7 @@
       "_ProjectEstimator-DxMwxyBG.js"
     ],
     "css": [
-      "assets/Home-Be2i0YA-.css"
+      "assets/Home-XBOjGp5m.css"
     ]
   },
   "resources/js/Pages/Library/ContactForm.vue": {
@@ -388,7 +388,7 @@
     ]
   },
   "resources/js/Pages/Services/AiSolutions.vue": {
-    "file": "assets/AiSolutions-T-TxoEOj.js",
+    "file": "assets/AiSolutions-TFxcGavm.js",
     "name": "AiSolutions",
     "src": "resources/js/Pages/Services/AiSolutions.vue",
     "isDynamicEntry": true,
@@ -397,11 +397,11 @@
       "_index.esm-CRerGu4e.js"
     ],
     "css": [
-      "assets/AiSolutions-CYei1uoe.css"
+      "assets/AiSolutions-DHmrvRMW.css"
     ]
   },
   "resources/js/Pages/Services/ErpCrm.vue": {
-    "file": "assets/ErpCrm-wKboMqm0.js",
+    "file": "assets/ErpCrm-CIhaP9lx.js",
     "name": "ErpCrm",
     "src": "resources/js/Pages/Services/ErpCrm.vue",
     "isDynamicEntry": true,
@@ -410,11 +410,11 @@
       "_index.esm-CRerGu4e.js"
     ],
     "css": [
-      "assets/ErpCrm-XDSwmCxJ.css"
+      "assets/ErpCrm-CnMcMDz2.css"
     ]
   },
   "resources/js/Pages/Services/MobileApp.vue": {
-    "file": "assets/MobileApp-DK76XDy7.js",
+    "file": "assets/MobileApp-D-JMHqcq.js",
     "name": "MobileApp",
     "src": "resources/js/Pages/Services/MobileApp.vue",
     "isDynamicEntry": true,
@@ -423,11 +423,11 @@
       "_index.esm-CRerGu4e.js"
     ],
     "css": [
-      "assets/MobileApp-CIl_KQpe.css"
+      "assets/MobileApp-Bzd79X2T.css"
     ]
   },
   "resources/js/Pages/Services/SaasPlatforms.vue": {
-    "file": "assets/SaasPlatforms-DeS6TrSr.js",
+    "file": "assets/SaasPlatforms-Blb_aPAc.js",
     "name": "SaasPlatforms",
     "src": "resources/js/Pages/Services/SaasPlatforms.vue",
     "isDynamicEntry": true,
@@ -436,11 +436,11 @@
       "_index.esm-CRerGu4e.js"
     ],
     "css": [
-      "assets/SaasPlatforms-E64Hc1lY.css"
+      "assets/SaasPlatforms-DVhYSyB6.css"
     ]
   },
   "resources/js/Pages/Services/WebApp.vue": {
-    "file": "assets/WebApp-Dw0OuJ8O.js",
+    "file": "assets/WebApp-CQ0lmpBJ.js",
     "name": "WebApp",
     "src": "resources/js/Pages/Services/WebApp.vue",
     "isDynamicEntry": true,
@@ -449,11 +449,11 @@
       "_index.esm-CRerGu4e.js"
     ],
     "css": [
-      "assets/WebApp-B_q29RWy.css"
+      "assets/WebApp-CwjsAK4f.css"
     ]
   },
   "resources/js/app.ts": {
-    "file": "assets/app-BqL1Hdlv.js",
+    "file": "assets/app-C_Z0I9ix.js",
     "name": "app",
     "src": "resources/js/app.ts",
     "isEntry": true,
@@ -495,7 +495,7 @@
       "resources/js/Pages/Services/WebApp.vue"
     ],
     "css": [
-      "assets/app-BNc88A5f.css"
+      "assets/app-BcaQ8_CA.css"
     ]
   }
 }

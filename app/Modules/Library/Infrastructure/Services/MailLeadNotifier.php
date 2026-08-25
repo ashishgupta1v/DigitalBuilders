@@ -13,8 +13,11 @@ final class MailLeadNotifier implements LeadNotifierInterface
 {
     public function notify(Lead $lead): void
     {
-        $to = config('mail.lead_inbox', 'hello@digitalbuilders.in');
-
-        Mail::to($to)->send(new NewLeadMail($lead));
+        try {
+            $to = config('mail.lead_inbox', 'ashishgupta1v@gmail.com');
+            Mail::to($to)->send(new NewLeadMail($lead));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning("Failed to send lead email notification: " . $e->getMessage());
+        }
     }
 }

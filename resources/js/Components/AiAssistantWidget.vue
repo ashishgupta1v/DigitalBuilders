@@ -18,10 +18,10 @@ const messages = ref<Message[]>([
         sender: 'bot',
         text: 'Hello! I am the DigitalBuilders AI Assistant. How can I assist with your software project today?',
         options: [
+            { label: 'Explore Live Case Studies (9 Apps)', action: 'case_studies' },
             { label: 'What services do you offer?', action: 'services' },
-            { label: 'How much does a project cost?', action: 'pricing' },
-            { label: 'Who is Ashish Gupta?', action: 'founder' },
-            { label: 'Book a Discovery Call', action: 'lead_form' },
+            { label: 'Calculate Project Scope', action: 'estimator_scroll' },
+            { label: 'Chat on WhatsApp with Lead Architect', action: 'whatsapp_chat' },
         ],
     },
 ]);
@@ -141,11 +141,23 @@ function handleOptionClick(action: string, label: string) {
                     { label: 'Schedule Strategy Session', action: 'lead_form' },
                 ],
             });
+        } else if (action === 'case_studies') {
+            const el = document.getElementById('case-studies');
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+                isOpen.value = false;
+            } else {
+                window.location.href = '/#case-studies';
+            }
+        } else if (action === 'whatsapp_chat') {
+            window.open('https://wa.me/919087021592?text=' + encodeURIComponent('Hi Ashish, I was chatting with the DigitalBuilders AI and would like to discuss my project directly.'), '_blank');
         } else if (action === 'estimator_scroll') {
             const el = document.getElementById('estimator');
             if (el) {
                 el.scrollIntoView({ behavior: 'smooth' });
                 isOpen.value = false;
+            } else {
+                window.location.href = '/estimator';
             }
         } else if (action === 'portfolio_link') {
             window.open('https://ashishgupta.dev', '_blank');

@@ -6,10 +6,13 @@ use App\Http\Controllers\Library\EstimatorController;
 use App\Http\Controllers\Library\LeadController;
 use App\Http\Controllers\Library\PortfolioController;
 use App\Http\Controllers\Library\ServiceController;
+use App\Http\Controllers\Library\SitemapController;
 use App\Http\Controllers\Library\TestimonialController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::get('/', function () {
     return Inertia::render('Home', [

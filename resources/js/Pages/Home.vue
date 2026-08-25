@@ -1012,11 +1012,16 @@ onBeforeUnmount(() => {
                             {{ form.processing ? 'Submitting...' : 'Request a Project Quote' }}
                         </button>
 
-                        <p v-if="form.recentlySuccessful" class="rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-200">
-                            Thank you! Your inquiry has been received. We'll respond within 24 business hours.
-                        </p>
-
-                        <p class="text-xs text-slate-500 dark:text-slate-400">Your data is secure. We review all inquiries and respond within 24 business hours.</p>
+                        <div v-if="form.recentlySuccessful" class="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-sm text-emerald-700 dark:text-emerald-200 space-y-3">
+                            <p class="font-semibold flex items-center gap-2">
+                                <svg class="h-5 w-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                Thank you! Your project inquiry has been received. We'll review and respond within 24 business hours.
+                            </p>
+                            <a :href="'https://wa.me/919087021592?text=' + encodeURIComponent('Hi Ashish, I just submitted a project inquiry on DigitalBuilders regarding ' + (form.project_type || 'a custom project') + '. Let\'s connect!')" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-xl bg-[#25d366] px-4 py-2.5 text-xs font-bold text-white shadow hover:bg-[#20ba5a] transition">
+                                <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.815 11.815 0 018.413 3.479 11.821 11.821 0 013.48 8.413c-.003 6.558-5.339 11.893-11.893 11.893h-.005a11.882 11.882 0 01-5.683-1.448L0 24h.057z"/></svg>
+                                Want faster response? Chat directly with Ashish on WhatsApp ↗
+                            </a>
+                        </div>
                     </form>
                 </div>
 
