@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import CaseStudyModal, { type CaseStudy } from '@/Components/Home/CaseStudyModal.vue';
+import { vAutoAnimate } from '@formkit/auto-animate/vue';
 
 const selectedCategory = ref<string>('all');
 const activeModalStudy = ref<CaseStudy | null>(null);
@@ -317,8 +318,8 @@ const filteredStudies = computed(() => {
             </button>
         </div>
 
-        <!-- Projects Grid / Scroll Container -->
-        <div class="case-scroll mt-8 flex gap-6 overflow-x-auto pb-6" data-stagger>
+        <!-- Projects Grid / Scroll Container with Smooth Transition Animation -->
+        <div v-auto-animate class="case-scroll mt-8 flex gap-6 overflow-x-auto pb-6" data-stagger>
             <article
                 v-for="study in filteredStudies"
                 :key="study.id"
@@ -362,6 +363,8 @@ const filteredStudies = computed(() => {
                             class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                             loading="lazy"
                             decoding="async"
+                            width="600"
+                            height="338"
                         />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3">
                             <span class="text-[11px] font-bold text-white bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20">

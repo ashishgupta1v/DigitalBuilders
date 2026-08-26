@@ -163,6 +163,12 @@ onMounted(() => {
         const isDecimal = rawTarget.includes('.');
         const target = parseFloat(rawTarget);
         const suffix = htmlEl.dataset.suffix ?? '';
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) {
+            htmlEl.textContent = `${isDecimal ? target.toFixed(1) : Math.round(target)}${suffix}`;
+            return;
+        }
+
         const start = Date.now();
         const duration = 1400;
 

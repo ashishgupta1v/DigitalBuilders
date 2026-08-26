@@ -23,11 +23,16 @@
         "vue-tsc": "^2.0.24"
     },
     "dependencies": {
+        "@formkit/auto-animate": "^0.10.0",
         "@types/three": "^0.185.4",
+        "@vueuse/core": "^14.4.0",
         "@vueuse/motion": "^3.0.3",
+        "clsx": "^2.1.1",
         "dompurify": "^3.4.0",
+        "embla-carousel-vue": "^8.6.0",
         "lucide-vue-next": "^1.0.0",
         "motion": "^12.38.0",
+        "tailwind-merge": "^3.6.0",
         "three": "^0.185.1"
     }
 }

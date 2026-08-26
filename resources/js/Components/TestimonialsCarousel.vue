@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
+import emblaCarouselVue from 'embla-carousel-vue';
 
 interface TestimonialItem {
     id: number;
@@ -60,44 +61,62 @@ const testimonials = ref<TestimonialItem[]>([
     },
 ]);
 
-const currentIndex = ref(0);
-let timer: ReturnType<typeof setInterval> | null = null;
+const [emblaRef, emblaApi] = emblaCarouselVue({
+    loop: true,
+    align: 'start',
+    slidesToScroll: 1,
+});
 
-function next() {
-    currentIndex.value = (currentIndex.value + 1) % testimonials.value.length;
+const selectedIndex = ref(0);
+let autoPlayTimer: ReturnType<typeof setInterval> | null = null;
+
+function onSelect() {
+    if (!emblaApi.value) return;
+    selectedIndex.value = emblaApi.value.selectedScrollSnap();
 }
 
-function prev() {
-    currentIndex.value = (currentIndex.value - 1 + testimonials.value.length) % testimonials.value.length;
+function scrollPrev() {
+    emblaApi.value?.scrollPrev();
 }
 
-function goTo(idx: number) {
-    currentIndex.value = idx;
+function scrollNext() {
+    emblaApi.value?.scrollNext();
 }
 
-function startTimer() {
+function scrollTo(index: number) {
+    emblaApi.value?.scrollTo(index);
+}
+
+function startAutoPlay() {
     const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
-    if (!timer) {
-        timer = setInterval(next, 6500);
-    }
+    stopAutoPlay();
+    autoPlayTimer = setInterval(() => {
+        if (emblaApi.value) {
+            emblaApi.value.scrollNext();
+        }
+    }, 6000);
 }
 
-function stopTimer() {
-    if (timer) {
-        clearInterval(timer);
-        timer = null;
+function stopAutoPlay() {
+    if (autoPlayTimer) {
+        clearInterval(autoPlayTimer);
+        autoPlayTimer = null;
     }
 }
 
 onMounted(() => {
     fetchTestimonials();
-    startTimer();
+    if (emblaApi.value) {
+        emblaApi.value.on('select', onSelect);
+        onSelect();
+    }
+    startAutoPlay();
 });
 
 onBeforeUnmount(() => {
-    stopTimer();
+    stopAutoPlay();
 });
 
 async function fetchTestimonials() {
@@ -107,22 +126,24 @@ async function fetchTestimonials() {
             const data = await res.json();
             if (Array.isArray(data) && data.length > 0) {
                 testimonials.value = data;
+                emblaApi.value?.reInit();
             }
         }
     } catch {
-        // Fallback gracefully to static array
+        // Fallback gracefully
     }
 }
 </script>
 
 <template>
-    <div
+    <section
+        aria-label="Client Testimonials and Social Proof"
         class="db-mini rounded-3xl border border-[#b8c9e633] bg-[#27374dcb] p-6 sm:p-8 lg:p-10 shadow-[0_20px_50px_rgba(10,16,24,0.3)]"
-        @mouseenter="stopTimer"
-        @mouseleave="startTimer"
+        @mouseenter="stopAutoPlay"
+        @mouseleave="startAutoPlay"
     >
         <!-- Header -->
-        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <span class="db-chip">Verified Social Proof</span>
                 <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl">What Digital Leaders Say</h2>
@@ -132,58 +153,58 @@ async function fetchTestimonials() {
             <!-- Controls (44px tap targets) -->
             <div class="flex items-center gap-2 self-start">
                 <button
-                    @click="prev"
+                    type="button"
+                    @click="scrollPrev"
                     class="flex h-11 w-11 min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center rounded-full border border-[#b8c9e633] text-slate-300 transition hover:border-[#9ba7ff] hover:text-white focus-visible:ring-2 focus-visible:ring-sky-400"
-                    aria-label="Previous testimonial"
+                    aria-label="Previous testimonial slide"
                 >
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                 </button>
                 <button
-                    @click="next"
+                    type="button"
+                    @click="scrollNext"
                     class="flex h-11 w-11 min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center rounded-full border border-[#b8c9e633] text-slate-300 transition hover:border-[#9ba7ff] hover:text-white focus-visible:ring-2 focus-visible:ring-sky-400"
-                    aria-label="Next testimonial"
+                    aria-label="Next testimonial slide"
                 >
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </button>
             </div>
         </div>
 
-        <!-- Carousel Content Area -->
-        <div class="mt-8 relative overflow-hidden min-h-[220px]">
-            <Transition
-                mode="out-in"
-                enter-active-class="transition-all duration-300 ease-out"
-                enter-from-class="opacity-0 translate-x-8"
-                leave-active-class="transition-all duration-200 ease-in"
-                leave-to-class="opacity-0 -translate-x-8"
-            >
-                <div :key="currentIndex" class="space-y-6">
+        <!-- Embla Viewport -->
+        <div class="mt-8 overflow-hidden" ref="emblaRef">
+            <div class="flex touch-pan-y gap-6 select-none">
+                <div
+                    v-for="(item, idx) in testimonials"
+                    :key="item.id || idx"
+                    class="min-w-0 flex-[0_0_100%] space-y-6"
+                >
                     <!-- Metric Chip + Rating -->
                     <div class="flex flex-wrap items-center justify-between gap-3">
-                        <div class="flex items-center gap-1 text-amber-400 text-sm">
+                        <div class="flex items-center gap-1 text-amber-400 text-sm" aria-label="5 star rating">
                             <span v-for="star in 5" :key="star">★</span>
                         </div>
                         <span
-                            v-if="testimonials[currentIndex].metric_highlight"
+                            v-if="item.metric_highlight"
                             class="inline-flex items-center gap-1.5 rounded-full border border-[#c593ff44] bg-[#c593ff18] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#d8c3ff]"
                         >
                             <svg class="h-3.5 w-3.5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-                            Impact: {{ testimonials[currentIndex].metric_highlight }}
+                            Impact: {{ item.metric_highlight }}
                         </span>
                     </div>
 
                     <!-- Quote Content -->
                     <blockquote class="text-base italic leading-relaxed text-slate-100 sm:text-lg">
-                        "{{ testimonials[currentIndex].content }}"
+                        "{{ item.content }}"
                     </blockquote>
 
                     <!-- Author Info -->
                     <div class="flex items-center justify-between border-t border-[#b8c9e622] pt-4">
                         <div class="flex items-center gap-3">
                             <img
-                                v-if="testimonials[currentIndex].avatar"
-                                :src="testimonials[currentIndex].avatar"
-                                :alt="testimonials[currentIndex].client_name"
+                                v-if="item.avatar"
+                                :src="item.avatar"
+                                :alt="item.client_name"
                                 class="h-12 w-12 rounded-full object-cover border border-[#9ba7ff44]"
                                 loading="lazy"
                                 decoding="async"
@@ -191,16 +212,16 @@ async function fetchTestimonials() {
                                 height="48"
                             />
                             <div>
-                                <p class="text-sm font-bold text-white">{{ testimonials[currentIndex].client_name }}</p>
-                                <p class="text-xs text-slate-400">{{ testimonials[currentIndex].role }} · <span class="text-[#b7d3ff]">{{ testimonials[currentIndex].company }}</span></p>
+                                <p class="text-sm font-bold text-white">{{ item.client_name }}</p>
+                                <p class="text-xs text-slate-400">{{ item.role }} · <span class="text-[#b7d3ff]">{{ item.company }}</span></p>
                             </div>
                         </div>
                         <span class="hidden text-xs text-slate-400 sm:inline-block">
-                            Project: {{ testimonials[currentIndex].project_type }}
+                            Project: {{ item.project_type }}
                         </span>
                     </div>
                 </div>
-            </Transition>
+            </div>
         </div>
 
         <!-- Dots Indicator with Accessible 44px Touch Targets -->
@@ -208,15 +229,16 @@ async function fetchTestimonials() {
             <button
                 v-for="(_, idx) in testimonials"
                 :key="idx"
-                @click="goTo(idx)"
+                type="button"
+                @click="scrollTo(idx)"
                 class="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-400"
                 :aria-label="`Go to slide ${idx + 1}`"
             >
                 <span
                     class="h-2.5 rounded-full transition-all"
-                    :class="currentIndex === idx ? 'w-8 bg-[#9ba7ff]' : 'w-2.5 bg-[#b8c9e644] hover:bg-slate-400'"
+                    :class="selectedIndex === idx ? 'w-8 bg-[#9ba7ff]' : 'w-2.5 bg-[#b8c9e644] hover:bg-slate-400'"
                 />
             </button>
         </div>
-    </div>
+    </section>
 </template>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { vAutoAnimate } from '@formkit/auto-animate/vue';
+
 const faqs = [
     {
         q: 'How long does a typical web application project take?',
@@ -31,7 +33,7 @@ const faqs = [
     <section id="faq" class="mt-20 sm:mt-24" data-reveal>
         <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-[#9dc5ff] font-semibold">Common Questions</p>
         <h2 class="mt-3 text-2xl font-black text-slate-900 dark:text-white sm:text-3xl md:text-4xl">Frequently Asked Questions</h2>
-        <div class="mt-8 space-y-3" data-stagger>
+        <div v-auto-animate class="mt-8 space-y-3" data-stagger>
             <details
                 v-for="faq in faqs"
                 :key="faq.q"
