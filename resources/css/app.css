@@ -4,8 +4,11 @@
 
 @layer base {
 	:root,
-	[data-theme='light'],
-	.light {
+	html,
+	html.light,
+	html[data-theme='light'],
+	.light,
+	[data-theme='light'] {
 		/* Semantic HSL Design Tokens (Light Theme Baseline Default) */
 		--background: 210 40% 98%;          /* #f8fafc */
 		--foreground: 222.2 84% 4.9%;       /* #0f172a */
@@ -64,6 +67,10 @@
 	}
 
 	/* Dark Theme Tokens */
+	:root.dark,
+	:root[data-theme='dark'],
+	html.dark,
+	html[data-theme='dark'],
 	.dark,
 	[data-theme='dark'] {
 		--background: 222.2 47.4% 7.8%;      /* #0b0f19 */

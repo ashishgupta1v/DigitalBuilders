@@ -37,7 +37,7 @@ const isDarkMode = ref(false);
 function toggleTheme() {
     isDarkMode.value = !isDarkMode.value;
     if (isDarkMode.value) {
-        document.documentElement.removeAttribute('data-theme');
+        document.documentElement.setAttribute('data-theme', 'dark');
         document.documentElement.classList.add('dark');
         document.documentElement.classList.remove('light');
         localStorage.setItem('db-theme', 'dark');
@@ -108,7 +108,7 @@ onMounted(() => {
     const savedTheme = localStorage.getItem('db-theme');
     if (savedTheme === 'dark') {
         isDarkMode.value = true;
-        document.documentElement.removeAttribute('data-theme');
+        document.documentElement.setAttribute('data-theme', 'dark');
         document.documentElement.classList.add('dark');
         document.documentElement.classList.remove('light');
     } else {
@@ -210,7 +210,7 @@ onBeforeUnmount(() => {
         <meta head-key="twitter-description" name="twitter:description" content="Enterprise-grade web, mobile, and AI architecture for ambitious businesses." />
     </Head>
 
-    <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">
+    <div class="db-shell bg-background text-foreground min-h-screen">
         <div class="db-progress" />
         <div class="db-grid-overlay" />
 
@@ -427,14 +427,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.site-bg {
-    background: var(--db-body-bg);
-    color: var(--db-text);
-    transition: background-color 0.35s ease, color 0.35s ease;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 300;
-}
-
 html {
     scroll-behavior: smooth;
 }
@@ -457,12 +449,6 @@ html {
     background-clip: text;
     color: transparent;
     filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.25));
-}
-
-[data-reveal],
-[data-stagger-item],
-[data-hero-title] {
-    opacity: 0;
 }
 
 .whatsapp-fab {

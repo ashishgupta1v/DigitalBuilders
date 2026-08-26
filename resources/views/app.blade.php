@@ -243,7 +243,7 @@
             (function() {
                 var theme = localStorage.getItem('db-theme');
                 if (theme === 'dark') {
-                    document.documentElement.removeAttribute('data-theme');
+                    document.documentElement.setAttribute('data-theme', 'dark');
                     document.documentElement.classList.add('dark');
                     document.documentElement.classList.remove('light');
                 } else {
