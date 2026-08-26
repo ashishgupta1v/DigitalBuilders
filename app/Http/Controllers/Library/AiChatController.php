@@ -50,10 +50,17 @@ Services, Decoupled Regional Price Books (India vs International):
 - Custom ERP/CRM Systems:
   • India: Launch ₹2,49,000 | Growth ₹3,79,000 | Enterprise ₹5,99,000
   • International (US/Global): Launch $11,000 | Growth $16,500 | Enterprise $26,000 (Gulf: $7,900 / $12,000 / $18,500)
+- E-Commerce Stores & D2C:
+  • India: Launch ₹99,000 | Growth ₹1,69,000 | Enterprise ₹2,79,000
+  • International (US/Global): Launch $4,500 | Growth $7,500 | Enterprise $12,500 (Gulf: $3,200 / $5,200 / $8,900)
+- Add-on Modules:
+  • Payments & Subscriptions: +₹19,000 | Real-time WebSockets: +₹25,000 | AI Copilot / LLM: +₹35,000 | Multi-language: +₹15,000 | WhatsApp Catalog: +₹12,000 | Data Migration: +₹15,000
 - Annual Maintenance Contracts (AMC Plans):
   • Basic AMC: ₹19,000 / yr (₹1,583/mo)
-  • Business AMC ★: ₹49,000 / yr (₹4,083/mo)
+  • Business AMC ★: ₹49,000 / yr (₹4,083/mo) (Prepay 12 mo get 2 free)
   • Enterprise SLA: From ₹1,49,000 / yr
+- SEO & Content Retainers: Essentials ₹9,999 / mo | Growth ₹19,999 / mo
+- Commercials: 40% Kickoff, 40% Staging Demo, 20% Launch. 30-day warranty. Free Mutual NDA. Govt Reg: UDYAM-PB-12-0217716.
 - Architecture Discovery Sprint: ₹19,000 INR / $750 USD ($500 Gulf) (100% credited to build).
 - Interactive Scope Estimator & Full Price Book: Available on /pricing and /estimator.
 
@@ -147,12 +154,12 @@ EOT;
 
         // Mobile apps
         if (preg_match('/\b(mobile|android|ios|flutter|react native|app cost|phone app)\b/i', $query)) {
-            return "Our mobile apps (iOS & Android) are engineered using Flutter or React Native with offline-first SQLite sync and sub-100ms API response times. Typical timeline is 3–7 weeks (Launch tier starts at ₹1,49,000 for India / $4,200 Gulf / $6,000 US/Global). Check out our case studies for SportsClub and Garg Enterprises!";
+            return "Our mobile apps (iOS & Android) are engineered using Flutter or React Native with offline-first SQLite sync and sub-100ms API response times. Typical timeline is 3–7 weeks (Launch tier starts at ₹1,19,000 for India / $4,200 Gulf / $6,000 US/Global). Check out our case studies for SportsClub and Garg Enterprises!";
         }
 
         // Pricing, cost, estimate
         if (preg_match('/\b(cost|price|pricing|rates|how much|quote|budget|estimate|investment)\b/i', $query)) {
-            return "We use decoupled, transparent regional price books (no currency exchange markups):\n• 🇮🇳 India (INR): Web Apps from ₹99k, AI Agents from ₹1.29L, Mobile Apps from ₹1.49L, SaaS from ₹2.49L, ERP/CRM from ₹2.99L\n• 🌍 International (USD): Web Apps from $3,500 ($2,500 Gulf), AI from $4,500, Mobile from $6,000, SaaS from $9,000\n\nView our complete price book on /pricing or configure exact modules on /estimator!";
+            return "We use decoupled, transparent regional price books (no currency exchange markups):\n• 🇮🇳 India (INR): Web Apps from ₹79k, AI Agents from ₹99k, E-Commerce from ₹99k, Mobile Apps from ₹1.19L, SaaS from ₹1.99L, ERP/CRM from ₹2.49L\n• 🌍 International (USD): Web Apps from $3,500 ($2,500 Gulf), AI from $4,500, Mobile from $6,000, SaaS from $9,000\n\nView our complete price book on /pricing or configure exact modules on /estimator!";
         }
 
         // Timeline, how long

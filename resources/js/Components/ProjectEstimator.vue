@@ -89,6 +89,15 @@ const PROJECT_TYPES: ProjectOption[] = [
         baseDays: 45,
         description: 'Custom inventory, WhatsApp ERP bots, multi-warehouse & GST engine',
     },
+    {
+        id: 'ecommerce',
+        label: 'E-Commerce Store',
+        basePriceInr: 99000,
+        basePriceGulf: 3200,
+        basePriceUsd: 4500,
+        baseDays: 21,
+        description: 'Catalog, COD checkout, WhatsApp order alerts & inventory sync',
+    },
 ];
 
 const SCALE_OPTIONS: ScaleOption[] = [
@@ -160,6 +169,22 @@ const FEATURES_LIST: FeatureOption[] = [
         priceGulf: 400,
         priceUsd: 500,
         days: 2,
+    },
+    {
+        id: 'whatsapp_catalog',
+        label: 'WhatsApp Catalog & Business API Integration',
+        priceInr: 12000,
+        priceGulf: 300,
+        priceUsd: 400,
+        days: 2,
+    },
+    {
+        id: 'data_migration',
+        label: 'Data Migration from Legacy / Tally / Excel',
+        priceInr: 15000,
+        priceGulf: 400,
+        priceUsd: 500,
+        days: 3,
     },
 ];
 

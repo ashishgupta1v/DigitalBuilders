@@ -401,15 +401,77 @@ const SERVICES: ArchitecturalService[] = [
                 mrpInr: '₹6,99,000',
                 priceGulf: '$18,500',
                 priceUsd: '$26,000',
-                timeline: '14–18 Weeks',
+                timeline: '12–16 Weeks',
                 idealFor: 'Large-scale industrial conglomerates & multi-company setups',
                 deliverables: [
-                    'Full Supply Chain & Production Scheduling',
-                    'SAP / Oracle / Custom Financial Integration',
-                    'Executive Real-Time KPI Dashboards',
-                    'Multi-Currency & Cross-Border Logistics',
-                    'Complete Source Code & Internal Team Handover',
-                    '1-Year Dedicated Enterprise AMC Support',
+                    'Multi-company, multi-branch, multi-currency architecture',
+                    'Offline support so billing never stops when internet does',
+                    'SSO, maker-checker approvals and full audit trail',
+                    'Manufacturing / job-work, BOM and costing modules',
+                    'Tally, e-way bill, banking and BI tool integrations',
+                    '99.99% uptime target, priority SLA and on-site training',
+                ],
+            },
+        ],
+    },
+    {
+        id: 'ecommerce',
+        title: 'E-Commerce Store & D2C Architecture',
+        category: 'Digital Commerce',
+        description: 'A store built for how Indian D2C sellers actually operate — COD-friendly checkout, WhatsApp order alerts, and real-time inventory sync.',
+        icon: 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z',
+        tiers: [
+            {
+                name: 'Launch',
+                priceInr: '₹99,000',
+                mrpInr: '₹1,29,000',
+                priceGulf: '$3,200',
+                priceUsd: '$4,500',
+                timeline: '3–4 Weeks',
+                idealFor: 'Brands taking their first catalogue online',
+                deliverables: [
+                    'Product catalogue, variants, search and filters',
+                    'Cart, checkout & payment gateway (Razorpay / Stripe)',
+                    'COD support with shipping zone and rate rules',
+                    'Order management dashboard with status updates',
+                    'WhatsApp order confirmation & shipping alerts',
+                    'Mobile-first storefront tuned for sub-second speed',
+                ],
+            },
+            {
+                name: 'Growth',
+                popular: true,
+                badge: '★ Most Popular',
+                priceInr: '₹1,69,000',
+                mrpInr: '₹1,99,000',
+                priceGulf: '$5,200',
+                priceUsd: '$7,500',
+                timeline: '5–6 Weeks',
+                idealFor: 'Stores with repeat customers and rising order volume',
+                deliverables: [
+                    'Multiple payment methods, wallets and UPI intents',
+                    'Coupons, discounts & abandoned-cart recovery emails',
+                    'Customer accounts with order history & tracking',
+                    'Real-time inventory sync across catalogue & stock',
+                    'Reviews, ratings & related-product recommendations',
+                    'Sales & cohort dashboards for repeat-purchase tracking',
+                ],
+            },
+            {
+                name: 'Enterprise',
+                priceInr: '₹2,79,000',
+                mrpInr: '₹3,49,000',
+                priceGulf: '$8,900',
+                priceUsd: '$12,500',
+                timeline: '8–10 Weeks',
+                idealFor: 'Multi-warehouse brands selling across channels',
+                deliverables: [
+                    'Multi-warehouse inventory with location-wise stock',
+                    'Marketplace feeds for Amazon, Flipkart and Meta Shops',
+                    'Loyalty points, referral rewards & subscription orders',
+                    'Multi-currency checkout for export/NRI customers',
+                    'ERP/accounting integration for stock & GST reconciliation',
+                    '99.99% uptime target with priority SLA at peak sale days',
                 ],
             },
         ],
@@ -462,6 +524,24 @@ const ADDON_MODULES: AddonModule[] = [
         priceGulf: '+$400',
         priceUsd: '+$500',
         timeline: '+2 Days',
+    },
+    {
+        title: 'WhatsApp Catalog Setup',
+        description: 'Green-tick ready product catalogue inside WhatsApp Business, linked to your inventory. (Up to ₹15,000 for large catalogues).',
+        priceInr: '+₹12,000',
+        mrpInr: '+₹15,000',
+        priceGulf: '+$300',
+        priceUsd: '+$400',
+        timeline: '+2 Days',
+    },
+    {
+        title: 'Data Migration & Sanitization',
+        description: 'Move records cleanly off Tally, Excel or paper registers into your new system. (Up to ₹40,000 for complex legacy datasets).',
+        priceInr: '+₹15,000',
+        mrpInr: '+₹25,000',
+        priceGulf: '+$400',
+        priceUsd: '+$500',
+        timeline: '+3 Days',
     },
 ];
 
@@ -804,6 +884,124 @@ function getAddonPrice(addon: AddonModule): string {
                         <a href="/#contact" class="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-border bg-secondary py-2.5 text-xs font-bold text-secondary-foreground hover:bg-secondary/80 transition-colors">
                             Custom SLA
                         </a>
+                    </div>
+                </div>
+
+                <!-- Annual prepay note -->
+                <div class="mt-6 rounded-2xl border border-border bg-card/60 p-4 text-center text-xs text-muted-foreground">
+                    💡 <strong class="text-foreground">Annual prepay = 2 months free.</strong> Care plans start after your 30-day post-launch warranty ends. All plans are cancellable at renewal, and unused change hours roll over one month.
+                </div>
+
+                <!-- Ongoing SEO & Content Retainer Band -->
+                <div class="mt-8 rounded-2xl border border-border bg-card/70 dark:bg-card/40 p-6 shadow-sm">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-border pb-4">
+                        <div>
+                            <span class="text-[11px] uppercase tracking-wider font-bold text-sky-600 dark:text-sky-400">Growth Engineering</span>
+                            <h3 class="text-lg font-bold text-card-foreground">Ongoing SEO & Content Retainers</h3>
+                            <p class="text-xs text-muted-foreground">Organic search growth & content updates, billed monthly — separate from Care/AMC uptime cover.</p>
+                        </div>
+                        <a href="/#contact" class="inline-flex items-center gap-1.5 self-start md:self-auto rounded-full border border-border bg-secondary px-4 py-1.5 text-xs font-bold text-secondary-foreground hover:bg-secondary/80 transition-colors">
+                            <span>Book SEO Retainer</span>
+                            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </a>
+                    </div>
+                    <div class="mt-5 grid gap-4 sm:grid-cols-2">
+                        <div class="rounded-xl border border-border bg-card p-4 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between">
+                                    <h4 class="text-sm font-bold text-card-foreground">Essentials</h4>
+                                    <span class="font-mono text-base font-black text-sky-600 dark:text-sky-400">₹9,999 <span class="text-[11px] font-normal text-muted-foreground">/ mo</span></span>
+                                </div>
+                                <p class="mt-2 text-xs text-muted-foreground">Monthly keyword tracking, Core Web Vitals fixes, 2 keyword-mapped blog posts, and monthly Search Console performance audit.</p>
+                            </div>
+                        </div>
+                        <div class="rounded-xl border border-sky-500/40 bg-sky-500/5 p-4 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between">
+                                    <h4 class="text-sm font-bold text-card-foreground">Growth ★</h4>
+                                    <span class="font-mono text-base font-black text-sky-600 dark:text-sky-400">₹19,999 <span class="text-[11px] font-normal text-muted-foreground">/ mo</span></span>
+                                </div>
+                                <p class="mt-2 text-xs text-muted-foreground">Everything in Essentials, plus authoritative link outreach, 4 articles/mo, competitor keyword gap monitoring, and Google Ads landing-page CRO.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Commercial Milestones & Infrastructure Note (Layer 4) -->
+            <div class="mt-20 rounded-3xl border border-border bg-card text-card-foreground p-6 sm:p-10 backdrop-blur-md shadow-xl">
+                <div class="max-w-3xl">
+                    <span class="db-chip">Commercial Integrity</span>
+                    <h2 class="mt-3 text-2xl font-black text-card-foreground sm:text-3xl">Staged Milestone Payments & Terms</h2>
+                    <p class="mt-2 text-sm text-muted-foreground">
+                        Simple, predictable, and written down in a legally binding proposal. You pay as milestones are verified on staging.
+                    </p>
+                </div>
+
+                <!-- 3 Staged Milestones -->
+                <div class="mt-8 grid gap-5 md:grid-cols-3">
+                    <div class="rounded-2xl border border-border bg-card/60 p-5">
+                        <div class="font-mono text-3xl font-black text-sky-600 dark:text-sky-400">40%</div>
+                        <span class="mt-1 block text-xs font-bold uppercase tracking-wider text-card-foreground">At Project Kickoff</span>
+                        <p class="mt-2 text-xs text-muted-foreground leading-relaxed">
+                            Reserves your dedicated sprint slot. Scope signed, Domain-Driven architecture approved, development begins immediately.
+                        </p>
+                    </div>
+                    <div class="rounded-2xl border border-border bg-card/60 p-5">
+                        <div class="font-mono text-3xl font-black text-sky-600 dark:text-sky-400">40%</div>
+                        <span class="mt-1 block text-xs font-bold uppercase tracking-wider text-card-foreground">At Staging Demo</span>
+                        <p class="mt-2 text-xs text-muted-foreground leading-relaxed">
+                            Complete working system running on live staging environment, thoroughly tested and accepted by your stakeholders.
+                        </p>
+                    </div>
+                    <div class="rounded-2xl border border-border bg-card/60 p-5">
+                        <div class="font-mono text-3xl font-black text-emerald-600 dark:text-emerald-400">20%</div>
+                        <span class="mt-1 block text-xs font-bold uppercase tracking-wider text-card-foreground">At Launch & Handover</span>
+                        <p class="mt-2 text-xs text-muted-foreground leading-relaxed">
+                            Zero-downtime production deployment, full source code repository transfer, documentation, and live staff training complete.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Infrastructure Notice (Amber) -->
+                <div class="mt-6 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-5 text-card-foreground">
+                    <div class="flex items-start gap-3">
+                        <div class="h-6 w-6 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5 font-bold">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold uppercase tracking-wide text-amber-700 dark:text-amber-300">
+                                Infrastructure & Third-Party Costs Notice
+                            </h4>
+                            <p class="mt-1 text-xs text-muted-foreground leading-relaxed">
+                                Hosting servers (AWS, DigitalOcean, Vercel, Neon), domain names, SSL, payment-gateway gateway fees, SMS/WhatsApp API charges (Meta Cloud API), and AI tokens (OpenAI/Anthropic) are billed directly to you. We set these accounts up in <strong class="text-foreground">your name</strong> so you own and control 100% of your data and assets.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3 Legal Pillars -->
+                <div class="mt-6 grid gap-4 sm:grid-cols-3 pt-6 border-t border-border text-xs">
+                    <div class="flex items-start gap-2">
+                        <svg class="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        <div>
+                            <strong class="text-card-foreground block">Free Mutual NDA</strong>
+                            <span class="text-muted-foreground">Signed before the first technical deep-dive call. Your proprietary IP stays protected.</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <svg class="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        <div>
+                            <strong class="text-card-foreground block">100% Code Ownership</strong>
+                            <span class="text-muted-foreground">Full Git repository access, architecture docs, and IP rights transfer on final release.</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <svg class="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        <div>
+                            <strong class="text-card-foreground block">Govt Registered MSME</strong>
+                            <span class="text-muted-foreground">Official Udyam Reg: <strong class="text-foreground">UDYAM-PB-12-0217716</strong>. GST invoices provided.</span>
+                        </div>
                     </div>
                 </div>
             </div>

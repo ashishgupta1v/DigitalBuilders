@@ -1,650 +1,649 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DigitalBuilders — 2026 Architectural Price Book (India Edition · INR)</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #0284c7;
-            --primary-dark: #0369a1;
-            --accent: #4f46e5;
-            --dark-bg: #0f172a;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --highlight: #f0fdf4;
-            --highlight-border: #86efac;
-        }
+<!doctype html><html><head><meta charset="utf-8"><title>DigitalBuilders — Services & Pricing 2026–27</title><style>@page { size: A4 portrait; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root{
+  --navy:#0B0F19; --navy2:#111726; --line:rgba(255,255,255,.10);
+  --indigo:#6366F1; --emerald:#10B981; --ink:#EEF1F8; --dim:#9AA4BD; --dim2:#7C879F;
+}
+html,body{ background:var(--navy); }
+body{ font-family:'Inter',sans-serif; color:var(--ink); -webkit-print-color-adjust:exact; print-color-adjust:exact; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+.page{
+  position:relative; width:210mm; height:297mm; overflow:hidden;
+  background: var(--navy);
+  padding:15mm 14mm 16mm; page-break-after:always; display:flex; flex-direction:column;
+}
+.page:last-child{ page-break-after:auto; }
+.page::before{ content:""; position:absolute; top:0; left:0; right:0; height:3.2mm;
+  background:linear-gradient(135deg, #6366F1, #4F46E5); }
 
-        body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f8fafc;
-            color: var(--text-main);
-            line-height: 1.5;
-            padding: 2.5rem 1.5rem;
-        }
+/* footer */
+.pfoot{ position:absolute; left:14mm; right:14mm; bottom:7.5mm; display:flex; align-items:center;
+  gap:6mm; border-top:1px solid var(--line); padding-top:2.6mm; font-size:6.6pt; color:var(--dim2); letter-spacing:.02em; }
+.pfoot .fl{ font-weight:600; color:var(--dim); white-space:nowrap; }
+.pfoot .fc{ flex:1; text-align:center; }
+.pfoot .fr{ font-weight:700; color:var(--ink); font-family:'Space Grotesk',sans-serif; }
 
-        .document-wrapper {
-            max-width: 900px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 1.25rem;
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
-            padding: 3rem 2.5rem;
-            position: relative;
-        }
+/* headings */
+.phead{ margin-bottom:7mm; }
+.eyebrow{ font-size:7.6pt; font-weight:800; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--emerald); margin-bottom:2.8mm; }
+h2{ font-family:'Space Grotesk',sans-serif; font-size:28pt; font-weight:700; line-height:1.05;
+  letter-spacing:-.025em; display:flex; align-items:center; gap:3.4mm; }
+.sub{ margin-top:2.4mm; font-size:9.4pt; color:var(--dim); font-weight:500; }
+.intro{ margin-top:3.2mm; font-size:9.2pt; line-height:1.55; color:#C3CBDD; max-width:165mm; }
+.ico{ display:inline-flex; width:12mm; height:12mm; border-radius:3mm; align-items:center; justify-content:center;
+  background:rgba(99,102,241,.15); border-left:3px solid rgba(99,102,241,.50); border:1px solid rgba(255,255,255,.14); color:#fff; }
+.ico svg{ width:7mm; height:7mm; }
+.ic{ display:inline-flex; color:var(--emerald); }
+.ic svg{ width:5.6mm; height:5.6mm; }
 
-        .no-print-bar {
-            max-width: 900px;
-            margin: 0 auto 1.5rem auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+/* ---------- COVER ---------- */
+.cover{ padding:0; }
+.cover .cov-glow{ position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(99,102,241,.14), rgba(99,102,241,.06)); }
+.cov-top{ position:relative; padding:22mm 18mm 0; display:flex; align-items:center; gap:6mm; }
+.cover .logo{ width:26mm; }
+.bn{ font-family:'Space Grotesk',sans-serif; font-size:17pt; font-weight:700; letter-spacing:.02em; }
+.bn span{ color:#6EE7B7; }
+.bt{ font-size:9pt; color:var(--dim); margin-top:1mm; letter-spacing:.04em; }
+.cov-mid{ position:relative; padding:0 18mm; margin-top:26mm; flex:1; }
+.kicker{ display:inline-block; font-size:8pt; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+  color:#C7D2FE; border:1px solid rgba(255,255,255,.18); border-radius:20mm; padding:2mm 5mm; margin-bottom:9mm;
+  background:rgba(255,255,255,.03); border-top:2px solid rgba(99,102,241,.25); }
+h1{ font-family:'Space Grotesk',sans-serif; font-size:31pt; line-height:1.13; font-weight:700; letter-spacing:-.025em; }
+.grad{ color:#6EE7B7; }
+.lede{ margin-top:7mm; font-size:10.4pt; line-height:1.6; color:#C3CBDD; max-width:135mm; }
+.cov-stats{ display:flex; gap:4mm; margin-top:14mm; }
+.cov-stats div{ flex:1; border:1px solid var(--line); border-radius:3mm; padding:4.5mm 3mm;
+  background:rgba(255,255,255,.025); border-top:1px solid rgba(99,102,241,.30); text-align:center; }
+.cov-stats b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:17pt; color:#A5B4FC; }
+.cov-stats span{ display:block; margin-top:1.4mm; font-size:7.4pt; color:var(--dim); }
+.cov-bot{ position:relative; margin:0 18mm 26mm; display:flex; align-items:center; gap:7mm;
+  border-top:1px solid var(--line); padding-top:7mm; }
+.cover .qr{ width:26mm; border-radius:2.5mm; }
+.cov-contact{ font-size:9pt; color:#C3CBDD; line-height:1.65; }
+.cc-t{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:11pt; color:#fff; margin-bottom:1.5mm; }
 
-        .print-btn {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: #ffffff;
-            border: none;
-            padding: 0.65rem 1.4rem;
-            font-size: 0.875rem;
-            font-weight: 700;
-            border-radius: 9999px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
-        }
+/* ---------- WHY ---------- */
+.stats{ display:flex; gap:3.5mm; margin-bottom:7mm; }
+.stat{ flex:1; border:1px solid var(--line); border-radius:3mm; padding:5mm 3.5mm; text-align:center;
+  background:rgba(255,255,255,.03); border-top:2px solid rgba(99,102,241,.25); }
+.stat b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:20pt; line-height:1; color:#A5B4FC; }
+.stat span{ display:block; margin-top:2.2mm; font-size:7.6pt; color:var(--dim); line-height:1.35; }
+.benefits{ display:grid; grid-template-columns:1fr 1fr; gap:3mm; align-items:stretch; margin-top:2mm; margin-bottom:3mm; }
+.ben{ display:flex; gap:3.5mm; border:1px solid var(--line); border-radius:3mm; padding:4.5mm 5mm;
+  background:rgba(255,255,255,.025); border-top:1px solid rgba(99,102,241,.30); align-items:flex-start; }
+.bi{ flex:none; width:9mm; height:9mm; border-radius:2.5mm; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg, rgba(99,102,241,.36), rgba(99,102,241,.24)); color:#fff; }
+.bi svg{ width:5mm; height:5mm; }
+.ben b{ font-size:9.6pt; font-weight:700; }
+.ben p{ margin-top:1.8mm; font-size:8.2pt; line-height:1.5; color:var(--dim); }
+.promises{ display:grid; grid-template-columns:repeat(4,1fr); gap:2.4mm; margin-top:7mm; }
+.promises span{ font-size:7.3pt; font-weight:600; color:#D7DDEB; border:1px solid var(--line);
+  background:rgba(255,255,255,.05); border-radius:20mm; padding:2.2mm 2.4mm; text-align:center; justify-content:center; }
+.promises.small span{ font-size:7.2pt; }
+.hook{ margin-top:3mm; border-radius:3mm; padding:6.5mm; text-align:center;
+  background:linear-gradient(135deg, rgba(99,102,241,.22), rgba(99,102,241,.14));
+  border:1px solid rgba(255,255,255,.14);
+  font-family:'Space Grotesk',sans-serif; font-size:15pt; font-weight:600; letter-spacing:-.01em; }
+.hook span{ display:block; margin-top:2.5mm; font-family:'Inter',sans-serif; font-size:8.4pt;
+  font-weight:500; color:var(--dim); letter-spacing:0; }
 
-        .print-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
-        }
+/* ---------- PROCESS ---------- */
+.steps{ display:flex; flex-direction:column; gap:4.5mm; margin-top:2mm; }
+.step{ display:flex; gap:5mm; border:1px solid var(--line); border-radius:3mm; padding:6mm;
+  background:rgba(255,255,255,.025); border-top:1px solid rgba(99,102,241,.30); }
+.sn{ flex:none; font-family:'Space Grotesk',sans-serif; font-size:21pt; font-weight:700; width:14mm; color:#A5B4FC; }
+.sc b{ font-size:12pt; font-family:'Space Grotesk',sans-serif; font-weight:600; }
+.sc p{ margin-top:2mm; font-size:8.8pt; line-height:1.55; color:#BFC7D9; }
+.sout{ margin-top:3.2mm; display:inline-block; font-size:7.4pt; font-weight:800; letter-spacing:.06em;
+  text-transform:uppercase; color:#062E22; background:linear-gradient(135deg, #10B981, #059669);
+  border-radius:20mm; padding:1.8mm 4mm; }
 
-        .back-link {
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 0.875rem;
-            font-weight: 600;
-        }
+/* ---------- TIER CARDS ---------- */
+.tiers{ display:flex; gap:4mm; flex:1; align-items:stretch; }
+.tiers.two .tier{ max-width:86mm; }
+.tier{ position:relative; flex:1; border:1px solid var(--line); border-radius:3.5mm; padding:6mm 5mm;
+  background:rgba(255,255,255,.025); border-top:1px solid rgba(99,102,241,.30); display:flex; flex-direction:column; }
+.tier.popular{ border-color:rgba(99,102,241,.55);
+  background:linear-gradient(135deg, rgba(99,102,241,.19), rgba(99,102,241,.11)); }
+.badge{ position:absolute; top:-2.6mm; left:50%; transform:translateX(-50%);
+  font-size:6.4pt; font-weight:800; letter-spacing:.14em; color:#0B0F19; white-space:nowrap;
+  background:linear-gradient(135deg, #10B981, #059669); border-radius:20mm; padding:1.4mm 3.4mm; }
+.tname{ font-family:'Space Grotesk',sans-serif; font-size:14.5pt; font-weight:700; }
+.best{ margin-top:2mm; font-size:8.2pt; line-height:1.45; color:var(--dim); min-height:9mm; }
+.price{ margin-top:3mm; padding-top:3.5mm; border-top:1px solid var(--line); }
+.price .small{ display:block; font-size:7pt; color:var(--dim2); letter-spacing:.06em; text-transform:uppercase; }
+.price .amt{ display:block; font-family:'Space Grotesk',sans-serif; font-size:21.5pt; font-weight:700;
+  letter-spacing:-.02em; line-height:1.15; margin-top:.8mm; }
+.price .gst{ display:block; font-size:7pt; color:var(--dim2); margin-top:.6mm; }
+.tl{ margin-top:3mm; display:inline-block; align-self:flex-start; font-size:7.2pt; font-weight:700;
+  color:#C7D2FE; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.05);
+  border-radius:20mm; padding:1.4mm 3.2mm; }
+.feats{ list-style:none; margin-top:4.5mm; display:flex; flex-direction:column; gap:3.6mm; }
+.feats li{ display:flex; gap:2.4mm; font-size:8.7pt; line-height:1.55; color:#D3D9E7; }
+.tiers.two .feats li{ font-size:9.2pt; }
+.tick{ flex:none; color:var(--emerald); font-weight:800; font-size:8pt; }
+.incl{ margin-top:5mm; border:1px solid var(--line); border-radius:2.5mm; padding:3.4mm 4mm;
+  font-size:7.4pt; color:var(--dim); background:rgba(255,255,255,.03); text-align:center; }
+.nudge{ margin-top:3.5mm; text-align:center; font-size:8pt; color:#C3CBDD; }
+.nudge b{ color:var(--emerald); }
 
-        /* Header */
-        .doc-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 2rem;
-            margin-bottom: 2rem;
-        }
+/* ---------- ADD-ONS ---------- */
+.addons{ display:grid; grid-template-columns:1fr 1fr; gap:3.2mm; }
+.addon{ border:1px solid var(--line); border-radius:3.5mm; padding:4.5mm 5mm;
+  background:rgba(255,255,255,.02); border-left:3px solid rgba(99,102,241,.30); }
+.ai{ display:inline-flex; width:8mm; height:8mm; border-radius:2.5mm; align-items:center; justify-content:center;
+  background:linear-gradient(135deg, rgba(99,102,241,.36), rgba(99,102,241,.24)); }
+.an{ margin-top:2.4mm; font-family:'Space Grotesk',sans-serif; font-size:10.8pt; font-weight:600; }
+.ap{ margin-top:1.6mm; font-family:'Space Grotesk',sans-serif; font-size:14.5pt; font-weight:700; color:#6EE7B7; }
+.ap span{ display:block; font-family:'Inter',sans-serif; font-size:7pt; font-weight:500; color:var(--dim2); margin-top:.8mm; }
+.addon p{ margin-top:2.2mm; font-size:7.8pt; line-height:1.42; color:var(--dim); }
+.notebox{ margin-top:3.5mm; border-left:2px solid var(--emerald); border-radius:2mm;
+  background:rgba(16,185,129,.08); padding:4.5mm 5mm; font-size:8.4pt; line-height:1.55; color:#C7CFE0; }
+.notebox b{ color:#fff; }
 
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
+/* ---------- CASES ---------- */
+.cases{ display:grid; grid-template-columns:1fr 1fr; gap:4.5mm; }
+.case{ border:1px solid var(--line); border-radius:3.5mm; padding:6mm;
+  background:rgba(255,255,255,.02); border-left:4px solid rgba(16,185,129,.40); }
+.cn{ font-size:7.6pt; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
+.cr{ margin-top:2.5mm; font-family:'Space Grotesk',sans-serif; font-size:15pt; font-weight:700; line-height:1.2; color:#6EE7B7; }
+.case p{ margin-top:3mm; font-size:8.4pt; line-height:1.5; color:var(--dim); }
+.quotebox{ margin-top:auto; border:1px solid rgba(255,255,255,.14); border-radius:3.5mm; padding:7mm;
+  font-family:'Space Grotesk',sans-serif; font-size:12.5pt; line-height:1.45; font-weight:500; }
+.quotebox span{ display:block; margin-top:3mm; font-family:'Inter',sans-serif; font-size:8.4pt;
+  font-weight:600; color:var(--dim); }
 
-        .brand-icon {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, #0284c7, #4f46e5);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 1.25rem;
-        }
+/* ---------- TERMS ---------- */
+.milestones{ display:flex; gap:4mm; }
+.ms{ flex:1; border:1px solid var(--line); border-radius:3.5mm; padding:5mm;
+  background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.02)); border-top:2px solid rgba(99,102,241,.30); }
+.ms b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:18pt; color:#A5B4FC; }
+.ms span{ display:block; margin-top:1.6mm; font-size:7.6pt; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; color:#C7D2FE; }
+.ms p{ margin-top:2.6mm; font-size:7.8pt; line-height:1.45; color:var(--dim); }
+.terms{ display:grid; grid-template-columns:repeat(3,1fr); gap:4.5mm; margin-top:6mm; }
+.tcol{ display:flex; flex-direction:column; border:1px solid var(--line); border-radius:3.5mm; padding:5.5mm; background:rgba(255,255,255,.03); border-top:2px solid rgba(99,102,241,.30); }
+.tcol b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:11pt; font-weight:600; margin-bottom:3.5mm; }
+.tcol ul{ list-style:none; display:flex; flex-direction:column; gap:2.9mm; }
+.tcol li{ position:relative; padding-left:4mm; font-size:8.2pt; line-height:1.5; color:#C7CFE0; }
+.tcol li::before{ content:""; position:absolute; left:0; top:1.5mm; width:1.6mm; height:1.6mm; border-radius:50%;
+  background:linear-gradient(135deg, #10B981, #059669); }
 
-        .brand-name {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            color: #0f172a;
-        }
+/* ---------- CTA ---------- */
+.cta{ justify-content:center; padding:20mm 18mm 22mm; }
+.cta .cov-glow{ position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(99,102,241,.14), rgba(99,102,241,.06)); }
+.cta-in{ position:relative; }
+.logo.sm{ width:18mm; margin-bottom:8mm; }
+.cta h1{ font-size:27pt; }
+.cta .lede{ font-size:10pt; max-width:130mm; }
+.cta-grid{ display:flex; gap:8mm; align-items:center; margin-top:11mm;
+  border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:9mm 0; }
+.qr.big{ width:46mm; border-radius:3mm; }
+.cta-contact{ flex:1; }
+.cta-contact .row{ display:flex; gap:4mm; align-items:baseline; padding:1.9mm 0;
+  border-bottom:1px dashed rgba(255,255,255,.10); }
+.cta-contact .row span{ width:22mm; font-size:7.4pt; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--dim2); }
+.cta-contact .row b{ font-size:10pt; font-weight:600; }
+.ctabtn{ margin-top:5.5mm; display:inline-block; font-weight:800; font-size:9.6pt; color:#0B0F19;
+  background:linear-gradient(135deg, #10B981, #059669); border-radius:20mm; padding:3.4mm 7mm; }
+.ctanote{ margin-top:3mm; font-size:7.8pt; color:var(--dim); }
+.cta .promises{ margin-top:9mm; grid-template-columns:repeat(5,1fr); }
 
-        .brand-name span {
-            color: var(--primary);
-        }
+.tfoot{ margin-top:auto; padding-top:4.5mm; border-top:1px solid var(--line); font-size:7.2pt;
+  color:var(--dim2); letter-spacing:.03em; }
+.tiers.two{ align-items:stretch; }
+.tiers.two .tier{ max-width:none; }
+.pairs{ margin-top:5mm; border:1px solid var(--line); border-radius:3mm; padding:4.5mm 5mm;
+  background:rgba(255,255,255,.03); }
+.pt{ font-size:7.4pt; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); }
+.prow{ display:flex; gap:4mm; margin-top:3.5mm; }
+.pi{ flex:1; border-left:2px solid rgba(99,102,241,.55); padding-left:3.5mm; }
+.pi b{ display:block; font-size:8.4pt; font-weight:600; }
+.pi span{ display:block; margin-top:1.2mm; font-size:8pt; font-weight:700; color:#6EE7B7; }
+.benefits{ flex:1; align-content:stretch; }
+.hook{ margin-top:7mm; }
 
-        .edition-badge {
-            display: inline-block;
-            background: #eff6ff;
-            color: #1d4ed8;
-            border: 1px solid #bfdbfe;
-            padding: 0.35rem 0.85rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
+/* refinements */
+.addons{ flex:1; grid-template-rows:repeat(3,1fr); }
+.addon{ display:flex; flex-direction:column; }
+.apair{ margin-top:auto; padding-top:2.8mm; border-top:1px solid var(--line); display:flex; flex-wrap:wrap; align-items:center; gap:1.6mm; }
+.pairlbl{ font-size:6.8pt; font-weight:700; letter-spacing:.04em; color:var(--dim2); text-transform:uppercase; margin-right:.6mm; }
+.pairtag{ font-size:6.8pt; font-weight:600; color:#C7D2FE; background:rgba(99,102,241,.14);
+  border:1px solid rgba(99,102,241,.25); border-radius:20mm; padding:1mm 2.4mm; }
+.cases{ flex:1; grid-template-rows:1fr 1fr; }
+.case{ display:flex; flex-direction:column; }
+.ctag{ margin-top:auto; padding-top:4mm; font-size:7.4pt; font-weight:600; letter-spacing:.04em;
+  color:var(--dim2); border-top:1px solid var(--line); }
+.quotebox{ margin-top:6mm; }
+.faq{ display:grid; grid-template-columns:repeat(3,1fr); gap:4.5mm; margin-top:auto; }
+.fq{ border-left:2px solid rgba(99,102,241,.55); padding:1mm 0 1mm 4mm; }
+.fq b{ font-size:9pt; font-weight:700; }
+.fq p{ margin-top:1.8mm; font-size:8pt; line-height:1.5; color:var(--dim); }
+.milestones{ margin-bottom:0; }
+.terms{ flex:1; grid-auto-rows:1fr; margin-bottom:6mm; }
+.faq{ margin-top:0; }
+.steps{ flex:1; justify-content:space-between; position:relative; gap:2.4mm; }
+.step{ position:relative; z-index:1; }
 
-        .doc-meta {
-            text-align: right;
-            font-size: 0.8125rem;
-            color: var(--text-muted);
-        }
+/* retainer band on AMC page */
+.retainer{ margin-top:6mm; border:1px solid var(--line); border-radius:3.5mm; padding:6mm;
+  background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.02)); border-top:2px solid rgba(99,102,241,.30); }
+.rethead{ display:flex; align-items:center; gap:4mm; }
+.rethead .ai{ width:9.5mm; height:9.5mm; }
+.rethead b{ display:block; font-family:'Space Grotesk',sans-serif; font-size:11.5pt; font-weight:600; }
+.rethead span{ display:block; margin-top:1mm; font-size:7.6pt; color:var(--dim); }
+.retrow{ display:flex; gap:4mm; margin-top:5mm; }
+.ret{ flex:1; border:1px solid var(--line); border-radius:2.5mm; padding:4.5mm; background:rgba(255,255,255,.03); border-top:1px solid rgba(99,102,241,.25); }
+.rn{ font-size:9pt; font-weight:700; }
+.rp{ margin-top:1.5mm; font-family:'Space Grotesk',sans-serif; font-size:14pt; font-weight:700; color:#6EE7B7; }
+.rp span{ font-family:'Inter',sans-serif; font-size:7pt; font-weight:500; color:var(--dim2); margin-left:1mm; }
+.ret p{ margin-top:2.4mm; font-size:7.8pt; line-height:1.45; color:var(--dim); }
+.gst{ margin-top:1mm; font-size:7.6pt; color:var(--dim2); letter-spacing:.03em; }
 
-        .doc-meta strong {
-            color: var(--text-main);
-            display: block;
-            font-size: 0.875rem;
-        }
+/* wayfinder */
+.wayf{ position:absolute; top:9mm; right:14mm; font-family:'Space Grotesk',sans-serif;
+  font-size:8pt; font-weight:700; color:var(--dim2); letter-spacing:.05em; z-index:5; }
+.wayf span{ font-weight:500; color:#4E5772; }
 
-        /* Hero intro */
-        .doc-intro {
-            margin-bottom: 2.25rem;
-        }
+/* card elevation — flat shadow (no blur) so Chromium keeps it vector instead of
+   rasterizing every card; blurred shadows were the main cause of slow PDF loading */
+.stat,.ben,.tier,.addon,.case,.ms,.tcol,.step,.ret,.retainer,.founder{
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+}
+.tier.popular{ box-shadow: inset 0 1px 0 rgba(255,255,255,.09); }
 
-        .doc-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.85rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            color: #0f172a;
-            line-height: 1.2;
-        }
+/* tick icon */
+.tick{ flex:none; display:inline-flex; margin-top:.3mm; }
+.tick svg{ width:4mm; height:4mm; }
 
-        .doc-subtitle {
-            margin-top: 0.5rem;
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            max-width: 720px;
-        }
+/* star in badge */
+.badge{ display:inline-flex; align-items:center; gap:1.2mm; }
+.badge svg{ width:2.6mm; height:2.6mm; }
 
-        .value-anchor {
-            margin-top: 1rem;
-            display: inline-block;
-            background: #fdf2f8;
-            border: 1px solid #fbcfe8;
-            color: #be185d;
-            padding: 0.4rem 0.9rem;
-            border-radius: 8px;
-            font-size: 0.8125rem;
-            font-weight: 600;
-        }
+/* founder trust block */
+.founder{ margin-top:3mm; display:flex; gap:5mm; align-items:center; border:1px solid var(--line);
+  border-radius:3.5mm; padding:5.5mm 6mm; background:rgba(255,255,255,.025); border-top:1px solid rgba(99,102,241,.30); }
+.fav{ flex:none; width:15mm; height:15mm; border-radius:50%; overflow:hidden; }
+.fav svg{ width:100%; height:100%; display:block; }
+.fname{ font-family:'Space Grotesk',sans-serif; font-size:11pt; font-weight:700; }
+.fname span{ font-family:'Inter',sans-serif; font-size:8.4pt; font-weight:500; color:var(--dim); }
+.founder p{ margin-top:1.6mm; font-size:8.4pt; line-height:1.5; color:#C3CBDD; max-width:150mm; }
 
-        /* Section Headings */
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 2rem 0 1rem 0;
-            padding-bottom: 0.5rem;
-            border-bottom: 1.5px solid #e2e8f0;
-        }
+/* upgraded promise badges */
+.promises span{ display:inline-flex; align-items:center; gap:1.6mm; }
+.promises svg{ width:3.4mm; height:3.4mm; flex:none; }
+.cov-diag-wrap{ margin-top:11mm; }
+.covdiag{ width:100%; height:auto; display:block; }
+.cov-diag-cap{ margin-top:3mm; font-size:7.4pt; color:var(--dim2); letter-spacing:.03em; text-align:center; }
 
-        .section-header h2 {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #0f172a;
-            letter-spacing: -0.02em;
-        }
+.tcap{ margin-top:auto; padding-top:5mm; display:flex; align-items:center; gap:1.8mm;
+  font-size:7.6pt; font-weight:700; color:#6EE7B7; letter-spacing:.03em; }
+.tcap svg{ width:3.4mm; height:3.4mm; }
+.cta .kicker{ margin:6mm 0 5mm; }
 
-        .section-header span {
-            font-size: 0.75rem;
-            color: var(--primary);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
+/* infrastructure cost callout — deliberately distinct (amber) from the green reassurance notes */
+.infranote{ margin-top:4mm; border:1px solid rgba(245,158,11,.35); border-left:2.6px solid #F59E0B;
+  border-radius:2.5mm; padding:4mm 5mm; background:rgba(245,158,11,.08); }
+.infrahead{ display:flex; align-items:center; gap:2.4mm; }
+.infrahead svg{ width:4mm; height:4mm; color:#F59E0B; flex:none; }
+.infrahead b{ font-size:8.8pt; font-weight:700; color:#FDE68A; letter-spacing:.01em; }
+.infranote p{ margin-top:2mm; font-size:7.9pt; line-height:1.5; color:#D8CFC0; }
+.infranote p b{ color:#FDE68A; font-weight:700; }
 
-        /* Tables */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.875rem;
-            margin-bottom: 1.5rem;
-        }
+/* links: keep the existing visual language, just make them clickable */
+a{ color:inherit; text-decoration:none; }
+.ctabtn{ cursor:pointer; }
 
-        th {
-            background: #f8fafc;
-            color: #334155;
-            font-weight: 700;
-            text-align: left;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border);
-            font-size: 0.8125rem;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-        }
-
-        td {
-            padding: 0.85rem 1rem;
-            border: 1px solid var(--border);
-            color: #1e293b;
-            vertical-align: middle;
-        }
-
-        tr:nth-child(even) td {
-            background: #fafafa;
-        }
-
-        .service-title {
-            font-weight: 700;
-            color: #0f172a;
-            display: block;
-        }
-
-        .service-desc {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.15rem;
-        }
-
-        .price-val {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
-            color: #0f172a;
-            white-space: nowrap;
-        }
-
-        .popular-col {
-            background: #f0f9ff !important;
-            border-left: 2px solid var(--primary);
-            border-right: 2px solid var(--primary);
-        }
-
-        .popular-badge {
-            background: #0284c7;
-            color: white;
-            font-size: 0.65rem;
-            font-weight: 700;
-            padding: 0.15rem 0.4rem;
-            border-radius: 4px;
-            margin-left: 0.35rem;
-            text-transform: uppercase;
-        }
-
-        /* Guarantee Grid */
-        .inclusion-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-            margin: 1.25rem 0 2rem 0;
-        }
-
-        .inc-card {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 0.85rem;
-            font-size: 0.8125rem;
-        }
-
-        .inc-card strong {
-            display: block;
-            color: #0f172a;
-            margin-bottom: 0.2rem;
-            font-size: 0.85rem;
-        }
-
-        .inc-card p {
-            color: #64748b;
-            font-size: 0.75rem;
-            line-height: 1.4;
-        }
-
-        /* Mechanics Box */
-        .mechanics-box {
-            background: linear-gradient(135deg, #f8fafc, #eff6ff);
-            border: 1.5px solid #bfdbfe;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.25rem;
-        }
-
-        .mech-item strong {
-            display: block;
-            font-size: 0.85rem;
-            color: #1e3a8a;
-            margin-bottom: 0.25rem;
-        }
-
-        .mech-item p {
-            font-size: 0.8125rem;
-            color: #334155;
-            line-height: 1.45;
-        }
-
-        /* Footer */
-        .doc-footer {
-            margin-top: 2.5rem;
-            padding-top: 1.5rem;
-            border-top: 2px solid #f1f5f9;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8125rem;
-            color: var(--text-muted);
-        }
-
-        .contact-cta {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-        }
-
-        .contact-pill {
-            font-weight: 700;
-            color: #0f172a;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-        }
-
-        .contact-pill span {
-            color: #0284c7;
-        }
-
-        @media print {
-            body {
-                background: #ffffff;
-                padding: 0;
-            }
-            .no-print-bar {
-                display: none !important;
-            }
-            .document-wrapper {
-                border: none;
-                box-shadow: none;
-                padding: 0;
-                max-width: 100%;
-            }
-            .page-break {
-                page-break-before: always;
-            }
-            tr {
-                page-break-inside: avoid;
-            }
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem 0.5rem;
-            }
-            .document-wrapper {
-                padding: 1.5rem 1rem;
-            }
-            .doc-header {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            .doc-meta {
-                text-align: left;
-            }
-            .inclusion-grid, .mechanics-box {
-                grid-template-columns: 1fr;
-            }
-            .doc-footer {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: flex-start;
-            }
-            .contact-cta {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="no-print-bar">
-        <a href="/pricing" class="back-link">← Back to Interactive Pricing</a>
-        <button onclick="window.print()" class="print-btn">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/></svg>
-            Print / Save as PDF
-        </button>
+/* disable ligatures: prevent + and – substitution into private-use glyphs */
+body{ font-variant-ligatures: none; }
+</style></head><body><section class="page cover">
+  <div class="cov-glow"></div>
+  <div class="cov-top"><img class="logo" src="/images/db-logo.png" alt="DigitalBuilders Logo"/><div class="brandline"><div class="bn">DIGITAL<span>BUILDERS</span></div><div class="bt">We Build Your Digital Future.</div></div></div>
+  <div class="cov-mid">
+    <div class="kicker">Services &amp; Pricing — India 2026–27</div>
+    <h1>Enterprise web, mobile &amp; AI architecture,<br/>delivered with <span class="grad">Silicon Valley engineering discipline.</span></h1>
+    <p class="lede">Fixed written scope. Weekly sprint demos. Zero-downtime launches. Built in Ludhiana for businesses that want software that lasts.</p>
+    <div class="cov-stats"><div><b>8+</b><span>years experience</span></div><div><b>25+</b><span>projects delivered</span></div><div><b>99.9%</b><span>uptime</span></div><div><b>100%</b><span>on-time sprints</span></div></div>
+    <div class="cov-diag-wrap"><svg class="covdiag" viewBox="0 0 860 190" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="covline" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6366F1" stop-opacity=".55"/><stop offset="1" stop-color="#10B981" stop-opacity=".55"/></linearGradient></defs><line x1="120" y1="50" x2="290" y2="90" stroke="url(#covline)" stroke-width="1.4"/><line x1="120" y1="130" x2="290" y2="100" stroke="url(#covline)" stroke-width="1.4"/><line x1="360" y1="85" x2="530" y2="50" stroke="url(#covline)" stroke-width="1.4"/><line x1="360" y1="95" x2="530" y2="130" stroke="url(#covline)" stroke-width="1.4"/><line x1="620" y1="55" x2="750" y2="85" stroke="url(#covline)" stroke-width="1.4"/><line x1="620" y1="125" x2="750" y2="95" stroke="url(#covline)" stroke-width="1.4"/><rect x="70" y="24" width="108" height="32" rx="8" fill="rgba(255,255,255,.035)" stroke="rgba(255,255,255,.16)" stroke-width="1"/><circle cx="70" cy="40" r="2.2" fill="#6EE7B7"/><circle cx="178" cy="40" r="2.2" fill="#A5B4FC"/><text x="124.0" y="44" font-family="Space Grotesk" font-size="9.5" font-weight="600" text-anchor="middle" fill="#C7D2FE"><tspan x="124.0" dy="0">Client</tspan></text><rect x="70" y="124" width="108" height="32" rx="8" fill="rgba(255,255,255,.035)" stroke="rgba(255,255,255,.16)" stroke-width="1"/><circle cx="70" cy="140" r="2.2" fill="#6EE7B7"/><circle cx="178" cy="140" r="2.2" fill="#A5B4FC"/><text x="124.0" y="144" font-family="Space Grotesk" font-size="9.5" font-weight="600" text-anchor="middle" fill="#C7D2FE"><tspan x="124.0" dy="0">WhatsApp</tspan></text><rect x="300" y="74" width="108" height="32" rx="8" fill="rgba(255,255,255,.035)" stroke="rgba(255,255,255,.16)" stroke-width="1"/><circle cx="300" cy="90" r="2.2" fill="#6EE7B7"/><circle cx="408" cy="90" r="2.2" fill="#A5B4FC"/><text x="354.0" y="90" font-family="Space Grotesk" font-size="9.5" font-weight="600" text-anchor="middle" fill="#C7D2FE"><tspan x="354.0" dy="0">Auth &</tspan><tspan x="354.0" dy="11">Gateway</tspan></text><rect x="540" y="24" width="108" height="32" rx="8" fill="rgba(255,255,255,.035)" stroke="rgba(255,255,255,.16)" stroke-width="1"/><circle cx="540" cy="40" r="2.2" fill="#6EE7B7"/><circle cx="648" cy="40" r="2.2" fill="#A5B4FC"/><text x="594.0" y="44" font-family="Space Grotesk" font-size="9.5" font-weight="600" text-anchor="middle" fill="#C7D2FE"><tspan x="594.0" dy="0">Web / App</tspan></text><rect x="540" y="124" width="108" height="32" rx="8" fill="rgba(255,255,255,.035)" stroke="rgba(255,255,255,.16)" stroke-width="1"/><circle cx="540" cy="140" r="2.2" fill="#6EE7B7"/><circle cx="648" cy="140" r="2.2" fill="#A5B4FC"/><text x="594.0" y="144" font-family="Space Grotesk" font-size="9.5" font-weight="600" text-anchor="middle" fill="#C7D2FE"><tspan x="594.0" dy="0">AI Agent</tspan></text><rect x="760" y="74" width="108" height="32" rx="8" fill="rgba(255,255,255,.035)" stroke="rgba(255,255,255,.16)" stroke-width="1"/><circle cx="760" cy="90" r="2.2" fill="#6EE7B7"/><circle cx="868" cy="90" r="2.2" fill="#A5B4FC"/><text x="814.0" y="94" font-family="Space Grotesk" font-size="9.5" font-weight="600" text-anchor="middle" fill="#C7D2FE"><tspan x="814.0" dy="0">Database</tspan></text></svg><div class="cov-diag-cap">A typical DigitalBuilders system — client to database, wired and monitored</div></div>
+  </div>
+  <div class="cov-bot"><a href="https://wa.me/919087021592?text=Hi%20DigitalBuilders%21%20I%27d%20like%20to%20discuss%20a%20project.%20Please%20share%20package%20details%20and%20next%20steps."><img class="qr" src="/images/db-logo.png" alt="DigitalBuilders Contact"/></a><div class="cov-contact"><div class="cc-t">Book a free consultation</div><div><a href="tel:+919087021592">+91 90870 21592</a></div><div><a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a></div><div><a href="https://digitalbuilders.in">digitalbuilders.in</a> · Ludhiana, Punjab</div><div class="gst">Udyam Reg. No. UDYAM-PB-12-0217716</div></div></div>
+</section><section class="page "><div class="wayf">02 <span>/ 15</span></div>
+  <div class="phead"><div class="eyebrow">Why us</div><h2>Why DigitalBuilders</h2>
+  <p class="intro">You are not buying pages or screens. You are buying a system that still works, still scales and still makes sense three years from now.</p></div>
+  <div class="stats">
+    <div class="stat"><b>8+</b><span>Years engineering experience</span></div>
+    <div class="stat"><b>25+</b><span>Projects delivered end to end</span></div>
+    <div class="stat"><b>99.9%</b><span>Uptime across live systems</span></div>
+    <div class="stat"><b>100%</b><span>On-time sprint delivery</span></div>
+  </div>
+  <div class="benefits">
+    <div class="ben"><div class="bi"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V8l8-4 8 4v12"/><path d="M4 12h16M12 4v16M8 20v-4M16 20v-4"/></svg></span></div><div><b>Architecture first, code second</b><p>Domain-Driven design means new features slot in instead of breaking what already works.</p></div></div>
+    <div class="ben"><div class="bi"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg></span></div><div><b>You see progress every week</b><p>Live sprint demos, not status emails. You always know exactly what your money built.</p></div></div>
+    <div class="ben"><div class="bi"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10" width="15" height="10" rx="2.5"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10M12 14v2.5"/></svg></span></div><div><b>Secure and tested by default</b><p>Auth, role permissions, audit trails and automated test coverage ship in every build.</p></div></div>
+    <div class="ben"><div class="bi"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12.5 7 9l4.5 3.5a2 2 0 0 0 2.5 0L21 7"/><path d="M3 12.5V17l5.5 4 6-2 6.5-6V7"/></svg></span></div><div><b>One architect, start to finish</b><p>Founder-led delivery. The person who designs your system is the person who builds it.</p></div></div>
+  </div>
+  <div class="founder">
+    <div class="fav"><svg viewBox="0 0 60 60" width="60" height="60"><defs><linearGradient id="avg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A5B4FC"/><stop offset="1" stop-color="#10B981"/></linearGradient></defs><circle cx="30" cy="30" r="30" fill="url(#avg)"/><text x="30" y="39" font-family="Space Grotesk" font-size="21" font-weight="700" text-anchor="middle" fill="#0B0F19">AG</text></svg></div>
+    <div class="ftext"><div class="fname">Ashish Gupta <span>· Founder &amp; Lead Architect</span></div>
+    <p>8+ years building production systems before starting DigitalBuilders — every proposal you receive is scoped and reviewed personally, and every architecture decision carries my name against it.</p></div>
+  </div>
+  <div class="promises">
+    <span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>Fixed written scope</span><span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>No hidden charges</span><span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>GST invoice</span><span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>Weekly demos</span><span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>Zero-downtime</span><span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>30-day warranty</span><span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>Milestone payments</span><span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>Refer &amp; Earn</span>
+  </div>
+  <div class="hook">“Sasta roye baar-baar, achha roye ek baar.”<span>Cheap work costs you again and again. Good work costs you once.</span></div>
+<div class="pfoot"><div class="fl">Why DigitalBuilders</div><div class="fc"><a href="tel:+919087021592">+91 90870 21592</a> · <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a> · <a href="https://digitalbuilders.in">digitalbuilders.in</a> · Ludhiana, Punjab, India</div><div class="fr">2</div></div></section><section class="page "><div class="wayf">03 <span>/ 15</span></div>
+  <div class="phead"><div class="eyebrow">Process</div><h2>How We Work</h2>
+  <p class="intro">Four steps, no surprises. You approve the scope before a single line of code is written, and you see working software every week after that.</p></div>
+  <div class="steps">
+    <div class="step"><div class="sn">01</div><div class="sc"><b>Understand</b><p>We map your actual workflow — who does what, where it breaks, what it costs you. You get a written scope with features, timeline and a fixed price. Nothing starts until you sign off on it.</p><div class="sout">Deliverable: written scope &amp; fixed quote</div></div></div>
+    <div class="step"><div class="sn">02</div><div class="sc"><b>Architect</b><p>We design the data model, module boundaries and integrations before building. This is why our systems grow cleanly instead of turning into a tangle after version three.</p><div class="sout">Deliverable: architecture &amp; screen flow</div></div></div>
+    <div class="step"><div class="sn">03</div><div class="sc"><b>Build with weekly demos</b><p>Development runs in sprints. Every week you get a live demo of working software, and your feedback goes into the next sprint. No black box, no month-long silences.</p><div class="sout">Deliverable: working build, every week</div></div></div>
+    <div class="step"><div class="sn">04</div><div class="sc"><b>Launch, warranty &amp; support</b><p>Zero-downtime deployment, team training and handover documentation. Then 30 days of post-launch warranty, with an optional Care plan for everything after that.</p><div class="sout">Deliverable: live system + 30-day warranty</div></div></div>
+  </div>
+<div class="pfoot"><div class="fl">How We Work</div><div class="fc"><a href="tel:+919087021592">+91 90870 21592</a> · <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a> · <a href="https://digitalbuilders.in">digitalbuilders.in</a> · Ludhiana, Punjab, India</div><div class="fr">3</div></div></section><section class="page "><div class="wayf">04 <span>/ 15</span></div>
+      <div class="phead"><div class="eyebrow">Service A</div>
+        <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.8 3.8 9S14.5 18.3 12 21c-2.5-2.7-3.8-5.8-3.8-9S9.5 5.7 12 3z"/></svg></span>Digital Presence</h2>
+        <div class="sub">For local businesses, shops, clinics &amp; studios</div>
+        <p class="intro">Get found, get calls, get customers. A fast, mobile-first presence that turns searches into WhatsApp enquiries — live in days, not months.</p></div>
+      <div class="tiers two"><div class="tier">
+      <div class="tname">Starter</div>
+      <div class="best">Shops &amp; solo professionals going online for the first time</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹19,999</span><span class="gst">+18% GST</span></div>
+      <div class="tl">3–7 days</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Up to 5 responsive pages, sharp on every phone</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>One-tap WhatsApp chat button on every screen</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Enquiry form delivering leads straight to your inbox</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Google Business Profile setup so locals find you</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Domain, hosting &amp; SSL set up in your name and launched for you</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Basic on-page SEO: titles, descriptions, sitemap</li></ul>
+      <div class="tfoot">Single environment · 30-day warranty</div>
+    </div><div class="tier popular"><div class="badge"><svg class="staricon" viewBox="0 0 16 16" width="10" height="10"><path d="M8 1.2l1.9 4.2 4.5.5-3.4 3 1 4.4L8 11l-4 2.3 1-4.4-3.4-3 4.5-.5z" fill="#0B0F19"/></svg>MOST POPULAR</div>
+      <div class="tname">Business</div>
+      <div class="best">Growing businesses that want enquiries flowing every week</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹44,999</span><span class="gst">+18% GST</span></div>
+      <div class="tl">1–2 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Up to 12 custom-designed pages with gallery &amp; testimonials</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Multi-step lead forms with spam protection and auto-reply</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Keyword-mapped SEO on every page plus schema markup</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Blog / news section you can update yourself</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Google Analytics + Search Console dashboards wired up</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Speed tuning for 90+ Lighthouse and Core Web Vitals</li></ul>
+      <div class="tfoot">Analytics + SEO handover · 30-day warranty</div>
+    </div></div>
+      <div class="pairs"><div class="pt">Popular pairings for local businesses</div>
+        <div class="prow"><div class="pi"><b>Payments &amp; Subscriptions</b><span>+₹19,000</span></div>
+        <div class="pi"><b>Multi-language (Hindi / Punjabi)</b><span>+₹15,000</span></div>
+        <div class="pi"><b>AI Chat Agent on WhatsApp</b><span>from ₹99,000</span></div></div></div>
+      <div class="incl">Every build includes: Domain-Driven Architecture · Auth/OAuth + Admin Dashboard · Full test coverage · Weekly sprint demos · 30-day warranty</div>
+      <div class="nudge">Not sure which tier? Get a free custom estimate → <b><a href="https://wa.me/919087021592?text=Hi%20DigitalBuilders%21%20I%27d%20like%20to%20discuss%20a%20project.%20Please%20share%20package%20details%20and%20next%20steps.">wa.me/919087021592</a></b></div>
+    <div class="pfoot"><div class="fl">Digital Presence</div><div class="fc"><a href="tel:+919087021592">+91 90870 21592</a> · <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a> · <a href="https://digitalbuilders.in">digitalbuilders.in</a> · Ludhiana, Punjab, India</div><div class="fr">4</div></div></section><section class="page "><div class="wayf">05 <span>/ 15</span></div>
+      <div class="phead"><div class="eyebrow">Service B</div>
+        <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M7 21h10M9 13h6"/></svg></span>Web Application</h2>
+        <div class="sub">Laravel + Vue · custom business software on the web</div>
+        <p class="intro">Replace the spreadsheets and WhatsApp groups running your operations with one secure application built exactly around how your team works.</p></div>
+      <div class="tiers three"><div class="tier">
+      <div class="tname">Launch</div>
+      <div class="best">Validating one core workflow and shipping it fast</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹79,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">2–3 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>2–3 custom modules built to your exact process</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Secure email/OAuth login with role-based permissions</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Admin dashboard with search, filters and exports</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Domain-Driven architecture that stays clean as you grow</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Automated test coverage on all critical paths</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Single production environment, tuned for speed</li></ul>
+      <div class="tfoot">Single environment · 30-day warranty</div>
+    </div><div class="tier popular"><div class="badge"><svg class="staricon" viewBox="0 0 16 16" width="10" height="10"><path d="M8 1.2l1.9 4.2 4.5.5-3.4 3 1 4.4L8 11l-4 2.3 1-4.4-3.4-3 4.5-.5z" fill="#0B0F19"/></svg>MOST POPULAR</div>
+      <div class="tname">Growth</div>
+      <div class="best">Teams running daily operations who need room to scale</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹1,49,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">4–6 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>6–8 modules with configurable workflows and approvals</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Separate staging and production environments</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Third-party API integrations (payments, SMS, accounting)</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Activity logs, audit trail and granular user roles</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Error monitoring, uptime alerts and nightly backups</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Reporting dashboard with charts and CSV/Excel export</li></ul>
+      <div class="tfoot">Staging + production · 30-day warranty</div>
+    </div><div class="tier">
+      <div class="tname">Enterprise</div>
+      <div class="best">Multi-team or multi-location operations with compliance needs</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹2,49,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">8–12 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Unlimited modules on a modular, multi-region architecture</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>SSO / SAML and enterprise-grade access control</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>99.99% uptime target with zero-downtime deployments</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Advanced integrations: ERP, CRM, data warehouse, BI</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Load testing, security hardening and compliance docs</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Priority SLA with named engineer and response guarantees</li></ul>
+      <div class="tfoot">Multi-region · Priority SLA · 30-day warranty</div>
+    </div></div>
+      
+      <div class="incl">Every build includes: Domain-Driven Architecture · Auth/OAuth + Admin Dashboard · Full test coverage · Weekly sprint demos · 30-day warranty</div>
+      <div class="nudge">Not sure which tier? Get a free custom estimate → <b><a href="https://wa.me/919087021592?text=Hi%20DigitalBuilders%21%20I%27d%20like%20to%20discuss%20a%20project.%20Please%20share%20package%20details%20and%20next%20steps.">wa.me/919087021592</a></b></div>
+    <div class="pfoot"><div class="fl">Web Application</div><div class="fc"><a href="tel:+919087021592">+91 90870 21592</a> · <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a> · <a href="https://digitalbuilders.in">digitalbuilders.in</a> · Ludhiana, Punjab, India</div><div class="fr">5</div></div></section><section class="page "><div class="wayf">06 <span>/ 15</span></div>
+      <div class="phead"><div class="eyebrow">Service C</div>
+        <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 3v4M9 13h.01M15 13h.01M9.5 16.5h5"/></svg></span>AI Voice / Chat Agent</h2>
+        <div class="sub">Answer every enquiry in seconds — day or night</div>
+        <p class="intro">An agent that knows your catalogue, prices and policies, qualifies leads on WhatsApp or your site, and hands hot ones to your sales team with full context.</p></div>
+      <div class="tiers three"><div class="tier">
+      <div class="tname">Launch</div>
+      <div class="best">Businesses losing leads to slow replies after hours</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹99,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">2–3 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>WhatsApp or website chatbot trained on your content</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>RAG knowledge pipeline over your docs, PDFs and catalogue</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Automatic lead capture with name, need and phone</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Human handoff the moment a customer asks for a person</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Safety guardrails so it never invents prices or promises</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Conversation logs and weekly performance summary</li></ul>
+      <div class="tfoot">Single environment · 30-day warranty</div>
+    </div><div class="tier popular"><div class="badge"><svg class="staricon" viewBox="0 0 16 16" width="10" height="10"><path d="M8 1.2l1.9 4.2 4.5.5-3.4 3 1 4.4L8 11l-4 2.3 1-4.4-3.4-3 4.5-.5z" fill="#0B0F19"/></svg>MOST POPULAR</div>
+      <div class="tname">Growth</div>
+      <div class="best">Sales teams that want qualified leads, not raw enquiries</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹1,79,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">3–4 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>WhatsApp + website + Instagram DM on one brain</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Scored lead qualification with your own questions</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>CRM handoff — leads pushed with full chat transcript</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Appointment and callback booking inside the chat</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Multi-language replies including Hindi and Punjabi</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Analytics dashboard: intents, drop-offs, conversion</li></ul>
+      <div class="tfoot">Staging + production · 30-day warranty</div>
+    </div><div class="tier">
+      <div class="tname">Enterprise</div>
+      <div class="best">High-volume support and inbound calling operations</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹2,99,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">5–8 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Real-time voice agent over WebRTC with natural turn-taking</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Inbound and outbound call flows with IVR replacement</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Deep integration with your ERP/CRM for live order data</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Role-based agent console with takeover and coaching</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Compliance logging, redaction and data-residency options</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Priority SLA, model evaluation suite and monthly tuning</li></ul>
+      <div class="tfoot">Multi-region · Priority SLA · 30-day warranty</div>
+    </div></div>
+      
+      <div class="incl">Every build includes: Domain-Driven Architecture · Auth/OAuth + Admin Dashboard · Full test coverage · Weekly sprint demos · 30-day warranty</div>
+      <div class="nudge">Not sure which tier? Get a free custom estimate → <b><a href="https://wa.me/919087021592?text=Hi%20DigitalBuilders%21%20I%27d%20like%20to%20discuss%20a%20project.%20Please%20share%20package%20details%20and%20next%20steps.">wa.me/919087021592</a></b></div>
+    <div class="pfoot"><div class="fl">AI Voice / Chat Agent</div><div class="fc"><a href="tel:+919087021592">+91 90870 21592</a> · <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a> · <a href="https://digitalbuilders.in">digitalbuilders.in</a> · Ludhiana, Punjab, India</div><div class="fr">6</div></div></section><section class="page "><div class="wayf">07 <span>/ 15</span></div>
+      <div class="phead"><div class="eyebrow">Service D</div>
+        <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18.5h2"/></svg></span>Mobile App</h2>
+        <div class="sub">iOS &amp; Android from one codebase</div>
+        <p class="intro">A native-feeling app your customers or field team actually keep on the home screen — built cross-platform so you pay once and ship to both stores.</p></div>
+      <div class="tiers three"><div class="tier">
+      <div class="tname">Launch</div>
+      <div class="best">Getting your core idea into customers' hands quickly</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹1,19,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">3–4 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Cross-platform build (React Native / Flutter) for iOS + Android</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Up to 8 screens with your branding and smooth navigation</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Secure login with OTP or social sign-in</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Push notifications for updates and offers</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Backend API with admin panel to manage content</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>App Store and Play Store submission handled for you</li></ul>
+      <div class="tfoot">Single environment · 30-day warranty</div>
+    </div><div class="tier popular"><div class="badge"><svg class="staricon" viewBox="0 0 16 16" width="10" height="10"><path d="M8 1.2l1.9 4.2 4.5.5-3.4 3 1 4.4L8 11l-4 2.3 1-4.4-3.4-3 4.5-.5z" fill="#0B0F19"/></svg>MOST POPULAR</div>
+      <div class="tname">Growth</div>
+      <div class="best">Apps with payments, accounts and daily active users</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹1,99,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">5–7 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Up to 20 screens with a polished design system</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>In-app payments and subscriptions (Razorpay / Stripe)</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Offline sync so the app works on weak networks</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Segmented push campaigns and in-app messaging</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Crash reporting, analytics and staged release rollouts</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Staging build for your team to test before every launch</li></ul>
+      <div class="tfoot">Staging + production · 30-day warranty</div>
+    </div><div class="tier">
+      <div class="tname">Enterprise</div>
+      <div class="best">Field-force, dealer or large consumer apps at scale</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹3,29,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">8–12 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Unlimited screens on a modular, feature-flagged codebase</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Offline-first sync engine with conflict resolution</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>SSO, device management and biometric security</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Native modules: maps, barcode, camera, background location</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>ERP/CRM integration with real-time order and stock data</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>99.99% uptime backend, priority SLA and quarterly roadmap</li></ul>
+      <div class="tfoot">Multi-region · Priority SLA · 30-day warranty</div>
+    </div></div>
+      
+      <div class="incl">Every build includes: Domain-Driven Architecture · Auth/OAuth + Admin Dashboard · Full test coverage · Weekly sprint demos · 30-day warranty</div>
+      <div class="nudge">Not sure which tier? Get a free custom estimate → <b><a href="https://wa.me/919087021592?text=Hi%20DigitalBuilders%21%20I%27d%20like%20to%20discuss%20a%20project.%20Please%20share%20package%20details%20and%20next%20steps.">wa.me/919087021592</a></b></div>
+    <div class="pfoot"><div class="fl">Mobile App</div><div class="fc"><a href="tel:+919087021592">+91 90870 21592</a> · <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a> · <a href="https://digitalbuilders.in">digitalbuilders.in</a> · Ludhiana, Punjab, India</div><div class="fr">7</div></div></section><section class="page "><div class="wayf">08 <span>/ 15</span></div>
+      <div class="phead"><div class="eyebrow">Service E</div>
+        <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1 0-8 5.5 5.5 0 0 1 10.6 1.3A3.6 3.6 0 0 1 17.5 18z"/><path d="M12 12v5M9.5 14.5 12 12l2.5 2.5"/></svg></span>SaaS Platform</h2>
+        <div class="sub">Turn your idea into a subscription product</div>
+        <p class="intro">Multi-tenant, billing-ready and built to onboard customer number one and customer number one thousand on the same architecture.</p></div>
+      <div class="tiers three"><div class="tier">
+      <div class="tname">Launch</div>
+      <div class="best">Founders shipping an MVP to first paying customers</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹1,99,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">5–7 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Multi-tenant architecture with isolated customer data</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Self-serve signup, onboarding and workspace creation</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Subscription billing with Razorpay or Stripe</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Core product modules plus admin back-office</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Role-based access for owners, members and viewers</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Production environment with monitoring and backups</li></ul>
+      <div class="tfoot">Single environment · 30-day warranty</div>
+    </div><div class="tier popular"><div class="badge"><svg class="staricon" viewBox="0 0 16 16" width="10" height="10"><path d="M8 1.2l1.9 4.2 4.5.5-3.4 3 1 4.4L8 11l-4 2.3 1-4.4-3.4-3 4.5-.5z" fill="#0B0F19"/></svg>MOST POPULAR</div>
+      <div class="tname">Growth</div>
+      <div class="best">Products with real traction ready to scale acquisition</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹3,19,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">6–8 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Plan tiers, trials, coupons and proration handled properly</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Usage metering and quota enforcement per tenant</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Customer-facing analytics plus internal admin dashboards</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Email lifecycle automation and in-app notifications</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Public API with keys, rate limits and webhooks</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Staging + production, automated CI/CD deployments</li></ul>
+      <div class="tfoot">Staging + production · 30-day warranty</div>
+    </div><div class="tier">
+      <div class="tname">Enterprise</div>
+      <div class="best">Selling to enterprises that demand security and uptime</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹4,99,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">10–14 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Multi-region deployment targeting 99.99% uptime</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>SSO / SAML, SCIM provisioning and audit logs</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Custom domains and white-label branding per tenant</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Data export, retention policies and compliance pack</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Advanced integrations and partner API programme</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Priority SLA with named architect and quarterly reviews</li></ul>
+      <div class="tfoot">Multi-region · Priority SLA · 30-day warranty</div>
+    </div></div>
+      
+      <div class="incl">Every build includes: Domain-Driven Architecture · Auth/OAuth + Admin Dashboard · Full test coverage · Weekly sprint demos · 30-day warranty</div>
+      <div class="nudge">Not sure which tier? Get a free custom estimate → <b><a href="https://wa.me/919087021592?text=Hi%20DigitalBuilders%21%20I%27d%20like%20to%20discuss%20a%20project.%20Please%20share%20package%20details%20and%20next%20steps.">wa.me/919087021592</a></b></div>
+    <div class="pfoot"><div class="fl">SaaS Platform</div><div class="fc"><a href="tel:+919087021592">+91 90870 21592</a> · <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a> · <a href="https://digitalbuilders.in">digitalbuilders.in</a> · Ludhiana, Punjab, India</div><div class="fr">8</div></div></section><section class="page "><div class="wayf">09 <span>/ 15</span></div>
+      <div class="phead"><div class="eyebrow">Service F</div>
+        <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M5 20V9l7-5 7 5v11"/><path d="M9 20v-5h6v5M10 11h4"/></svg></span>Enterprise ERP / CRM</h2>
+        <div class="sub">Inventory, GST invoicing, sales, purchase &amp; ledgers</div>
+        <p class="intro">One system for stock, billing, dealers and reporting — designed for Indian business reality: GST, multi-godown, credit ledgers and patchy internet.</p></div>
+      <div class="tiers three"><div class="tier">
+      <div class="tname">Launch</div>
+      <div class="best">Single-location businesses moving off Tally-plus-Excel</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹2,49,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">6–8 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Inventory with batches, units and low-stock alerts</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>GST-compliant invoicing, e-invoice ready formats</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sales and purchase entry with party-wise ledgers</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Role-based access for owner, accounts and store staff</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Core reports: stock, sales, outstanding, GST summary</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Data migration from your existing sheets or software</li></ul>
+      <div class="tfoot">Single environment · 30-day warranty</div>
+    </div><div class="tier popular"><div class="badge"><svg class="staricon" viewBox="0 0 16 16" width="10" height="10"><path d="M8 1.2l1.9 4.2 4.5.5-3.4 3 1 4.4L8 11l-4 2.3 1-4.4-3.4-3 4.5-.5z" fill="#0B0F19"/></svg>MOST POPULAR</div>
+      <div class="tname">Growth</div>
+      <div class="best">Multi-godown operations with dealers and field sales</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹3,79,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">8–10 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Multi-location stock with transfers and reconciliation</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Dealer / distributor portal with credit limits and ledgers</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Purchase orders, approvals and vendor management</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sales-team mobile access with order booking</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Dashboards: margin, ageing, top SKUs, collection status</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Staging environment, automated backups and monitoring</li></ul>
+      <div class="tfoot">Staging + production · 30-day warranty</div>
+    </div><div class="tier">
+      <div class="tname">Enterprise</div>
+      <div class="best">Multi-company groups needing uptime, control and audit</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹5,99,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">12–16 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Multi-company, multi-branch, multi-currency architecture</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Offline support so billing never stops when internet does</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>SSO, maker-checker approvals and full audit trail</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Manufacturing / job-work, BOM and costing modules</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Tally, e-way bill, banking and BI tool integrations</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>99.99% uptime target, priority SLA and on-site training</li></ul>
+      <div class="tfoot">Multi-region · Priority SLA · 30-day warranty</div>
+    </div></div>
+      
+      <div class="incl">Every build includes: Domain-Driven Architecture · Auth/OAuth + Admin Dashboard · Full test coverage · Weekly sprint demos · 30-day warranty</div>
+      <div class="nudge">Not sure which tier? Get a free custom estimate → <b><a href="https://wa.me/919087021592?text=Hi%20DigitalBuilders%21%20I%27d%20like%20to%20discuss%20a%20project.%20Please%20share%20package%20details%20and%20next%20steps.">wa.me/919087021592</a></b></div>
+    <div class="pfoot"><div class="fl">Enterprise ERP / CRM</div><div class="fc"><a href="tel:+919087021592">+91 90870 21592</a> · <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a> · <a href="https://digitalbuilders.in">digitalbuilders.in</a> · Ludhiana, Punjab, India</div><div class="fr">9</div></div></section><section class="page "><div class="wayf">10 <span>/ 15</span></div>
+      <div class="phead"><div class="eyebrow">Service G</div>
+        <h2><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M2.5 4h2.4l2.3 11.2a2 2 0 0 0 2 1.6h8a2 2 0 0 0 2-1.6L21 8H6"/></svg></span>E-Commerce Store</h2>
+        <div class="sub">Sell online with catalog, cart, payments &amp; shipping</div>
+        <p class="intro">A store built for how Indian D2C sellers actually operate — COD-friendly checkout, WhatsApp order alerts, and inventory that stays in sync instead of overselling.</p></div>
+      <div class="tiers three"><div class="tier">
+      <div class="tname">Launch</div>
+      <div class="best">Brands taking their first catalogue online</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹99,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">3–4 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Product catalogue, variants, search and filters</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Cart, checkout and one payment gateway (Razorpay/Stripe)</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>COD support with shipping zone and rate rules</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Order management dashboard with status updates</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>WhatsApp order confirmation and shipping alerts</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Mobile-first storefront tuned for speed</li></ul>
+      <div class="tfoot">Single environment · 30-day warranty</div>
+    </div><div class="tier popular"><div class="badge"><svg class="staricon" viewBox="0 0 16 16" width="10" height="10"><path d="M8 1.2l1.9 4.2 4.5.5-3.4 3 1 4.4L8 11l-4 2.3 1-4.4-3.4-3 4.5-.5z" fill="#0B0F19"/></svg>MOST POPULAR</div>
+      <div class="tname">Growth</div>
+      <div class="best">Stores with repeat customers and rising order volume</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹1,69,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">5–6 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Multiple payment methods, wallets and UPI intents</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Coupons, discounts and abandoned-cart recovery emails</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Customer accounts with order history and tracking</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Real-time inventory sync across catalogue and stock</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Reviews, ratings and related-product recommendations</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sales and cohort dashboards for repeat-purchase tracking</li></ul>
+      <div class="tfoot">Staging + production · 30-day warranty</div>
+    </div><div class="tier">
+      <div class="tname">Enterprise</div>
+      <div class="best">Multi-warehouse brands selling across channels</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹2,79,000</span><span class="gst">+18% GST</span></div>
+      <div class="tl">8–10 weeks</div>
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Multi-warehouse inventory with location-wise stock</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Marketplace feeds for Amazon, Flipkart and Meta Shops</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Loyalty points, referral rewards and subscription orders</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Multi-currency checkout for export/NRI customers</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>ERP/accounting integration for stock and GST reconciliation</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>99.99% uptime target with priority SLA at peak sale days</li></ul>
+      <div class="tfoot">Multi-region · Priority SLA · 30-day warranty</div>
+    </div></div>
+      
+      <div class="incl">Every build includes: Domain-Driven Architecture · Auth/OAuth + Admin Dashboard · Full test coverage · Weekly sprint demos · 30-day warranty</div>
+      <div class="nudge">Not sure which tier? Get a free custom estimate → <b><a href="https://wa.me/919087021592?text=Hi%20DigitalBuilders%21%20I%27d%20like%20to%20discuss%20a%20project.%20Please%20share%20package%20details%20and%20next%20steps.">wa.me/919087021592</a></b></div>
+    <div class="pfoot"><div class="fl">E-Commerce Store</div><div class="fc"><a href="tel:+919087021592">+91 90870 21592</a> · <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a> · <a href="https://digitalbuilders.in">digitalbuilders.in</a> · Ludhiana, Punjab, India</div><div class="fr">10</div></div></section><section class="page "><div class="wayf">11 <span>/ 15</span></div>
+  <div class="phead"><div class="eyebrow">Extend any package</div><h2>Add-On Modules</h2>
+  <p class="intro">Bolt these onto any tier of any service. Priced flat, scoped in writing, delivered inside the same sprint cycle as your main build.</p></div>
+  <div class="addons"><div class="addon"><div class="ai"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6.5 15h4"/></svg></span></div><div class="an">Payments &amp; Subscriptions</div><div class="ap">+₹19,000<span>+18% GST</span></div><p>Razorpay/Stripe checkout, recurring plans, invoices and refund flows wired end to end.</p><div class="apair"><span class="pairlbl">Pairs with</span><span class="pairtag">Web App</span><span class="pairtag">SaaS</span><span class="pairtag">Mobile App</span></div></div><div class="addon"><div class="ai"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span></div><div class="an">Real-time &amp; Live Push</div><div class="ap">+₹25,000<span>+18% GST</span></div><p>Live dashboards, instant order updates and push notifications over websockets.</p><div class="apair"><span class="pairlbl">Pairs with</span><span class="pairtag">Web App</span><span class="pairtag">ERP/CRM</span><span class="pairtag">Mobile App</span></div></div><div class="addon"><div class="ai"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5a3 3 0 0 0-6 .6 3 3 0 0 0-1.2 5A3 3 0 0 0 7.5 19H12z"/><path d="M12 5.5a3 3 0 0 1 6 .6 3 3 0 0 1 1.2 5A3 3 0 0 1 16.5 19H12z"/><path d="M12 5.5V19"/></svg></span></div><div class="an">AI Copilot / LLM</div><div class="ap">+₹35,000<span>+18% GST</span></div><p>An assistant inside your product: search, summaries and actions on your own data.</p><div class="apair"><span class="pairlbl">Pairs with</span><span class="pairtag">SaaS</span><span class="pairtag">ERP/CRM</span><span class="pairtag">Web App</span></div></div><div class="addon"><div class="ai"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3c-2.4 2.7-3.6 5.7-3.6 9s1.2 6.3 3.6 9c2.4-2.7 3.6-5.7 3.6-9S14.4 5.7 12 3z"/></svg></span></div><div class="an">Multi-language (i18n)</div><div class="ap">+₹15,000<span>+18% GST</span></div><p>Hindi, Punjabi or any language — full interface translation with easy content switching.</p><div class="apair"><span class="pairlbl">Pairs with</span><span class="pairtag">Digital Presence</span><span class="pairtag">Mobile App</span><span class="pairtag">SaaS</span></div></div><div class="addon"><div class="ai"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 3v4M9 13h.01M15 13h.01M9.5 16.5h5"/></svg></span></div><div class="an">WhatsApp Catalog Setup</div><div class="ap">+₹12,000<span>+18% GST</span></div><p>Green-tick ready product catalogue inside WhatsApp Business, linked to your inventory. Up to ₹15,000 for large catalogues.</p><div class="apair"><span class="pairlbl">Pairs with</span><span class="pairtag">Digital Presence</span><span class="pairtag">E-Commerce</span><span class="pairtag">ERP/CRM</span></div></div><div class="addon"><div class="ai"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 13.5-5.7M20 12a8 8 0 0 1-13.5 5.7"/><path d="M17 3v4h-4M7 21v-4h4"/></svg></span></div><div class="an">Data Migration</div><div class="ap">+₹15,000<span>+18% GST</span></div><p>Move records cleanly off Tally, Excel or paper registers into your new system. Up to ₹40,000 for large datasets.</p><div class="apair"><span class="pairlbl">Pairs with</span><span class="pairtag">ERP/CRM</span><span class="pairtag">Web App</span><span class="pairtag">SaaS</span></div></div></div>
+  <div class="notebox"><b>Bundling note.</b> Add-ons booked with the original project are delivered at the prices above. Added later as a separate engagement, they are re-quoted to cover re-testing and redeployment — so it pays to decide during the scope stage.</div>
+  <div class="nudge">Want a custom module that isn't listed? Tell us the workflow → <b><a href="https://wa.me/919087021592?text=Hi%20DigitalBuilders%21%20I%27d%20like%20to%20discuss%20a%20project.%20Please%20share%20package%20details%20and%20next%20steps.">wa.me/919087021592</a></b></div>
+<div class="pfoot"><div class="fl">Add-On Modules</div><div class="fc"><a href="tel:+919087021592">+91 90870 21592</a> · <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a> · <a href="https://digitalbuilders.in">digitalbuilders.in</a> · Ludhiana, Punjab, India</div><div class="fr">11</div></div></section><section class="page "><div class="wayf">12 <span>/ 15</span></div>
+  <div class="phead"><div class="eyebrow">After launch</div><h2>Care Plans &amp; AMC</h2>
+  <p class="intro">Software is not furniture. Libraries age, traffic grows, browsers change. A Care plan keeps your system patched, backed up, monitored and improving — annually.</p></div>
+  <div class="tiers three"><div class="tier">
+      <div class="tname">Basic</div>
+      <div class="best">Websites and small apps that must simply stay up</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹19,000</span><span class="gst">/year</span></div>
+      
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Security patches and dependency updates</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Daily backups with restore on request</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Uptime monitoring with email alerts</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Up to 4 hours of minor changes per month</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Response within 2 business days</li></ul>
+      <div class="tfoot">Renews annually · cancel at renewal</div>
+    </div><div class="tier popular"><div class="badge"><svg class="staricon" viewBox="0 0 16 16" width="10" height="10"><path d="M8 1.2l1.9 4.2 4.5.5-3.4 3 1 4.4L8 11l-4 2.3 1-4.4-3.4-3 4.5-.5z" fill="#0B0F19"/></svg>MOST POPULAR</div>
+      <div class="tname">Business</div>
+      <div class="best">Revenue-critical applications used every day</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹49,000</span><span class="gst">/year</span></div>
+      
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Everything in Basic, plus proactive health checks</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Performance tuning and quarterly optimisation review</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Up to 12 hours of changes and small features monthly</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Staging environment kept in sync for safe testing</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Response within 1 business day, WhatsApp support line</li></ul>
+      <div class="tfoot">Prepay 12 months and get 2 free</div>
+    </div><div class="tier">
+      <div class="tname">Enterprise SLA</div>
+      <div class="best">Systems where downtime costs real money</div>
+      <div class="price"><span class="small">Starting at</span><span class="amt">₹1,49,000</span><span class="gst">/year onwards</span></div>
+      
+      <ul class="feats"><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Everything in Business, plus a named engineer</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>99.99% uptime commitment with incident reporting</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>24×7 critical response with defined resolution targets</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Quarterly roadmap and architecture review sessions</li><li><span class="tick"><svg class="tickicon" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="8" fill="#10B981"/><path d="M4.4 8.3l2.3 2.2 5-5.1" stroke="#08110D" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Priority queue on all new feature requests</li></ul>
+      <div class="tfoot">Named engineer · 24×7 critical response</div>
+    </div></div>
+  <div class="notebox"><b>Annual prepay = 2 months free.</b> Care plans start after your 30-day post-launch warranty ends. All plans are cancellable at renewal, and unused change hours roll over one month.</div>
+  <div class="retainer">
+    <div class="rethead"><div class="ai"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg></span></div><div><b>Ongoing SEO &amp; Content Retainer</b><span>Growth work, billed monthly — separate from Care/AMC uptime cover</span></div></div>
+    <div class="retrow">
+      <div class="ret"><div class="rn">Essentials</div><div class="rp">₹9,999<span>/month +18% GST</span></div><p>Monthly keyword tracking, on-page fixes, 2 blog posts and a performance report.</p></div>
+      <div class="ret"><div class="rn">Growth</div><div class="rp">₹19,999<span>/month +18% GST</span></div><p>Everything in Essentials, plus link building, 4 posts, competitor tracking and Google Ads support.</p></div>
     </div>
-
-    <div class="document-wrapper">
-        <!-- Header -->
-        <header class="doc-header">
-            <div class="brand-logo">
-                <div class="brand-icon">DB</div>
-                <div>
-                    <div class="brand-name">Digital<span>Builders</span></div>
-                    <span class="edition-badge">🇮🇳 India Price Book · FY 2026-27</span>
-                </div>
-            </div>
-            <div class="doc-meta">
-                <strong>Lead Architect: Ashish Gupta</strong>
-                <span>Engineering Office: Ludhiana, Punjab</span>
-                <span>GST Verified Invoicing</span>
-            </div>
-        </header>
-
-        <!-- Intro -->
-        <div class="doc-intro">
-            <h1 class="doc-title">Enterprise Software & AI Architecture Price Book</h1>
-            <p class="doc-subtitle">
-                Silicon Valley engineering discipline and enterprise AI automation tailored for ambitious Indian businesses. Transparent milestone payments, fixed written scope, and zero hidden charges.
-            </p>
-            <div class="value-anchor">
-                "Cheap software becomes expensive — Sasta roye baar-baar. Invest in robust architecture from Day 1."
-            </div>
-        </div>
-
-        <!-- Section 1: Core Builds -->
-        <div class="section-header">
-            <span>Layer 1</span>
-            <h2>Core Architectural Builds (One-Time All-Inclusive)</h2>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 38%;">Architectural Archetype</th>
-                    <th style="width: 20%;">🚀 Launch Tier</th>
-                    <th style="width: 22%;" class="popular-col">📈 Growth Tier <span class="popular-badge">★ Popular</span></th>
-                    <th style="width: 20%;">🏢 Enterprise Tier</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <span class="service-title">Digital Presence & Funnel</span>
-                        <span class="service-desc">Single/Multi-Page Sites, Portals, CMS & Local SEO</span>
-                    </td>
-                    <td class="price-val">₹19,999</td>
-                    <td class="price-val popular-col">₹44,999</td>
-                    <td class="price-val">On Request</td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="service-title">Web Application</span>
-                        <span class="service-desc">Custom Portals, Dashboards, Workflow Systems</span>
-                    </td>
-                    <td class="price-val">₹79,000</td>
-                    <td class="price-val popular-col">₹1,49,000</td>
-                    <td class="price-val">₹2,49,000</td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="service-title">AI Voice / Chat Agent</span>
-                        <span class="service-desc">Inbound/Outbound Voice, RAG & LLM Workflows</span>
-                    </td>
-                    <td class="price-val">₹99,000</td>
-                    <td class="price-val popular-col">₹1,79,000</td>
-                    <td class="price-val">₹2,99,000</td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="service-title">Mobile App (iOS & Android)</span>
-                        <span class="service-desc">React Native / Flutter Cross-Platform</span>
-                    </td>
-                    <td class="price-val">₹1,19,000</td>
-                    <td class="price-val popular-col">₹1,99,000</td>
-                    <td class="price-val">₹3,29,000</td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="service-title">SaaS Platform</span>
-                        <span class="service-desc">Multi-Tenant, Billing Engine, Role Hierarchy</span>
-                    </td>
-                    <td class="price-val">₹1,99,000</td>
-                    <td class="price-val popular-col">₹3,19,000</td>
-                    <td class="price-val">₹4,99,000</td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="service-title">Enterprise ERP / CRM</span>
-                        <span class="service-desc">Inventory, Accounts, WhatsApp ERP & GST Sync</span>
-                    </td>
-                    <td class="price-val">₹2,49,000</td>
-                    <td class="price-val popular-col">₹3,79,000</td>
-                    <td class="price-val">₹5,99,000</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Included In Every Build -->
-        <div class="inclusion-grid">
-            <div class="inc-card">
-                <strong>🔒 Auth & Role RBAC</strong>
-                <p>Multi-factor auth, social logins, and granular permission systems.</p>
-            </div>
-            <div class="inc-card">
-                <strong>⚡ Domain-Driven Architecture</strong>
-                <p>Clean hexagonal architecture engineered to scale to 100k+ MAU.</p>
-            </div>
-            <div class="inc-card">
-                <strong>🛡️ 30-Day Post-Launch Warranty</strong>
-                <p>Full bug fixes and stabilization warranty with zero extra cost.</p>
-            </div>
-        </div>
-
-        <!-- Section 2: Add-on Modules -->
-        <div class="section-header">
-            <span>Layer 2</span>
-            <h2>À La Carte Add-on Modules</h2>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Module Name</th>
-                    <th>Capabilities & Inclusions</th>
-                    <th style="width: 25%;">Fixed Add-on Fee</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Payments & Subscriptions</strong></td>
-                    <td>Razorpay, Stripe, Cashfree, automated GST invoices & webhooks</td>
-                    <td class="price-val">+₹19,000</td>
-                </tr>
-                <tr>
-                    <td><strong>Real-time WebSockets & Push</strong></td>
-                    <td>Instant live updates, driver/rider tracking, interactive chat</td>
-                    <td class="price-val">+₹25,000</td>
-                </tr>
-                <tr>
-                    <td><strong>AI Copilot / LLM RAG</strong></td>
-                    <td>Custom OpenAI/Claude embeddings, document chat, automated parsing</td>
-                    <td class="price-val">+₹35,000</td>
-                </tr>
-                <tr>
-                    <td><strong>Multi-Language (i18n)</strong></td>
-                    <td>Hindi, Punjabi, Regional languages + dynamic English switcher</td>
-                    <td class="price-val">+₹15,000</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Section 3: AMC Retainers -->
-        <div class="section-header">
-            <span>Layer 3</span>
-            <h2>Annual Maintenance Contracts (AMC Plans)</h2>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Plan</th>
-                    <th>Coverage & SLA</th>
-                    <th>Annual Investment</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Basic AMC</strong></td>
-                    <td>Server health, security patches, monthly offsite backups, 48h SLA</td>
-                    <td class="price-val">₹19,000 / yr <span style="font-size:0.75rem; color:#64748b;">(₹1,583/mo)</span></td>
-                </tr>
-                <tr>
-                    <td><strong>Business AMC ★</strong></td>
-                    <td>8 hrs feature tweaks/mo, 99.9% uptime monitor, 12h priority SLA</td>
-                    <td class="price-val popular-col">₹49,000 / yr <span style="font-size:0.75rem; color:#0284c7;">(₹4,083/mo)</span></td>
-                </tr>
-                <tr>
-                    <td><strong>Enterprise SLA</strong></td>
-                    <td>Dedicated engineer, 24/7 incident response, 1-hour critical SLA</td>
-                    <td class="price-val">From ₹1,49,000 / yr</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Closing Mechanics & Trust -->
-        <div class="mechanics-box">
-            <div class="mech-item">
-                <strong>🇮🇳 Transparent Milestone Payment Structure</strong>
-                <p>₹21,000 advance to lock sprint slot → <strong>40% on Architecture Approval</strong> → <strong>30% on Staging Demo</strong> → <strong>30% on Production Launch & Handover</strong>.</p>
-            </div>
-            <div class="mech-item">
-                <strong>📜 GST Compliant & 100% IP Ownership</strong>
-                <p>All source code, Docker configs, and database schemas are handed over cleanly with 100% intellectual property ownership from Day 1.</p>
-            </div>
-            <div class="mech-item">
-                <strong>🔍 Architecture Discovery Sprint</strong>
-                <p>Large ERP/SaaS scopes begin with a deep 1-week architecture blueprint for <strong>₹19,000</strong> (100% credited toward build contract).</p>
-            </div>
-            <div class="mech-item">
-                <strong>🤝 Direct Staff Engineer Communication</strong>
-                <p>Work directly with Lead Architect Ashish Gupta. No middlemen, no junior interns, no miscommunications.</p>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="doc-footer">
-            <div>
-                © 2026 DigitalBuilders · www.digitalbuilders.in
-            </div>
-            <div class="contact-cta">
-                <a href="https://wa.me/919087021592?text=Hi%20Ashish,%20I'm%20reviewing%20the%20India%20Price%20Book" target="_blank" class="contact-pill">
-                    <span>WhatsApp:</span> +91 90870 21592
-                </a>
-                <a href="mailto:hello@digitalbuilders.in" class="contact-pill">
-                    <span>Email:</span> hello@digitalbuilders.in
-                </a>
-            </div>
-        </footer>
+  </div>
+  <div class="nudge">Already have a system built by someone else? We take over maintenance too → <b><a href="https://wa.me/919087021592?text=Hi%20DigitalBuilders%21%20I%27d%20like%20to%20discuss%20a%20project.%20Please%20share%20package%20details%20and%20next%20steps.">wa.me/919087021592</a></b></div>
+<div class="pfoot"><div class="fl">Care / AMC</div><div class="fc"><a href="tel:+919087021592">+91 90870 21592</a> · <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a> · <a href="https://digitalbuilders.in">digitalbuilders.in</a> · Ludhiana, Punjab, India</div><div class="fr">12</div></div></section><section class="page "><div class="wayf">13 <span>/ 15</span></div>
+  <div class="phead"><div class="eyebrow">Proof</div><h2>Results, Not Promises</h2>
+  <p class="intro">A short sample of what changed for clients after launch. Full case studies and reference calls available on request.</p></div>
+  <div class="cases"><div class="case"><div class="cn">Garg Enterprises</div><div class="cr">Order-entry errors cut from 14% to 0%</div><p>Custom ERP replaced manual registers across sales and stock.</p><div class="ctag">Enterprise ERP · Laravel · Vue · PostgreSQL</div></div><div class="case"><div class="cn">GutTalks</div><div class="cr">3.2× booking conversion</div><p>Rebuilt funnel with instant WhatsApp booking and follow-up automation.</p><div class="ctag">Digital Presence · WhatsApp automation</div></div><div class="case"><div class="cn">Habuilt</div><div class="cr">99.99% uptime sustained</div><p>Re-architected hosting with zero-downtime deployments and monitoring.</p><div class="ctag">Infrastructure · CI/CD · Monitoring</div></div><div class="case"><div class="cn">Cloud modernization</div><div class="cr">$1M/yr infrastructure savings</div><p>Enterprise workload re-platformed and right-sized by our lead architect.</p><div class="ctag">Cloud architecture · Cost optimisation</div></div></div>
+  <div class="quotebox">“The best measure of an architect is what the system looks like two years later, when someone else has to add a feature to it.”<span>— Ashish Gupta, Lead Architect</span></div>
+  <div class="nudge">Want to speak to a client directly? We'll arrange it → <b><a href="https://wa.me/919087021592?text=Hi%20DigitalBuilders%21%20I%27d%20like%20to%20discuss%20a%20project.%20Please%20share%20package%20details%20and%20next%20steps.">wa.me/919087021592</a></b></div>
+<div class="pfoot"><div class="fl">Proof / Case Studies</div><div class="fc"><a href="tel:+919087021592">+91 90870 21592</a> · <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a> · <a href="https://digitalbuilders.in">digitalbuilders.in</a> · Ludhiana, Punjab, India</div><div class="fr">13</div></div></section><section class="page "><div class="wayf">14 <span>/ 15</span></div>
+  <div class="phead"><div class="eyebrow">Commercials</div><h2>Payment &amp; Terms</h2>
+  <p class="intro">Simple, staged and written down. You pay as value is delivered, and you always know what the next payment unlocks.</p></div>
+  <div class="milestones">
+    <div class="ms"><b>40%</b><span>At kickoff</span><p>Reserves your sprint slot. Scope signed, architecture approved, development begins.</p></div>
+    <div class="ms"><b>40%</b><span>At staging demo</span><p>Working system on staging, reviewed and accepted by you.</p></div>
+    <div class="ms"><b>20%</b><span>At launch</span><p>Live deployment, training and handover complete.</p></div>
+  </div>
+  <div class="infranote">
+    <div class="infrahead"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span><b>Infrastructure &amp; third-party costs are not included in any tier above</b></div>
+    <p>Hosting, servers, domain registration, SSL, payment-gateway fees, SMS/WhatsApp API charges and AI/LLM usage are separate from the project price. We set these accounts up in <b>your name</b>, so you own and control them — but the provider bills <b>you</b> directly, not us. We'll recommend the right plan and size it to your traffic before you commit to any spend.</p>
+  </div>
+  <div class="terms">
+    <div class="tcol"><b>What's fixed</b>
+      <ul><li>Fixed written scope agreed before kickoff</li><li>No hidden charges — every rupee is in the quote</li><li>Proper GST invoice; input credit available to you</li><li>All prices exclude 18% GST</li><li>Quote validity: 30 days from the date issued</li></ul>
+      <div class="tcap"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>Legally binding</div></div>
+    <div class="tcol"><b>What's included</b>
+      <ul><li>Weekly sprint demos throughout the build</li><li>Zero-downtime deployment at launch</li><li>30-day post-launch warranty on delivered scope</li><li>Source code and full handover documentation</li><li>Live training session for your team at handover</li></ul>
+      <div class="tcap"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>Nothing held back</div></div>
+    <div class="tcol"><b>Good to know</b>
+      <ul><li>Discovery &amp; Architecture Sprint ₹19,000 for large ERP/SaaS, credited to your build</li><li>Change requests outside signed scope are quoted separately before work starts</li><li>Infrastructure and third-party costs are billed directly to you — see note above</li><li>Payments accepted via UPI, NEFT/RTGS or cheque; TDS deducted as applicable under IT rules</li><li>Refer &amp; Earn: a reward on every client you introduce</li></ul>
+      <div class="tcap"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>No surprise invoices</div></div>
+  </div>
+  <div class="faq">
+    <div class="fq"><b>Do you sign an NDA?</b><p>Yes — before the first detailed call, at no cost. Your idea and your data stay yours.</p></div>
+    <div class="fq"><b>Who owns the code?</b><p>You do. Full source, repository access and documentation transfer to you on final payment.</p></div>
+    <div class="fq"><b>Can we start small?</b><p>Yes. Begin at the Launch tier or with a Discovery Sprint, then scale scope once you've seen us work.</p></div>
+  </div>
+<div class="pfoot"><div class="fl">Payment &amp; Terms</div><div class="fc"><a href="tel:+919087021592">+91 90870 21592</a> · <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a> · <a href="https://digitalbuilders.in">digitalbuilders.in</a> · Ludhiana, Punjab, India</div><div class="fr">14</div></div></section><section class="page cta">
+  <div class="cov-glow"></div>
+  <div class="cta-in">
+    <img class="logo sm" src="/images/db-logo.png" alt="DigitalBuilders Logo"/>
+    <div class="kicker">Ready when you are</div>
+    <h1>Let's build the version<br/><span class="grad">you won't have to rebuild.</span></h1>
+    <p class="lede">Send us the problem, not a spec. We'll come back with a fixed scope, a fixed price and a date — free of charge.</p>
+    <div class="cta-grid">
+      <a href="https://wa.me/919087021592?text=Hi%20DigitalBuilders%21%20I%27d%20like%20to%20discuss%20a%20project.%20Please%20share%20package%20details%20and%20next%20steps."><img class="qr big" src="/images/db-logo.png" alt="DigitalBuilders QR"/></a>
+      <div class="cta-contact">
+        <div class="row"><span>WhatsApp</span><b><a href="https://wa.me/919087021592?text=Hi%20DigitalBuilders%21%20I%27d%20like%20to%20discuss%20a%20project.%20Please%20share%20package%20details%20and%20next%20steps.">+91 90870 21592</a></b></div>
+        <div class="row"><span>Email</span><b><a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a></b></div>
+        <div class="row"><span>Web</span><b><a href="https://digitalbuilders.in">digitalbuilders.in</a></b></div>
+        <div class="row"><span>Chat</span><b><a href="https://wa.me/919087021592?text=Hi%20DigitalBuilders%21%20I%27d%20like%20to%20discuss%20a%20project.%20Please%20share%20package%20details%20and%20next%20steps.">wa.me/919087021592</a></b></div>
+        <div class="row"><span>Studio</span><b>Ludhiana, Punjab, India</b></div>
+        <a class="ctabtn" href="https://wa.me/919087021592?text=Hi%20DigitalBuilders%21%20I%27d%20like%20to%20discuss%20a%20project.%20Please%20share%20package%20details%20and%20next%20steps.">Book a free consultation</a>
+        <div class="ctanote">Scan the code, or message us anytime. We reply the same working day.</div>
+      </div>
     </div>
-
-</body>
-</html>
+    <div class="promises small"><span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>Fixed written scope</span><span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>No hidden charges</span><span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>GST invoice</span><span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>30-day warranty</span><span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg></span>Milestone payments</span></div>
+  </div>
+  <div class="pfoot"><div class="fl">DigitalBuilders — We Build Your Digital Future.</div><div class="fc"><a href="tel:+919087021592">+91 90870 21592</a> · <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a> · <a href="https://digitalbuilders.in">digitalbuilders.in</a> · Ludhiana, Punjab, India</div><div class="fr">15</div></div>
+</section></body></html>

@@ -22,7 +22,7 @@ class PricingPageTest extends TestCase
         $this->assertFileExists($filePath);
 
         $content = file_get_contents($filePath);
-        $this->assertStringContainsString('India Price Book', $content);
+        $this->assertStringContainsString('Services & Pricing', $content);
         $this->assertStringContainsString('₹19,999', $content);
         $this->assertStringContainsString('₹79,000', $content);
         $this->assertStringContainsString('₹99,000', $content);
@@ -45,7 +45,7 @@ class PricingPageTest extends TestCase
     {
         $resInr = $this->get('/downloads/digitalbuilders-pricing-india-inr.html');
         $resInr->assertStatus(200);
-        $resInr->assertSee('India Price Book');
+        $resInr->assertSee('Services & Pricing');
 
         $resUsd = $this->get('/downloads/digitalbuilders-pricing-international-usd.html');
         $resUsd->assertStatus(200);
