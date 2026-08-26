@@ -1,15 +1,61 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import StickyMobileCta from '@/Components/StickyMobileCta.vue';
+
+const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    serviceType: 'Custom Web Application Development',
+    provider: {
+        '@type': 'ProfessionalService',
+        name: 'DigitalBuilders',
+        url: 'https://www.digitalbuilders.in',
+    },
+    description: 'Blazing-fast, enterprise-grade web applications engineered with modular monolith architecture and sub-100ms response times.',
+    areaServed: ['IN', 'US', 'GB', 'AE', 'CA', 'AU'],
+    hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Web Application Development Packages',
+        itemListElement: [
+            {
+                '@type': 'Offer',
+                itemOffered: {
+                    '@type': 'Service',
+                    name: 'Launch Web Application',
+                },
+                priceCurrency: 'INR',
+                price: '99000',
+            },
+        ],
+    },
+};
+
+const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.digitalbuilders.in' },
+        { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://www.digitalbuilders.in/#services' },
+        { '@type': 'ListItem', position: 3, name: 'Custom Web Applications', item: 'https://www.digitalbuilders.in/services/web-applications' },
+    ],
+};
 </script>
 
 <template>
     <Head title="Custom Web Application Development — DigitalBuilders">
         <meta name="description" content="Blazing-fast, enterprise-grade web applications built with Laravel 13, Vue 3, Inertia, and Modular Monolith architecture." />
+        <link rel="canonical" href="https://www.digitalbuilders.in/services/web-applications" />
         <meta property="og:title" content="Custom Web Application Development | DigitalBuilders" />
         <meta property="og:description" content="Blazing-fast, enterprise-grade web applications engineered with modular monolith architecture and sub-100ms response times." />
         <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/habuilt.jpg" />
         <meta property="og:url" content="https://www.digitalbuilders.in/services/web-applications" />
         <meta name="twitter:card" content="summary_large_image" />
+        <component is="script" type="application/ld+json">
+            {{ JSON.stringify(serviceSchema) }}
+        </component>
+        <component is="script" type="application/ld+json">
+            {{ JSON.stringify(breadcrumbSchema) }}
+        </component>
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">
@@ -186,6 +232,8 @@ import { Head, Link } from '@inertiajs/vue3';
         <footer class="border-t border-[#b8c9e633] bg-[#233246d9] py-8 text-center text-xs text-slate-400">
             <p>© {{ new Date().getFullYear() }} DigitalBuilders. All rights reserved.</p>
         </footer>
+
+        <StickyMobileCta />
     </div>
 </template>
 

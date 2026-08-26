@@ -1,15 +1,61 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import StickyMobileCta from '@/Components/StickyMobileCta.vue';
+
+const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    serviceType: 'Cross-Platform & Native Mobile App Development',
+    provider: {
+        '@type': 'ProfessionalService',
+        name: 'DigitalBuilders',
+        url: 'https://www.digitalbuilders.in',
+    },
+    description: 'Native-feeling, high-performance mobile applications for iOS and Android engineered for fluid 60fps performance and offline synchronization.',
+    areaServed: ['IN', 'US', 'GB', 'AE', 'CA', 'AU'],
+    hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Mobile App Development Packages',
+        itemListElement: [
+            {
+                '@type': 'Offer',
+                itemOffered: {
+                    '@type': 'Service',
+                    name: 'Launch Mobile App (iOS & Android)',
+                },
+                priceCurrency: 'INR',
+                price: '149000',
+            },
+        ],
+    },
+};
+
+const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.digitalbuilders.in' },
+        { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://www.digitalbuilders.in/#services' },
+        { '@type': 'ListItem', position: 3, name: 'Mobile App Development', item: 'https://www.digitalbuilders.in/services/mobile-apps' },
+    ],
+};
 </script>
 
 <template>
     <Head title="Mobile App Development (iOS & Android) — DigitalBuilders">
         <meta name="description" content="Native-feeling, high-performance mobile applications for iOS and Android engineered for flawless 60fps responsiveness." />
+        <link rel="canonical" href="https://www.digitalbuilders.in/services/mobile-apps" />
         <meta property="og:title" content="Mobile App Development (iOS & Android) | DigitalBuilders" />
         <meta property="og:description" content="Native-feeling, high-performance mobile applications for iOS and Android engineered for fluid 60fps performance and offline synchronization." />
         <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/sportsclub.jpg" />
         <meta property="og:url" content="https://www.digitalbuilders.in/services/mobile-apps" />
         <meta name="twitter:card" content="summary_large_image" />
+        <component is="script" type="application/ld+json">
+            {{ JSON.stringify(serviceSchema) }}
+        </component>
+        <component is="script" type="application/ld+json">
+            {{ JSON.stringify(breadcrumbSchema) }}
+        </component>
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">
@@ -138,6 +184,8 @@ import { Head, Link } from '@inertiajs/vue3';
         <footer class="border-t border-[#b8c9e633] bg-[#233246d9] py-8 text-center text-xs text-slate-400">
             <p>© {{ new Date().getFullYear() }} DigitalBuilders. All rights reserved.</p>
         </footer>
+
+        <StickyMobileCta />
     </div>
 </template>
 

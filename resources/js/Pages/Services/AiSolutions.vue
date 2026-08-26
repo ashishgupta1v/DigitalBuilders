@@ -1,15 +1,61 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import StickyMobileCta from '@/Components/StickyMobileCta.vue';
+
+const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    serviceType: 'AI Voice Agents & Autonomous AI Architecture',
+    provider: {
+        '@type': 'ProfessionalService',
+        name: 'DigitalBuilders',
+        url: 'https://www.digitalbuilders.in',
+    },
+    description: 'Production-ready AI voice agents, LLM copilots, vector retrieval RAG pipelines, and automated business workflows.',
+    areaServed: ['IN', 'US', 'GB', 'AE', 'CA', 'AU'],
+    hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'AI Solutions Packages',
+        itemListElement: [
+            {
+                '@type': 'Offer',
+                itemOffered: {
+                    '@type': 'Service',
+                    name: 'Launch AI Agent / RAG Copilot',
+                },
+                priceCurrency: 'INR',
+                price: '199000',
+            },
+        ],
+    },
+};
+
+const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.digitalbuilders.in' },
+        { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://www.digitalbuilders.in/#services' },
+        { '@type': 'ListItem', position: 3, name: 'AI Voice Agents & Solutions', item: 'https://www.digitalbuilders.in/services/ai-solutions' },
+    ],
+};
 </script>
 
 <template>
     <Head title="AI Voice Agents & Autonomous AI Solutions — DigitalBuilders">
         <meta name="description" content="Custom AI voice agents, LLM copilots, vector retrieval RAG pipelines, and automated business workflows." />
+        <link rel="canonical" href="https://www.digitalbuilders.in/services/ai-solutions" />
         <meta property="og:title" content="Autonomous AI Voice Agents & RAG Workflows | DigitalBuilders" />
         <meta property="og:description" content="Custom AI voice agents, LLM copilots, vector retrieval RAG pipelines, and automated business workflows." />
         <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/zoeticoach.jpg" />
         <meta property="og:url" content="https://www.digitalbuilders.in/services/ai-solutions" />
         <meta name="twitter:card" content="summary_large_image" />
+        <component is="script" type="application/ld+json">
+            {{ JSON.stringify(serviceSchema) }}
+        </component>
+        <component is="script" type="application/ld+json">
+            {{ JSON.stringify(breadcrumbSchema) }}
+        </component>
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">
@@ -138,6 +184,8 @@ import { Head, Link } from '@inertiajs/vue3';
         <footer class="border-t border-[#b8c9e633] bg-[#233246d9] py-8 text-center text-xs text-slate-400">
             <p>© {{ new Date().getFullYear() }} DigitalBuilders. All rights reserved.</p>
         </footer>
+
+        <StickyMobileCta />
     </div>
 </template>
 

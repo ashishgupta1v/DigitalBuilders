@@ -14,6 +14,15 @@ use Inertia\Inertia;
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'healthy',
+        'app' => 'DigitalBuilders',
+        'environment' => app()->environment(),
+        'timestamp' => now()->toIso8601String(),
+    ], 200, ['Cache-Control' => 'no-store, no-cache']);
+})->name('health');
+
 Route::get('/', function () {
     return Inertia::render('Home', [
         'canLogin' => Route::has('login'),

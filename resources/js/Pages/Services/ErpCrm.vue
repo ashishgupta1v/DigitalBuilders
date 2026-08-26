@@ -1,15 +1,61 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import StickyMobileCta from '@/Components/StickyMobileCta.vue';
+
+const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    serviceType: 'Enterprise ERP & Custom CRM Development',
+    provider: {
+        '@type': 'ProfessionalService',
+        name: 'DigitalBuilders',
+        url: 'https://www.digitalbuilders.in',
+    },
+    description: 'Custom ERP and CRM operations engines engineered to unify inventory, logistics, sales pipelines, and customer support.',
+    areaServed: ['IN', 'US', 'GB', 'AE', 'CA', 'AU'],
+    hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Enterprise ERP & CRM Packages',
+        itemListElement: [
+            {
+                '@type': 'Offer',
+                itemOffered: {
+                    '@type': 'Service',
+                    name: 'Launch Custom ERP / CRM System',
+                },
+                priceCurrency: 'INR',
+                price: '299000',
+            },
+        ],
+    },
+};
+
+const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.digitalbuilders.in' },
+        { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://www.digitalbuilders.in/#services' },
+        { '@type': 'ListItem', position: 3, name: 'Enterprise ERP & CRM', item: 'https://www.digitalbuilders.in/services/erp-crm' },
+    ],
+};
 </script>
 
 <template>
     <Head title="Enterprise ERP & CRM Systems — DigitalBuilders">
         <meta name="description" content="Custom ERP and CRM operations engines engineered to unify inventory, logistics, sales pipelines, and customer support." />
+        <link rel="canonical" href="https://www.digitalbuilders.in/services/erp-crm" />
         <meta property="og:title" content="Enterprise ERP & Custom CRM Engineering | DigitalBuilders" />
         <meta property="og:description" content="Unify fragmented operational spreadsheets and software into a high-performance custom ERP/CRM dashboard." />
         <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/dhandadiary.jpg" />
         <meta property="og:url" content="https://www.digitalbuilders.in/services/erp-crm" />
         <meta name="twitter:card" content="summary_large_image" />
+        <component is="script" type="application/ld+json">
+            {{ JSON.stringify(serviceSchema) }}
+        </component>
+        <component is="script" type="application/ld+json">
+            {{ JSON.stringify(breadcrumbSchema) }}
+        </component>
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">
@@ -138,6 +184,8 @@ import { Head, Link } from '@inertiajs/vue3';
         <footer class="border-t border-[#b8c9e633] bg-[#233246d9] py-8 text-center text-xs text-slate-400">
             <p>© {{ new Date().getFullYear() }} DigitalBuilders. All rights reserved.</p>
         </footer>
+
+        <StickyMobileCta />
     </div>
 </template>
 

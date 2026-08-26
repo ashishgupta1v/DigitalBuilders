@@ -1,15 +1,61 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import StickyMobileCta from '@/Components/StickyMobileCta.vue';
+
+const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    serviceType: 'Multi-Tenant SaaS Platform Engineering',
+    provider: {
+        '@type': 'ProfessionalService',
+        name: 'DigitalBuilders',
+        url: 'https://www.digitalbuilders.in',
+    },
+    description: 'Multi-tenant SaaS platform engineering with subscription billing, tenant data isolation, and global auto-scaling.',
+    areaServed: ['IN', 'US', 'GB', 'AE', 'CA', 'AU'],
+    hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'SaaS Platform Engineering Packages',
+        itemListElement: [
+            {
+                '@type': 'Offer',
+                itemOffered: {
+                    '@type': 'Service',
+                    name: 'Launch SaaS Platform',
+                },
+                priceCurrency: 'INR',
+                price: '249000',
+            },
+        ],
+    },
+};
+
+const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.digitalbuilders.in' },
+        { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://www.digitalbuilders.in/#services' },
+        { '@type': 'ListItem', position: 3, name: 'SaaS Platform Engineering', item: 'https://www.digitalbuilders.in/services/saas-platforms' },
+    ],
+};
 </script>
 
 <template>
     <Head title="SaaS Platform Engineering — DigitalBuilders">
         <meta name="description" content="Multi-tenant SaaS platform engineering with subscription billing, tenant data isolation, and global auto-scaling." />
+        <link rel="canonical" href="https://www.digitalbuilders.in/services/saas-platforms" />
         <meta property="og:title" content="High-Scale SaaS Platform Engineering | DigitalBuilders" />
         <meta property="og:description" content="Multi-tenant SaaS platform engineering with subscription billing, tenant data isolation, and global auto-scaling." />
         <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/dhandadiary.jpg" />
         <meta property="og:url" content="https://www.digitalbuilders.in/services/saas-platforms" />
         <meta name="twitter:card" content="summary_large_image" />
+        <component is="script" type="application/ld+json">
+            {{ JSON.stringify(serviceSchema) }}
+        </component>
+        <component is="script" type="application/ld+json">
+            {{ JSON.stringify(breadcrumbSchema) }}
+        </component>
     </Head>
 
     <div class="db-shell site-bg text-[var(--db-text)] min-h-screen">
@@ -138,6 +184,8 @@ import { Head, Link } from '@inertiajs/vue3';
         <footer class="border-t border-[#b8c9e633] bg-[#233246d9] py-8 text-center text-xs text-slate-400">
             <p>© {{ new Date().getFullYear() }} DigitalBuilders. All rights reserved.</p>
         </footer>
+
+        <StickyMobileCta />
     </div>
 </template>
 
