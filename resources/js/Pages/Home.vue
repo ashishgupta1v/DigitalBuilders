@@ -32,7 +32,7 @@ defineProps<{
 
 const mobileMenuOpen = ref(false);
 const showBackToTop = ref(false);
-const isDarkMode = ref(true);
+const isDarkMode = ref(false);
 
 function toggleTheme() {
     isDarkMode.value = !isDarkMode.value;
@@ -40,7 +40,7 @@ function toggleTheme() {
         document.documentElement.removeAttribute('data-theme');
         document.documentElement.classList.add('dark');
         document.documentElement.classList.remove('light');
-        localStorage.removeItem('db-theme');
+        localStorage.setItem('db-theme', 'dark');
     } else {
         document.documentElement.setAttribute('data-theme', 'light');
         document.documentElement.classList.remove('dark');
@@ -104,18 +104,18 @@ const services = [
 const canonicalUrl = 'https://www.digitalbuilders.in/';
 
 onMounted(() => {
-    // Restore saved theme
+    // Restore saved theme (default Light)
     const savedTheme = localStorage.getItem('db-theme');
-    if (savedTheme === 'light') {
-        isDarkMode.value = false;
-        document.documentElement.setAttribute('data-theme', 'light');
-        document.documentElement.classList.remove('dark');
-        document.documentElement.classList.add('light');
-    } else {
+    if (savedTheme === 'dark') {
         isDarkMode.value = true;
         document.documentElement.removeAttribute('data-theme');
         document.documentElement.classList.add('dark');
         document.documentElement.classList.remove('light');
+    } else {
+        isDarkMode.value = false;
+        document.documentElement.setAttribute('data-theme', 'light');
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
     }
 
     // Scroll listeners
@@ -215,37 +215,37 @@ onBeforeUnmount(() => {
         <div class="db-grid-overlay" />
 
         <!-- Navigation Header -->
-        <header class="sticky top-0 z-50 border-b border-[#b8c9e622] bg-[var(--db-nav-bg)] backdrop-blur-xl transition-colors duration-300">
+        <header class="sticky top-0 z-50 border-b border-border bg-[var(--db-nav-bg)] backdrop-blur-xl transition-colors duration-300">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-3.5 lg:px-8">
                 <!-- Logo: icon + brand name -->
                 <ApplicationLogo :is-link="true" href="#top" />
 
                 <nav class="hidden items-center gap-1.5 text-sm font-medium md:flex lg:gap-2">
-                    <a href="#services" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">Services</a>
-                    <a href="#portfolio" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">Portfolio</a>
-                    <Link href="/pricing" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">Pricing</Link>
-                    <Link href="/blog" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">Blog</Link>
-                    <a href="#about" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">About</a>
-                    <a href="#contact" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">Contact</a>
+                    <a href="#services" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Services</a>
+                    <a href="#portfolio" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Portfolio</a>
+                    <Link href="/pricing" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Pricing</Link>
+                    <Link href="/blog" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Blog</Link>
+                    <a href="#about" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">About</a>
+                    <a href="#contact" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Contact</a>
                 </nav>
 
                 <div class="flex items-center gap-2">
                     <!-- Theme Toggle -->
                     <button
                         @click="toggleTheme"
-                        class="hidden h-9 w-9 items-center justify-center rounded-full border border-white/10 text-slate-400 transition hover:text-white sm:inline-flex"
+                        class="hidden h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground sm:inline-flex cursor-pointer"
                         :aria-label="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
                     >
                         <svg v-if="isDarkMode" class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
                         <svg v-else class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
                     </button>
-                    <Link v-if="canLogin" :href="route('login')" class="hidden rounded-full border border-white/15 px-4 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-white/40 hover:text-white sm:inline-flex">
+                    <Link v-if="canLogin" :href="route('login')" class="hidden rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-muted-foreground transition hover:border-border hover:text-foreground sm:inline-flex">
                         Log in
                     </Link>
                     <!-- Mobile hamburger -->
                     <button
                         @click="mobileMenuOpen = !mobileMenuOpen"
-                        class="flex h-11 w-11 items-center justify-center rounded-full border border-[#b8c9e633] text-[var(--db-muted)] transition hover:text-[var(--db-text)] md:hidden focus:outline-none"
+                        class="flex h-11 w-11 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground md:hidden focus:outline-none cursor-pointer"
                         :aria-expanded="mobileMenuOpen"
                         aria-label="Toggle menu"
                     >
@@ -266,17 +266,17 @@ onBeforeUnmount(() => {
                 leave-active-class="transition-all duration-200 ease-in"
                 leave-to-class="opacity-0 -translate-y-3"
             >
-                <div v-if="mobileMenuOpen" class="border-t border-[#b8c9e622] bg-[var(--db-nav-bg)] px-4 pb-5 pt-4 sm:px-5 md:hidden">
+                <div v-if="mobileMenuOpen" class="border-t border-border bg-card px-4 pb-5 pt-4 sm:px-5 md:hidden">
                     <nav class="flex flex-col gap-3 text-sm font-medium">
-                        <a href="#services" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Services</a>
-                        <a href="#portfolio" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Portfolio</a>
-                        <Link href="/pricing" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Pricing</Link>
-                        <Link href="/blog" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Blog</Link>
-                        <a href="#about" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">About</a>
-                        <a href="#contact" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Contact</a>
+                        <a href="#services" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Services</a>
+                        <a href="#portfolio" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Portfolio</a>
+                        <Link href="/pricing" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Pricing</Link>
+                        <Link href="/blog" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Blog</Link>
+                        <a href="#about" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">About</a>
+                        <a href="#contact" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Contact</a>
                     </nav>
-                    <div v-if="canLogin" class="mt-4 flex flex-col gap-2 border-t border-[#b8c9e622] pt-4">
-                        <Link :href="route('login')" class="inline-flex w-full items-center justify-center rounded-full border border-white/20 px-4 py-2 text-xs font-semibold text-[var(--db-muted)] transition hover:border-white/50 hover:text-[var(--db-text)]">
+                    <div v-if="canLogin" class="mt-4 flex flex-col gap-2 border-t border-border pt-4">
+                        <Link :href="route('login')" class="inline-flex w-full items-center justify-center rounded-full border border-border px-4 py-2 text-xs font-semibold text-muted-foreground transition hover:text-foreground">
                             Log in
                         </Link>
                     </div>
@@ -312,35 +312,35 @@ onBeforeUnmount(() => {
 
             <!-- 8. About & Process Section -->
             <section id="about" class="mt-20 grid gap-6 sm:mt-24 sm:gap-8 lg:grid-cols-[1.2fr_1fr]" data-reveal>
-                <div class="db-antigravity-card rounded-3xl border border-[#b8c9e633] bg-[#27374dcb] p-6 sm:p-8 shadow-xl">
-                    <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-[#9dc5ff] font-semibold">About Us</p>
-                    <h2 class="mt-2 text-2xl font-black text-slate-900 dark:text-white sm:text-3xl">Ashish Gupta</h2>
-                    <p class="mt-1 text-sm font-semibold text-indigo-600 dark:text-[#d8c3ff]">Lead Digital Architect · Founder</p>
-                    <p class="mt-4 text-slate-600 dark:text-slate-300 leading-relaxed">
+                <div class="db-antigravity-card rounded-3xl border border-border bg-card text-card-foreground p-6 sm:p-8 shadow-xl">
+                    <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400 font-semibold">About Us</p>
+                    <h2 class="mt-2 text-2xl font-black text-foreground sm:text-3xl">Ashish Gupta</h2>
+                    <p class="mt-1 text-sm font-semibold text-indigo-600 dark:text-indigo-400">Lead Digital Architect · Founder</p>
+                    <p class="mt-4 text-muted-foreground leading-relaxed">
                         Over 8 years in enterprise IT designing and deploying complex large-scale software systems. DigitalBuilders was founded to deliver production-grade architecture, not fragile templates.
                     </p>
                     <div class="mt-6 flex items-center gap-3">
-                        <a href="https://www.linkedin.com/in/ashishgupta1v/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 dark:border-[#b8c9e633] text-slate-500 dark:text-slate-400 hover:border-[#0a66c2] hover:text-[#0a66c2] transition-colors">
+                        <a href="https://www.linkedin.com/in/ashishgupta1v/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:border-[#0a66c2] hover:text-[#0a66c2] transition-colors">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                         </a>
-                        <a href="https://github.com/ashishgupta1v" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 dark:border-[#b8c9e633] text-slate-500 dark:text-slate-400 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white transition-colors">
+                        <a href="https://github.com/ashishgupta1v" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:border-foreground hover:text-foreground transition-colors">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                         </a>
-                        <a href="https://wa.me/919087021592" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 dark:border-[#b8c9e633] text-slate-500 dark:text-slate-400 hover:border-[#25d366] hover:text-[#25d366] transition-colors">
+                        <a href="https://wa.me/919087021592" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:border-[#25d366] hover:text-[#25d366] transition-colors">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                         </a>
-                        <a href="https://ashishgupta.dev" target="_blank" rel="noopener noreferrer" aria-label="Personal Website" class="flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 dark:border-[#b8c9e633] text-slate-500 dark:text-slate-400 hover:border-sky-500 hover:text-sky-500 transition-colors">
+                        <a href="https://ashishgupta.dev" target="_blank" rel="noopener noreferrer" aria-label="Personal Website" class="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:border-sky-500 hover:text-sky-500 transition-colors">
                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
                         </a>
                     </div>
                 </div>
-                <div class="db-antigravity-card rounded-3xl border border-[#b8c9e633] bg-[#27374dde] p-6 sm:p-8 shadow-xl">
-                    <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-[#9dc5ff] font-semibold">How We Work</p>
-                    <ol class="mt-4 space-y-4 text-sm text-slate-700 dark:text-slate-200">
-                        <li><span class="font-bold text-slate-900 dark:text-white">01 Understand Your Needs</span> — We discuss goals, challenges, and priorities.</li>
-                        <li><span class="font-bold text-slate-900 dark:text-white">02 Plan the Right Solution</span> — We design the system before development starts.</li>
-                        <li><span class="font-bold text-slate-900 dark:text-white">03 Build and Deliver</span> — We deliver in clear phases with regular updates.</li>
-                        <li><span class="font-bold text-slate-900 dark:text-white">04 Support & Scale</span> — Post-launch monitoring, 30-day warranty, and ongoing support.</li>
+                <div class="db-antigravity-card rounded-3xl border border-border bg-card text-card-foreground p-6 sm:p-8 shadow-xl">
+                    <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400 font-semibold">How We Work</p>
+                    <ol class="mt-4 space-y-4 text-sm text-card-foreground">
+                        <li><span class="font-bold text-foreground">01 Understand Your Needs</span> — We discuss goals, challenges, and priorities.</li>
+                        <li><span class="font-bold text-foreground">02 Plan the Right Solution</span> — We design the system before development starts.</li>
+                        <li><span class="font-bold text-foreground">03 Build and Deliver</span> — We deliver in clear phases with regular updates.</li>
+                        <li><span class="font-bold text-foreground">04 Support & Scale</span> — Post-launch monitoring, 30-day warranty, and ongoing support.</li>
                     </ol>
                 </div>
             </section>
@@ -374,45 +374,45 @@ onBeforeUnmount(() => {
                 v-if="showBackToTop"
                 @click="scrollToTop"
                 aria-label="Back to top"
-                class="fixed bottom-24 right-5 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-[#b8c9e633] bg-[#27374dde] text-[#9dc5ff] shadow-lg backdrop-blur-md transition hover:border-[#9ba7ff] hover:text-white"
+                class="fixed bottom-24 right-5 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-lg backdrop-blur-md transition hover:border-sky-500 hover:text-sky-500 cursor-pointer"
             >
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
             </button>
         </Transition>
 
         <!-- Footer -->
-        <footer class="border-t border-[#b8c9e633] bg-[#111827e6] backdrop-blur-md">
+        <footer class="border-t border-border bg-secondary/50 backdrop-blur-md">
             <div class="mx-auto max-w-7xl px-4 py-10 sm:px-5 lg:px-8">
                 <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
                     <div>
                         <ApplicationLogo :is-link="true" href="#top" size="sm" />
-                        <p class="mt-2 max-w-xs text-xs text-slate-500">Enterprise Software & AI Architecture. Based in Ludhiana, Punjab, India.</p>
+                        <p class="mt-2 max-w-xs text-xs text-muted-foreground">Enterprise Software & AI Architecture. Based in Ludhiana, Punjab, India.</p>
                     </div>
                     <div class="flex items-center gap-3">
-                        <a href="https://linkedin.com/in/ashishgupta1v" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 dark:border-[#b8c9e633] text-slate-500 dark:text-slate-400 hover:border-[#0077b5] hover:text-[#0077b5] transition-colors">
+                        <a href="https://linkedin.com/in/ashishgupta1v" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:border-[#0077b5] hover:text-[#0077b5] transition-colors">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                         </a>
-                        <a href="https://github.com/ashishgupta1v" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 dark:border-[#b8c9e633] text-slate-500 dark:text-slate-400 hover:border-slate-900 dark:hover:border-white hover:text-slate-900 dark:hover:text-white transition-colors">
+                        <a href="https://github.com/ashishgupta1v" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:border-foreground hover:text-foreground transition-colors">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                         </a>
-                        <a href="https://wa.me/919087021592" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" @click="trackWhatsAppClick('footer_social')" class="flex h-9 w-9 items-center justify-center rounded-full border border-[#b8c9e622] text-slate-500 hover:border-[#25d366] hover:text-[#25d366] transition-colors">
+                        <a href="https://wa.me/919087021592" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" @click="trackWhatsAppClick('footer_social')" class="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:border-[#25d366] hover:text-[#25d366] transition-colors">
                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                         </a>
-                        <a href="https://ashishgupta.dev" target="_blank" rel="noopener noreferrer" aria-label="Personal Website" class="flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 dark:border-[#b8c9e633] text-slate-500 dark:text-slate-400 hover:border-sky-500 hover:text-sky-500 transition-colors">
+                        <a href="https://ashishgupta.dev" target="_blank" rel="noopener noreferrer" aria-label="Personal Website" class="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:border-sky-500 hover:text-sky-500 transition-colors">
                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
                         </a>
                     </div>
                 </div>
-                <div class="mt-8 border-t border-[#b8c9e615] pt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-xs text-slate-500">
+                <div class="mt-8 border-t border-border pt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-xs text-muted-foreground">
                     <p>© {{ new Date().getFullYear() }} DigitalBuilders. All rights reserved.</p>
                     <div class="flex flex-wrap gap-4">
-                        <Link href="/pricing" class="hover:text-slate-300 transition-colors">Pricing</Link>
-                        <Link href="/estimator" class="hover:text-slate-300 transition-colors">Estimator</Link>
-                        <Link href="/blog" class="hover:text-slate-300 transition-colors">Blog</Link>
-                        <Link href="/library/privacy-policy" class="hover:text-slate-300 transition-colors">Privacy Policy</Link>
-                        <Link href="/library/terms-of-service" class="hover:text-slate-300 transition-colors">Terms of Service</Link>
-                        <button type="button" @click="openCookieSettings" class="hover:text-slate-300 transition-colors cursor-pointer text-left">Cookie Settings</button>
-                        <a href="mailto:hello@digitalbuilders.in" class="hover:text-slate-300 transition-colors">hello@digitalbuilders.in</a>
+                        <Link href="/pricing" class="hover:text-foreground transition-colors">Pricing</Link>
+                        <Link href="/estimator" class="hover:text-foreground transition-colors">Estimator</Link>
+                        <Link href="/blog" class="hover:text-foreground transition-colors">Blog</Link>
+                        <Link href="/library/privacy-policy" class="hover:text-foreground transition-colors">Privacy Policy</Link>
+                        <Link href="/library/terms-of-service" class="hover:text-foreground transition-colors">Terms of Service</Link>
+                        <button type="button" @click="openCookieSettings" class="hover:text-foreground transition-colors cursor-pointer text-left">Cookie Settings</button>
+                        <a href="mailto:hello@digitalbuilders.in" class="hover:text-foreground transition-colors">hello@digitalbuilders.in</a>
                     </div>
                 </div>
             </div>

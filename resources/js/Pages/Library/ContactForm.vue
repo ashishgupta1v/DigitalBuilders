@@ -98,7 +98,7 @@ function submit() {
 
                 <div>
                     <button type="submit" :disabled="form.processing"
-                        class="inline-flex justify-center rounded-full border border-[#b8c9e640] bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-6 py-3 text-sm font-semibold text-[#1a2231] shadow-sm hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#a6b0ff] focus:ring-offset-0 disabled:opacity-50">
+                        class="btn-primary inline-flex justify-center rounded-full px-6 py-3 text-sm font-semibold text-white shadow-sm hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-0 disabled:opacity-50">
                         {{ form.processing ? 'Submitting...' : 'Request a Project Quote' }}
                     </button>
                 </div>

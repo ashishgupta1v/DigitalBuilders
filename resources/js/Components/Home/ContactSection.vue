@@ -90,32 +90,32 @@ function submitLead() {
 <template>
     <div>
         <!-- Ready to Architect Callout Banner -->
-        <section class="mt-20 rounded-3xl border border-sky-200 dark:border-[#b8c9e655] bg-[linear-gradient(120deg,rgba(2,132,199,0.08),rgba(124,58,237,0.08))] dark:bg-[linear-gradient(120deg,rgba(122,196,255,0.16),rgba(197,147,255,0.16))] p-6 text-center sm:mt-24 sm:p-10 shadow-lg" data-reveal>
-            <h2 class="text-2xl font-black text-slate-900 dark:text-white sm:text-3xl md:text-4xl">Ready to Architect Your Solution?</h2>
-            <p class="mx-auto mt-3 max-w-3xl text-sm sm:text-base text-slate-600 dark:text-slate-200">Stop settling. Start building. Engineer the resilient digital systems your business needs.</p>
-            <a href="#contact" class="db-action mt-7 inline-flex w-full items-center justify-center rounded-full bg-[linear-gradient(95deg,#0284c7_0%,#4f46e5_48%,#7c3aed_100%)] dark:bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-7 py-3.5 min-h-[44px] text-sm font-bold text-white dark:text-[#1a2231] shadow-lg transition hover:scale-[1.02] sm:w-auto">
+        <section class="mt-20 rounded-3xl border border-sky-500/30 bg-sky-500/10 p-6 text-center sm:mt-24 sm:p-10 shadow-lg" data-reveal>
+            <h2 class="text-2xl font-black text-foreground sm:text-3xl md:text-4xl">Ready to Architect Your Solution?</h2>
+            <p class="mx-auto mt-3 max-w-3xl text-sm sm:text-base text-muted-foreground">Stop settling. Start building. Engineer the resilient digital systems your business needs.</p>
+            <a href="#contact" class="btn-primary mt-7 inline-flex w-full items-center justify-center rounded-full px-7 py-3.5 min-h-[44px] text-sm font-bold text-white shadow-lg transition hover:scale-[1.02] sm:w-auto">
                 Schedule Your Strategy Session
             </a>
         </section>
 
         <!-- Contact Section -->
         <section id="contact" class="mt-20 grid gap-6 sm:mt-24 sm:gap-8 lg:grid-cols-[1.15fr_0.85fr]" data-reveal>
-            <div class="db-antigravity-card rounded-3xl border border-slate-200 dark:border-[#b8c9e633] bg-white dark:bg-[#27374dde] p-6 sm:p-8 shadow-xl">
-                <h2 class="text-2xl font-black text-slate-900 dark:text-white sm:text-3xl">Let's Connect</h2>
-                <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">Your business requires software that works as hard as you do. Let's map your bottlenecks into a robust digital solution.</p>
+            <div class="db-antigravity-card rounded-3xl border border-border bg-card text-card-foreground p-6 sm:p-8 shadow-xl">
+                <h2 class="text-2xl font-black text-card-foreground sm:text-3xl">Let's Connect</h2>
+                <p class="mt-3 text-sm text-muted-foreground">Your business requires software that works as hard as you do. Let's map your bottlenecks into a robust digital solution.</p>
 
                 <!-- General / Rate-Limit Error Alert Banner -->
                 <div
                     v-if="submissionError || flashError"
                     role="alert"
                     aria-live="assertive"
-                    class="mt-6 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-5 text-sm text-rose-800 dark:text-rose-200 space-y-3 shadow-inner"
+                    class="mt-6 rounded-2xl border border-red-500/40 bg-red-500/10 p-5 text-sm text-red-900 dark:text-red-200 space-y-3 shadow-inner"
                 >
                     <div class="flex items-start gap-2.5">
-                        <svg class="h-5 w-5 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        <svg class="h-5 w-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                         <div>
                             <p class="font-bold text-base">{{ submissionError || flashError }}</p>
-                            <p class="mt-1 text-xs text-rose-700 dark:text-rose-300 leading-relaxed">
+                            <p class="mt-1 text-xs text-red-800 dark:text-red-300 leading-relaxed">
                                 Your typed information has been kept intact. If the network or rate limit interrupted submission, you can immediately send your inquiry to Lead Architect Ashish Gupta via WhatsApp:
                             </p>
                         </div>
@@ -132,7 +132,7 @@ function submitLead() {
                         </a>
                         <a
                             href="mailto:hello@digitalbuilders.in"
-                            class="inline-flex items-center gap-1.5 text-xs text-rose-800 dark:text-rose-200 underline font-semibold hover:text-rose-950 dark:hover:text-white"
+                            class="inline-flex items-center gap-1.5 text-xs text-red-900 dark:text-red-200 underline font-semibold hover:text-red-950 dark:hover:text-white"
                         >
                             Or email hello@digitalbuilders.in
                         </a>
@@ -144,7 +144,7 @@ function submitLead() {
                     <input v-model="form._hp_company" type="text" name="_hp_company" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none !important;" />
 
                     <div>
-                        <label for="contact-name" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Full Name *</label>
+                        <label for="contact-name" class="block text-sm font-medium text-card-foreground">Full Name *</label>
                         <input
                             id="contact-name"
                             name="name"
@@ -156,13 +156,13 @@ function submitLead() {
                             placeholder="First and Last Name"
                             :aria-invalid="!!form.errors.name"
                             :aria-describedby="form.errors.name ? 'contact-name-error' : undefined"
-                            class="mt-2 w-full rounded-xl border border-slate-300 dark:border-[#b8c9e640] bg-slate-50 dark:bg-[#192434] px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-sky-500 focus:outline-none"
+                            class="mt-2 w-full rounded-xl border border-border bg-secondary/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none"
                         />
-                        <p v-if="form.errors.name" id="contact-name-error" role="alert" aria-live="polite" class="mt-1 text-xs text-red-500 dark:text-red-300">{{ form.errors.name }}</p>
+                        <p v-if="form.errors.name" id="contact-name-error" role="alert" aria-live="polite" class="mt-1 text-xs text-red-500">{{ form.errors.name }}</p>
                     </div>
 
                     <div>
-                        <label for="contact-email" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Email Address *</label>
+                        <label for="contact-email" class="block text-sm font-medium text-card-foreground">Email Address *</label>
                         <input
                             id="contact-email"
                             name="email"
@@ -174,13 +174,13 @@ function submitLead() {
                             placeholder="you@company.com"
                             :aria-invalid="!!form.errors.email"
                             :aria-describedby="form.errors.email ? 'contact-email-error' : undefined"
-                            class="mt-2 w-full rounded-xl border border-slate-300 dark:border-[#b8c9e640] bg-slate-50 dark:bg-[#192434] px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-sky-500 focus:outline-none"
+                            class="mt-2 w-full rounded-xl border border-border bg-secondary/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none"
                         />
-                        <p v-if="form.errors.email" id="contact-email-error" role="alert" aria-live="polite" class="mt-1 text-xs text-red-500 dark:text-red-300">{{ form.errors.email }}</p>
+                        <p v-if="form.errors.email" id="contact-email-error" role="alert" aria-live="polite" class="mt-1 text-xs text-red-500">{{ form.errors.email }}</p>
                     </div>
 
                     <div>
-                        <label for="contact-phone" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Phone Number *</label>
+                        <label for="contact-phone" class="block text-sm font-medium text-card-foreground">Phone Number *</label>
                         <input
                             id="contact-phone"
                             name="phone"
@@ -192,28 +192,28 @@ function submitLead() {
                             placeholder="+91 XXXXX XXXXX"
                             :aria-invalid="!!form.errors.phone"
                             :aria-describedby="form.errors.phone ? 'contact-phone-error' : undefined"
-                            class="mt-2 w-full rounded-xl border border-slate-300 dark:border-[#b8c9e640] bg-slate-50 dark:bg-[#192434] px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-sky-500 focus:outline-none"
+                            class="mt-2 w-full rounded-xl border border-border bg-secondary/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none"
                         />
-                        <p v-if="form.errors.phone" id="contact-phone-error" role="alert" aria-live="polite" class="mt-1 text-xs text-red-500 dark:text-red-300">{{ form.errors.phone }}</p>
+                        <p v-if="form.errors.phone" id="contact-phone-error" role="alert" aria-live="polite" class="mt-1 text-xs text-red-500">{{ form.errors.phone }}</p>
                     </div>
 
                     <div>
-                        <label for="contact-project-type" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Project Type *</label>
+                        <label for="contact-project-type" class="block text-sm font-medium text-card-foreground">Project Type *</label>
                         <select
                             id="contact-project-type"
                             name="project_type"
                             v-model="form.project_type"
                             @change="form.clearErrors('project_type'); submissionError = null"
                             required
-                            class="mt-2 w-full rounded-xl border border-slate-300 dark:border-[#b8c9e640] bg-slate-50 dark:bg-[#192434] px-4 py-3 text-sm text-slate-900 dark:text-white focus:border-sky-500 focus:outline-none"
+                            class="mt-2 w-full rounded-xl border border-border bg-secondary/50 px-4 py-3 text-sm text-foreground focus:ring-2 focus:ring-primary focus:outline-none"
                         >
                             <option v-for="type in projectTypes" :key="type.value" :value="type.value">{{ type.label }}</option>
                         </select>
-                        <p v-if="form.errors.project_type" id="contact-type-error" role="alert" aria-live="polite" class="mt-1 text-xs text-red-500 dark:text-red-300">{{ form.errors.project_type }}</p>
+                        <p v-if="form.errors.project_type" id="contact-type-error" role="alert" aria-live="polite" class="mt-1 text-xs text-red-500">{{ form.errors.project_type }}</p>
                     </div>
 
                     <div>
-                        <label for="contact-description" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Project Description (Optional)</label>
+                        <label for="contact-description" class="block text-sm font-medium text-card-foreground">Project Description (Optional)</label>
                         <textarea
                             id="contact-description"
                             name="description"
@@ -221,22 +221,22 @@ function submitLead() {
                             @input="form.clearErrors('description'); submissionError = null"
                             rows="4"
                             placeholder="Briefly describe your core operational challenge or project vision..."
-                            class="mt-2 w-full rounded-xl border border-slate-300 dark:border-[#b8c9e640] bg-slate-50 dark:bg-[#192434] px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-sky-500 focus:outline-none"
+                            class="mt-2 w-full rounded-xl border border-border bg-secondary/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none"
                         ></textarea>
-                        <p v-if="form.errors.description" id="contact-desc-error" role="alert" aria-live="polite" class="mt-1 text-xs text-red-500 dark:text-red-300">{{ form.errors.description }}</p>
+                        <p v-if="form.errors.description" id="contact-desc-error" role="alert" aria-live="polite" class="mt-1 text-xs text-red-500">{{ form.errors.description }}</p>
                     </div>
 
                     <button
                         :disabled="form.processing"
                         type="submit"
-                        class="db-action w-full rounded-full border border-transparent bg-[linear-gradient(95deg,#0284c7_0%,#4f46e5_48%,#7c3aed_100%)] dark:bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-6 py-3.5 min-h-[44px] text-sm font-bold text-white dark:text-[#1a2231] transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70 shadow-lg cursor-pointer"
+                        class="btn-primary w-full rounded-full px-6 py-3.5 min-h-[44px] text-sm font-bold text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70 shadow-lg cursor-pointer"
                     >
                         {{ form.processing ? 'Submitting Inquiry...' : 'Request a Project Quote' }}
                     </button>
 
-                    <div v-if="form.recentlySuccessful" role="alert" aria-live="polite" class="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-sm text-emerald-700 dark:text-emerald-200 space-y-3">
+                    <div v-if="form.recentlySuccessful" role="alert" aria-live="polite" class="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-sm text-emerald-800 dark:text-emerald-200 space-y-3">
                         <p class="font-semibold flex items-center gap-2">
-                            <svg class="h-5 w-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <svg class="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                             Thank you! Your project inquiry has been received. We'll review and respond within 24 business hours.
                         </p>
                         <a :href="'https://wa.me/919087021592?text=' + encodeURIComponent('Hi Ashish, I just submitted a project inquiry on DigitalBuilders regarding ' + form.project_type + '. Let\'s connect!')" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-xl bg-[#25d366] px-4 py-2.5 min-h-[44px] text-xs font-bold text-white shadow hover:bg-[#20ba5a] transition">
@@ -248,18 +248,18 @@ function submitLead() {
             </div>
 
             <aside class="space-y-4">
-                <div class="db-antigravity-card rounded-3xl border border-slate-200 dark:border-[#b8c9e633] bg-white dark:bg-[#27374dde] p-6 sm:p-8 shadow-xl">
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Get In Touch</h3>
-                    <a href="tel:+919087021592" @click="trackPhoneClick()" class="mt-4 flex items-center gap-2.5 min-h-[44px] py-1 text-sm text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-white transition-colors">
-                        <svg class="h-4 w-4 shrink-0 text-sky-600 dark:text-[#9dc5ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                <div class="db-antigravity-card rounded-3xl border border-border bg-card text-card-foreground p-6 sm:p-8 shadow-xl">
+                    <h3 class="text-xl font-bold text-card-foreground">Get In Touch</h3>
+                    <a href="tel:+919087021592" @click="trackPhoneClick()" class="mt-4 flex items-center gap-2.5 min-h-[44px] py-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        <svg class="h-4 w-4 shrink-0 text-sky-600 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                         +91 90870 21592
                     </a>
-                    <a href="mailto:hello@digitalbuilders.in" @click="trackEmailClick()" class="mt-1 flex items-center gap-2.5 min-h-[44px] py-1 break-all text-sm text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-white transition-colors">
-                        <svg class="h-4 w-4 shrink-0 text-sky-600 dark:text-[#9dc5ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    <a href="mailto:hello@digitalbuilders.in" @click="trackEmailClick()" class="mt-1 flex items-center gap-2.5 min-h-[44px] py-1 break-all text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        <svg class="h-4 w-4 shrink-0 text-sky-600 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                         hello@digitalbuilders.in
                     </a>
-                    <p class="mt-1 flex items-center gap-2.5 min-h-[44px] py-1 text-sm text-slate-600 dark:text-slate-300">
-                        <svg class="h-4 w-4 shrink-0 text-sky-600 dark:text-[#9dc5ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    <p class="mt-1 flex items-center gap-2.5 min-h-[44px] py-1 text-sm text-muted-foreground">
+                        <svg class="h-4 w-4 shrink-0 text-sky-600 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         Ludhiana, Punjab, India
                     </p>
                     <!-- WhatsApp Quick Contact -->
@@ -269,13 +269,13 @@ function submitLead() {
                     </a>
                 </div>
                 <!-- Calendar Strategy Call Card -->
-                <div class="db-antigravity-card rounded-3xl border border-sky-400/40 bg-gradient-to-b from-sky-500/10 to-indigo-500/10 p-6 sm:p-8 shadow-xl">
+                <div class="db-antigravity-card rounded-3xl border border-sky-500/40 bg-sky-500/10 p-6 sm:p-8 shadow-xl">
                     <div class="flex items-center gap-2">
                         <span class="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-ping" />
-                        <span class="text-xs uppercase font-extrabold tracking-wider text-sky-400">Instant Architecture Scoping</span>
+                        <span class="text-xs uppercase font-extrabold tracking-wider text-sky-700 dark:text-sky-400">Instant Architecture Scoping</span>
                     </div>
-                    <h3 class="mt-2 text-xl font-bold text-slate-900 dark:text-white">Book a Strategy Session</h3>
-                    <p class="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <h3 class="mt-2 text-xl font-bold text-card-foreground">Book a Strategy Session</h3>
+                    <p class="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                         Prefer an interactive deep-dive? Book a 30-minute system architecture review directly with Lead Architect Ashish Gupta.
                     </p>
                     <a
@@ -283,17 +283,17 @@ function submitLead() {
                         target="_blank"
                         rel="noopener noreferrer"
                         @click="trackWhatsAppClick('strategy_session')"
-                        class="mt-4 inline-flex w-full items-center justify-center gap-2 min-h-[44px] rounded-full bg-[linear-gradient(95deg,#0284c7_0%,#4f46e5_48%,#7c3aed_100%)] dark:bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-5 py-3 text-xs font-bold text-white dark:text-[#1a2231] shadow transition hover:scale-[1.02]"
+                        class="btn-primary mt-4 inline-flex w-full items-center justify-center gap-2 min-h-[44px] rounded-full px-5 py-3 text-xs font-bold text-white shadow transition hover:scale-[1.02]"
                     >
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         Schedule 30-Min Strategy Call
                     </a>
                 </div>
 
-                <div class="db-antigravity-card rounded-3xl border border-slate-200 dark:border-[#b8c9e633] bg-white dark:bg-[#27374dde] p-6 sm:p-8 shadow-xl">
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Quick Access</h3>
-                    <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">Explore more projects and technical work by our founder Ashish Gupta.</p>
-                    <a href="https://ashishgupta.dev" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-1.5 min-h-[44px] py-1 text-sm font-bold text-sky-600 dark:text-[#c8d6ff] hover:text-sky-700 dark:hover:text-white transition-colors">
+                <div class="db-antigravity-card rounded-3xl border border-border bg-card text-card-foreground p-6 sm:p-8 shadow-xl">
+                    <h3 class="text-xl font-bold text-card-foreground">Quick Access</h3>
+                    <p class="mt-3 text-sm text-muted-foreground">Explore more projects and technical work by our founder Ashish Gupta.</p>
+                    <a href="https://ashishgupta.dev" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-1.5 min-h-[44px] py-1 text-sm font-bold text-sky-600 dark:text-sky-400 hover:underline transition-colors">
                         View Founder Portfolio (ashishgupta.dev)
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     </a>

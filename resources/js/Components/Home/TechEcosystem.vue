@@ -14,11 +14,11 @@ const techStack = [
 <template>
     <section class="mt-20 sm:mt-24" data-reveal>
         <div class="text-center max-w-3xl mx-auto">
-            <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-[#9dc5ff] font-semibold">Technology Matrix</p>
-            <h2 class="mt-3 text-2xl font-black text-[var(--db-text)] sm:text-3xl md:text-4xl">
+            <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400 font-semibold">Technology Matrix</p>
+            <h2 class="mt-3 text-2xl font-black text-foreground sm:text-3xl md:text-4xl">
                 Engineered with Modern, Battle-Tested Tools
             </h2>
-            <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">
+            <p class="mt-3 text-sm text-muted-foreground">
                 We select technologies that maximize developer velocity, ensure sub-100ms response times, and reduce long-term maintenance overhead.
             </p>
         </div>
@@ -28,16 +28,16 @@ const techStack = [
                 v-for="tech in techStack"
                 :key="tech.name"
                 data-stagger-item
-                class="db-antigravity-card rounded-2xl border border-slate-200 dark:border-[#b8c9e633] bg-white dark:bg-[#27374dcb] p-5 shadow-sm flex flex-col justify-between"
+                class="db-antigravity-card rounded-2xl border border-border bg-card text-card-foreground p-5 shadow-sm flex flex-col justify-between"
             >
                 <div>
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-sky-600 dark:text-[#8fc3ff]">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
                         {{ tech.category }}
                     </span>
-                    <h3 class="mt-1.5 text-base font-bold text-slate-900 dark:text-white">
+                    <h3 class="mt-1.5 text-base font-bold text-card-foreground">
                         {{ tech.name }}
                     </h3>
-                    <p class="mt-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p class="mt-2 text-xs text-muted-foreground leading-relaxed">
                         {{ tech.desc }}
                     </p>
                 </div>

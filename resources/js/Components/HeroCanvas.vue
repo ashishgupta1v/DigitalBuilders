@@ -7,7 +7,7 @@ const props = withDefaults(
         isDarkMode?: boolean;
     }>(),
     {
-        isDarkMode: true,
+        isDarkMode: false,
     },
 );
 
@@ -213,6 +213,16 @@ function updatePhysics() {
 let clock = 0;
 function animate() {
     if (!renderer || !scene || !camera) return;
+
+    // Respect prefers-reduced-motion
+    const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+        // Render a single crisp static frame and return
+        renderer.render(scene, camera);
+        return;
+    }
+
     animFrameId = requestAnimationFrame(animate);
 
     clock += 0.01;

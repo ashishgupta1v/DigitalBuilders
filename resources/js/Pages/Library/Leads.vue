@@ -214,14 +214,14 @@ async function addNote() {
                             <button
                                 @click="viewMode = 'kanban'"
                                 class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition"
-                                :class="viewMode === 'kanban' ? 'bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff)] text-[#1a2231]' : 'text-slate-400 hover:text-white'"
+                                :class="viewMode === 'kanban' ? 'btn-primary text-white shadow-sm' : 'text-slate-400 hover:text-white'"
                             >
                                 📊 Kanban Pipeline
                             </button>
                             <button
                                 @click="viewMode = 'table'"
                                 class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition"
-                                :class="viewMode === 'table' ? 'bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff)] text-[#1a2231]' : 'text-slate-400 hover:text-white'"
+                                :class="viewMode === 'table' ? 'btn-primary text-white shadow-sm' : 'text-slate-400 hover:text-white'"
                             >
                                 📋 Tabular Vault
                             </button>
@@ -534,7 +534,7 @@ async function addNote() {
                             <button
                                 type="submit"
                                 :disabled="isSubmittingNote || !newNoteText.trim()"
-                                class="w-full rounded-full bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff)] py-2 text-xs font-bold text-[#1a2231] hover:brightness-110 disabled:opacity-50"
+                                class="btn-primary w-full rounded-full py-2 text-xs font-bold text-white hover:scale-[1.01] disabled:opacity-50"
                             >
                                 {{ isSubmittingNote ? 'Saving Note...' : 'Post Internal Note' }}
                             </button>

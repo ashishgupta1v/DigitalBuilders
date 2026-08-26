@@ -242,14 +242,14 @@
         <script>
             (function() {
                 var theme = localStorage.getItem('db-theme');
-                if (theme === 'light') {
-                    document.documentElement.setAttribute('data-theme', 'light');
-                    document.documentElement.classList.remove('dark');
-                    document.documentElement.classList.add('light');
-                } else {
+                if (theme === 'dark') {
                     document.documentElement.removeAttribute('data-theme');
                     document.documentElement.classList.add('dark');
                     document.documentElement.classList.remove('light');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
                 }
 
                 // Register service worker if supported

@@ -88,7 +88,7 @@ function scrollTo(index: number) {
 }
 
 function startAutoPlay() {
-    const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
     stopAutoPlay();
@@ -138,7 +138,7 @@ async function fetchTestimonials() {
 <template>
     <section
         aria-label="Client Testimonials and Social Proof"
-        class="db-mini rounded-3xl border border-[#b8c9e633] bg-[#27374dcb] p-6 sm:p-8 lg:p-10 shadow-[0_20px_50px_rgba(10,16,24,0.3)]"
+        class="db-mini rounded-3xl border border-border bg-card text-card-foreground p-6 sm:p-8 lg:p-10 shadow-xl"
         @mouseenter="stopAutoPlay"
         @mouseleave="startAutoPlay"
     >
@@ -146,8 +146,8 @@ async function fetchTestimonials() {
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <span class="db-chip">Verified Social Proof</span>
-                <h2 class="mt-3 text-2xl font-black text-white sm:text-3xl">What Digital Leaders Say</h2>
-                <p class="mt-1 text-sm text-slate-300">Empirical feedback from business founders & tech executives.</p>
+                <h2 class="mt-3 text-2xl font-black text-card-foreground sm:text-3xl">What Digital Leaders Say</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Empirical feedback from business founders & tech executives.</p>
             </div>
 
             <!-- Controls (44px tap targets) -->
@@ -155,7 +155,7 @@ async function fetchTestimonials() {
                 <button
                     type="button"
                     @click="scrollPrev"
-                    class="flex h-11 w-11 min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center rounded-full border border-[#b8c9e633] text-slate-300 transition hover:border-[#9ba7ff] hover:text-white focus-visible:ring-2 focus-visible:ring-sky-400"
+                    class="flex h-11 w-11 min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center rounded-full border border-border text-muted-foreground transition hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary"
                     aria-label="Previous testimonial slide"
                 >
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
@@ -163,7 +163,7 @@ async function fetchTestimonials() {
                 <button
                     type="button"
                     @click="scrollNext"
-                    class="flex h-11 w-11 min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center rounded-full border border-[#b8c9e633] text-slate-300 transition hover:border-[#9ba7ff] hover:text-white focus-visible:ring-2 focus-visible:ring-sky-400"
+                    class="flex h-11 w-11 min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center rounded-full border border-border text-muted-foreground transition hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary"
                     aria-label="Next testimonial slide"
                 >
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -181,42 +181,42 @@ async function fetchTestimonials() {
                 >
                     <!-- Metric Chip + Rating -->
                     <div class="flex flex-wrap items-center justify-between gap-3">
-                        <div class="flex items-center gap-1 text-amber-400 text-sm" aria-label="5 star rating">
+                        <div class="flex items-center gap-1 text-amber-500 text-sm" aria-label="5 star rating">
                             <span v-for="star in 5" :key="star">★</span>
                         </div>
                         <span
                             v-if="item.metric_highlight"
-                            class="inline-flex items-center gap-1.5 rounded-full border border-[#c593ff44] bg-[#c593ff18] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#d8c3ff]"
+                            class="inline-flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-purple-900 dark:text-purple-300"
                         >
-                            <svg class="h-3.5 w-3.5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                            <svg class="h-3.5 w-3.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
                             Impact: {{ item.metric_highlight }}
                         </span>
                     </div>
 
                     <!-- Quote Content -->
-                    <blockquote class="text-base italic leading-relaxed text-slate-100 sm:text-lg">
+                    <blockquote class="text-base italic leading-relaxed text-card-foreground sm:text-lg">
                         "{{ item.content }}"
                     </blockquote>
 
                     <!-- Author Info -->
-                    <div class="flex items-center justify-between border-t border-[#b8c9e622] pt-4">
+                    <div class="flex items-center justify-between border-t border-border pt-4">
                         <div class="flex items-center gap-3">
                             <img
                                 v-if="item.avatar"
                                 :src="item.avatar"
                                 :alt="item.client_name"
-                                class="h-12 w-12 rounded-full object-cover border border-[#9ba7ff44]"
+                                class="h-12 w-12 rounded-full object-cover border border-border"
                                 loading="lazy"
                                 decoding="async"
                                 width="48"
                                 height="48"
                             />
                             <div>
-                                <p class="text-sm font-bold text-white">{{ item.client_name }}</p>
-                                <p class="text-xs text-slate-400">{{ item.role }} · <span class="text-[#b7d3ff]">{{ item.company }}</span></p>
+                                <p class="text-sm font-bold text-card-foreground">{{ item.client_name }}</p>
+                                <p class="text-xs text-muted-foreground">{{ item.role }} · <span class="text-primary font-medium">{{ item.company }}</span></p>
                             </div>
                         </div>
-                        <span class="hidden text-xs text-slate-400 sm:inline-block">
+                        <span class="hidden text-xs text-muted-foreground sm:inline-block">
                             Project: {{ item.project_type }}
                         </span>
                     </div>
@@ -231,12 +231,12 @@ async function fetchTestimonials() {
                 :key="idx"
                 type="button"
                 @click="scrollTo(idx)"
-                class="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-400"
+                class="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-primary"
                 :aria-label="`Go to slide ${idx + 1}`"
             >
                 <span
                     class="h-2.5 rounded-full transition-all"
-                    :class="selectedIndex === idx ? 'w-8 bg-[#9ba7ff]' : 'w-2.5 bg-[#b8c9e644] hover:bg-slate-400'"
+                    :class="selectedIndex === idx ? 'w-8 bg-primary' : 'w-2.5 bg-muted-foreground/30 hover:bg-muted-foreground/60'"
                 />
             </button>
         </div>

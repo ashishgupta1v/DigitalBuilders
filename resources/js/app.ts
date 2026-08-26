@@ -45,14 +45,14 @@ const updateScrollProgress = () => {
 
 // Theme persistence — apply before first paint to avoid flash
 const savedTheme = typeof localStorage !== 'undefined' ? localStorage.getItem('db-theme') : null;
-if (savedTheme === 'light') {
-    document.documentElement.setAttribute('data-theme', 'light');
-    document.documentElement.classList.remove('dark');
-    document.documentElement.classList.add('light');
-} else {
+if (savedTheme === 'dark') {
     document.documentElement.removeAttribute('data-theme');
     document.documentElement.classList.add('dark');
     document.documentElement.classList.remove('light');
+} else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.add('light');
 }
 
 if (typeof document !== 'undefined') {

@@ -16,10 +16,10 @@ defineProps<{
     <section id="services" class="mt-20 sm:mt-24" data-reveal>
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
-                <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-[#9dc5ff] font-semibold">Our Services</p>
-                <h2 class="mt-3 text-2xl font-black text-[var(--db-text)] sm:text-3xl md:text-4xl">Complete Digital Solutions for Growing Brands</h2>
+                <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400 font-semibold">Our Services</p>
+                <h2 class="mt-3 text-2xl font-black text-foreground sm:text-3xl md:text-4xl">Complete Digital Solutions for Growing Brands</h2>
             </div>
-            <Link href="/estimator" class="rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-2.5 min-h-[44px] text-xs font-bold text-sky-600 dark:text-sky-300 hover:bg-sky-500/20 transition-all inline-flex items-center gap-1.5 self-start md:self-auto">
+            <Link href="/estimator" class="rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-2.5 min-h-[44px] text-xs font-bold text-sky-600 dark:text-sky-400 hover:bg-sky-500/20 transition-all inline-flex items-center gap-1.5 self-start md:self-auto">
                 <span>Scope Your Project</span>
                 <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </Link>
@@ -30,7 +30,7 @@ defineProps<{
                 v-for="service in services"
                 :key="service.title"
                 data-stagger-item
-                class="db-antigravity-card rounded-2xl border border-[#b8c9e633] bg-[#27374dcb] p-6 flex flex-col justify-between"
+                class="db-antigravity-card rounded-2xl border border-border bg-card text-card-foreground p-6 flex flex-col justify-between shadow-sm"
             >
                 <div>
                     <div class="h-11 w-11 mb-4 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center font-bold">
@@ -41,10 +41,10 @@ defineProps<{
                         <svg v-else-if="service.link.includes('erp-crm')" class="h-6 w-6 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
                         <svg v-else class="h-6 w-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                     </div>
-                    <h3 class="text-lg font-bold text-[var(--db-text)]">{{ service.title }}</h3>
-                    <p class="mt-2.5 text-sm leading-relaxed text-slate-300">{{ service.summary }}</p>
+                    <h3 class="text-lg font-bold text-card-foreground">{{ service.title }}</h3>
+                    <p class="mt-2.5 text-sm leading-relaxed text-muted-foreground">{{ service.summary }}</p>
                 </div>
-                <Link :href="service.link" class="mt-5 inline-flex items-center gap-1.5 min-h-[44px] py-2 text-xs font-bold text-sky-600 dark:text-[#9ba7ff] hover:text-indigo-600 dark:hover:text-[#c593ff] transition-colors">
+                <Link :href="service.link" class="mt-5 inline-flex items-center gap-1.5 min-h-[44px] py-2 text-xs font-bold text-sky-600 dark:text-sky-400 hover:underline transition-colors">
                     Learn More
                     <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </Link>

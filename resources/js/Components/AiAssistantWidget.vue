@@ -230,15 +230,15 @@ function submitLeadFromChat() {
     <div class="fixed bottom-24 right-6 z-[8000]">
         <button
             @click="toggleWidget"
-            class="relative flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-[#9ba7ff66] bg-[linear-gradient(135deg,#24354a,#1a2636)] shadow-[0_8px_25px_rgba(155,167,255,0.35)] transition-all hover:scale-110"
+            class="relative flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-sky-500/40 bg-card text-foreground shadow-2xl transition-all hover:scale-110"
             :aria-expanded="isOpen"
             aria-label="Open AI Assistant"
         >
             <span v-if="hasUnread" class="absolute -right-1 -top-1 flex h-4 w-4">
-                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#c593ff] opacity-75"></span>
-                <span class="relative inline-flex h-4 w-4 rounded-full bg-[#c593ff]"></span>
+                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-purple-500 opacity-75"></span>
+                <span class="relative inline-flex h-4 w-4 rounded-full bg-purple-500"></span>
             </span>
-            <svg class="h-6 w-6 text-[#9ba7ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-6 w-6 text-sky-600 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4z"/>
             </svg>
         </button>
@@ -255,20 +255,20 @@ function submitLeadFromChat() {
             v-if="isOpen"
             role="dialog"
             aria-label="DigitalBuilders AI Assistant"
-            class="db-ai-widget-panel fixed bottom-24 right-6 z-[8500] flex h-[540px] w-[360px] flex-col rounded-3xl border border-[#b8c9e640] bg-[#1a2534] shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-xl sm:w-[400px]"
+            class="db-ai-widget-panel fixed bottom-24 right-6 z-[8500] flex h-[540px] w-[360px] flex-col rounded-3xl border border-border bg-card text-card-foreground shadow-2xl backdrop-blur-xl sm:w-[400px]"
         >
             <!-- Header -->
-            <div class="flex items-center justify-between border-b border-[#b8c9e622] bg-[#223145] px-5 py-4 rounded-t-3xl">
+            <div class="flex items-center justify-between border-b border-border bg-secondary/80 px-5 py-4 rounded-t-3xl">
                 <div class="flex items-center gap-3">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-full bg-[linear-gradient(95deg,#7ac4ff,#c593ff)] text-xs font-black text-[#1a2231]">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-full btn-primary text-xs font-black text-white">
                         AI
                     </div>
                     <div>
-                        <h4 class="text-sm font-bold text-white">DigitalBuilders AI</h4>
-                        <p class="text-[11px] text-emerald-400">● Active Assistant</p>
+                        <h4 class="text-sm font-bold text-card-foreground">DigitalBuilders AI</h4>
+                        <p class="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">● Active Assistant</p>
                     </div>
                 </div>
-                <button @click="isOpen = false" aria-label="Close AI Assistant" class="cursor-pointer text-slate-400 hover:text-white">✕</button>
+                <button @click="isOpen = false" aria-label="Close AI Assistant" class="cursor-pointer text-muted-foreground hover:text-foreground">✕</button>
             </div>
 
             <!-- Messages Area -->
@@ -282,8 +282,8 @@ function submitLeadFromChat() {
                     <div
                         class="max-w-[85%] rounded-2xl px-4 py-2.5 leading-relaxed whitespace-pre-line"
                         :class="msg.sender === 'user'
-                            ? 'bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff)] text-[#1a2231] font-medium'
-                            : 'border border-[#b8c9e626] bg-[#243449] text-slate-200'"
+                            ? 'btn-primary text-white font-medium'
+                            : 'border border-border bg-secondary/70 text-card-foreground'"
                     >
                         {{ msg.text }}
                     </div>
@@ -294,7 +294,7 @@ function submitLeadFromChat() {
                             v-for="opt in msg.options"
                             :key="opt.action"
                             @click="handleOptionClick(opt.action, opt.label)"
-                            class="cursor-pointer rounded-full border border-[#9ba7ff44] bg-[#27374d80] px-3 py-1.5 text-[11px] font-semibold text-[#b7d3ff] transition hover:border-[#9ba7ff] hover:bg-[#2d3f57] hover:text-white"
+                            class="cursor-pointer rounded-full border border-border bg-secondary px-3 py-1.5 text-[11px] font-semibold text-secondary-foreground transition hover:bg-secondary/80 hover:text-foreground"
                         >
                             {{ opt.label }}
                         </button>
@@ -302,18 +302,18 @@ function submitLeadFromChat() {
                 </div>
 
                 <!-- Thinking indicator -->
-                <div v-if="isThinking" class="flex items-center gap-1.5 text-slate-400 text-xs py-1">
-                    <span class="h-2 w-2 rounded-full bg-[#9ba7ff] animate-ping"></span>
+                <div v-if="isThinking" class="flex items-center gap-1.5 text-muted-foreground text-xs py-1">
+                    <span class="h-2 w-2 rounded-full bg-sky-500 animate-ping"></span>
                     <span>DigitalBuilders AI is thinking...</span>
                 </div>
 
                 <!-- Embedded Lead Capture Form inside Chat -->
-                <div v-if="showLeadCapture" class="rounded-2xl border border-[#c593ff44] bg-[#27263c] p-4 text-xs space-y-2.5">
-                    <p class="font-bold text-white">Quick Discovery Intake</p>
-                    <input v-model="leadForm.name" type="text" placeholder="Your Name *" aria-label="Your Name" class="w-full rounded-xl border border-[#b8c9e633] bg-[#1a2534] px-3 py-2 text-white placeholder:text-slate-500 focus:outline-none" />
-                    <input v-model="leadForm.email" type="email" placeholder="Corporate Email *" aria-label="Corporate Email" class="w-full rounded-xl border border-[#b8c9e633] bg-[#1a2534] px-3 py-2 text-white placeholder:text-slate-500 focus:outline-none" />
-                    <input v-model="leadForm.phone" type="text" placeholder="Phone Number *" aria-label="Phone Number" class="w-full rounded-xl border border-[#b8c9e633] bg-[#1a2534] px-3 py-2 text-white placeholder:text-slate-500 focus:outline-none" />
-                    <select v-model="leadForm.project_type" aria-label="Project Type" class="w-full rounded-xl border border-[#b8c9e633] bg-[#1a2534] px-3 py-2 text-white focus:outline-none">
+                <div v-if="showLeadCapture" class="rounded-2xl border border-purple-500/30 bg-purple-500/10 p-4 text-xs space-y-2.5">
+                    <p class="font-bold text-card-foreground">Quick Discovery Intake</p>
+                    <input v-model="leadForm.name" type="text" placeholder="Your Name *" aria-label="Your Name" class="w-full rounded-xl border border-border bg-background px-3 py-2 text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none" />
+                    <input v-model="leadForm.email" type="email" placeholder="Corporate Email *" aria-label="Corporate Email" class="w-full rounded-xl border border-border bg-background px-3 py-2 text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none" />
+                    <input v-model="leadForm.phone" type="text" placeholder="Phone Number *" aria-label="Phone Number" class="w-full rounded-xl border border-border bg-background px-3 py-2 text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none" />
+                    <select v-model="leadForm.project_type" aria-label="Project Type" class="w-full rounded-xl border border-border bg-background px-3 py-2 text-foreground focus:ring-2 focus:ring-primary focus:outline-none">
                         <option value="web_app">Web Application</option>
                         <option value="mobile_app">Mobile App</option>
                         <option value="ai_solutions">AI Solution</option>
@@ -323,7 +323,7 @@ function submitLeadFromChat() {
                     <button
                         @click="submitLeadFromChat"
                         :disabled="leadForm.processing"
-                        class="w-full cursor-pointer rounded-full bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff,#c593ff)] py-2 font-bold text-[#1a2231] hover:brightness-110 disabled:opacity-50"
+                        class="btn-primary w-full cursor-pointer rounded-full py-2 font-bold text-white hover:scale-[1.01] disabled:opacity-50"
                     >
                         {{ leadForm.processing ? 'Submitting...' : 'Submit Inquiry' }}
                     </button>
@@ -331,20 +331,20 @@ function submitLeadFromChat() {
             </div>
 
             <!-- Freeform Input Bar -->
-            <div class="border-t border-[#b8c9e622] bg-[#17212d] p-2.5 rounded-b-3xl">
+            <div class="border-t border-border bg-secondary/40 p-2.5 rounded-b-3xl">
                 <form @submit.prevent="sendCustomMessage" class="flex items-center gap-2">
                     <input
                         v-model="customInput"
                         type="text"
                         placeholder="Ask AI anything about your project..."
                         aria-label="Chat input message"
-                        class="flex-1 rounded-xl border border-[#b8c9e633] bg-[#1a2534] px-3.5 py-2 text-xs text-white placeholder:text-slate-400 focus:border-[#9ba7ff] focus:outline-none"
+                        class="flex-1 rounded-xl border border-border bg-background px-3.5 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:outline-none"
                     />
                     <button
                         type="submit"
                         :disabled="!customInput.trim() || isThinking"
                         aria-label="Send message"
-                        class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl bg-[linear-gradient(95deg,#7ac4ff,#9ba7ff)] text-[#1a2231] transition hover:brightness-110 disabled:opacity-40"
+                        class="btn-primary flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl text-white transition hover:scale-105 disabled:opacity-40"
                     >
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </button>

@@ -23,6 +23,8 @@ class PricingPageTest extends TestCase
 
         $content = file_get_contents($filePath);
         $this->assertStringContainsString('India Price Book', $content);
+        $this->assertStringContainsString('₹19,999', $content);
+        $this->assertStringContainsString('₹79,000', $content);
         $this->assertStringContainsString('₹99,000', $content);
         $this->assertStringContainsString('₹1,79,000', $content);
     }

@@ -45,7 +45,7 @@ onBeforeUnmount(() => {
             v-if="isVisible"
             role="region"
             aria-label="Quick mobile contact actions"
-            class="fixed bottom-0 left-0 right-0 z-40 block md:hidden border-t border-slate-200/20 dark:border-white/10 bg-white/95 dark:bg-[#0d1424]/95 backdrop-blur-xl px-4 py-3 shadow-[0_-10px_30px_rgba(0,0,0,0.2)] pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+            class="fixed bottom-0 left-0 right-0 z-40 block md:hidden border-t border-border bg-card/95 backdrop-blur-xl px-4 py-3 shadow-[0_-10px_30px_rgba(0,0,0,0.2)] pb-[max(0.75rem,env(safe-area-inset-bottom))]"
         >
             <div class="mx-auto flex max-w-lg items-center justify-between gap-3">
                 <!-- Direct WhatsApp Fast Action -->
@@ -66,7 +66,7 @@ onBeforeUnmount(() => {
                 <a
                     href="#contact"
                     @click="onEstimateClick"
-                    class="flex flex-1 items-center justify-center gap-1.5 rounded-2xl bg-[linear-gradient(95deg,#0284c7_0%,#4f46e5_48%,#7c3aed_100%)] dark:bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-4 py-3 min-h-[46px] text-xs font-bold text-white dark:text-[#1a2231] shadow-[0_4px_15px_rgba(2,132,199,0.25)] transition-transform active:scale-95 text-center"
+                    class="btn-primary flex flex-1 items-center justify-center gap-1.5 rounded-2xl px-4 py-3 min-h-[46px] text-xs font-bold text-white shadow-[0_4px_15px_rgba(2,132,199,0.25)] transition-transform active:scale-95 text-center"
                 >
                     <span>Get Free Quote &rarr;</span>
                 </a>

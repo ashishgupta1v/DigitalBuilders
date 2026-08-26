@@ -31,20 +31,20 @@ const faqs = [
 
 <template>
     <section id="faq" class="mt-20 sm:mt-24" data-reveal>
-        <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-[#9dc5ff] font-semibold">Common Questions</p>
-        <h2 class="mt-3 text-2xl font-black text-slate-900 dark:text-white sm:text-3xl md:text-4xl">Frequently Asked Questions</h2>
+        <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400 font-semibold">Common Questions</p>
+        <h2 class="mt-3 text-2xl font-black text-foreground sm:text-3xl md:text-4xl">Frequently Asked Questions</h2>
         <div v-auto-animate class="mt-8 space-y-3" data-stagger>
             <details
                 v-for="faq in faqs"
                 :key="faq.q"
                 data-stagger-item
-                class="group rounded-2xl border border-slate-200 dark:border-[#b8c9e633] bg-white dark:bg-[#1a2534] overflow-hidden shadow-sm"
+                class="group rounded-2xl border border-border bg-card overflow-hidden shadow-sm"
             >
-                <summary class="flex cursor-pointer items-center justify-between gap-4 p-5 text-sm font-semibold text-slate-900 dark:text-white hover:text-sky-600 dark:hover:text-[#b7d3ff] transition-colors list-none">
+                <summary class="flex cursor-pointer items-center justify-between gap-4 p-5 text-sm font-semibold text-card-foreground hover:text-sky-600 dark:hover:text-sky-400 transition-colors list-none">
                     {{ faq.q }}
-                    <svg class="h-4 w-4 shrink-0 text-sky-600 dark:text-[#9dc5ff] transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    <svg class="h-4 w-4 shrink-0 text-sky-600 dark:text-sky-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 </summary>
-                <div class="border-t border-slate-100 dark:border-[#b8c9e622] px-5 pb-5 pt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                <div class="border-t border-border px-5 pb-5 pt-4 text-sm leading-relaxed text-muted-foreground">
                     {{ faq.a }}
                 </div>
             </details>

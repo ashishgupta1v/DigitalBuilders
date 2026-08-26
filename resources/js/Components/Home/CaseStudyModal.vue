@@ -74,12 +74,12 @@ onBeforeUnmount(() => {
                 <div
                     ref="modalContainer"
                     tabindex="-1"
-                    class="relative w-full max-w-3xl rounded-3xl border border-slate-200 dark:border-[#b8c9e640] bg-white dark:bg-[#182332] p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto outline-none"
+                    class="relative w-full max-w-3xl rounded-3xl border border-border bg-card text-card-foreground p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto outline-none"
                 >
                     <!-- Close button -->
                     <button
                         @click="emit('close')"
-                        class="absolute top-5 right-5 flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/20 transition-colors cursor-pointer"
+                        class="absolute top-5 right-5 flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                         aria-label="Close case study preview modal"
                     >
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -88,23 +88,23 @@ onBeforeUnmount(() => {
                     <!-- Header -->
                     <div class="pr-10">
                         <div class="flex items-center gap-2">
-                            <span class="rounded-full bg-sky-500/15 border border-sky-500/30 px-3 py-1 text-xs font-bold text-sky-600 dark:text-sky-300">
+                            <span class="rounded-full bg-sky-500/15 border border-sky-500/30 px-3 py-1 text-xs font-bold text-sky-800 dark:text-sky-300">
                                 {{ study.categoryLabel }}
                             </span>
-                            <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                            <span class="text-xs font-bold text-emerald-800 dark:text-emerald-400">
                                 ⚡ {{ study.metricBadge }}
                             </span>
                         </div>
-                        <h2 id="modal-case-study-title" class="mt-3 text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+                        <h2 id="modal-case-study-title" class="mt-3 text-2xl sm:text-3xl font-black text-card-foreground">
                             {{ study.client }}
                         </h2>
-                        <p class="mt-2 text-sm sm:text-base text-slate-600 dark:text-slate-300">
+                        <p class="mt-2 text-sm sm:text-base text-muted-foreground">
                             {{ study.tldr }}
                         </p>
                     </div>
 
                     <!-- Live Snapshot Image Preview -->
-                    <div class="mt-5 relative aspect-video w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10 shadow-lg bg-slate-950">
+                    <div class="mt-5 relative aspect-video w-full overflow-hidden rounded-2xl border border-border shadow-lg bg-slate-950">
                         <img
                             :src="study.image"
                             :alt="`${study.client} production interface preview`"
@@ -120,71 +120,71 @@ onBeforeUnmount(() => {
                         <span
                             v-for="tech in study.techStack"
                             :key="tech"
-                            class="rounded-lg bg-slate-100 dark:bg-[#1f2d3f] border border-slate-200 dark:border-white/10 px-3 py-1 text-xs font-medium text-slate-700 dark:text-slate-200"
+                            class="rounded-lg bg-secondary border border-border px-3 py-1 text-xs font-medium text-secondary-foreground"
                         >
                             {{ tech }}
                         </span>
                     </div>
 
                     <!-- Problem & Challenge -->
-                    <div class="mt-6 space-y-3 rounded-2xl bg-slate-50 dark:bg-[#141e2b] p-4 text-sm text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-white/5">
+                    <div class="mt-6 space-y-3 rounded-2xl bg-secondary/50 p-4 text-sm text-card-foreground border border-border">
                         <div>
-                            <strong class="text-slate-900 dark:text-white font-bold">The Problem: </strong>
+                            <strong class="text-foreground font-bold">The Problem: </strong>
                             {{ study.problem }}
                         </div>
                         <div>
-                            <strong class="text-slate-900 dark:text-white font-bold">The Challenge: </strong>
+                            <strong class="text-foreground font-bold">The Challenge: </strong>
                             {{ study.challenge }}
                         </div>
                     </div>
 
                     <!-- Architecture Actions -->
                     <div class="mt-6">
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">Our Architectural Solution</h3>
-                        <ul class="mt-3 space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400">Our Architectural Solution</h3>
+                        <ul class="mt-3 space-y-2 text-sm text-muted-foreground">
                             <li
                                 v-for="(action, idx) in study.architectureActions"
                                 :key="idx"
                                 class="flex items-start gap-2.5"
                             >
                                 <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-sky-500" />
-                                <span>{{ action }}</span>
+                                <span class="text-card-foreground/90">{{ action }}</span>
                             </li>
                         </ul>
                     </div>
 
                     <!-- Business Impact -->
                     <div class="mt-6">
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Measurable Business Impact</h3>
-                        <ul class="mt-3 space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">Measurable Business Impact</h3>
+                        <ul class="mt-3 space-y-2 text-sm text-muted-foreground">
                             <li
                                 v-for="(impact, idx) in study.businessImpact"
                                 :key="idx"
                                 class="flex items-start gap-2.5"
                             >
                                 <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-emerald-500" />
-                                <span>{{ impact }}</span>
+                                <span class="text-card-foreground/90">{{ impact }}</span>
                             </li>
                         </ul>
                     </div>
 
                     <!-- Client Quote -->
-                    <blockquote class="mt-6 rounded-2xl border border-purple-200 dark:border-purple-900/50 bg-purple-50 dark:bg-[#201830] p-4 text-sm text-purple-900 dark:text-purple-200 italic">
+                    <blockquote class="mt-6 rounded-2xl border border-purple-500/30 bg-purple-500/10 p-4 text-sm text-purple-950 dark:text-purple-200 italic">
                         "{{ study.quote }}"
-                        <footer class="mt-2 text-xs font-bold text-purple-700 dark:text-purple-300 not-italic">
+                        <footer class="mt-2 text-xs font-bold text-purple-800 dark:text-purple-300 not-italic">
                             — {{ study.quoteAuthor }}
                         </footer>
                     </blockquote>
 
                     <!-- Action Buttons -->
-                    <div class="mt-8 flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-200 dark:border-white/10">
+                    <div class="mt-8 flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-border">
                         <div class="flex flex-wrap items-center gap-2">
                             <a
                                 v-if="study.liveUrl"
                                 :href="study.liveUrl"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(95deg,#0284c7_0%,#4f46e5_100%)] dark:bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_100%)] px-5 py-2.5 text-xs font-bold text-white dark:text-[#1a2231] shadow transition hover:scale-105"
+                                class="btn-primary inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold text-white shadow transition hover:scale-105"
                             >
                                 <span>Visit Live Application</span>
                                 <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
@@ -192,7 +192,7 @@ onBeforeUnmount(() => {
                             <Link
                                 :href="`/portfolio/${study.portfolioSlug}`"
                                 @click="emit('close')"
-                                class="inline-flex items-center gap-1.5 rounded-full border border-slate-300 dark:border-white/20 bg-slate-100 dark:bg-white/5 px-4 py-2.5 text-xs font-bold text-slate-800 dark:text-white transition hover:bg-slate-200 dark:hover:bg-white/10"
+                                class="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-4 py-2.5 text-xs font-bold text-secondary-foreground transition hover:bg-secondary/80"
                             >
                                 <span>Open Dedicated Case Study Page</span>
                                 <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -200,7 +200,7 @@ onBeforeUnmount(() => {
                         </div>
                         <button
                             @click="emit('close')"
-                            class="text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors cursor-pointer"
+                            class="text-xs font-bold text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                         >
                             Close Preview
                         </button>
