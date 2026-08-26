@@ -39,6 +39,17 @@ class PricingPageTest extends TestCase
         $this->assertStringContainsString('Gulf', $content);
     }
 
+    public function test_brochures_accessible_via_http_route(): void
+    {
+        $resInr = $this->get('/downloads/digitalbuilders-pricing-india-inr.html');
+        $resInr->assertStatus(200);
+        $resInr->assertSee('India Price Book');
+
+        $resUsd = $this->get('/downloads/digitalbuilders-pricing-international-usd.html');
+        $resUsd->assertStatus(200);
+        $resUsd->assertSee('International Price Book');
+    }
+
     public function test_sitemap_contains_pricing_page(): void
     {
         $response = $this->get('/sitemap.xml');

@@ -54,10 +54,20 @@ Route::prefix('portfolio')->name('portfolio.')->group(function () {
     Route::get('/ssknitwear', [PortfolioController::class, 'ssknitwear'])->name('ssknitwear');
 });
 
-// Pricing (Public)
+// Pricing & Rate Card Brochures (Public)
 Route::get('/pricing', function () {
     return Inertia::render('Pricing');
 })->name('pricing.index');
+
+Route::get('/downloads/{file}', function (string $file) {
+    $path = public_path('downloads/' . $file);
+    if (!file_exists($path)) {
+        abort(404);
+    }
+    return response(file_get_contents($path), 200, [
+        'Content-Type' => 'text/html; charset=utf-8',
+    ]);
+})->where('file', '[A-Za-z0-9\-\_\.]+')->name('downloads.show');
 
 // Estimator routes (public)
 Route::get('/estimator', [EstimatorController::class, 'index'])->name('estimator.index');
