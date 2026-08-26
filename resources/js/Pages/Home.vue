@@ -26,9 +26,7 @@ type MotionAnimate = (
 
 const motionAnimate = animate as unknown as MotionAnimate;
 
-defineProps<{
-    canLogin?: boolean;
-}>();
+
 
 const mobileMenuOpen = ref(false);
 const showBackToTop = ref(false);
@@ -239,9 +237,6 @@ onBeforeUnmount(() => {
                         <svg v-if="isDarkMode" class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
                         <svg v-else class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
                     </button>
-                    <Link v-if="canLogin" :href="route('login')" class="hidden rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-muted-foreground transition hover:border-border hover:text-foreground sm:inline-flex">
-                        Log in
-                    </Link>
                     <!-- Mobile hamburger -->
                     <button
                         @click="mobileMenuOpen = !mobileMenuOpen"
@@ -275,11 +270,6 @@ onBeforeUnmount(() => {
                         <a href="#about" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">About</a>
                         <a href="#contact" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Contact</a>
                     </nav>
-                    <div v-if="canLogin" class="mt-4 flex flex-col gap-2 border-t border-border pt-4">
-                        <Link :href="route('login')" class="inline-flex w-full items-center justify-center rounded-full border border-border px-4 py-2 text-xs font-semibold text-muted-foreground transition hover:text-foreground">
-                            Log in
-                        </Link>
-                    </div>
                 </div>
             </Transition>
         </header>

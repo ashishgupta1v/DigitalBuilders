@@ -24,4 +24,13 @@ class SecurityHeadersTest extends TestCase
         $response = $this->get('/register');
         $response->assertStatus(404);
     }
+
+    public function test_auth_and_login_routes_are_disabled(): void
+    {
+        $this->get('/login')->assertStatus(404);
+        $this->post('/login', [])->assertStatus(404);
+        $this->get('/forgot-password')->assertStatus(404);
+        $this->get('/dashboard')->assertStatus(404);
+        $this->get('/profile')->assertStatus(404);
+    }
 }
