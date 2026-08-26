@@ -15,7 +15,8 @@ import { Head, Link } from '@inertiajs/vue3';
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
                 <Link href="/" class="db-gradient-text text-lg font-semibold tracking-wide">DigitalBuilders</Link>
                 <div class="flex items-center gap-4">
-                    <Link href="/" class="text-sm font-medium text-slate-300 hover:text-white">← Back to Home</Link>
+                    <Link href="/pricing" class="text-xs font-semibold text-sky-400 hover:text-sky-300">View Full Price Book</Link>
+                    <Link href="/" class="text-sm font-medium text-slate-300 hover:text-white">← Home</Link>
                     <a href="/#contact" class="hidden rounded-full border border-white/20 px-4 py-2 text-xs font-semibold text-white hover:border-white/50 sm:inline-flex">
                         Contact Sales
                     </a>

@@ -156,12 +156,15 @@ function handleOptionClick(action: string, label: string) {
             messages.value.push({
                 id: Date.now() + 1,
                 sender: 'bot',
-                text: 'Our custom software projects typically start around ₹1,25,000 ($1,500 USD) for MVPs, and scaled enterprise architecture ranges from ₹2,50,000 to ₹5,00,000+. You can use our interactive estimator on this page for an exact breakdown!',
+                text: 'We maintain decoupled regional price books with transparent milestone payments: 🇮🇳 India (Launch tiers starting from ₹99,000) and 🌍 International (starting from $3,500 US/Global & $2,500 Gulf). View our complete price book or customize your scope!',
                 options: [
-                    { label: 'Calculate My Scope Now', action: 'estimator_scroll' },
-                    { label: 'Connect with Lead Architect', action: 'lead_form' },
+                    { label: 'View 2026 Price Book (/pricing)', action: 'pricing_page' },
+                    { label: 'Calculate Scope in Estimator', action: 'estimator_scroll' },
+                    { label: 'Book Discovery Call', action: 'lead_form' },
                 ],
             });
+        } else if (action === 'pricing_page') {
+            window.location.href = '/pricing';
         } else if (action === 'founder') {
             messages.value.push({
                 id: Date.now() + 1,

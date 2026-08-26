@@ -108,12 +108,18 @@ class SitemapController extends Controller
                 'changefreq' => 'weekly',
                 'priority' => '0.9',
             ],
-            // Estimator, Blog Hub & RSS Feed
+            // Estimator, Pricing, Blog Hub & RSS Feed
+            [
+                'loc' => $baseUrl . '/pricing',
+                'lastmod' => $now,
+                'changefreq' => 'weekly',
+                'priority' => '0.9',
+            ],
             [
                 'loc' => $baseUrl . '/estimator',
                 'lastmod' => $now,
                 'changefreq' => 'weekly',
-                'priority' => '0.8',
+                'priority' => '0.85',
             ],
             [
                 'loc' => $baseUrl . '/blog',

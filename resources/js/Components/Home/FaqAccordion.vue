@@ -21,8 +21,8 @@ const faqs = [
         a: 'Every project includes a 30-day post-launch warranty where we fix any bugs at no charge. After that, we offer flexible retainer plans for ongoing feature development, monitoring, and performance optimization.',
     },
     {
-        q: 'How do you handle pricing?',
-        a: 'We offer project-based pricing for well-defined scopes, and time-and-materials for evolving projects. Use our Project Cost Estimator to get a ballpark, then book a free 30-minute strategy session to discuss specifics.',
+        q: 'How do you handle pricing and payment milestones?',
+        a: 'We use decoupled, fixed regional price books with transparent milestone disbursements (₹21k booking -> 40/30/30 milestones in India; 50/50 via Stripe/Wire internationally). No surprise invoices, no currency exchange markups. India builds start at ₹99,000 + GST; International builds start at $3,500 ($2,500 for Gulf). You can explore our complete 2026 Price Book on /pricing or configure custom modules in our /estimator.',
     },
 ] as const;
 </script>

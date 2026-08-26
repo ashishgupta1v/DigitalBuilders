@@ -54,6 +54,11 @@ Route::prefix('portfolio')->name('portfolio.')->group(function () {
     Route::get('/ssknitwear', [PortfolioController::class, 'ssknitwear'])->name('ssknitwear');
 });
 
+// Pricing (Public)
+Route::get('/pricing', function () {
+    return Inertia::render('Pricing');
+})->name('pricing.index');
+
 // Estimator routes (public)
 Route::get('/estimator', [EstimatorController::class, 'index'])->name('estimator.index');
 Route::post('/estimator/submit', [EstimatorController::class, 'submitEstimate'])->middleware('throttle:5,60')->name('estimator.submit');

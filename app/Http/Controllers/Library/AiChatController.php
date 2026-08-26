@@ -31,12 +31,24 @@ Comprehensive Live Portfolio Knowledge:
 8. SportsEntertainmentClub: Cross-platform iOS/Android mobile app. Atomic slot locking eliminating court reservation collisions, digital QR membership passes, and live tournament leaderboards.
 9. Garg Enterprises: Rugged B2B Android ordering app. Offline SQLite draft purchase orders with background sync, dealer credit ledger, and 1-tap GST invoice downloads for 10,000+ SKUs.
 
-Services, Ballpark Timelines & Pricing:
-- Custom Web Applications: 3-6 weeks, starting at ₹1,25,000 INR ($1,500 USD).
-- B2B SaaS Platforms & Custom ERP/CRM: 4-8 weeks, starting at ₹2,50,000 - ₹5,00,000 INR ($3,000 - $6,000 USD).
-- Mobile Apps (iOS + Android): 4-7 weeks, starting at ₹2,00,000 INR ($2,500 USD).
-- Autonomous AI Agents & Voice RAG: 2-4 weeks, starting at ₹1,50,000 INR ($1,800 USD).
-- Interactive Scope Estimator: Available on /estimator.
+Services, Decoupled Regional Price Books (India vs International):
+- Custom Web Applications:
+  • India: Launch ₹99,000 | Growth ₹1,79,000 | Enterprise ₹2,99,000
+  • International (US/Global): Launch $3,500 | Growth $6,500 | Enterprise $11,000 (Gulf: $2,500 / $4,500 / $7,900)
+- AI Voice/Chat Agents & RAG:
+  • India: Launch ₹1,29,000 | Growth ₹2,19,000 | Enterprise ₹3,49,000
+  • International (US/Global): Launch $4,500 | Growth $7,900 | Enterprise $13,000 (Gulf: $3,200 / $5,500 / $9,500)
+- Mobile Apps (iOS & Android):
+  • India: Launch ₹1,49,000 | Growth ₹2,49,000 | Enterprise ₹3,99,000
+  • International (US/Global): Launch $6,000 | Growth $10,000 | Enterprise $16,000 (Gulf: $4,200 / $7,200 / $11,500)
+- SaaS Platforms:
+  • India: Launch ₹2,49,000 | Growth ₹3,99,000 | Enterprise ₹5,99,000
+  • International (US/Global): Launch $9,000 | Growth $14,000 | Enterprise $22,000 (Gulf: $6,500 / $9,900 / $15,500)
+- Custom ERP/CRM Systems:
+  • India: Launch ₹2,99,000 | Growth ₹4,49,000 | Enterprise ₹6,99,000
+  • International (US/Global): Launch $11,000 | Growth $16,500 | Enterprise $26,000 (Gulf: $7,900 / $12,000 / $18,500)
+- Architecture Discovery Sprint: ₹25,000 INR / $750 USD ($500 Gulf) (100% credited to build).
+- Interactive Scope Estimator & Full Price Book: Available on /pricing and /estimator.
 
 Contact & Booking:
 - Email: hello@digitalbuilders.in
@@ -128,12 +140,12 @@ EOT;
 
         // Mobile apps
         if (preg_match('/\b(mobile|android|ios|flutter|react native|app cost|phone app)\b/i', $query)) {
-            return "Our mobile apps (iOS & Android) are engineered using Flutter or React Native with 60 FPS fluid performance and offline-first SQLite synchronization. Typical timeline is 4–7 weeks, starting around ₹2,00,000 ($2,500 USD). Check out our case studies for SportsEntertainmentClub (court slot locking) and Garg Enterprises (offline B2B wholesale ordering)!";
+            return "Our mobile apps (iOS & Android) are engineered using Flutter or React Native with offline-first SQLite sync and sub-100ms API response times. Typical timeline is 3–7 weeks (Launch tier starts at ₹1,49,000 for India / $4,200 Gulf / $6,000 US/Global). Check out our case studies for SportsClub and Garg Enterprises!";
         }
 
         // Pricing, cost, estimate
         if (preg_match('/\b(cost|price|pricing|rates|how much|quote|budget|estimate|investment)\b/i', $query)) {
-            return "Our project investment tiers typically range as follows:\n• Custom Web Apps / MVPs: ₹1,25,000 – ₹2,50,000 ($1,500 – $3,000)\n• High-Scale SaaS / Custom ERP: ₹2,50,000 – ₹5,00,000+ ($3,000 – $6,000+)\n• Mobile Apps: ₹2,00,000 – ₹3,50,000 ($2,500 – $4,200)\n• AI Voice/Chat Workflows: ₹1,50,000 – ₹3,00,000 ($1,800 – $3,500)\n\nYou can use our interactive /estimator for an exact tailored scope!";
+            return "We use decoupled, transparent regional price books (no currency exchange markups):\n• 🇮🇳 India (INR): Web Apps from ₹99k, AI Agents from ₹1.29L, Mobile Apps from ₹1.49L, SaaS from ₹2.49L, ERP/CRM from ₹2.99L\n• 🌍 International (USD): Web Apps from $3,500 ($2,500 Gulf), AI from $4,500, Mobile from $6,000, SaaS from $9,000\n\nView our complete price book on /pricing or configure exact modules on /estimator!";
         }
 
         // Timeline, how long

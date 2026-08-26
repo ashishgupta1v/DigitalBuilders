@@ -220,6 +220,7 @@ onBeforeUnmount(() => {
                 <nav class="hidden items-center gap-1.5 text-sm font-medium md:flex lg:gap-2">
                     <a href="#services" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">Services</a>
                     <a href="#portfolio" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">Portfolio</a>
+                    <Link href="/pricing" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">Pricing</Link>
                     <Link href="/blog" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">Blog</Link>
                     <a href="#about" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">About</a>
                     <a href="#contact" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">Contact</a>
@@ -266,6 +267,7 @@ onBeforeUnmount(() => {
                     <nav class="flex flex-col gap-3 text-sm font-medium">
                         <a href="#services" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Services</a>
                         <a href="#portfolio" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Portfolio</a>
+                        <Link href="/pricing" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Pricing</Link>
                         <Link href="/blog" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Blog</Link>
                         <a href="#about" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">About</a>
                         <a href="#contact" @click="mobileMenuOpen = false" class="text-[var(--db-muted)] transition hover:text-[var(--db-text)]">Contact</a>
@@ -400,9 +402,11 @@ onBeforeUnmount(() => {
                 <div class="mt-8 border-t border-[#b8c9e615] pt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-xs text-slate-500">
                     <p>© {{ new Date().getFullYear() }} DigitalBuilders. All rights reserved.</p>
                     <div class="flex flex-wrap gap-4">
+                        <Link href="/pricing" class="hover:text-slate-300 transition-colors">Pricing</Link>
+                        <Link href="/estimator" class="hover:text-slate-300 transition-colors">Estimator</Link>
+                        <Link href="/blog" class="hover:text-slate-300 transition-colors">Blog</Link>
                         <Link href="/library/privacy-policy" class="hover:text-slate-300 transition-colors">Privacy Policy</Link>
                         <Link href="/library/terms-of-service" class="hover:text-slate-300 transition-colors">Terms of Service</Link>
-                        <Link href="/blog" class="hover:text-slate-300 transition-colors">Blog</Link>
                         <a href="mailto:hello@digitalbuilders.in" class="hover:text-slate-300 transition-colors">hello@digitalbuilders.in</a>
                     </div>
                 </div>

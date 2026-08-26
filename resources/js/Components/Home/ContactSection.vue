@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 
 const page = usePage();
@@ -21,6 +21,24 @@ const form = useForm({
     project_type: 'web_app',
     description: '',
     _hp_company: '',
+});
+
+onMounted(() => {
+    if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        const service = params.get('service');
+        const tier = params.get('tier');
+        const region = params.get('region');
+
+        if (service === 'discovery_sprint') {
+            form.description = `[Architecture Discovery Sprint inquiry · Region: ${region?.toUpperCase() ?? 'INR'}]`;
+        } else if (service && projectTypes.some((p) => p.value === service)) {
+            form.project_type = service;
+            if (tier) {
+                form.description = `[Selected Scope: ${tier.toUpperCase()} Tier · Region: ${region?.toUpperCase() ?? 'INR'}]`;
+            }
+        }
+    }
 });
 
 const submissionError = ref<string | null>(null);

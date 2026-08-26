@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalBuilders — 2026 Architectural Price Book (International Edition · USD)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --accent: #4f46e5;
+            --dark-bg: #0f172a;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --highlight: #f0fdf4;
+            --highlight-border: #86efac;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: var(--text-main);
+            line-height: 1.5;
+            padding: 2.5rem 1.5rem;
+        }
+
+        .document-wrapper {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 1.25rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+            padding: 3rem 2.5rem;
+            position: relative;
+        }
+
+        .no-print-bar {
+            max-width: 960px;
+            margin: 0 auto 1.5rem auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .print-btn {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #ffffff;
+            border: none;
+            padding: 0.65rem 1.4rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+            border-radius: 9999px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+        }
+
+        .print-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
+        }
+
+        .back-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        /* Header */
+        .doc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #0284c7, #4f46e5);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .brand-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: #0f172a;
+        }
+
+        .brand-name span {
+            color: var(--primary);
+        }
+
+        .edition-badge {
+            display: inline-block;
+            background: #f0fdf4;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .doc-meta {
+            text-align: right;
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+        }
+
+        .doc-meta strong {
+            color: var(--text-main);
+            display: block;
+            font-size: 0.875rem;
+        }
+
+        /* Hero intro */
+        .doc-intro {
+            margin-bottom: 2.25rem;
+        }
+
+        .doc-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.85rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: #0f172a;
+            line-height: 1.2;
+        }
+
+        .doc-subtitle {
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 760px;
+        }
+
+        .value-anchor {
+            margin-top: 1rem;
+            display: inline-block;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+            padding: 0.4rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+        }
+
+        /* Section Headings */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 1.5px solid #e2e8f0;
+        }
+
+        .section-header h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+        }
+
+        .section-header span {
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #334155;
+            font-weight: 700;
+            text-align: left;
+            padding: 0.75rem 0.85rem;
+            border: 1px solid var(--border);
+            font-size: 0.775rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        td {
+            padding: 0.85rem 0.85rem;
+            border: 1px solid var(--border);
+            color: #1e293b;
+            vertical-align: middle;
+        }
+
+        tr:nth-child(even) td {
+            background: #fafafa;
+        }
+
+        .service-title {
+            font-weight: 700;
+            color: #0f172a;
+            display: block;
+        }
+
+        .service-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.15rem;
+        }
+
+        .price-val {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #0f172a;
+            white-space: nowrap;
+        }
+
+        .sub-region-price {
+            display: block;
+            font-size: 0.75rem;
+            color: #0369a1;
+            font-weight: 500;
+            margin-top: 0.15rem;
+        }
+
+        .popular-col {
+            background: #f0f9ff !important;
+            border-left: 2px solid var(--primary);
+            border-right: 2px solid var(--primary);
+        }
+
+        .popular-badge {
+            background: #0284c7;
+            color: white;
+            font-size: 0.625rem;
+            font-weight: 700;
+            padding: 0.125rem 0.35rem;
+            border-radius: 4px;
+            margin-left: 0.25rem;
+            text-transform: uppercase;
+        }
+
+        /* Inclusions */
+        .inclusion-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin: 1.25rem 0 2rem 0;
+        }
+
+        .inc-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.85rem;
+            font-size: 0.8125rem;
+        }
+
+        .inc-card strong {
+            display: block;
+            color: #0f172a;
+            margin-bottom: 0.2rem;
+            font-size: 0.85rem;
+        }
+
+        .inc-card p {
+            color: #64748b;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        /* Mechanics Box */
+        .mechanics-box {
+            background: linear-gradient(135deg, #f8fafc, #f0fdf4);
+            border: 1.5px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+        }
+
+        .mech-item strong {
+            display: block;
+            font-size: 0.85rem;
+            color: #14532d;
+            margin-bottom: 0.25rem;
+        }
+
+        .mech-item p {
+            font-size: 0.8125rem;
+            color: #334155;
+            line-height: 1.45;
+        }
+
+        /* Footer */
+        .doc-footer {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+        }
+
+        .contact-cta {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .contact-pill {
+            font-weight: 700;
+            color: #0f172a;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .contact-pill span {
+            color: #0284c7;
+        }
+
+        @media print {
+            body {
+                background: #ffffff;
+                padding: 0;
+            }
+            .no-print-bar {
+                display: none !important;
+            }
+            .document-wrapper {
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            tr {
+                page-break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+            .document-wrapper {
+                padding: 1.5rem 1rem;
+            }
+            .doc-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .doc-meta {
+                text-align: left;
+            }
+            .inclusion-grid, .mechanics-box {
+                grid-template-columns: 1fr;
+            }
+            .doc-footer {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            .contact-cta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print-bar">
+        <a href="/pricing" class="back-link">← Back to Interactive Pricing</a>
+        <button onclick="window.print()" class="print-btn">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/></svg>
+            Print / Save as PDF
+        </button>
+    </div>
+
+    <div class="document-wrapper">
+        <!-- Header -->
+        <header class="doc-header">
+            <div class="brand-logo">
+                <div class="brand-icon">DB</div>
+                <div>
+                    <div class="brand-name">Digital<span>Builders</span></div>
+                    <span class="edition-badge">🌍 International Price Book · 2026-27</span>
+                </div>
+            </div>
+            <div class="doc-meta">
+                <strong>Lead Architect: Ashish Gupta</strong>
+                <span>Direct Offshore Staff Architecture</span>
+                <span>US / EU & Gulf Regional Tracks</span>
+            </div>
+        </header>
+
+        <!-- Intro -->
+        <div class="doc-intro">
+            <h1 class="doc-title">Software & AI Systems Architecture Price Book</h1>
+            <p class="doc-subtitle">
+                Silicon Valley engineering discipline with significant time-zone & economic advantages. Direct communication with staff engineers, enterprise NDA/MSA contracts, and weekly async video demos.
+            </p>
+            <div class="value-anchor">
+                "Anchored against $150+/hr US agencies — premium offshore engineering with zero boilerplate compromises."
+            </div>
+        </div>
+
+        <!-- Section 1: Core Builds -->
+        <div class="section-header">
+            <span>Layer 1</span>
+            <h2>Core Architectural Builds (One-Time All-Inclusive)</h2>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 32%;">Archetype</th>
+                    <th style="width: 22%;">🚀 Launch Tier</th>
+                    <th style="width: 24%;" class="popular-col">📈 Growth Tier <span class="popular-badge">★ Popular</span></th>
+                    <th style="width: 22%;">🏢 Enterprise Tier</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <span class="service-title">Web Application</span>
+                        <span class="service-desc">Custom Portals, Dashboards, Schedulers</span>
+                    </td>
+                    <td>
+                        <span class="price-val">$3,500</span>
+                        <span class="sub-region-price">Gulf: $2,500</span>
+                    </td>
+                    <td class="popular-col">
+                        <span class="price-val">$6,500</span>
+                        <span class="sub-region-price">Gulf: $4,500</span>
+                    </td>
+                    <td>
+                        <span class="price-val">$11,000</span>
+                        <span class="sub-region-price">Gulf: $7,900</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="service-title">AI Voice / Chat Agent</span>
+                        <span class="service-desc">Inbound/Outbound Telephony, RAG Pipelines</span>
+                    </td>
+                    <td>
+                        <span class="price-val">$4,500</span>
+                        <span class="sub-region-price">Gulf: $3,200</span>
+                    </td>
+                    <td class="popular-col">
+                        <span class="price-val">$7,900</span>
+                        <span class="sub-region-price">Gulf: $5,500</span>
+                    </td>
+                    <td>
+                        <span class="price-val">$13,000</span>
+                        <span class="sub-region-price">Gulf: $9,500</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="service-title">Mobile App (iOS & Android)</span>
+                        <span class="service-desc">React Native / Flutter Cross-Platform</span>
+                    </td>
+                    <td>
+                        <span class="price-val">$6,000</span>
+                        <span class="sub-region-price">Gulf: $4,200</span>
+                    </td>
+                    <td class="popular-col">
+                        <span class="price-val">$10,000</span>
+                        <span class="sub-region-price">Gulf: $7,200</span>
+                    </td>
+                    <td>
+                        <span class="price-val">$16,000</span>
+                        <span class="sub-region-price">Gulf: $11,500</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="service-title">SaaS Platform</span>
+                        <span class="service-desc">Multi-Tenant, Billing Engine, Role Hierarchy</span>
+                    </td>
+                    <td>
+                        <span class="price-val">$9,000</span>
+                        <span class="sub-region-price">Gulf: $6,500</span>
+                    </td>
+                    <td class="popular-col">
+                        <span class="price-val">$14,000</span>
+                        <span class="sub-region-price">Gulf: $9,900</span>
+                    </td>
+                    <td>
+                        <span class="price-val">$22,000</span>
+                        <span class="sub-region-price">Gulf: $15,500</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="service-title">Enterprise ERP / CRM</span>
+                        <span class="service-desc">Multi-Warehouse, Custom Workflows, SAP/NetSuite Sync</span>
+                    </td>
+                    <td>
+                        <span class="price-val">$11,000</span>
+                        <span class="sub-region-price">Gulf: $7,900</span>
+                    </td>
+                    <td class="popular-col">
+                        <span class="price-val">$16,500</span>
+                        <span class="sub-region-price">Gulf: $12,000</span>
+                    </td>
+                    <td>
+                        <span class="price-val">$26,000</span>
+                        <span class="sub-region-price">Gulf: $18,500</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Included In Every Build -->
+        <div class="inclusion-grid">
+            <div class="inc-card">
+                <strong>🔒 Auth & Multi-Tenant RBAC</strong>
+                <p>SSO, OAuth2, granular role permissions, and token revocation.</p>
+            </div>
+            <div class="inc-card">
+                <strong>⚡ Clean Hexagonal Architecture</strong>
+                <p>High-throughput architecture with complete automated test coverage.</p>
+            </div>
+            <div class="inc-card">
+                <strong>🛡️ 30-Day Post-Launch SLA Warranty</strong>
+                <p>Dedicated post-launch bug triage & stabilization warranty.</p>
+            </div>
+        </div>
+
+        <!-- Section 2: Add-on Modules -->
+        <div class="section-header">
+            <span>Layer 2</span>
+            <h2>À La Carte Add-on Modules</h2>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Module Name</th>
+                    <th>Capabilities & Inclusions</th>
+                    <th style="width: 18%;">US / EU</th>
+                    <th style="width: 18%;">Gulf / ME</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Payments & Subscriptions</strong></td>
+                    <td>Stripe / Paddle / Checkout.com, customer portal & tiered plans</td>
+                    <td class="price-val">+$700</td>
+                    <td class="price-val">+$500</td>
+                </tr>
+                <tr>
+                    <td><strong>Real-time WebSockets & Push</strong></td>
+                    <td>Instant live streams, collaborative editing, push notification triggers</td>
+                    <td class="price-val">+$800</td>
+                    <td class="price-val">+$600</td>
+                </tr>
+                <tr>
+                    <td><strong>AI Copilot / LLM Integration</strong></td>
+                    <td>OpenAI / Claude function calling, embeddings, private document RAG</td>
+                    <td class="price-val">+$1,200</td>
+                    <td class="price-val">+$900</td>
+                </tr>
+                <tr>
+                    <td><strong>Multi-Language (i18n / RTL)</strong></td>
+                    <td>Arabic / English RTL layout, multi-locale localization</td>
+                    <td class="price-val">+$500</td>
+                    <td class="price-val">+$400</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Section 3: Monthly Care Retainers -->
+        <div class="section-header">
+            <span>Layer 3</span>
+            <h2>Ongoing Engineering Care (Monthly Retainers)</h2>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Plan</th>
+                    <th>Coverage & Commitments</th>
+                    <th>US / EU Rate</th>
+                    <th>Gulf Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Basic Care</strong></td>
+                    <td>Server health, security patches, daily backups, 48h SLA</td>
+                    <td class="price-val">$120 / mo</td>
+                    <td class="price-val">$90 / mo</td>
+                </tr>
+                <tr>
+                    <td><strong>Business Care ★</strong></td>
+                    <td>10 hrs feature dev/mo, 99.9% uptime monitor, 12h priority SLA</td>
+                    <td class="price-val popular-col">$350 / mo</td>
+                    <td class="price-val">$250 / mo</td>
+                </tr>
+                <tr>
+                    <td><strong>Enterprise SLA</strong></td>
+                    <td>Dedicated engineer, 24/7 on-call, 1-hour critical response</td>
+                    <td class="price-val">From $850 / mo</td>
+                    <td class="price-val">From $600 / mo</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Closing Mechanics & Trust -->
+        <div class="mechanics-box">
+            <div class="mech-item">
+                <strong>🌍 International Payment & Invoicing</strong>
+                <p>Standard <strong>50% deposit / 50% completion</strong> or milestone-based disbursements via <strong>Stripe Invoicing / International Wire Transfer (USD)</strong>.</p>
+            </div>
+            <div class="mech-item">
+                <strong>📜 Master Services Agreement & Mutual NDA</strong>
+                <p>Standard enterprise contract and mutual non-disclosure agreement protecting your confidential intellectual property and code ownership.</p>
+            </div>
+            <div class="mech-item">
+                <strong>🔍 Discovery & Architecture Sprint</strong>
+                <p>Deep 1-week system architecture and tech stack mapping for <strong>$750 (US/EU) / $500 (Gulf)</strong>, 100% credited against the final build contract.</p>
+            </div>
+            <div class="mech-item">
+                <strong>🎥 Async Transparency & Slack Channel</strong>
+                <p>Direct private Slack channel with Lead Architect Ashish Gupta + weekly recorded Loom walkthroughs and staging preview deployments.</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="doc-footer">
+            <div>
+                © 2026 DigitalBuilders · www.digitalbuilders.in
+            </div>
+            <div class="contact-cta">
+                <a href="mailto:hello@digitalbuilders.in" class="contact-pill">
+                    <span>Email:</span> hello@digitalbuilders.in
+                </a>
+                <a href="https://wa.me/919087021592?text=Hi%20Ashish,%20I'm%20reviewing%20the%20International%20Price%20Book" target="_blank" class="contact-pill">
+                    <span>WhatsApp:</span> +91 90870 21592
+                </a>
+            </div>
+        </footer>
+    </div>
+
+</body>
+</html>
