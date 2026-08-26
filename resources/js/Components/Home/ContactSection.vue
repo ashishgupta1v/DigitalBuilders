@@ -290,6 +290,36 @@ function submitLead() {
                     </a>
                 </div>
 
+                <!-- Official 2026 Brochure Download Card -->
+                <div class="db-antigravity-card rounded-3xl border border-sky-500/30 bg-card text-card-foreground p-6 sm:p-8 shadow-xl">
+                    <div class="flex items-center gap-2">
+                        <span class="text-base">📄</span>
+                        <span class="text-xs uppercase font-extrabold tracking-wider text-sky-700 dark:text-sky-400">Official Specification</span>
+                    </div>
+                    <h3 class="mt-2 text-xl font-bold text-card-foreground">2026 Price Book Brochure</h3>
+                    <p class="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                        Need an offline copy for your board or technical team? Download or print our full 15-page architectural specification brochure.
+                    </p>
+                    <div class="mt-4 flex flex-col sm:flex-row gap-2">
+                        <a
+                            href="/downloads/digitalbuilders-pricing-india-inr.html"
+                            target="_blank"
+                            class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full border border-sky-500/40 bg-sky-500/10 px-4 py-2.5 text-xs font-bold text-sky-700 dark:text-sky-300 hover:bg-sky-500/20 transition-all shadow-sm"
+                        >
+                            <span>🇮🇳 India (INR)</span>
+                            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                        </a>
+                        <a
+                            href="/downloads/digitalbuilders-pricing-international-usd.html"
+                            target="_blank"
+                            class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full border border-border bg-secondary px-4 py-2.5 text-xs font-bold text-secondary-foreground hover:bg-secondary/80 transition-all shadow-sm"
+                        >
+                            <span>🌍 Global (USD)</span>
+                            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                        </a>
+                    </div>
+                </div>
+
                 <div class="db-antigravity-card rounded-3xl border border-border bg-card text-card-foreground p-6 sm:p-8 shadow-xl">
                     <h3 class="text-xl font-bold text-card-foreground">Quick Access</h3>
                     <p class="mt-3 text-sm text-muted-foreground">Explore more projects and technical work by our founder Ashish Gupta.</p>

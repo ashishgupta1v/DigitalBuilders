@@ -222,6 +222,10 @@ onBeforeUnmount(() => {
                     <a href="#services" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Services</a>
                     <a href="#portfolio" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Portfolio</a>
                     <Link href="/pricing" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Pricing</Link>
+                    <a href="/downloads/digitalbuilders-pricing-india-inr.html" target="_blank" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground inline-flex items-center gap-1.5">
+                        <span>Brochure</span>
+                        <span class="rounded bg-sky-500/10 text-sky-600 dark:text-sky-400 text-[10px] font-bold px-1.5 py-0.5">PDF</span>
+                    </a>
                     <Link href="/blog" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Blog</Link>
                     <a href="#about" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">About</a>
                     <a href="#contact" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Contact</a>
@@ -266,6 +270,10 @@ onBeforeUnmount(() => {
                         <a href="#services" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Services</a>
                         <a href="#portfolio" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Portfolio</a>
                         <Link href="/pricing" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Pricing</Link>
+                        <a href="/downloads/digitalbuilders-pricing-india-inr.html" target="_blank" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground flex items-center justify-between">
+                            <span>Brochure (PDF)</span>
+                            <span class="rounded bg-sky-500/10 text-sky-600 dark:text-sky-400 text-[10px] font-bold px-2 py-0.5">Download</span>
+                        </a>
                         <Link href="/blog" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Blog</Link>
                         <a href="#about" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">About</a>
                         <a href="#contact" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Contact</a>

@@ -20,6 +20,7 @@ const messages = ref<Message[]>([
         options: [
             { label: 'Explore Live Case Studies (9 Apps)', action: 'case_studies' },
             { label: 'What services do you offer?', action: 'services' },
+            { label: '📄 Download 2026 Price Book (PDF)', action: 'brochure_download' },
             { label: 'Calculate Project Scope', action: 'estimator_scroll' },
             { label: 'Chat on WhatsApp with Lead Architect', action: 'whatsapp_chat' },
         ],
@@ -193,6 +194,20 @@ function handleOptionClick(action: string, label: string) {
             } else {
                 window.location.href = '/estimator';
             }
+        } else if (action === 'brochure_download') {
+            messages.value.push({
+                id: Date.now() + 1,
+                sender: 'bot',
+                text: 'You can view, print, or download our official 15-page 2026 Architectural Price Book & Service Catalogue directly below:\n\n• 🇮🇳 India Edition (INR ₹)\n• 🌍 International Edition (USD $)',
+                options: [
+                    { label: '🇮🇳 India Price Book (INR)', action: 'open_brochure_inr' },
+                    { label: '🌍 Global Price Book (USD)', action: 'open_brochure_usd' },
+                ],
+            });
+        } else if (action === 'open_brochure_inr') {
+            window.open('/downloads/digitalbuilders-pricing-india-inr.html', '_blank');
+        } else if (action === 'open_brochure_usd') {
+            window.open('/downloads/digitalbuilders-pricing-international-usd.html', '_blank');
         } else if (action === 'portfolio_link') {
             window.open('https://ashishgupta.dev', '_blank');
         } else if (action === 'lead_form') {

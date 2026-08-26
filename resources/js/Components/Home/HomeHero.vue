@@ -31,6 +31,15 @@ defineProps<{
                     <a href="#contact" class="btn-primary inline-flex w-full items-center justify-center rounded-full px-7 py-3.5 min-h-[44px] text-sm font-bold text-white shadow-lg transition-transform hover:scale-[1.02] sm:w-auto">
                         Book a Discovery Call
                     </a>
+                    <a
+                        href="/downloads/digitalbuilders-pricing-india-inr.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex w-full items-center justify-center gap-2 rounded-full border border-sky-500/40 bg-sky-500/10 text-sky-700 dark:text-sky-300 hover:bg-sky-500/20 px-6 py-3.5 min-h-[44px] text-sm font-bold transition-all shadow-sm sm:w-auto"
+                    >
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <span>Download 2026 Brochure (PDF)</span>
+                    </a>
                     <a href="#portfolio" class="inline-flex w-full items-center justify-center rounded-full border border-border bg-secondary text-secondary-foreground hover:bg-secondary/80 px-7 py-3.5 min-h-[44px] text-sm font-semibold transition-colors sm:w-auto">
                         View Our Portfolio
                     </a>
