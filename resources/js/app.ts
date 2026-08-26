@@ -46,7 +46,7 @@ const updateScrollProgress = () => {
 // Theme persistence — apply before first paint to avoid flash
 const savedTheme = typeof localStorage !== 'undefined' ? localStorage.getItem('db-theme') : null;
 if (savedTheme === 'dark') {
-    document.documentElement.removeAttribute('data-theme');
+    document.documentElement.setAttribute('data-theme', 'dark');
     document.documentElement.classList.add('dark');
     document.documentElement.classList.remove('light');
 } else {
