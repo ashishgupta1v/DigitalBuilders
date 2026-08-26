@@ -362,7 +362,7 @@
     ]
   },
   "resources/js/Pages/Pricing.vue": {
-    "file": "assets/Pricing-CRsvBPbg.js",
+    "file": "assets/Pricing-0OWk2moq.js",
     "name": "Pricing",
     "src": "resources/js/Pages/Pricing.vue",
     "isDynamicEntry": true,
@@ -471,7 +471,7 @@
     ]
   },
   "resources/js/app.ts": {
-    "file": "assets/app-CCAtqlFk.js",
+    "file": "assets/app-1RiJqHAR.js",
     "name": "app",
     "src": "resources/js/app.ts",
     "isEntry": true,
@@ -516,7 +516,7 @@
       "resources/js/Pages/Services/WebApp.vue"
     ],
     "css": [
-      "assets/app-yIVm_t-w.css"
+      "assets/app-D74H0lSN.css"
     ]
   }
 }

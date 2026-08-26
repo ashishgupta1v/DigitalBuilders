@@ -32,22 +32,29 @@ Comprehensive Live Portfolio Knowledge:
 9. Garg Enterprises: Rugged B2B Android ordering app. Offline SQLite draft purchase orders with background sync, dealer credit ledger, and 1-tap GST invoice downloads for 10,000+ SKUs.
 
 Services, Decoupled Regional Price Books (India vs International):
+- Digital Presence & Landing Architecture:
+  • India: Launch (Starter) ₹19,999 | Growth (Business) ₹44,999 | Enterprise On Request
+  • International (US/Global): Launch $600 | Growth $1,300 (Gulf: $450 / $950)
 - Custom Web Applications:
-  • India: Launch ₹99,000 | Growth ₹1,79,000 | Enterprise ₹2,99,000
+  • India: Launch ₹79,000 | Growth ₹1,49,000 | Enterprise ₹2,49,000
   • International (US/Global): Launch $3,500 | Growth $6,500 | Enterprise $11,000 (Gulf: $2,500 / $4,500 / $7,900)
 - AI Voice/Chat Agents & RAG:
-  • India: Launch ₹1,29,000 | Growth ₹2,19,000 | Enterprise ₹3,49,000
+  • India: Launch ₹99,000 | Growth ₹1,79,000 | Enterprise ₹2,99,000
   • International (US/Global): Launch $4,500 | Growth $7,900 | Enterprise $13,000 (Gulf: $3,200 / $5,500 / $9,500)
 - Mobile Apps (iOS & Android):
-  • India: Launch ₹1,49,000 | Growth ₹2,49,000 | Enterprise ₹3,99,000
+  • India: Launch ₹1,19,000 | Growth ₹1,99,000 | Enterprise ₹3,29,000
   • International (US/Global): Launch $6,000 | Growth $10,000 | Enterprise $16,000 (Gulf: $4,200 / $7,200 / $11,500)
 - SaaS Platforms:
-  • India: Launch ₹2,49,000 | Growth ₹3,99,000 | Enterprise ₹5,99,000
+  • India: Launch ₹1,99,000 | Growth ₹3,19,000 | Enterprise ₹4,99,000
   • International (US/Global): Launch $9,000 | Growth $14,000 | Enterprise $22,000 (Gulf: $6,500 / $9,900 / $15,500)
 - Custom ERP/CRM Systems:
-  • India: Launch ₹2,99,000 | Growth ₹4,49,000 | Enterprise ₹6,99,000
+  • India: Launch ₹2,49,000 | Growth ₹3,79,000 | Enterprise ₹5,99,000
   • International (US/Global): Launch $11,000 | Growth $16,500 | Enterprise $26,000 (Gulf: $7,900 / $12,000 / $18,500)
-- Architecture Discovery Sprint: ₹25,000 INR / $750 USD ($500 Gulf) (100% credited to build).
+- Annual Maintenance Contracts (AMC Plans):
+  • Basic AMC: ₹19,000 / yr (₹1,583/mo)
+  • Business AMC ★: ₹49,000 / yr (₹4,083/mo)
+  • Enterprise SLA: From ₹1,49,000 / yr
+- Architecture Discovery Sprint: ₹19,000 INR / $750 USD ($500 Gulf) (100% credited to build).
 - Interactive Scope Estimator & Full Price Book: Available on /pricing and /estimator.
 
 Contact & Booking:

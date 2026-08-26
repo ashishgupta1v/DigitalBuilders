@@ -739,8 +739,8 @@ function getAddonPrice(addon: AddonModule): string {
                             <h3 class="text-lg font-bold text-card-foreground">Basic {{ activeRegion === 'INR' ? 'AMC' : 'Care' }}</h3>
                             <div class="mt-3 font-mono text-2xl font-black text-card-foreground">
                                 <span v-if="activeRegion === 'INR'">
-                                    <span class="text-sm text-muted-foreground line-through mr-1 opacity-70">₹36,000</span>
-                                    ₹29,000 <span class="text-xs font-normal text-muted-foreground">/ yr (₹2,416/mo)</span>
+                                    <span class="text-sm text-muted-foreground line-through mr-1 opacity-70">₹29,000</span>
+                                    ₹19,000 <span class="text-xs font-normal text-muted-foreground">/ yr (₹1,583/mo)</span>
                                 </span>
                                 <span v-else-if="activeRegion === 'GULF'">$90 <span class="text-xs font-normal text-muted-foreground">/ mo</span></span>
                                 <span v-else>$120 <span class="text-xs font-normal text-muted-foreground">/ mo</span></span>
@@ -765,8 +765,8 @@ function getAddonPrice(addon: AddonModule): string {
                             </div>
                             <div class="mt-3 font-mono text-2xl font-black text-card-foreground">
                                 <span v-if="activeRegion === 'INR'">
-                                    <span class="text-sm text-muted-foreground line-through mr-1 opacity-70">₹99,000</span>
-                                    ₹79,000 <span class="text-xs font-normal text-sky-700 dark:text-sky-300">/ yr (₹6,583/mo)</span>
+                                    <span class="text-sm text-muted-foreground line-through mr-1 opacity-70">₹79,000</span>
+                                    ₹49,000 <span class="text-xs font-normal text-sky-700 dark:text-sky-300">/ yr (₹4,083/mo)</span>
                                 </span>
                                 <span v-else-if="activeRegion === 'GULF'">$250 <span class="text-xs font-normal text-sky-700 dark:text-sky-300">/ mo</span></span>
                                 <span v-else>$350 <span class="text-xs font-normal text-sky-700 dark:text-sky-300">/ mo</span></span>
@@ -788,8 +788,8 @@ function getAddonPrice(addon: AddonModule): string {
                             <h3 class="text-lg font-bold text-card-foreground">Enterprise SLA</h3>
                             <div class="mt-3 font-mono text-2xl font-black text-card-foreground">
                                 <span v-if="activeRegion === 'INR'">
-                                    <span class="text-sm text-muted-foreground line-through mr-1 opacity-70">From ₹2.4L</span>
-                                    From ₹1,99,000 <span class="text-xs font-normal text-muted-foreground">/ yr</span>
+                                    <span class="text-sm text-muted-foreground line-through mr-1 opacity-70">From ₹1.99L</span>
+                                    From ₹1,49,000 <span class="text-xs font-normal text-muted-foreground">/ yr</span>
                                 </span>
                                 <span v-else-if="activeRegion === 'GULF'">From $600 <span class="text-xs font-normal text-muted-foreground">/ mo</span></span>
                                 <span v-else>From $850 <span class="text-xs font-normal text-muted-foreground">/ mo</span></span>

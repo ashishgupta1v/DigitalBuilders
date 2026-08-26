@@ -3,8 +3,69 @@
 @tailwind utilities;
 
 @layer base {
-	:root {
-		/* Semantic HSL Design Tokens (Dark Theme Default) */
+	:root,
+	[data-theme='light'],
+	.light {
+		/* Semantic HSL Design Tokens (Light Theme Baseline Default) */
+		--background: 210 40% 98%;          /* #f8fafc */
+		--foreground: 222.2 84% 4.9%;       /* #0f172a */
+
+		--card: 0 0% 100%;                  /* #ffffff */
+		--card-foreground: 222.2 84% 4.9%;  /* #0f172a */
+
+		--popover: 0 0% 100%;               /* #ffffff */
+		--popover-foreground: 222.2 84% 4.9%;/* #0f172a */
+
+		--primary: 221.2 83.2% 53.3%;       /* #2563eb */
+		--primary-foreground: 0 0% 100%;    /* #ffffff (Crisp White on Primary) */
+
+		--secondary: 210 40% 96.1%;         /* #f1f5f9 */
+		--secondary-foreground: 222.2 47.4% 11.2%; /* #0f172a */
+
+		--muted: 210 40% 96.1%;             /* #f1f5f9 */
+		--muted-foreground: 215.4 16.3% 36.9%; /* #334155 - CR 7.2:1 on #ffffff */
+
+		--accent: 210 40% 96.1%;            /* #f1f5f9 */
+		--accent-foreground: 222.2 47.4% 11.2%; /* #0f172a */
+
+		--destructive: 0 84.2% 60.2%;       /* #ef4444 */
+		--destructive-foreground: 210 40% 98%;
+
+		--border: 214.3 31.8% 88%;          /* #e2e8f0 */
+		--input: 214.3 31.8% 88%;
+		--ring: 221.2 83.2% 53.3%;          /* #2563eb */
+
+		/* Brand Gradients & Theme Variables */
+		--db-cta-gradient: linear-gradient(95deg, #0369a1 0%, #4f46e5 48%, #7c3aed 100%);
+		--db-cta-gradient-hover: linear-gradient(95deg, #075985 0%, #4338ca 48%, #6d28d9 100%);
+		--db-bg: #f8fafc;
+		--db-bg-elev: #f1f5f9;
+		--db-card: #ffffff;
+		--db-card-strong: #e2e8f0;
+		--db-border: rgba(15, 23, 42, 0.12);
+		--db-text: #0f172a;
+		--db-muted: #475569;
+		--db-accent-a: #0284c7;
+		--db-accent-b: #db2777;
+		--db-accent-c: #7c3aed;
+		--db-danger: #f43f5e;
+		--db-success: #059669;
+		--db-gradient: linear-gradient(135deg, #0284c7 0%, #6366f1 35%, #9333ea 70%, #db2777 100%);
+		--db-soft-gradient: linear-gradient(140deg, rgba(2, 132, 199, 0.08), rgba(147, 51, 234, 0.08), rgba(225, 29, 72, 0.08));
+		--db-card-gradient: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.92));
+		--db-body-bg: radial-gradient(1100px 600px at -10% -10%, rgba(2, 132, 199, 0.08), transparent 60%),
+			radial-gradient(900px 540px at 110% 10%, rgba(219, 39, 119, 0.08), transparent 58%),
+			linear-gradient(180deg, #f8fafc 0%, #f1f5f9 52%, #f8fafc 100%);
+		--db-panel-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.92));
+		--db-glass-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(241, 245, 249, 0.88));
+		--db-nav-bg: rgba(255, 255, 255, 0.92);
+		--db-skeleton-base: rgba(226, 232, 240, 0.8);
+		--db-skeleton-shine: rgba(241, 245, 249, 0.9);
+	}
+
+	/* Dark Theme Tokens */
+	.dark,
+	[data-theme='dark'] {
 		--background: 222.2 47.4% 7.8%;      /* #0b0f19 */
 		--foreground: 210 40% 98%;          /* #f8fafc */
 
@@ -33,7 +94,6 @@
 		--input: 217.2 32.6% 22%;
 		--ring: 212.8 100% 47%;             /* #0284c7 */
 
-		/* Brand Gradients & Theme Variables */
 		--db-cta-gradient: linear-gradient(95deg, #0369a1 0%, #4f46e5 48%, #7c3aed 100%);
 		--db-cta-gradient-hover: linear-gradient(95deg, #075985 0%, #4338ca 48%, #6d28d9 100%);
 		--db-bg: #0b0f19;
@@ -59,64 +119,6 @@
 		--db-nav-bg: rgba(11, 15, 25, 0.88);
 		--db-skeleton-base: rgba(30, 41, 59, 0.6);
 		--db-skeleton-shine: rgba(56, 189, 248, 0.25);
-	}
-
-	/* Light Theme Tokens */
-	[data-theme='light'],
-	.light {
-		--background: 210 40% 98%;          /* #f8fafc */
-		--foreground: 222.2 84% 4.9%;       /* #0f172a */
-
-		--card: 0 0% 100%;                  /* #ffffff */
-		--card-foreground: 222.2 84% 4.9%;  /* #0f172a */
-
-		--popover: 0 0% 100%;               /* #ffffff */
-		--popover-foreground: 222.2 84% 4.9%;/* #0f172a */
-
-		--primary: 221.2 83.2% 53.3%;       /* #2563eb */
-		--primary-foreground: 0 0% 100%;    /* #ffffff */
-
-		--secondary: 210 40% 96.1%;         /* #f1f5f9 */
-		--secondary-foreground: 222.2 47.4% 11.2%; /* #0f172a */
-
-		--muted: 210 40% 96.1%;             /* #f1f5f9 */
-		--muted-foreground: 215.4 16.3% 36.9%; /* #334155 - CR 7.2:1 on #ffffff */
-
-		--accent: 210 40% 96.1%;            /* #f1f5f9 */
-		--accent-foreground: 222.2 47.4% 11.2%; /* #0f172a */
-
-		--destructive: 0 84.2% 60.2%;
-		--destructive-foreground: 210 40% 98%;
-
-		--border: 214.3 31.8% 88%;          /* #e2e8f0 */
-		--input: 214.3 31.8% 88%;
-		--ring: 221.2 83.2% 53.3%;
-
-		--db-cta-gradient: linear-gradient(95deg, #0369a1 0%, #4f46e5 48%, #7c3aed 100%);
-		--db-cta-gradient-hover: linear-gradient(95deg, #075985 0%, #4338ca 48%, #6d28d9 100%);
-		--db-bg: #f8fafc;
-		--db-bg-elev: #f1f5f9;
-		--db-card: #ffffff;
-		--db-card-strong: #e2e8f0;
-		--db-border: rgba(15, 23, 42, 0.12);
-		--db-text: #0f172a;
-		--db-muted: #475569;
-		--db-accent-a: #0284c7;
-		--db-accent-b: #db2777;
-		--db-accent-c: #7c3aed;
-		--db-danger: #f43f5e;
-		--db-success: #059669;
-		--db-gradient: linear-gradient(135deg, #0284c7 0%, #6366f1 35%, #9333ea 70%, #db2777 100%);
-		--db-soft-gradient: linear-gradient(140deg, rgba(2, 132, 199, 0.08), rgba(147, 51, 234, 0.08), rgba(225, 29, 72, 0.08));
-		--db-card-gradient: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.92));
-		--db-body-bg: radial-gradient(1100px 600px at -10% -10%, rgba(2, 132, 199, 0.08), transparent 60%),
-			radial-gradient(900px 540px at 110% 10%, rgba(219, 39, 119, 0.08), transparent 58%),
-			linear-gradient(180deg, #f8fafc 0%, #f1f5f9 52%, #f8fafc 100%);
-		--db-panel-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.92));
-		--db-glass-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(241, 245, 249, 0.88));
-		--db-nav-bg: rgba(255, 255, 255, 0.92);
-		--db-skeleton-base: rgba(226, 232, 240, 0.8);
-		--db-skeleton-shine: rgba(241, 245, 249, 0.9);
 	}
 
 	html {
