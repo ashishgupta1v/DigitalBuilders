@@ -227,7 +227,7 @@ function submitLeadFromChat() {
 
 <template>
     <!-- Floating Trigger Badge -->
-    <div class="fixed bottom-24 right-6 z-[8000]">
+    <div class="fixed bottom-20 md:bottom-6 right-4 sm:right-6 z-[8000]">
         <button
             @click="toggleWidget"
             class="relative flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-sky-500/40 bg-card text-foreground shadow-2xl transition-all hover:scale-110"
@@ -255,7 +255,7 @@ function submitLeadFromChat() {
             v-if="isOpen"
             role="dialog"
             aria-label="DigitalBuilders AI Assistant"
-            class="db-ai-widget-panel fixed bottom-24 right-6 z-[8500] flex h-[540px] w-[360px] flex-col rounded-3xl border border-border bg-card text-card-foreground shadow-2xl backdrop-blur-xl sm:w-[400px]"
+            class="db-ai-widget-panel fixed bottom-20 md:bottom-6 right-4 sm:right-6 z-[8500] flex h-[540px] max-h-[calc(100vh-6rem)] w-[calc(100vw-2rem)] max-w-[380px] sm:w-[400px] flex-col rounded-3xl border border-border bg-card text-card-foreground shadow-2xl backdrop-blur-xl"
         >
             <!-- Header -->
             <div class="flex items-center justify-between border-b border-border bg-secondary/80 px-5 py-4 rounded-t-3xl">
