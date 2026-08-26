@@ -13,6 +13,7 @@ import ContactSection from '@/Components/Home/ContactSection.vue';
 import TestimonialsCarousel from '@/Components/TestimonialsCarousel.vue';
 import ProjectEstimator from '@/Components/ProjectEstimator.vue';
 import AiAssistantWidget from '@/Components/AiAssistantWidget.vue';
+import CookieConsent from '@/Components/CookieConsent.vue';
 
 type MotionAnimate = (
     target: Element | NodeListOf<Element>,
@@ -58,6 +59,10 @@ const handleScrollProgress = () => {
 
 function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openCookieSettings() {
+    window.dispatchEvent(new CustomEvent('db:open-cookie-settings'));
 }
 
 const services = [
@@ -407,11 +412,15 @@ onBeforeUnmount(() => {
                         <Link href="/blog" class="hover:text-slate-300 transition-colors">Blog</Link>
                         <Link href="/library/privacy-policy" class="hover:text-slate-300 transition-colors">Privacy Policy</Link>
                         <Link href="/library/terms-of-service" class="hover:text-slate-300 transition-colors">Terms of Service</Link>
+                        <button type="button" @click="openCookieSettings" class="hover:text-slate-300 transition-colors cursor-pointer text-left">Cookie Settings</button>
                         <a href="mailto:hello@digitalbuilders.in" class="hover:text-slate-300 transition-colors">hello@digitalbuilders.in</a>
                     </div>
                 </div>
             </div>
         </footer>
+
+        <!-- Privacy-First Cookie Consent Banner -->
+        <CookieConsent />
     </div>
 </template>
 

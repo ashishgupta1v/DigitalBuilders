@@ -866,3 +866,50 @@ html:not([data-theme='light']) footer.site-footer {
 	background-color: #0b0f19 !important;
 	border-color: rgba(184, 201, 230, 0.15) !important;
 }
+
+/* ==========================================================================
+   WCAG 2.1 AA Accessibility & prefers-reduced-motion
+   ========================================================================== */
+
+/* Distinct focus-visible indicators for keyboard navigation */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+	outline: 2px solid #38bdf8 !important;
+	outline-offset: 2px !important;
+}
+
+/* Strict prefers-reduced-motion override */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+
+	[data-reveal],
+	[data-stagger-item],
+	[data-hero-title] {
+		opacity: 1 !important;
+		transform: none !important;
+	}
+
+	.whatsapp-fab {
+		animation: none !important;
+	}
+}
+
+/* Minimum 44x44px touch targets helper */
+.db-touch-target {
+	min-width: 44px;
+	min-height: 44px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}

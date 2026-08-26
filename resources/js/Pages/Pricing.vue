@@ -2,9 +2,14 @@
 import { Head, Link } from '@inertiajs/vue3';
 import { computed, onMounted, ref } from 'vue';
 import { detectUserRegion, REGIONS, type RegionMode, saveUserRegion } from '@/utils/geo';
+import CookieConsent from '@/Components/CookieConsent.vue';
 
 const activeRegion = ref<RegionMode>('INR');
 const isAutoDetected = ref(true);
+
+function openCookieSettings() {
+    window.dispatchEvent(new CustomEvent('db:open-cookie-settings'));
+}
 
 onMounted(() => {
     const detected = detectUserRegion();
@@ -735,14 +740,18 @@ function getAddonPrice(addon: AddonModule): string {
         <footer class="mt-20 border-t border-[#b8c9e633] bg-[#233246d9] py-8 text-center text-xs text-slate-400">
             <div class="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p>© {{ new Date().getFullYear() }} DigitalBuilders · Architectural Price Book</p>
-                <div class="flex items-center gap-4">
+                <div class="flex flex-wrap items-center gap-4">
                     <Link href="/" class="hover:text-white">Home</Link>
                     <Link href="/estimator" class="hover:text-white">Estimator</Link>
-                    <Link href="/privacy-policy" class="hover:text-white">Privacy Policy</Link>
-                    <Link href="/terms-of-service" class="hover:text-white">Terms of Service</Link>
+                    <Link href="/library/privacy-policy" class="hover:text-white">Privacy Policy</Link>
+                    <Link href="/library/terms-of-service" class="hover:text-white">Terms of Service</Link>
+                    <button type="button" @click="openCookieSettings" class="hover:text-white cursor-pointer">Cookie Settings</button>
                 </div>
             </div>
         </footer>
+
+        <!-- Privacy-First Cookie Consent Banner -->
+        <CookieConsent />
     </div>
 </template>
 

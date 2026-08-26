@@ -142,6 +142,77 @@
                 ]
             }
         </script>
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "How long does a typical web application project take?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Timelines vary by architectural scope. A standard web application typically takes 3–6 weeks. Enterprise-grade platforms with custom ERP/CRM integrations take 4–8 weeks. We break every project into weekly sprint milestones with live review demos from day one."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Do you work with startups, or only established companies?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "We work with both. For startups, we focus on building a scalable MVP that won't need to be rebuilt as you grow. For established companies, we focus on performance, security, and integrating with existing systems."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "What makes DigitalBuilders different from other agencies?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "We operate with a Staff Engineer mindset — we design systems before writing a single line of code. Unlike most agencies, we don't use fragile templates or boilerplate. Every system we build is custom-engineered for your specific domain and scale requirements."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Can you integrate AI into my existing application?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes. We specialize in practical AI integrations — not just chatbots. This includes AI voice agents, automated lead qualification, intelligent document processing, workflow automation, and custom LLM-powered features fitted into your existing stack."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "What happens after the project is launched?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Every project includes a 30-day post-launch warranty where we fix any bugs at no charge. After that, we offer flexible retainer plans for ongoing feature development, monitoring, and performance optimization."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "How do you handle pricing and payment milestones?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "We use decoupled, fixed regional price books with transparent milestone disbursements (₹21k booking -> 40/30/30 milestones in India; 50/50 via Stripe/Wire internationally). No surprise invoices, no currency exchange markups. India builds start at ₹99,000 + GST; International builds start at $3,500 ($2,500 for Gulf)."
+                        }
+                    }
+                ]
+            }
+        </script>
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "AggregateRating",
+                "itemReviewed": {
+                    "@type": "ProfessionalService",
+                    "name": "DigitalBuilders",
+                    "url": "https://www.digitalbuilders.in/"
+                },
+                "ratingValue": "5.0",
+                "bestRating": "5",
+                "ratingCount": "8",
+                "reviewCount": "8"
+            }
+        </script>
         @endverbatim
 
         <title inertia>{{ config('app.name', 'DigitalBuilders') }}</title>
@@ -172,6 +243,13 @@
                     document.documentElement.removeAttribute('data-theme');
                     document.documentElement.classList.add('dark');
                     document.documentElement.classList.remove('light');
+                }
+
+                // Register service worker if supported
+                if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
+                    window.addEventListener('load', function() {
+                        navigator.serviceWorker.register('/sw.js').catch(function() {});
+                    });
                 }
             })();
         </script>

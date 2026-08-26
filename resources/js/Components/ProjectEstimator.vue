@@ -248,10 +248,29 @@ function openInquiryModal() {
     showLeadModal.value = true;
 }
 
+const modalFallbackWhatsAppUrl = computed(() => {
+    const lines = [
+        'Hi Ashish, I configured an estimate on DigitalBuilders and want to discuss it directly:',
+        `• Name: ${form.name || 'Not provided'}`,
+        `• Email: ${form.email || 'Not provided'}`,
+        `• Phone: ${form.phone || 'Not provided'}`,
+        `• Project: ${currentProjectTypeObj.value.label}`,
+        `• Budget: ${form.estimated_budget}`,
+        `• Timeline: ${form.estimated_timeline}`,
+        `• Selected Modules: ${selectedFeatures.value.join(', ') || 'Core only'}`,
+        form.description ? `• Notes: ${form.description}` : '',
+    ].filter(Boolean).join('\n');
+
+    return 'https://wa.me/919087021592?text=' + encodeURIComponent(lines);
+});
+
 function submitInquiry() {
+    if (form.processing) return;
     modalSubmissionError.value = null;
+
     form.post(route('estimator.submit'), {
         preserveScroll: true,
+        preserveState: true,
         onSuccess: () => {
             modalSubmissionError.value = null;
             showLeadModal.value = false;
@@ -259,6 +278,12 @@ function submitInquiry() {
             window.dispatchEvent(new CustomEvent('db:toast', {
                 detail: { message: 'Estimate inquiry submitted successfully! We will contact you within 24 hours.', type: 'success' },
             }));
+            if (typeof window !== 'undefined' && (window as any).dbTrack) {
+                (window as any).dbTrack('estimate_submitted', {
+                    project: currentProjectTypeObj.value.id,
+                    budget: form.estimated_budget,
+                });
+            }
         },
         onError: (errors) => {
             if (errors && Object.keys(errors).length > 0) {
@@ -266,7 +291,7 @@ function submitInquiry() {
                 const msg = errors.message || errors.error || errors[firstKey];
                 modalSubmissionError.value = typeof msg === 'string' ? msg : 'Please review and correct the fields above.';
             } else {
-                modalSubmissionError.value = 'Submission failed or rate limit reached. Please wait 60 seconds or contact us directly on WhatsApp (+91 90870 21592).';
+                modalSubmissionError.value = 'Submission could not be completed. You may have reached the rate limit — please send your estimate directly via WhatsApp.';
             }
         },
     });
@@ -488,11 +513,22 @@ function formatMoney(val: number): string {
                     v-if="modalSubmissionError"
                     role="alert"
                     aria-live="assertive"
-                    class="mt-4 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-3.5 text-xs text-rose-800 dark:text-rose-200"
+                    class="mt-4 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-xs text-rose-800 dark:text-rose-200 space-y-2.5"
                 >
                     <div class="flex items-start gap-2">
                         <svg class="h-4 w-4 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                         <p class="font-semibold leading-relaxed">{{ modalSubmissionError }}</p>
+                    </div>
+                    <div class="pt-1">
+                        <a
+                            :href="modalFallbackWhatsAppUrl"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 text-[11px] transition shadow"
+                        >
+                            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                            Send Estimate on WhatsApp
+                        </a>
                     </div>
                 </div>
 

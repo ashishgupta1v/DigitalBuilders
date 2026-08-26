@@ -43,7 +43,7 @@
       "dest": "/public/downloads/$1"
     },
     {
-      "src": "/(favicon\\.ico|favicon\\.png|robots\\.txt|manifest\\.webmanifest)",
+      "src": "/(favicon\\.ico|favicon\\.png|robots\\.txt|manifest\\.webmanifest|sw\\.js)",
       "dest": "/public/$1"
     },
     {

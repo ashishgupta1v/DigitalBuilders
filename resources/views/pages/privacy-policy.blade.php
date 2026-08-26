@@ -44,32 +44,34 @@
     <li><strong>Business transfers:</strong> In connection with a merger or acquisition</li>
 </ul>
 
-<h2>4. Data Security</h2>
-<p>We implement industry-standard security measures including:</p>
+<h2>4. Data Security & Encryption</h2>
+<p>We implement defense-in-depth security measures to safeguard all client and inquiry data:</p>
 <ul>
-    <li>Encrypted data transmission (HTTPS/TLS)</li>
-    <li>Secure password hashing (bcrypt)</li>
-    <li>Access controls and authentication</li>
-    <li>Regular security reviews</li>
+    <li><strong>Data in Transit:</strong> End-to-end encrypted transmission via TLS 1.3 / HTTPS with strict HSTS (Strict-Transport-Security: max-age=63072000).</li>
+    <li><strong>Data at Rest:</strong> Database records and backups are encrypted at rest using AES-256 standards.</li>
+    <li><strong>Password Security:</strong> High-entropy cryptographic hashing using modern bcrypt with strict work factors.</li>
+    <li><strong>Strict Access Control:</strong> Principle of least privilege with mandatory role-based authentication and token revocation.</li>
 </ul>
-<p>While we strive to protect your information, no method of electronic transmission or storage is 100% secure.</p>
 
-<h2>5. Data Retention</h2>
-<p>We retain your personal information for as long as necessary to fulfill the purposes described in this policy, unless a longer retention period is required by law.</p>
-
-<h2>6. Your Rights</h2>
-<p>You have the right to:</p>
+<h2>5. Data Retention & Deletion Schedule</h2>
+<p>We adhere to strict data minimization principles:</p>
 <ul>
-    <li>Access your personal data</li>
-    <li>Request correction of inaccurate data</li>
-    <li>Request deletion of your data</li>
-    <li>Withdraw consent for data processing</li>
-    <li>Object to data processing</li>
+    <li><strong>Discovery Inquiries & Estimates:</strong> Retained for 24 months to support ongoing engineering scoping, after which they are securely purged or anonymized.</li>
+    <li><strong>Active Client Contracts & Invoices:</strong> Retained for statutory compliance and accounting periods as required by Indian taxation and corporate regulations.</li>
 </ul>
-<p>To exercise these rights, contact us at <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a>.</p>
 
-<h2>7. Cookies</h2>
-<p>We use essential cookies for session management and authentication. These cookies are necessary for the website to function and cannot be switched off.</p>
+<h2>6. Your Rights & Data Subject Access Requests (DSAR)</h2>
+<p>Under <strong>India's Digital Personal Data Protection (DPDP) Act 2023</strong> and the <strong>EU General Data Protection Regulation (GDPR)</strong>, you have the right to:</p>
+<ul>
+    <li><strong>Access & Portability:</strong> Request a complete machine-readable copy (JSON/CSV) of your personal data.</li>
+    <li><strong>Correction & Rectification:</strong> Request correction of inaccurate or incomplete records.</li>
+    <li><strong>Erasure & Deletion:</strong> Request immediate deletion of your contact records (Right to be Forgotten).</li>
+    <li><strong>Withdrawal of Consent:</strong> Revoke consent for non-essential cookies and analytics at any time.</li>
+</ul>
+<p>To submit a DSAR request, email us directly at <a href="mailto:hello@digitalbuilders.in">hello@digitalbuilders.in</a> with the subject line <code>DSAR Request - [Your Name]</code>. We process all verified requests within 30 calendar days at no charge.</p>
+
+<h2>7. Cookies & Consent Management</h2>
+<p>We use essential cookies strictly required for security, routing, and CSRF token protection. Non-essential performance and analytics telemetry are strictly consent-gated and can be adjusted anytime via our on-site cookie manager.</p>
 
 <h2>8. Third-Party Services</h2>
 <p>Our website may use the following third-party services:</p>

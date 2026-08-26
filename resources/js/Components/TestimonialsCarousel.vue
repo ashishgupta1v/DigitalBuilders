@@ -76,6 +76,9 @@ function goTo(idx: number) {
 }
 
 function startTimer() {
+    const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
     if (!timer) {
         timer = setInterval(next, 6500);
     }
@@ -99,14 +102,7 @@ onBeforeUnmount(() => {
 
 async function fetchTestimonials() {
     try {
-        let res = await fetch('/ajax/testimonials', {
-            headers: { 'Accept': 'application/json' },
-        });
-        if (!res.ok) {
-            res = await fetch('/api/testimonials', {
-                headers: { 'Accept': 'application/json' },
-            });
-        }
+        const res = await fetch('/ajax/testimonials');
         if (res.ok) {
             const data = await res.json();
             if (Array.isArray(data) && data.length > 0) {
@@ -114,7 +110,7 @@ async function fetchTestimonials() {
             }
         }
     } catch {
-        // Fallback to pre-seeded social proof
+        // Fallback gracefully to static array
     }
 }
 </script>
@@ -133,18 +129,18 @@ async function fetchTestimonials() {
                 <p class="mt-1 text-sm text-slate-300">Empirical feedback from business founders & tech executives.</p>
             </div>
 
-            <!-- Controls -->
+            <!-- Controls (44px tap targets) -->
             <div class="flex items-center gap-2 self-start">
                 <button
                     @click="prev"
-                    class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-[#b8c9e633] text-slate-300 transition hover:border-[#9ba7ff] hover:text-white"
+                    class="flex h-11 w-11 min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center rounded-full border border-[#b8c9e633] text-slate-300 transition hover:border-[#9ba7ff] hover:text-white focus-visible:ring-2 focus-visible:ring-sky-400"
                     aria-label="Previous testimonial"
                 >
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                 </button>
                 <button
                     @click="next"
-                    class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-[#b8c9e633] text-slate-300 transition hover:border-[#9ba7ff] hover:text-white"
+                    class="flex h-11 w-11 min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center rounded-full border border-[#b8c9e633] text-slate-300 transition hover:border-[#9ba7ff] hover:text-white focus-visible:ring-2 focus-visible:ring-sky-400"
                     aria-label="Next testimonial"
                 >
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -189,9 +185,13 @@ async function fetchTestimonials() {
                                 :src="testimonials[currentIndex].avatar"
                                 :alt="testimonials[currentIndex].client_name"
                                 class="h-12 w-12 rounded-full object-cover border border-[#9ba7ff44]"
+                                loading="lazy"
+                                decoding="async"
+                                width="48"
+                                height="48"
                             />
                             <div>
-                                <h3 class="text-sm font-bold text-white">{{ testimonials[currentIndex].client_name }}</h3>
+                                <p class="text-sm font-bold text-white">{{ testimonials[currentIndex].client_name }}</p>
                                 <p class="text-xs text-slate-400">{{ testimonials[currentIndex].role }} · <span class="text-[#b7d3ff]">{{ testimonials[currentIndex].company }}</span></p>
                             </div>
                         </div>
@@ -203,13 +203,13 @@ async function fetchTestimonials() {
             </Transition>
         </div>
 
-        <!-- Dots Indicator with Accessible 36px Touch Targets -->
-        <div class="mt-8 flex items-center justify-center gap-1.5">
+        <!-- Dots Indicator with Accessible 44px Touch Targets -->
+        <div class="mt-8 flex items-center justify-center gap-1">
             <button
                 v-for="(_, idx) in testimonials"
                 :key="idx"
                 @click="goTo(idx)"
-                class="flex h-9 w-9 items-center justify-center rounded-full transition-all cursor-pointer focus:outline-none"
+                class="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-400"
                 :aria-label="`Go to slide ${idx + 1}`"
             >
                 <span

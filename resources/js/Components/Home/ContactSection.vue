@@ -43,16 +43,35 @@ onMounted(() => {
 
 const submissionError = ref<string | null>(null);
 
+const fallbackWhatsAppUrl = computed(() => {
+    const lines = [
+        'Hi Ashish, I encountered an issue submitting the contact form on DigitalBuilders:',
+        `• Name: ${form.name || 'Not provided'}`,
+        `• Email: ${form.email || 'Not provided'}`,
+        `• Phone: ${form.phone || 'Not provided'}`,
+        `• Project: ${form.project_type || 'web_app'}`,
+        form.description ? `• Details: ${form.description}` : '',
+    ].filter(Boolean).join('\n');
+
+    return 'https://wa.me/919087021592?text=' + encodeURIComponent(lines);
+});
+
 function submitLead() {
+    if (form.processing) return;
     submissionError.value = null;
+
     form.post(route('library.leads.store'), {
         preserveScroll: true,
+        preserveState: true,
         onSuccess: () => {
             submissionError.value = null;
             form.reset();
             window.dispatchEvent(new CustomEvent('db:toast', {
                 detail: { message: 'Inquiry received! We will respond within 24 business hours.', type: 'success' },
             }));
+            if (typeof window !== 'undefined' && (window as any).dbTrack) {
+                (window as any).dbTrack('lead_submitted', { project_type: form.project_type });
+            }
         },
         onError: (errors) => {
             if (errors && Object.keys(errors).length > 0) {
@@ -60,7 +79,7 @@ function submitLead() {
                 const msg = errors.message || errors.error || errors[firstKey];
                 submissionError.value = typeof msg === 'string' ? msg : 'Please correct the highlighted fields and try again.';
             } else {
-                submissionError.value = 'Submission could not be completed. You may have reached the rate limit — please wait 60 seconds or contact us directly on WhatsApp.';
+                submissionError.value = 'Submission could not be completed. You may have reached the rate limit — please wait 60 seconds or send your inquiry directly via WhatsApp.';
             }
         },
     });
@@ -89,17 +108,33 @@ function submitLead() {
                     v-if="submissionError || flashError"
                     role="alert"
                     aria-live="assertive"
-                    class="mt-6 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-800 dark:text-rose-200 space-y-2"
+                    class="mt-6 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-5 text-sm text-rose-800 dark:text-rose-200 space-y-3 shadow-inner"
                 >
                     <div class="flex items-start gap-2.5">
                         <svg class="h-5 w-5 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                         <div>
-                            <p class="font-bold">{{ submissionError || flashError }}</p>
+                            <p class="font-bold text-base">{{ submissionError || flashError }}</p>
                             <p class="mt-1 text-xs text-rose-700 dark:text-rose-300 leading-relaxed">
-                                Need instant support? Reach Lead Architect Ashish Gupta directly on
-                                <a href="https://wa.me/919087021592?text=Hi%20Ashish,%20I'm%20reaching%20out%20from%20DigitalBuilders%20contact%20form" target="_blank" rel="noopener noreferrer" class="font-bold underline hover:text-rose-950 dark:hover:text-white">WhatsApp (+91 90870 21592)</a> or email <a href="mailto:hello@digitalbuilders.in" class="font-bold underline hover:text-rose-950 dark:hover:text-white">hello@digitalbuilders.in</a>.
+                                Your typed information has been kept intact. If the network or rate limit interrupted submission, you can immediately send your inquiry to Lead Architect Ashish Gupta via WhatsApp:
                             </p>
                         </div>
+                    </div>
+                    <div class="pt-2 flex flex-wrap items-center gap-3">
+                        <a
+                            :href="fallbackWhatsAppUrl"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 text-xs transition shadow-md"
+                        >
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                            Send Inquiry Directly on WhatsApp
+                        </a>
+                        <a
+                            href="mailto:hello@digitalbuilders.in"
+                            class="inline-flex items-center gap-1.5 text-xs text-rose-800 dark:text-rose-200 underline font-semibold hover:text-rose-950 dark:hover:text-white"
+                        >
+                            Or email hello@digitalbuilders.in
+                        </a>
                     </div>
                 </div>
 
@@ -232,6 +267,27 @@ function submitLead() {
                         Chat on WhatsApp
                     </a>
                 </div>
+                <!-- Calendar Strategy Call Card -->
+                <div class="db-antigravity-card rounded-3xl border border-sky-400/40 bg-gradient-to-b from-sky-500/10 to-indigo-500/10 p-6 sm:p-8 shadow-xl">
+                    <div class="flex items-center gap-2">
+                        <span class="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-ping" />
+                        <span class="text-xs uppercase font-extrabold tracking-wider text-sky-400">Instant Architecture Scoping</span>
+                    </div>
+                    <h3 class="mt-2 text-xl font-bold text-slate-900 dark:text-white">Book a Strategy Session</h3>
+                    <p class="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Prefer an interactive deep-dive? Book a 30-minute system architecture review directly with Lead Architect Ashish Gupta.
+                    </p>
+                    <a
+                        href="https://wa.me/919087021592?text=Hi%20Ashish,%20I'd%20like%20to%20schedule%20a%2030-minute%20system%20architecture%20strategy%20session."
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="mt-4 inline-flex w-full items-center justify-center gap-2 min-h-[44px] rounded-full bg-[linear-gradient(95deg,#0284c7_0%,#4f46e5_48%,#7c3aed_100%)] dark:bg-[linear-gradient(95deg,#7ac4ff_0%,#9ba7ff_48%,#c593ff_100%)] px-5 py-3 text-xs font-bold text-white dark:text-[#1a2231] shadow transition hover:scale-[1.02]"
+                    >
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        Schedule 30-Min Strategy Call
+                    </a>
+                </div>
+
                 <div class="db-antigravity-card rounded-3xl border border-slate-200 dark:border-[#b8c9e633] bg-white dark:bg-[#27374dde] p-6 sm:p-8 shadow-xl">
                     <h3 class="text-xl font-bold text-slate-900 dark:text-white">Quick Access</h3>
                     <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">Explore more projects and technical work by our founder Ashish Gupta.</p>

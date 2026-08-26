@@ -269,7 +269,14 @@ onMounted(() => {
     renderer.setClearColor(0x000000, 0);
 
     initScene(w, h);
-    animate();
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion && scene && camera) {
+        // Render single static frame for reduced motion users without continuous CPU loop
+        renderer.render(scene, camera);
+    } else {
+        animate();
+    }
 
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     window.addEventListener('mouseleave', onMouseLeave, { passive: true });
