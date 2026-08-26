@@ -440,11 +440,23 @@ html {
 }
 
 .db-brand-logo-text {
-    background: linear-gradient(100deg, #7ac4ff 0%, #a78bfa 50%, #c084fc 100%);
+    background: linear-gradient(135deg, #0284c7 0%, #4f46e5 45%, #7c3aed 80%, #db2777 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     color: transparent;
+    filter: none;
+    text-shadow: none;
+}
+
+.dark .db-brand-logo-text,
+[data-theme='dark'] .db-brand-logo-text {
+    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 35%, #c084fc 70%, #f472b6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.25));
 }
 
 [data-reveal],

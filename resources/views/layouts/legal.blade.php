@@ -63,7 +63,7 @@
         header a.logo img {
             height: 2.2rem;
             width: auto;
-            filter: drop-shadow(0 0 10px rgba(125, 211, 252, 0.35));
+            filter: none;
         }
 
         header nav a {
