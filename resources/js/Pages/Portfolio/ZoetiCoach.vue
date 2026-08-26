@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 </script>
 
 <template>
@@ -22,7 +23,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
         <header class="sticky top-0 z-50 border-b border-[#b8c9e633] bg-[var(--db-nav-bg)] backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <Link href="/" class="db-gradient-text text-lg font-semibold tracking-wide">DigitalBuilders</Link>
+                <ApplicationLogo :is-link="true" href="/" />
                 <div class="flex items-center gap-4">
                     <Link href="/" class="text-sm font-medium text-slate-300 hover:text-white">← Home</Link>
                     <a href="https://zoeticoach.com/" target="_blank" rel="noopener noreferrer" class="rounded-full bg-emerald-500/20 border border-emerald-500/40 px-4 py-2 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/30 inline-flex items-center gap-1.5">

@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 </script>
 
 <template>
-    <Head title="Krishan Balram Gaushala Case Study — GauSeva Connect & WhatsApp API | DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders built GauSeva Connect: automated daily WhatsApp birthday blessings via Meta Cloud API and instant 80G tax exemption PDF receipts." />
-        <meta property="og:title" content="Krishan Balram Gaushala Case Study — GauSeva Connect & WhatsApp API | DigitalBuilders" />
-        <meta property="og:description" content="How DigitalBuilders built GauSeva Connect: automated daily WhatsApp birthday blessings via Meta Cloud API and instant 80G tax exemption PDF receipts." />
+    <Head title="Govardhan Gaushala Case Study — Trust ERP & 80G Receipts | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders engineered a dedicated NGO operating system with instant automated 80G tax receipt PDF generation and transparent donation audit trails." />
+        <meta property="og:title" content="Govardhan Gaushala Case Study — Trust ERP & 80G Receipts | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders engineered a dedicated NGO operating system with instant automated 80G tax receipt PDF generation and transparent donation audit trails." />
         <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/gaushala.jpg" />
         <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/gaushala" />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Krishan Balram Gaushala Case Study — GauSeva Connect | DigitalBuilders" />
-        <meta name="twitter:description" content="GauSeva Connect: Automated devotee WhatsApp blessings and instant 80G tax receipts." />
+        <meta name="twitter:title" content="Govardhan Gaushala Case Study — Trust ERP | DigitalBuilders" />
+        <meta name="twitter:description" content="Dedicated NGO operating system with automated 80G tax receipts and donation tracking." />
         <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/gaushala.jpg" />
     </Head>
 
@@ -22,7 +23,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
         <header class="sticky top-0 z-50 border-b border-[#b8c9e633] bg-[var(--db-nav-bg)] backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <Link href="/" class="db-gradient-text text-lg font-semibold tracking-wide">DigitalBuilders</Link>
+                <ApplicationLogo :is-link="true" href="/" />
                 <div class="flex items-center gap-4">
                     <Link href="/" class="text-sm font-medium text-slate-300 hover:text-white">← Home</Link>
                     <a href="https://krishanbalramgaushala.com/" target="_blank" rel="noopener noreferrer" class="rounded-full bg-amber-500/20 border border-amber-500/40 px-4 py-2 text-xs font-semibold text-amber-300 hover:bg-amber-500/30 inline-flex items-center gap-1.5">

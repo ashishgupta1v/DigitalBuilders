@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ProjectEstimator from '@/Components/ProjectEstimator.vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import { Head, Link } from '@inertiajs/vue3';
 </script>
 
@@ -13,7 +14,7 @@ import { Head, Link } from '@inertiajs/vue3';
         <!-- Simple Nav -->
         <header class="sticky top-0 z-50 border-b border-[#b8c9e633] bg-[var(--db-nav-bg)] backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <Link href="/" class="db-gradient-text text-lg font-semibold tracking-wide">DigitalBuilders</Link>
+                <ApplicationLogo :is-link="true" href="/" />
                 <div class="flex items-center gap-4">
                     <Link href="/pricing" class="text-xs font-semibold text-sky-400 hover:text-sky-300">View Full Price Book</Link>
                     <Link href="/" class="text-sm font-medium text-slate-300 hover:text-white">← Home</Link>

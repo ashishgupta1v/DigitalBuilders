@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 </script>
 
 <template>
-    <Head title="GutTalks Case Study — Telehealth Portal, Root Rx & GutMap Complete™ | DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders built an evidence-based gut health telehealth platform with ₹499 Root Rx booking and at-home microbiome sequencing for 10k+ clients." />
-        <meta property="og:title" content="GutTalks Case Study — Telehealth Portal, Root Rx & GutMap Complete™ | DigitalBuilders" />
-        <meta property="og:description" content="How DigitalBuilders built an evidence-based gut health telehealth platform with ₹499 Root Rx booking and at-home microbiome sequencing for 10k+ clients." />
+    <Head title="GutTalks Case Study — Gut Health Consultation Platform | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders engineered a seamless gut health consultation and clinical assessment booking platform with dynamic medical questionnaires." />
+        <meta property="og:title" content="GutTalks Case Study — Gut Health Consultation Platform | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders engineered a seamless gut health consultation and clinical assessment booking platform with dynamic medical questionnaires." />
         <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/guttalks.jpg" />
         <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/guttalks" />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="GutTalks Case Study — Telehealth Portal & Root Rx | DigitalBuilders" />
-        <meta name="twitter:description" content="Evidence-based telehealth platform with ₹499 Root Rx booking and at-home microbiome diagnostics." />
+        <meta name="twitter:title" content="GutTalks Case Study — Telehealth Platform | DigitalBuilders" />
+        <meta name="twitter:description" content="Clinical consultation and gut health assessment booking platform." />
         <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/guttalks.jpg" />
     </Head>
 
@@ -22,7 +23,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
         <header class="sticky top-0 z-50 border-b border-[#b8c9e633] bg-[var(--db-nav-bg)] backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <Link href="/" class="db-gradient-text text-lg font-semibold tracking-wide">DigitalBuilders</Link>
+                <ApplicationLogo :is-link="true" href="/" />
                 <div class="flex items-center gap-4">
                     <Link href="/" class="text-sm font-medium text-slate-300 hover:text-white">← Home</Link>
                     <a href="https://guttalks.in/" target="_blank" rel="noopener noreferrer" class="rounded-full bg-sky-500/20 border border-sky-500/40 px-4 py-2 text-xs font-semibold text-sky-300 hover:bg-sky-500/30 inline-flex items-center gap-1.5">

@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 </script>
 
 <template>
-    <Head title="Dhanda Diary Case Study — Execution Cockpit & Business Ledger SaaS | DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders engineered a real-time execution cockpit with Daily Compliance Reports (DCR), ApexCharts KPI telemetry, and <50ms sync latency." />
-        <meta property="og:title" content="Dhanda Diary Case Study — Daily Compliance & Execution Cockpit SaaS | DigitalBuilders" />
-        <meta property="og:description" content="How DigitalBuilders engineered a real-time execution cockpit with Daily Compliance Reports (DCR), ApexCharts KPI telemetry, and <50ms sync latency." />
+    <Head title="Dhanda Diary Case Study — Operations & Compliance SaaS | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders engineered a real-time business execution cockpit with offline-capable event logging, sub-50ms query latency, and automated ledger sync." />
+        <meta property="og:title" content="Dhanda Diary Case Study — Operations & Compliance SaaS | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders engineered a real-time business execution cockpit with offline-capable event logging, sub-50ms query latency, and automated ledger sync." />
         <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/dhandadiary.jpg" />
         <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/dhandadiary" />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Dhanda Diary Case Study — Execution Cockpit SaaS | DigitalBuilders" />
-        <meta name="twitter:description" content="Execution cockpit with automated DCR routines, Kanban task boards, and ApexCharts KPI trackers." />
+        <meta name="twitter:title" content="Dhanda Diary Case Study — Operations SaaS | DigitalBuilders" />
+        <meta name="twitter:description" content="High-concurrency operations cockpit and compliance management engine." />
         <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/dhandadiary.jpg" />
     </Head>
 
@@ -22,7 +23,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
         <header class="sticky top-0 z-50 border-b border-[#b8c9e633] bg-[var(--db-nav-bg)] backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <Link href="/" class="db-gradient-text text-lg font-semibold tracking-wide">DigitalBuilders</Link>
+                <ApplicationLogo :is-link="true" href="/" />
                 <div class="flex items-center gap-4">
                     <Link href="/" class="text-sm font-medium text-slate-300 hover:text-white">← Home</Link>
                     <a href="https://dhandadiary.cloud/" target="_blank" rel="noopener noreferrer" class="rounded-full bg-emerald-500/20 border border-emerald-500/40 px-4 py-2 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/30 inline-flex items-center gap-1.5">

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 
 interface PostDetail {
     slug: string;
@@ -167,7 +168,7 @@ onBeforeUnmount(() => {
         <!-- Header -->
         <header class="sticky top-0 z-50 border-b border-[#b8c9e633] bg-[var(--db-nav-bg)] backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <Link href="/" class="db-gradient-text text-lg font-black tracking-tight">DigitalBuilders</Link>
+                <ApplicationLogo :is-link="true" href="/" />
                 <div class="flex items-center gap-4">
                     <Link href="/blog" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">← All Articles</Link>
                     <button

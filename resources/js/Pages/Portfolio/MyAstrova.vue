@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 </script>
 
 <template>
-    <Head title="MyAstrova Case Study — Vedic AstroTech Engine & Energized Crystal Mall | DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders engineered a sub-200ms mathematical ephemeris Kundli engine, live astrologer call/chat routing, and crystal remedy e-commerce." />
-        <meta property="og:title" content="MyAstrova Case Study — Vedic AstroTech Engine & Energized Crystal Mall | DigitalBuilders" />
-        <meta property="og:description" content="How DigitalBuilders engineered a sub-200ms mathematical ephemeris Kundli engine, live astrologer call/chat routing, and crystal remedy e-commerce." />
+    <Head title="MyAstrova Case Study — Vedic AstroTech Platform | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders engineered a high-precision Vedic astrology engine processing 28-point planetary ephemeris algorithms in sub-100ms." />
+        <meta property="og:title" content="MyAstrova Case Study — Vedic AstroTech Platform | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders engineered a high-precision Vedic astrology engine processing 28-point planetary ephemeris algorithms in sub-100ms." />
         <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/myastrova.jpg" />
         <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/myastrova" />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="MyAstrova Case Study — Vedic AstroTech Engine | DigitalBuilders" />
-        <meta name="twitter:description" content="Sub-200ms mathematical Kundli engine, live astrologer consultations, and energized crystal mall." />
+        <meta name="twitter:title" content="MyAstrova Case Study — AstroTech Engine | DigitalBuilders" />
+        <meta name="twitter:description" content="High-precision Vedic astrology SaaS with Swiss Ephemeris microsecond computations." />
         <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/myastrova.jpg" />
     </Head>
 
@@ -22,7 +23,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
         <header class="sticky top-0 z-50 border-b border-[#b8c9e633] bg-[var(--db-nav-bg)] backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <Link href="/" class="db-gradient-text text-lg font-semibold tracking-wide">DigitalBuilders</Link>
+                <ApplicationLogo :is-link="true" href="/" />
                 <div class="flex items-center gap-4">
                     <Link href="/" class="text-sm font-medium text-slate-300 hover:text-white">← Home</Link>
                     <a href="https://myastrova.com/" target="_blank" rel="noopener noreferrer" class="rounded-full bg-purple-500/20 border border-purple-500/40 px-4 py-2 text-xs font-semibold text-purple-300 hover:bg-purple-500/30 inline-flex items-center gap-1.5">

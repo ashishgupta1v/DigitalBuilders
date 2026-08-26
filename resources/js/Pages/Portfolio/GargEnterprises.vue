@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 </script>
 
 <template>
-    <Head title="Garg Enterprises Case Study — B2B Wholesale Ordering & Ledger App | DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders built a rugged Android B2B ordering app with offline SQLite sync, dealer credit ledger, and 1-tap GST invoice downloads for 10k+ SKUs." />
-        <meta property="og:title" content="Garg Enterprises Case Study — B2B Wholesale Ordering & Ledger App | DigitalBuilders" />
-        <meta property="og:description" content="How DigitalBuilders built a rugged Android B2B ordering app with offline SQLite sync, dealer credit ledger, and 1-tap GST invoice downloads for 10k+ SKUs." />
+    <Head title="Garg Enterprises Case Study — B2B Wholesale Ordering App | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders built an offline-first Android enterprise ordering app with credit ledger reconciliation and 1-tap GST invoice downloads for 10k+ SKUs." />
+        <meta property="og:title" content="Garg Enterprises Case Study — B2B Wholesale Ordering App | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders built an offline-first Android enterprise ordering app with credit ledger reconciliation and 1-tap GST invoice downloads for 10k+ SKUs." />
         <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/gargenterprises.jpg" />
         <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/garg-enterprises" />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Garg Enterprises Case Study — B2B Android App | DigitalBuilders" />
-        <meta name="twitter:description" content="B2B wholesale ordering app with offline SQLite drafting, dealer credit ledger, and GST PDF downloads." />
+        <meta name="twitter:title" content="Garg Enterprises Case Study — B2B Wholesale App | DigitalBuilders" />
+        <meta name="twitter:description" content="Offline-first Android wholesale ordering app with live dealer ledgers and 1-tap GST invoice downloads." />
         <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/gargenterprises.jpg" />
     </Head>
 
@@ -22,7 +23,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
         <header class="sticky top-0 z-50 border-b border-[#b8c9e633] bg-[var(--db-nav-bg)] backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <Link href="/" class="db-gradient-text text-lg font-semibold tracking-wide">DigitalBuilders</Link>
+                <ApplicationLogo :is-link="true" href="/" />
                 <div class="flex items-center gap-4">
                     <Link href="/" class="text-sm font-medium text-slate-300 hover:text-white">← Home</Link>
                     <a href="/#contact" class="rounded-full bg-indigo-500/20 border border-indigo-500/40 px-4 py-2 text-xs font-semibold text-indigo-300 hover:bg-indigo-500/30 inline-flex items-center gap-1.5">

@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 </script>
 
 <template>
-    <Head title="SportsEntertainmentClub Case Study — Court Booking & QR Pass App | DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders engineered a 60 FPS mobile app with atomic slot reservation concurrency locks, digital QR member passes, and tournament brackets." />
-        <meta property="og:title" content="SportsEntertainmentClub Case Study — Court Booking & QR Pass App | DigitalBuilders" />
-        <meta property="og:description" content="How DigitalBuilders engineered a 60 FPS mobile app with atomic slot reservation concurrency locks, digital QR member passes, and tournament brackets." />
+    <Head title="SportsClub Management App Case Study — IoT Turf Booking | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders engineered a cross-platform mobile turf booking and sports club operating system with IoT court access automation." />
+        <meta property="og:title" content="SportsClub Management App Case Study — IoT Turf Booking | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders engineered a cross-platform mobile turf booking and sports club operating system with IoT court access automation." />
         <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/sportsclub.jpg" />
-        <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/sports-club" />
+        <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/sportsclub" />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="SportsEntertainmentClub Case Study — Mobile App | DigitalBuilders" />
-        <meta name="twitter:description" content="Cross-platform court booking app with 0 collision locks and digital QR member wallet." />
+        <meta name="twitter:title" content="SportsClub Management App Case Study | DigitalBuilders" />
+        <meta name="twitter:description" content="Cross-platform turf booking and sports club operating system with IoT court access." />
         <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/sportsclub.jpg" />
     </Head>
 
@@ -22,7 +23,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
         <header class="sticky top-0 z-50 border-b border-[#b8c9e633] bg-[var(--db-nav-bg)] backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <Link href="/" class="db-gradient-text text-lg font-semibold tracking-wide">DigitalBuilders</Link>
+                <ApplicationLogo :is-link="true" href="/" />
                 <div class="flex items-center gap-4">
                     <Link href="/" class="text-sm font-medium text-slate-300 hover:text-white">← Home</Link>
                     <a href="/#contact" class="rounded-full bg-cyan-500/20 border border-cyan-500/40 px-4 py-2 text-xs font-semibold text-cyan-300 hover:bg-cyan-500/30 inline-flex items-center gap-1.5">

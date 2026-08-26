@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 </script>
 
 <template>
-    <Head title="Habuilt Case Study — 50 Habits, 4 Tiers & 99.99% Uptime | DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders stabilized Habuilt's high-traffic wellness platform, reducing server latency by 70% with 26-week progression tiers and mobile deep linking." />
-        <meta property="og:title" content="Habuilt Case Study — 50 Habits, 4 Progression Tiers & 99.99% Uptime | DigitalBuilders" />
-        <meta property="og:description" content="How DigitalBuilders stabilized Habuilt's high-traffic wellness platform, reducing server latency by 70% with 26-week progression tiers and mobile deep linking." />
+    <Head title="Habuilt Case Study — Progressive Habit Tracking Platform | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders engineered a progressive atomic habit tracking web platform with 50 habits, 4 tiers, streak mechanics, and mobile deep link auth." />
+        <meta property="og:title" content="Habuilt Case Study — Progressive Habit Tracking Platform | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders engineered a progressive atomic habit tracking web platform with 50 habits, 4 tiers, streak mechanics, and mobile deep link auth." />
         <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/habuilt.jpg" />
         <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/habuilt" />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Habuilt Case Study — 50 Habits, 4 Progression Tiers | DigitalBuilders" />
-        <meta name="twitter:description" content="High-traffic atomic habit platform stabilized with 70% lower latency and 99.99% uptime." />
+        <meta name="twitter:title" content="Habuilt Case Study — Habit Platform | DigitalBuilders" />
+        <meta name="twitter:description" content="Progressive atomic habit tracking platform with 50 habits, 4 progression tiers, and mobile deep linking." />
         <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/habuilt.jpg" />
     </Head>
 
@@ -22,7 +23,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
         <header class="sticky top-0 z-50 border-b border-[#b8c9e633] bg-[var(--db-nav-bg)] backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <Link href="/" class="db-gradient-text text-lg font-semibold tracking-wide">DigitalBuilders</Link>
+                <ApplicationLogo :is-link="true" href="/" />
                 <div class="flex items-center gap-4">
                     <Link href="/" class="text-sm font-medium text-slate-300 hover:text-white">← Home</Link>
                     <a href="https://www.habuilt.com/" target="_blank" rel="noopener noreferrer" class="rounded-full bg-sky-500/20 border border-sky-500/40 px-4 py-2 text-xs font-semibold text-sky-300 hover:bg-sky-500/30 inline-flex items-center gap-1.5">

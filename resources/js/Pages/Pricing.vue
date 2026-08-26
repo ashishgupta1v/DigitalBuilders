@@ -4,6 +4,7 @@ import { computed, onMounted, ref } from 'vue';
 import { detectUserRegion, REGIONS, type RegionMode, saveUserRegion } from '@/utils/geo';
 import CookieConsent from '@/Components/CookieConsent.vue';
 import StickyMobileCta from '@/Components/StickyMobileCta.vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import { trackBrochureDownload, trackWhatsAppClick } from '@/utils/analytics';
 
 const activeRegion = ref<RegionMode>('INR');
@@ -411,12 +412,7 @@ function getAddonPrice(addon: AddonModule): string {
         <!-- Header Navigation -->
         <header class="sticky top-0 z-50 border-b border-[#b8c9e633] bg-[var(--db-nav-bg)] backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <Link href="/" class="flex items-center gap-2.5">
-                    <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 font-black text-white shadow-md text-sm">
-                        DB
-                    </span>
-                    <span class="db-gradient-text text-lg font-extrabold tracking-wide">DigitalBuilders</span>
-                </Link>
+                <ApplicationLogo :is-link="true" href="/" />
                 <div class="flex items-center gap-3 sm:gap-5">
                     <Link href="/#services" class="hidden text-xs font-semibold text-slate-300 hover:text-white md:inline-block">Services</Link>
                     <Link href="/#portfolio" class="hidden text-xs font-semibold text-slate-300 hover:text-white md:inline-block">Portfolio</Link>

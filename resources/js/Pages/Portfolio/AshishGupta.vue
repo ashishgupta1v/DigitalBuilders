@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 </script>
 
 <template>
-    <Head title="Ashish Gupta Hub Case Study — Senior Full-Stack Architect Showcase | DigitalBuilders">
-        <meta name="description" content="High-performance engineering showcase demonstrating Domain-Driven Design (DDD), legacy modernization, and $1M+ cloud savings on the VILT stack." />
-        <meta property="og:title" content="Ashish Gupta Hub Case Study — Senior Full-Stack Architect Showcase | DigitalBuilders" />
-        <meta property="og:description" content="High-performance engineering showcase demonstrating Domain-Driven Design (DDD), legacy modernization, and $1M+ cloud savings on the VILT stack." />
+    <Head title="Ashish Gupta Portfolio Case Study — Lead Architect & AI Engineer | DigitalBuilders">
+        <meta name="description" content="Portfolio case study of Ashish Gupta, Lead Architect & Full-Stack AI Engineer at DigitalBuilders." />
+        <meta property="og:title" content="Ashish Gupta Portfolio Case Study — Lead Architect & AI Engineer | DigitalBuilders" />
+        <meta property="og:description" content="Portfolio case study of Ashish Gupta, Lead Architect & Full-Stack AI Engineer at DigitalBuilders." />
         <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/ashishgupta.jpg" />
         <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/ashishgupta" />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Ashish Gupta Hub Case Study — Architecture Showcase | DigitalBuilders" />
-        <meta name="twitter:description" content="Senior Full-Stack Architect portfolio demonstrating Domain-Driven Design and $1M+ cloud savings." />
+        <meta name="twitter:title" content="Ashish Gupta Portfolio Case Study | DigitalBuilders" />
+        <meta name="twitter:description" content="Lead Architect & AI Engineer portfolio and engineering case study." />
         <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/ashishgupta.jpg" />
     </Head>
 
@@ -22,7 +23,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
         <header class="sticky top-0 z-50 border-b border-[#b8c9e633] bg-[var(--db-nav-bg)] backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <Link href="/" class="db-gradient-text text-lg font-semibold tracking-wide">DigitalBuilders</Link>
+                <ApplicationLogo :is-link="true" href="/" />
                 <div class="flex items-center gap-4">
                     <Link href="/" class="text-sm font-medium text-slate-300 hover:text-white">← Home</Link>
                     <a href="https://ashishgupta.dev/" target="_blank" rel="noopener noreferrer" class="rounded-full bg-sky-500/20 border border-sky-500/40 px-4 py-2 text-xs font-semibold text-sky-300 hover:bg-sky-500/30 inline-flex items-center gap-1.5">

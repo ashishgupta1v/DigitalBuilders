@@ -15,6 +15,7 @@ import ProjectEstimator from '@/Components/ProjectEstimator.vue';
 import AiAssistantWidget from '@/Components/AiAssistantWidget.vue';
 import CookieConsent from '@/Components/CookieConsent.vue';
 import StickyMobileCta from '@/Components/StickyMobileCta.vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import { trackWhatsAppClick } from '@/utils/analytics';
 
 type MotionAnimate = (
@@ -217,18 +218,7 @@ onBeforeUnmount(() => {
         <header class="sticky top-0 z-50 border-b border-[#b8c9e622] bg-[var(--db-nav-bg)] backdrop-blur-xl transition-colors duration-300">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-3.5 lg:px-8">
                 <!-- Logo: icon + brand name -->
-                <a href="#top" class="flex items-center gap-2.5 group">
-                    <img
-                        src="/images/db-logo.png"
-                        alt="DigitalBuilders Logo"
-                        class="h-10 w-10 object-contain flex-shrink-0 transition-transform duration-300 group-hover:scale-105 filter drop-shadow-[0_0_8px_rgba(125,211,252,0.4)]"
-                        onerror="this.style.display='none'"
-                    />
-                    <span
-                        class="db-brand-logo-text text-xl font-black tracking-tight"
-                        style="font-family: 'Libre Baskerville', Georgia, serif; font-weight: 700; letter-spacing: -0.02em;"
-                    >Digital Builders</span>
-                </a>
+                <ApplicationLogo :is-link="true" href="#top" />
 
                 <nav class="hidden items-center gap-1.5 text-sm font-medium md:flex lg:gap-2">
                     <a href="#services" class="px-3 py-1.5 text-slate-400 transition-all duration-200 hover:text-white">Services</a>
@@ -395,10 +385,7 @@ onBeforeUnmount(() => {
             <div class="mx-auto max-w-7xl px-4 py-10 sm:px-5 lg:px-8">
                 <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
                     <div>
-                        <a href="#top" class="flex items-center gap-2.5">
-                            <img src="/images/db-logo.png" alt="DigitalBuilders Logo" class="h-8 w-8 object-contain" onerror="this.style.display='none'" />
-                            <span class="db-brand-logo-text text-lg font-black tracking-tight">Digital Builders</span>
-                        </a>
+                        <ApplicationLogo :is-link="true" href="#top" size="sm" />
                         <p class="mt-2 max-w-xs text-xs text-slate-500">Enterprise Software & AI Architecture. Based in Ludhiana, Punjab, India.</p>
                     </div>
                     <div class="flex items-center gap-3">
