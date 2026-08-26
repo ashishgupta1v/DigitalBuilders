@@ -189,9 +189,9 @@ const FEATURES_LIST: FeatureOption[] = [
 ];
 
 const currency = ref<RegionMode>('INR');
-const selectedType = ref<string>('web_app');
-const selectedScale = ref<string>('growth');
-const selectedFeatures = ref<string[]>(['stripe_payments', 'admin_analytics']);
+const selectedType = ref<string>('digital_presence');
+const selectedScale = ref<string>('mvp');
+const selectedFeatures = ref<string[]>([]);
 
 const showLeadModal = ref(false);
 const modalSubmissionError = ref<string | null>(null);
@@ -213,7 +213,7 @@ const currentProjectTypeObj = computed(() =>
 );
 
 const currentScaleObj = computed(() =>
-    SCALE_OPTIONS.find((s) => s.id === selectedScale.value) ?? SCALE_OPTIONS[1]
+    SCALE_OPTIONS.find((s) => s.id === selectedScale.value) ?? SCALE_OPTIONS[0]
 );
 
 const currentRegionInfo = computed(() => REGIONS[currency.value]);
@@ -254,7 +254,10 @@ const calculatedDays = computed(() => {
     });
 
     days = Math.round(days * (selectedScale.value === 'enterprise' ? 1.3 : 1.0));
-    const weeksMin = Math.max(2, Math.floor(days / 7));
+    if (days <= 7) {
+        return '5–7 Days (1 Week)';
+    }
+    const weeksMin = Math.max(1, Math.floor(days / 7));
     const weeksMax = Math.ceil(days / 7) + 1;
 
     return `${weeksMin} - ${weeksMax} Weeks`;
