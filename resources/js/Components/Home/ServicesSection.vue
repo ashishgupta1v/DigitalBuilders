@@ -50,5 +50,38 @@ defineProps<{
                 </Link>
             </article>
         </div>
+
+        <!-- Architectural Specification & Price Book Download Card -->
+        <div class="mt-8 rounded-3xl border border-border bg-card p-6 sm:p-8 flex flex-col lg:flex-row items-center justify-between gap-6 shadow-md" data-stagger-item>
+            <div class="flex items-center gap-4">
+                <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-sky-500/20 to-indigo-500/20 text-sky-600 dark:text-sky-400 flex items-center justify-center font-black text-xl shrink-0">
+                    📄
+                </div>
+                <div>
+                    <h3 class="text-base sm:text-lg font-bold text-foreground">2026 Architectural Price Book & Service Catalogue</h3>
+                    <p class="text-xs sm:text-sm text-muted-foreground mt-0.5">Explore full system deliverables, add-on modules, SLAs, and fixed pricing in a printable brochure format.</p>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto shrink-0">
+                <a
+                    href="/downloads/digitalbuilders-pricing-india-inr.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-full border border-sky-500/40 bg-sky-500/10 px-4 py-2.5 text-xs font-bold text-sky-700 dark:text-sky-300 hover:bg-sky-500/20 transition-all shadow-sm cursor-pointer"
+                >
+                    <span>🇮🇳 India (INR ₹)</span>
+                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+                <a
+                    href="/downloads/digitalbuilders-pricing-international-usd.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn-primary inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-xs font-bold text-white transition-all shadow-sm cursor-pointer"
+                >
+                    <span>🌐 International (USD $)</span>
+                    <svg class="h-3.5 w-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+            </div>
+        </div>
     </section>
 </template>

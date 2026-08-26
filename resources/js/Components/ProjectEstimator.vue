@@ -515,13 +515,22 @@ function formatMoney(val: number): string {
                     </div>
                 </div>
 
-                <div class="mt-8 space-y-3">
+                <div class="mt-8 space-y-2.5">
                     <button
                         @click="openInquiryModal"
                         class="btn-primary w-full min-h-[44px] rounded-full px-6 py-3.5 text-center text-sm font-bold text-white transition hover:scale-[1.01] shadow-lg cursor-pointer"
                     >
                         Request Formal Proposal for this Scope →
                     </button>
+                    <a
+                        :href="currency === 'INR' ? '/downloads/digitalbuilders-pricing-india-inr.html' : '/downloads/digitalbuilders-pricing-international-usd.html'"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex w-full min-h-[40px] items-center justify-center gap-2 rounded-full border border-border bg-secondary/80 px-5 py-2.5 text-center text-xs font-bold text-secondary-foreground transition hover:bg-secondary hover:border-sky-500/50 shadow-sm cursor-pointer"
+                    >
+                        <svg class="h-4 w-4 text-sky-600 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <span>View & Download Price Book (PDF)</span>
+                    </a>
                     <p class="text-center text-[11px] text-muted-foreground">Guaranteed response from Lead Architect within 24 hours.</p>
                 </div>
             </div>
