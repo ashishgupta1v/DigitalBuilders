@@ -36,6 +36,13 @@
         <meta name="twitter:title" content="{{ $currentMetaTitle }}">
         <meta name="twitter:description" content="{{ $currentMetaDesc }}">
         <meta name="twitter:image" content="{{ $currentMetaImage }}">
+
+        @php
+            $gaMeasurementId = config('services.ga_measurement_id', env('GA_MEASUREMENT_ID', ''));
+        @endphp
+        <script>
+            window.GA_MEASUREMENT_ID = @json($gaMeasurementId);
+        </script>
         @verbatim
         <script type="application/ld+json">
             {

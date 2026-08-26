@@ -3,6 +3,8 @@ import { Head, Link } from '@inertiajs/vue3';
 import { computed, onMounted, ref } from 'vue';
 import { detectUserRegion, REGIONS, type RegionMode, saveUserRegion } from '@/utils/geo';
 import CookieConsent from '@/Components/CookieConsent.vue';
+import StickyMobileCta from '@/Components/StickyMobileCta.vue';
+import { trackBrochureDownload, trackWhatsAppClick } from '@/utils/analytics';
 
 const activeRegion = ref<RegionMode>('INR');
 const isAutoDetected = ref(true);
@@ -480,6 +482,39 @@ function getAddonPrice(addon: AddonModule): string {
                 </p>
             </div>
 
+            <!-- Rate Card Quick Download / Print Bar -->
+            <div class="mt-6 mx-auto max-w-4xl flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-700/60 bg-slate-900/60 p-4 backdrop-blur-md">
+                <div class="flex items-center gap-3">
+                    <div class="h-9 w-9 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center font-bold shrink-0">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-white">Need an offline printable rate card or proposal brochure?</p>
+                        <p class="text-[11px] text-slate-400">Download our official 2026 architectural specification brochure in HTML/PDF format.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a
+                        href="/downloads/digitalbuilders-rate-card-inr.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        @click="trackBrochureDownload('inr')"
+                        class="inline-flex items-center gap-1.5 rounded-xl border border-sky-500/40 bg-sky-500/10 px-3.5 py-2 text-xs font-bold text-sky-300 hover:bg-sky-500/20 transition-all"
+                    >
+                        <span>🇮🇳 India Rate Card (INR)</span>
+                    </a>
+                    <a
+                        href="/downloads/digitalbuilders-rate-card-usd.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        @click="trackBrochureDownload('usd')"
+                        class="inline-flex items-center gap-1.5 rounded-xl border border-indigo-500/40 bg-indigo-500/10 px-3.5 py-2 text-xs font-bold text-indigo-300 hover:bg-indigo-500/20 transition-all"
+                    >
+                        <span>🌐 International (USD)</span>
+                    </a>
+                </div>
+            </div>
+
             <!-- Core Architectural Services Section -->
             <div class="mt-16 space-y-16">
                 <div v-for="service in SERVICES" :key="service.id" class="rounded-3xl border border-[#b8c9e633] bg-[#202e42cc] p-6 sm:p-8 backdrop-blur-md shadow-xl">
@@ -749,6 +784,9 @@ function getAddonPrice(addon: AddonModule): string {
                 </div>
             </div>
         </footer>
+
+        <!-- High-Conversion Sticky Mobile CTA Bar -->
+        <StickyMobileCta />
 
         <!-- Privacy-First Cookie Consent Banner -->
         <CookieConsent />

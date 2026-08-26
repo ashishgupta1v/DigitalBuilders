@@ -2,6 +2,7 @@
 import { useForm, Link } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { detectUserRegion, REGIONS, type RegionMode, saveUserRegion } from '@/utils/geo';
+import { trackEstimatorSubmit, trackEstimatorConfigured, trackWhatsAppClick } from '@/utils/analytics';
 
 const props = defineProps<{
     isStandalone?: boolean;
@@ -246,6 +247,7 @@ function openInquiryModal() {
     form.estimated_timeline = calculatedDays.value;
     form.features = selectedFeatures.value.map((fId) => FEATURES_LIST.find((f) => f.id === fId)?.label ?? fId);
     showLeadModal.value = true;
+    trackEstimatorConfigured(form.project_type, form.estimated_budget, form.estimated_timeline);
 }
 
 const modalFallbackWhatsAppUrl = computed(() => {
@@ -268,22 +270,20 @@ function submitInquiry() {
     if (form.processing) return;
     modalSubmissionError.value = null;
 
+    const projId = currentProjectTypeObj.value.id;
+    const budgetVal = form.estimated_budget;
+
     form.post(route('estimator.submit'), {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => {
             modalSubmissionError.value = null;
+            trackEstimatorSubmit(projId, budgetVal);
             showLeadModal.value = false;
             form.reset();
             window.dispatchEvent(new CustomEvent('db:toast', {
                 detail: { message: 'Estimate inquiry submitted successfully! We will contact you within 24 hours.', type: 'success' },
             }));
-            if (typeof window !== 'undefined' && (window as any).dbTrack) {
-                (window as any).dbTrack('estimate_submitted', {
-                    project: currentProjectTypeObj.value.id,
-                    budget: form.estimated_budget,
-                });
-            }
         },
         onError: (errors) => {
             if (errors && Object.keys(errors).length > 0) {

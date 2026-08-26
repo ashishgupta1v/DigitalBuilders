@@ -54,6 +54,31 @@ const jsonLd = computed(() => ({
     keywords: props.post.tags.join(', '),
 }));
 
+const breadcrumbJsonLd = computed(() => ({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+        {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: 'https://www.digitalbuilders.in',
+        },
+        {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Engineering Insights',
+            item: 'https://www.digitalbuilders.in/blog',
+        },
+        {
+            '@type': 'ListItem',
+            position: 3,
+            name: props.post.title,
+            item: canonicalUrl.value,
+        },
+    ],
+}));
+
 function handleScroll() {
     const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
     if (totalHeight > 0) {
@@ -123,6 +148,9 @@ onBeforeUnmount(() => {
         <meta name="twitter:image" :content="props.post.cover_image" />
         <component is="script" type="application/ld+json">
             {{ JSON.stringify(jsonLd) }}
+        </component>
+        <component is="script" type="application/ld+json">
+            {{ JSON.stringify(breadcrumbJsonLd) }}
         </component>
     </Head>
 
