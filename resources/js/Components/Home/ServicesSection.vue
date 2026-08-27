@@ -45,7 +45,7 @@ const emit = defineEmits<{
                     <p class="mt-3 text-sm text-muted-foreground leading-relaxed max-w-2xl">High-concurrency web platforms engineered with Laravel, Vue 3, and Inertia.js. Domain-driven architecture designed to handle thousands of concurrent transactions with zero technical debt.</p>
                 </div>
                 <div class="mt-8 pt-4 border-t border-border/80 flex items-center justify-between">
-                    <Link href="/services/web-applications" class="inline-flex items-center gap-1.5 text-xs font-bold text-sky-700 dark:text-sky-400 hover:underline">
+                    <Link href="/services/web-applications" class="inline-flex items-center gap-1.5 min-h-[44px] py-2 text-xs font-bold text-sky-700 dark:text-sky-400 hover:underline">
                         Explore Web Architecture
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </Link>
@@ -67,7 +67,7 @@ const emit = defineEmits<{
                     <p class="mt-3 text-sm text-muted-foreground leading-relaxed">Smooth iOS & Android apps built with Flutter, React Native, or Kotlin Native with offline SQLite sync and biometric security.</p>
                 </div>
                 <div class="mt-8 pt-4 border-t border-border/80 flex items-center justify-between">
-                    <Link href="/services/mobile-apps" class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 dark:text-indigo-400 hover:underline">
+                    <Link href="/services/mobile-apps" class="inline-flex items-center gap-1.5 min-h-[44px] py-2 text-xs font-bold text-indigo-700 dark:text-indigo-400 hover:underline">
                         Explore Mobile Apps
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </Link>
@@ -89,7 +89,7 @@ const emit = defineEmits<{
                     <p class="mt-3 text-sm text-muted-foreground leading-relaxed">Enterprise conversational AI agents, WhatsApp automated qualification workflows, and zero-hallucination vector search.</p>
                 </div>
                 <div class="mt-8 pt-4 border-t border-border/80 flex items-center justify-between">
-                    <Link href="/services/ai-solutions" class="inline-flex items-center gap-1.5 text-xs font-bold text-purple-700 dark:text-purple-400 hover:underline">
+                    <Link href="/services/ai-solutions" class="inline-flex items-center gap-1.5 min-h-[44px] py-2 text-xs font-bold text-purple-700 dark:text-purple-400 hover:underline">
                         Explore AI Agents
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </Link>
@@ -111,7 +111,7 @@ const emit = defineEmits<{
                     <p class="mt-3 text-sm text-muted-foreground leading-relaxed">Centralized business ERPs, daily compliance ledgers, inventory reconciliation, and custom invoicing workflows.</p>
                 </div>
                 <div class="mt-8 pt-4 border-t border-border/80 flex items-center justify-between">
-                    <Link href="/services/erp-crm" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline">
+                    <Link href="/services/erp-crm" class="inline-flex items-center gap-1.5 min-h-[44px] py-2 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline">
                         Explore ERP Solutions
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </Link>
@@ -133,7 +133,7 @@ const emit = defineEmits<{
                     <p class="mt-3 text-sm text-muted-foreground leading-relaxed">SaaS platforms with automated recurring billing, Stripe/Razorpay checkouts, webhook queues, and granular RBAC.</p>
                 </div>
                 <div class="mt-8 pt-4 border-t border-border/80 flex items-center justify-between">
-                    <Link href="/services/saas-platforms" class="inline-flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 hover:underline">
+                    <Link href="/services/saas-platforms" class="inline-flex items-center gap-1.5 min-h-[44px] py-2 text-xs font-bold text-amber-700 dark:text-amber-400 hover:underline">
                         Explore SaaS Platforms
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </Link>

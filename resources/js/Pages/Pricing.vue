@@ -563,9 +563,24 @@ function getAddonPrice(addon: AddonModule): string {
         <title>Enterprise Software & AI Architecture Pricing (2026 Price Book) — DigitalBuilders</title>
         <meta name="description" content="Transparent, decoupled pricing for enterprise web applications, AI voice agents, cross-platform mobile apps, SaaS, and custom ERP systems. View INR and USD price books." />
         <link rel="canonical" href="https://www.digitalbuilders.in/pricing" />
+        <meta property="og:title" content="Transparent Milestone-Based Pricing & Enterprise Care SLAs | DigitalBuilders" />
+        <meta property="og:description" content="Fixed-scope, transparent milestone pricing for enterprise web applications, mobile platforms, and AI systems. Explore Launch, Scale, and Enterprise tiers with 30-day warranty." />
+        <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/habuilt.jpg" />
+        <meta property="og:url" content="https://www.digitalbuilders.in/pricing" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Enterprise Software & AI Architecture Pricing (2026 Price Book) | DigitalBuilders" />
+        <meta name="twitter:description" content="Fixed-scope, transparent milestone pricing for enterprise web applications, mobile platforms, and AI systems." />
     </Head>
 
     <div class="db-shell bg-background text-foreground min-h-screen">
+        <!-- Accessible Skip to Main Content Link (WCAG 2.4.1) -->
+        <a
+            href="#main-content"
+            class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-5 focus:py-2.5 focus:bg-primary focus:text-white focus:rounded-full focus:shadow-2xl focus:font-bold focus:outline-none focus:ring-4 focus:ring-sky-400"
+        >
+            Skip to main content
+        </a>
+
         <div class="db-progress" />
         <div class="db-grid-overlay" />
 
@@ -573,18 +588,18 @@ function getAddonPrice(addon: AddonModule): string {
         <header class="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
                 <ApplicationLogo :is-link="true" href="/" />
-                <div class="flex items-center gap-3 sm:gap-5">
-                    <Link href="/#services" class="hidden text-xs font-semibold text-muted-foreground hover:text-foreground md:inline-block transition-colors">Services</Link>
-                    <Link href="/#portfolio" class="hidden text-xs font-semibold text-muted-foreground hover:text-foreground md:inline-block transition-colors">Portfolio</Link>
-                    <Link href="/estimator" class="text-xs font-semibold text-sky-600 dark:text-sky-400 hover:underline">Estimator</Link>
-                    <Link href="/#contact" class="btn-primary inline-flex items-center justify-center rounded-full px-4 py-2 text-xs font-bold text-white shadow transition hover:scale-105">
+                <nav aria-label="Primary navigation" class="flex items-center gap-3 sm:gap-5">
+                    <Link href="/#services" class="hidden text-xs font-semibold text-muted-foreground hover:text-foreground md:inline-flex items-center min-h-[44px] px-2 transition-colors">Services</Link>
+                    <Link href="/#portfolio" class="hidden text-xs font-semibold text-muted-foreground hover:text-foreground md:inline-flex items-center min-h-[44px] px-2 transition-colors">Portfolio</Link>
+                    <Link href="/estimator" class="text-xs font-semibold text-sky-600 dark:text-sky-400 hover:underline min-h-[44px] inline-flex items-center px-2">Estimator</Link>
+                    <Link href="/#contact" class="btn-primary inline-flex items-center justify-center rounded-full px-4 py-2 min-h-[44px] text-xs font-bold text-white shadow transition hover:scale-105">
                         Book Discovery
                     </Link>
-                </div>
+                </nav>
             </div>
         </header>
 
-        <main class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <main id="main-content" class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
             <!-- Hero Header -->
             <div class="text-center max-w-3xl mx-auto">
                 <span class="db-chip">Decoupled Regional Price Books · FY 2026-27</span>
@@ -603,7 +618,7 @@ function getAddonPrice(addon: AddonModule): string {
                             :key="region.id"
                             @click="switchRegion(region.id)"
                             :class="[
-                                'flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap',
+                                'flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap',
                                 activeRegion === region.id
                                     ? 'bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-md scale-[1.02]'
                                     : 'text-slate-800 dark:text-slate-200 font-bold hover:bg-accent/80 hover:text-foreground',

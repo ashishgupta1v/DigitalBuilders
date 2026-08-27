@@ -60,22 +60,30 @@ const breadcrumbSchema = {
     </Head>
 
     <div class="db-shell bg-background text-foreground min-h-screen">
+        <!-- Accessible Skip to Main Content Link (WCAG 2.4.1) -->
+        <a
+            href="#main-content"
+            class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-5 focus:py-2.5 focus:bg-primary focus:text-white focus:rounded-full focus:shadow-2xl focus:font-bold focus:outline-none focus:ring-4 focus:ring-sky-400"
+        >
+            Skip to main content
+        </a>
+
         <div class="db-progress" />
         <div class="db-grid-overlay" />
 
         <header class="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
                 <ApplicationLogo :is-link="true" href="/" />
-                <div class="flex items-center gap-4">
-                    <Link href="/" class="text-sm font-medium text-muted-foreground hover:text-foreground">← Home</Link>
-                    <Link href="/estimator" class="hidden rounded-full btn-primary px-4 py-2 text-xs font-semibold text-white sm:inline-flex">
+                <nav aria-label="Primary navigation" class="flex items-center gap-4">
+                    <Link href="/" class="text-sm font-medium text-muted-foreground hover:text-foreground min-h-[44px] inline-flex items-center px-2">← Home</Link>
+                    <Link href="/estimator" class="hidden rounded-full btn-primary px-4 py-2 min-h-[44px] text-xs font-semibold text-white sm:inline-flex items-center justify-center">
                         Estimate ERP Scope
                     </Link>
-                </div>
+                </nav>
             </div>
         </header>
 
-        <main class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <main id="main-content" class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
             <div class="text-center max-w-4xl mx-auto">
                 <span class="db-chip">Core Pillar 04</span>
                 <h1 class="mt-4 text-3xl font-black text-foreground sm:text-5xl lg:text-6xl leading-tight">

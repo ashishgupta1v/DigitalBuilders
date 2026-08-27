@@ -265,6 +265,14 @@ onUnmounted(() => {
     <Head title="DigitalBuilders — Enterprise Web, Mobile & AI Architecture" />
 
     <div class="relative min-h-screen bg-background text-foreground transition-colors duration-300 db-blueprint-grid">
+        <!-- Accessible Skip to Main Content Link (WCAG 2.4.1) -->
+        <a
+            href="#main-content"
+            class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-5 focus:py-2.5 focus:bg-primary focus:text-white focus:rounded-full focus:shadow-2xl focus:font-bold focus:outline-none focus:ring-4 focus:ring-sky-400"
+        >
+            Skip to main content
+        </a>
+
         <!-- Scroll Progress Bar -->
         <div class="db-progress" />
         <div class="db-grid-overlay" />
@@ -275,17 +283,17 @@ onUnmounted(() => {
                 <!-- Logo: icon + brand name -->
                 <ApplicationLogo :is-link="true" href="#top" />
 
-                <nav class="hidden items-center gap-1.5 text-sm font-medium lg:flex xl:gap-2">
-                    <a href="#services" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Services</a>
-                    <a href="#portfolio" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Portfolio</a>
-                    <Link href="/pricing" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Pricing</Link>
-                    <button type="button" @click="showBrochureModal = true" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground inline-flex items-center gap-1.5 cursor-pointer">
+                <nav aria-label="Primary navigation" class="hidden items-center gap-1.5 text-sm font-medium lg:flex xl:gap-2">
+                    <a href="#services" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">Services</a>
+                    <a href="#portfolio" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">Portfolio</a>
+                    <Link href="/pricing" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">Pricing</Link>
+                    <button type="button" @click="showBrochureModal = true" class="px-3 py-1.5 min-h-[44px] text-muted-foreground transition-all duration-200 hover:text-foreground inline-flex items-center gap-1.5 cursor-pointer">
                         <span>Price Book</span>
                         <span class="rounded bg-sky-500/10 text-sky-700 dark:text-sky-400 text-[10px] font-bold px-1.5 py-0.5">PDF</span>
                     </button>
-                    <Link href="/blog" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Blog</Link>
-                    <a href="#about" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">About</a>
-                    <a href="#contact" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Contact</a>
+                    <Link href="/blog" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">Blog</Link>
+                    <a href="#about" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">About</a>
+                    <a href="#contact" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">Contact</a>
                 </nav>
 
                 <div class="flex items-center gap-2.5">
@@ -299,19 +307,20 @@ onUnmounted(() => {
                         <span>Schedule Call</span>
                     </button>
 
-                    <!-- Theme Toggle -->
+                    <!-- Theme Toggle (≥44px Touch Target) -->
                     <button
                         @click="toggleTheme"
-                        class="h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground inline-flex cursor-pointer"
+                        class="h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground inline-flex cursor-pointer"
                         :aria-label="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
                     >
                         <svg v-if="isDarkMode" class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
                         <svg v-else class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
                     </button>
-                    <!-- Mobile hamburger -->
+
+                    <!-- Mobile hamburger (≥44px Touch Target) -->
                     <button
                         @click="mobileMenuOpen = !mobileMenuOpen"
-                        class="flex h-11 w-11 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground lg:hidden focus:outline-none cursor-pointer"
+                        class="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground lg:hidden focus:outline-none cursor-pointer"
                         :aria-expanded="mobileMenuOpen"
                         aria-label="Toggle menu"
                     >
@@ -333,21 +342,21 @@ onUnmounted(() => {
                 leave-to-class="opacity-0 -translate-y-3"
             >
                 <div v-if="mobileMenuOpen" class="border-t border-border bg-card px-4 pb-5 pt-4 sm:px-5 lg:hidden">
-                    <nav class="flex flex-col gap-3 text-sm font-medium">
-                        <a href="#services" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Services</a>
-                        <a href="#portfolio" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Portfolio</a>
-                        <Link href="/pricing" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Pricing</Link>
-                        <button type="button" @click="mobileMenuOpen = false; showBrochureModal = true" class="text-muted-foreground transition hover:text-foreground flex items-center justify-between text-left">
+                    <nav aria-label="Mobile navigation" class="flex flex-col gap-3 text-sm font-medium">
+                        <a href="#services" @click="mobileMenuOpen = false" class="min-h-[44px] flex items-center text-muted-foreground transition hover:text-foreground">Services</a>
+                        <a href="#portfolio" @click="mobileMenuOpen = false" class="min-h-[44px] flex items-center text-muted-foreground transition hover:text-foreground">Portfolio</a>
+                        <Link href="/pricing" @click="mobileMenuOpen = false" class="min-h-[44px] flex items-center text-muted-foreground transition hover:text-foreground">Pricing</Link>
+                        <button type="button" @click="mobileMenuOpen = false; showBrochureModal = true" class="min-h-[44px] text-muted-foreground transition hover:text-foreground flex items-center justify-between text-left">
                             <span>2026 Price Book</span>
                             <span class="rounded bg-sky-500/10 text-sky-700 dark:text-sky-400 text-[10px] font-bold px-2 py-0.5">PDF</span>
                         </button>
-                        <Link href="/blog" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Blog</Link>
-                        <a href="#about" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">About</a>
-                        <a href="#contact" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Contact</a>
+                        <Link href="/blog" @click="mobileMenuOpen = false" class="min-h-[44px] flex items-center text-muted-foreground transition hover:text-foreground">Blog</Link>
+                        <a href="#about" @click="mobileMenuOpen = false" class="min-h-[44px] flex items-center text-muted-foreground transition hover:text-foreground">About</a>
+                        <a href="#contact" @click="mobileMenuOpen = false" class="min-h-[44px] flex items-center text-muted-foreground transition hover:text-foreground">Contact</a>
                         <button
                             type="button"
                             @click="mobileMenuOpen = false; showBookingModal = true"
-                            class="btn-primary w-full rounded-full py-3 text-center text-xs font-bold text-white mt-2 shadow-md"
+                            class="btn-primary w-full min-h-[44px] rounded-full py-3 text-center text-xs font-bold text-white mt-2 shadow-md cursor-pointer"
                         >
                             Schedule Architecture Session
                         </button>

@@ -56,9 +56,7 @@ Route::prefix('portfolio')->name('portfolio.')->group(function () {
 });
 
 // Pricing & Rate Card Brochures (Public)
-Route::get('/pricing', function () {
-    return Inertia::render('Pricing');
-})->name('pricing.index');
+Route::get('/pricing', [ServiceController::class, 'pricing'])->name('pricing.index');
 
 Route::get('/downloads/{file}', function (string $file) {
     $path = public_path('downloads/' . $file);
