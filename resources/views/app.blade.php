@@ -22,6 +22,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="description" content="{{ $currentMetaDesc }}">
         <meta name="google-site-verification" content="J_TePy9m6LfzCY5lQaB1O1KHpnj05BWSp8JIhTibhhw">
+        <meta name="msvalidate.01" content="13FD5E145109ABCC31640FDCCA07FD32">
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
         <link rel="canonical" href="{{ $currentMetaUrl }}">
         <link rel="alternate" type="application/rss+xml" title="DigitalBuilders Engineering & Architecture Insights" href="{{ url('/feed.xml') }}">
