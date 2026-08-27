@@ -338,7 +338,7 @@
         </script>
         @endverbatim
 
-        <title inertia>{{ config('app.name', 'DigitalBuilders') }}</title>
+        <title inertia>{{ $currentMetaTitle }}</title>
 
         <link rel="icon" type="image/png" sizes="48x48" href="{{ asset('favicon-48x48.png') }}">
         <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
@@ -382,6 +382,12 @@
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
+        <noscript>
+            <header style="padding:20px;background:#0b0f19;color:#ffffff;text-align:center;">
+                <h1>DigitalBuilders — Enterprise Software &amp; AI Architecture</h1>
+                <p>DigitalBuilders delivers enterprise-grade web applications, mobile apps, and autonomous AI agents. Founded by Lead Digital Architect Ashish Gupta in Ludhiana, Punjab, India.</p>
+            </header>
+        </noscript>
         @if ($hasAssets)
             @inertia
         @else
