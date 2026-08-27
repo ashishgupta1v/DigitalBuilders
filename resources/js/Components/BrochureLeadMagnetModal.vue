@@ -17,6 +17,8 @@ const form = useForm({
     email: '',
     phone: '',
     project_type: 'web_app',
+    source: 'brochure',
+    region: 'INR',
     description: '[Requested 2026 Price Book via Lead Magnet Modal]',
     _hp_company: '',
 });
@@ -26,7 +28,7 @@ function handleClose() {
 }
 
 function handleDirectDownload(edition: 'inr' | 'usd') {
-    trackBrochureDownload(edition);
+    trackBrochureDownload(edition, edition === 'inr' ? 'INR' : 'USD');
     trackEvent('lead_magnet_direct_download', { edition });
     const url = edition === 'inr'
         ? '/downloads/digitalbuilders-pricing-india-inr.html'
@@ -35,6 +37,9 @@ function handleDirectDownload(edition: 'inr' | 'usd') {
 }
 
 function submitLeadAndDownload(edition: 'inr' | 'usd') {
+    form.region = edition === 'inr' ? 'INR' : 'USD';
+    form.source = 'brochure';
+    
     if (form.email || form.phone) {
         form.post(route('library.leads.store'), {
             preserveScroll: true,

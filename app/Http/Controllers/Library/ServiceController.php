@@ -82,4 +82,16 @@ class ServiceController extends Controller
             'type' => 'website',
         ]);
     }
+
+    public function book(): Response
+    {
+        return $this->renderWithMeta('Book', [
+            'title' => 'Book a Free Architecture Consultation | DigitalBuilders',
+            'description' => 'Schedule a 30-minute 1-on-1 technical discovery consultation with Lead Architect Ashish Gupta. Zero-obligation system bottleneck audit, stack evaluation, and fixed roadmap.',
+            'image' => asset('images/portfolio/habuilt.jpg'),
+            'url' => url('/book'),
+            'type' => 'website',
+        ]);
+    }
 }
+

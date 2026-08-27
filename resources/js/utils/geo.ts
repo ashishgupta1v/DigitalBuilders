@@ -44,14 +44,26 @@ export const REGIONS: Record<RegionMode, RegionMetadata> = {
     },
 };
 
-export function detectUserRegion(): RegionMode {
-    if (typeof window === 'undefined') return 'INR';
+export function detectUserRegion(serverRegion?: string | null): RegionMode {
+    if (typeof window === 'undefined') {
+        if (serverRegion === 'INR' || serverRegion === 'GULF' || serverRegion === 'USD') {
+            return serverRegion;
+        }
+        return 'INR';
+    }
 
+    // 1. Primary: Explicit User Manual Override in LocalStorage
     const saved = localStorage.getItem('db_pricing_region') as RegionMode | null;
     if (saved && (saved === 'INR' || saved === 'GULF' || saved === 'USD')) {
         return saved;
     }
 
+    // 2. Secondary: Server IP Geo Detection (x-vercel-ip-country / cf-ipcountry)
+    if (serverRegion === 'INR' || serverRegion === 'GULF' || serverRegion === 'USD') {
+        return serverRegion;
+    }
+
+    // 3. Tertiary: Browser Timezone Heuristic
     try {
         const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
         if (

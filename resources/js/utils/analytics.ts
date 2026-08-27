@@ -84,7 +84,7 @@ export function initGA4(): void {
 }
 
 /**
- * Dynamically injects Plausible Analytics when enabled.
+ * Dynamically injects Plausible Analytics with SPA pageview and custom event tracking.
  */
 export function initPlausible(): void {
     if (typeof window === 'undefined' || isPlausibleInitialized) return;
@@ -92,13 +92,27 @@ export function initPlausible(): void {
     const consent = getStoredConsent();
     if (!consent?.analytics) return;
 
+    // Create queue function if not yet loaded
+    (window as any).plausible = (window as any).plausible || function() {
+        ((window as any).plausible.q = (window as any).plausible.q || []).push(arguments);
+    };
+
     const plausibleDomain = (window as any).PLAUSIBLE_DOMAIN || 'digitalbuilders.in';
     const script = document.createElement('script');
     script.defer = true;
     script.dataset.domain = plausibleDomain;
-    script.src = 'https://plausible.io/js/script.tagged-events.js';
-    document.head.appendChild(script);
+    script.src = 'https://plausible.io/js/script.tagged-events.pageview-props.js';
+    
+    script.onerror = () => {
+        // Fallback to standard tagged events
+        const fallbackScript = document.createElement('script');
+        fallbackScript.defer = true;
+        fallbackScript.dataset.domain = plausibleDomain;
+        fallbackScript.src = 'https://plausible.io/js/script.tagged-events.js';
+        document.head.appendChild(fallbackScript);
+    };
 
+    document.head.appendChild(script);
     isPlausibleInitialized = true;
 }
 
@@ -251,6 +265,26 @@ export function trackPageView(pageUrl?: string, pageTitle?: string): void {
     const url = pageUrl || window.location.pathname + window.location.search;
     const title = pageTitle || document.title;
 
+    const consent = getStoredConsent();
+    const isConsentGiven = consent?.analytics ?? false;
+
+    // Dispatch to GA4
+    if (isConsentGiven && typeof (window as any).gtag === 'function') {
+        (window as any).gtag('event', 'page_view', {
+            page_path: url,
+            page_location: window.location.href,
+            page_title: title,
+        });
+    }
+
+    // Dispatch to Plausible
+    if (isConsentGiven && typeof (window as any).plausible === 'function') {
+        (window as any).plausible('pageview', {
+            u: window.location.origin + url,
+            props: { title },
+        });
+    }
+
     trackEvent('page_view', {
         page_path: url,
         page_location: window.location.href,
@@ -262,33 +296,35 @@ export function trackPageView(pageUrl?: string, pageTitle?: string): void {
 // Typed High-Value Conversion Event Helpers
 // ----------------------------------------------------------------------
 
-export function trackWhatsAppClick(source: string, extra: Record<string, any> = {}): void {
-    trackEvent('whatsapp_click', {
+export function trackBookingCompleted(bookingType: string, region: string, extra: Record<string, any> = {}): void {
+    trackEvent('Booking Completed', {
         event_category: 'Conversion',
-        event_label: source,
-        source,
+        booking_type: bookingType,
+        region,
         ...extra,
     });
 }
 
-export function trackBrochureDownload(tier: 'india' | 'international' | string): void {
-    trackEvent('brochure_download', {
+export function trackBrochureDownload(tier: 'india' | 'international' | string, region = 'INR'): void {
+    trackEvent('Brochure Download', {
         event_category: 'Conversion',
         event_label: `Pricing Brochure - ${tier}`,
         tier,
+        region,
     });
 }
 
-export function trackContactSubmit(projectType: string): void {
-    trackEvent('generate_lead', {
+export function trackContactSubmit(projectType: string, region = 'INR'): void {
+    trackEvent('Contact Submit', {
         event_category: 'Lead',
         event_label: projectType,
         project_type: projectType,
+        region,
     });
 }
 
 export function trackEstimatorConfigured(projectType: string, budget: string, timeline: string): void {
-    trackEvent('estimate_configured', {
+    trackEvent('Estimator Configured', {
         event_category: 'Engagement',
         project_type: projectType,
         estimated_budget: budget,
@@ -296,32 +332,56 @@ export function trackEstimatorConfigured(projectType: string, budget: string, ti
     });
 }
 
-export function trackEstimatorSubmit(projectType: string, budget: string): void {
-    trackEvent('estimate_submitted', {
+export function trackEstimatorSubmit(projectType: string, budget: string, region = 'INR'): void {
+    trackEvent('Estimator Complete', {
         event_category: 'Lead',
         event_label: projectType,
         project_type: projectType,
         estimated_budget: budget,
+        region,
     });
 }
 
 export function trackTierSelected(serviceId: string, tierName: string, region: string): void {
-    trackEvent('pricing_tier_selected', {
+    trackEvent('Package Select', {
         event_category: 'Conversion',
         service_id: serviceId,
         tier_name: tierName,
-        region: region,
+        region,
+    });
+}
+
+export function trackPricingRegionViewed(region: string): void {
+    trackEvent('Pricing Region Viewed', {
+        event_category: 'Engagement',
+        region,
+    });
+}
+
+export function trackNewsletterSignup(source = 'blog'): void {
+    trackEvent('Newsletter Signup', {
+        event_category: 'Lead',
+        source,
+    });
+}
+
+export function trackWhatsAppClick(source: string, extra: Record<string, any> = {}): void {
+    trackEvent('WhatsApp Click', {
+        event_category: 'Conversion',
+        event_label: source,
+        source,
+        ...extra,
     });
 }
 
 export function trackPhoneClick(): void {
-    trackEvent('phone_call_click', {
+    trackEvent('Phone Call Click', {
         event_category: 'Contact',
     });
 }
 
 export function trackEmailClick(): void {
-    trackEvent('email_click', {
+    trackEvent('Email Click', {
         event_category: 'Contact',
     });
 }
@@ -332,6 +392,7 @@ if (typeof window !== 'undefined') {
     (window as any).dbTrackPageView = trackPageView;
 
     initGA4();
+    initPlausible();
     initErrorMonitoring();
 
     window.addEventListener('db:consent-updated', (e: any) => {

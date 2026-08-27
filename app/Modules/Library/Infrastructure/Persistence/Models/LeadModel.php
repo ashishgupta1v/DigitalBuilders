@@ -18,10 +18,19 @@ class LeadModel extends Model
         'email',
         'phone',
         'project_type',
+        'source',
+        'region',
         'description',
         'status',
+        'stage',
         'score',
+        'estimated_value',
         'notes_count',
+        'utm_source',
+        'utm_medium',
+        'utm_campaign',
+        'utm_content',
+        'utm_term',
     ];
 
     public function notes(): \Illuminate\Database\Eloquent\Relations\HasMany

@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { useForm, Link } from '@inertiajs/vue3';
+import { useForm, Link, usePage } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { detectUserRegion, REGIONS, type RegionMode, saveUserRegion } from '@/utils/geo';
 import { trackEstimatorSubmit, trackEstimatorConfigured, trackWhatsAppClick } from '@/utils/analytics';
+
+const page = usePage();
+const serverGeoRegion = computed(() => (page.props as any).geo?.region as string | undefined);
 
 const props = defineProps<{
     isStandalone?: boolean;
@@ -341,7 +344,7 @@ function handleKeyDown(e: KeyboardEvent) {
 }
 
 onMounted(() => {
-    const detected = detectUserRegion();
+    const detected = detectUserRegion(serverGeoRegion.value);
     currency.value = detected;
 
     // Check query parameters if arriving with preset service or region

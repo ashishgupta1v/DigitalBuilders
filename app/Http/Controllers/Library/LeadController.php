@@ -39,10 +39,34 @@ class LeadController extends Controller
         return Inertia::render('Library/ContactForm');
     }
 
-    public function store(StoreLeadRequest $request, CreateLeadUseCase $useCase): RedirectResponse
+    public function store(StoreLeadRequest $request, CreateLeadUseCase $useCase): mixed
     {
-        $dto = CreateLeadDTO::fromArray($request->validated());
-        $useCase->execute($dto);
+        $validated = $request->validated();
+        $dto = CreateLeadDTO::fromArray($validated);
+        $leadDTO = $useCase->execute($dto);
+
+        // Enrich created LeadModel with growth CRM pipeline fields & UTM attribution
+        if ($leadDTO->id) {
+            \App\Modules\Library\Infrastructure\Persistence\Models\LeadModel::where('id', $leadDTO->id)->update([
+                'source'          => $validated['source'] ?? 'contact',
+                'region'          => $validated['region'] ?? null,
+                'stage'           => $validated['stage'] ?? 'new',
+                'estimated_value' => $validated['estimated_value'] ?? null,
+                'utm_source'      => $validated['utm_source'] ?? null,
+                'utm_medium'      => $validated['utm_medium'] ?? null,
+                'utm_campaign'    => $validated['utm_campaign'] ?? null,
+                'utm_content'     => $validated['utm_content'] ?? null,
+                'utm_term'        => $validated['utm_term'] ?? null,
+            ]);
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => "Thank you! Your inquiry has been received. We'll respond within 24 business hours.",
+                'lead_id' => $leadDTO->id,
+            ]);
+        }
 
         return back()
             ->with('success', 'Thank you! Your inquiry has been received. We\'ll respond within 24 business hours.');

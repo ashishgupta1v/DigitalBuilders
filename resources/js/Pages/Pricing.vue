@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import { computed, onMounted, ref } from 'vue';
 import { detectUserRegion, REGIONS, type RegionMode, saveUserRegion } from '@/utils/geo';
 import CookieConsent from '@/Components/CookieConsent.vue';
 import StickyMobileCta from '@/Components/StickyMobileCta.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import { trackBrochureDownload, trackWhatsAppClick } from '@/utils/analytics';
+import { trackBrochureDownload, trackWhatsAppClick, trackPricingRegionViewed, trackTierSelected } from '@/utils/analytics';
+
+const page = usePage();
+const serverGeoRegion = computed(() => (page.props as any).geo?.region as string | undefined);
 
 const activeRegion = ref<RegionMode>('INR');
 const isAutoDetected = ref(true);
@@ -15,14 +18,16 @@ function openCookieSettings() {
 }
 
 onMounted(() => {
-    const detected = detectUserRegion();
+    const detected = detectUserRegion(serverGeoRegion.value);
     activeRegion.value = detected;
+    trackPricingRegionViewed(detected);
 });
 
 function switchRegion(region: RegionMode) {
     activeRegion.value = region;
     isAutoDetected.value = false;
     saveUserRegion(region);
+    trackPricingRegionViewed(region);
 }
 
 const currentRegionInfo = computed(() => REGIONS[activeRegion.value]);

@@ -58,6 +58,9 @@ Route::prefix('portfolio')->name('portfolio.')->group(function () {
 // Pricing & Rate Card Brochures (Public)
 Route::get('/pricing', [ServiceController::class, 'pricing'])->name('pricing.index');
 
+// Direct Architect Booking (Public)
+Route::get('/book', [ServiceController::class, 'book'])->name('book');
+
 Route::get('/downloads/{file}', function (string $file) {
     $path = public_path('downloads/' . $file);
     if (!file_exists($path)) {
