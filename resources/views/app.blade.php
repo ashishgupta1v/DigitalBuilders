@@ -382,12 +382,7 @@
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
-        <noscript>
-            <header style="padding:20px;background:#0b0f19;color:#ffffff;text-align:center;">
-                <h1>DigitalBuilders — Enterprise Software &amp; AI Architecture</h1>
-                <p>DigitalBuilders delivers enterprise-grade web applications, mobile apps, and autonomous AI agents. Founded by Lead Digital Architect Ashish Gupta in Ludhiana, Punjab, India.</p>
-            </header>
-        </noscript>
+        <h1 class="sr-only" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;">DigitalBuilders — Enterprise Software &amp; AI Architecture</h1>
         @if ($hasAssets)
             @inertia
         @else
