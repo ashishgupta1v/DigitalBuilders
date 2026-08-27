@@ -6,13 +6,19 @@ namespace App\Http\Controllers\Library;
 
 use App\Http\Controllers\Controller;
 use App\Services\BlogService;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class SitemapController extends Controller
 {
-    public function index(BlogService $blogService): Response
+    public function index(Request $request, BlogService $blogService): Response
     {
-        $baseUrl = config('app.url', 'https://www.digitalbuilders.in');
+        $host = $request->getHost();
+        if ($host === 'localhost' || $host === '127.0.0.1') {
+            $baseUrl = rtrim($request->schemeAndHttpHost(), '/');
+        } else {
+            $baseUrl = 'https://www.digitalbuilders.in';
+        }
         $now = date('c');
 
         $urls = [

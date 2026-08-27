@@ -77,7 +77,12 @@ class BlogService
     {
         return Cache::remember('blog_rss_feed_xml', 3600, function (): string {
             $posts = $this->getAllPosts();
-            $baseUrl = rtrim(config('app.url', 'https://www.digitalbuilders.in'), '/');
+            $rawUrl = config('app.url', 'https://www.digitalbuilders.in');
+            if (str_contains((string) $rawUrl, 'vercel.app') || str_contains((string) $rawUrl, 'digital-builders-chi')) {
+                $baseUrl = 'https://www.digitalbuilders.in';
+            } else {
+                $baseUrl = rtrim((string) $rawUrl, '/');
+            }
             $feedUrl = $baseUrl . '/feed.xml';
             $nowRfc = (new DateTime('now', new DateTimeZone('UTC')))->format(DateTime::RSS);
 
