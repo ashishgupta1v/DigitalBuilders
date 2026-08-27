@@ -88,7 +88,7 @@ const filteredPosts = computed(() => {
                     <img :src="post.cover_image" :alt="post.title" class="h-48 w-full object-cover" />
                     <div class="flex flex-1 flex-col justify-between p-6">
                         <div>
-                            <div class="flex items-center justify-between text-xs text-sky-600 dark:text-sky-400">
+                            <div class="flex items-center justify-between text-xs text-sky-700 dark:text-sky-400">
                                 <span class="font-bold uppercase tracking-wider">{{ post.category }}</span>
                                 <span>{{ post.read_time }}</span>
                             </div>
@@ -100,7 +100,7 @@ const filteredPosts = computed(() => {
 
                         <div class="mt-6 flex items-center justify-between border-t border-border pt-4 text-xs">
                             <span class="text-muted-foreground">By {{ post.author }}</span>
-                            <Link :href="`/blog/${post.slug}`" class="font-bold text-sky-600 dark:text-sky-400 hover:underline">Read Article →</Link>
+                            <Link :href="`/blog/${post.slug}`" class="font-bold text-sky-700 dark:text-sky-400 hover:underline">Read Article →</Link>
                         </div>
                     </div>
                 </article>

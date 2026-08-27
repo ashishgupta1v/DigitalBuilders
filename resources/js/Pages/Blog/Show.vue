@@ -197,7 +197,7 @@ onBeforeUnmount(() => {
                     <span>•</span>
                     <span>Published {{ props.post.date }}</span>
                     <span>•</span>
-                    <span class="text-sky-600 dark:text-sky-400 font-semibold">{{ props.post.read_time }}</span>
+                    <span class="text-sky-700 dark:text-sky-400 font-semibold">{{ props.post.read_time }}</span>
                 </div>
             </div>
 
@@ -231,7 +231,7 @@ onBeforeUnmount(() => {
                             <h4 class="font-bold text-card-foreground text-base">{{ rel.title }}</h4>
                             <p class="mt-2 text-xs text-muted-foreground line-clamp-2">{{ rel.excerpt }}</p>
                         </div>
-                        <span class="mt-4 text-xs font-bold text-sky-600 dark:text-sky-400">Read Article →</span>
+                        <span class="mt-4 text-xs font-bold text-sky-700 dark:text-sky-400">Read Article →</span>
                     </Link>
                 </div>
             </div>
@@ -247,7 +247,7 @@ onBeforeUnmount(() => {
                     <h3 class="text-lg font-bold text-card-foreground">Written by Ashish Gupta</h3>
                     <p class="mt-1 text-xs text-muted-foreground">Lead Digital Architect & Founder at DigitalBuilders. Specializing in enterprise monoliths, AI voice agents, and cloud systems.</p>
                     <div class="mt-4 flex flex-wrap items-center gap-3">
-                        <a href="/#contact" class="inline-block text-xs font-bold text-sky-600 dark:text-sky-400 hover:underline">Schedule Architecture Audit →</a>
+                        <a href="/#contact" class="inline-block text-xs font-bold text-sky-700 dark:text-sky-400 hover:underline">Schedule Architecture Audit →</a>
                         <span class="text-muted-foreground">•</span>
                         <a href="/feed.xml" target="_blank" class="text-xs font-semibold text-muted-foreground hover:text-foreground">RSS Feed ↗</a>
                     </div>

@@ -323,7 +323,7 @@ function submitLead() {
                 <div class="db-antigravity-card rounded-3xl border border-border bg-card text-card-foreground p-6 sm:p-8 shadow-xl">
                     <h3 class="text-xl font-bold text-card-foreground">Quick Access</h3>
                     <p class="mt-3 text-sm text-muted-foreground">Explore more projects and technical work by our founder Ashish Gupta.</p>
-                    <a href="https://ashishgupta.dev" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-1.5 min-h-[44px] py-1 text-sm font-bold text-sky-600 dark:text-sky-400 hover:underline transition-colors">
+                    <a href="https://ashishgupta.dev" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-1.5 min-h-[44px] py-1 text-sm font-bold text-sky-700 dark:text-sky-400 hover:underline transition-colors">
                         View Founder Portfolio (ashishgupta.dev)
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     </a>

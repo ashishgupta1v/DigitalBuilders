@@ -14,7 +14,7 @@ const techStack = [
 <template>
     <section class="mt-20 sm:mt-24" data-reveal>
         <div class="text-center max-w-3xl mx-auto">
-            <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400 font-semibold">Technology Matrix</p>
+            <p class="text-sm uppercase tracking-[0.2em] text-sky-700 dark:text-sky-400 font-semibold">Technology Matrix</p>
             <h2 class="mt-3 text-2xl font-black text-foreground sm:text-3xl md:text-4xl">
                 Engineered with Modern, Battle-Tested Tools
             </h2>
@@ -31,7 +31,7 @@ const techStack = [
                 class="db-antigravity-card rounded-2xl border border-border bg-card text-card-foreground p-5 shadow-sm flex flex-col justify-between"
             >
                 <div>
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400">
                         {{ tech.category }}
                     </span>
                     <h3 class="mt-1.5 text-base font-bold text-card-foreground">

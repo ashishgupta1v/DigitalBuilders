@@ -98,7 +98,7 @@ const breadcrumbSchema = {
 
             <!-- Tech Badges -->
             <div class="mt-16 text-center">
-                <p class="text-xs uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400 font-bold">Core Stack & Ecosystem</p>
+                <p class="text-xs uppercase tracking-[0.2em] text-sky-700 dark:text-sky-400 font-bold">Core Stack & Ecosystem</p>
                 <div class="mt-4 flex flex-wrap justify-center gap-3">
                     <span class="rounded-xl border border-border bg-secondary px-4 py-2.5 text-xs font-bold text-secondary-foreground">Laravel 13</span>
                     <span class="rounded-xl border border-border bg-secondary px-4 py-2.5 text-xs font-bold text-secondary-foreground">Vue 3 + TypeScript</span>
@@ -137,7 +137,7 @@ const breadcrumbSchema = {
             <!-- Featured Case Studies -->
             <div class="mt-24">
                 <div class="text-center max-w-3xl mx-auto">
-                    <span class="text-xs uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400 font-bold">Proven In Production</span>
+                    <span class="text-xs uppercase tracking-[0.2em] text-sky-700 dark:text-sky-400 font-bold">Proven In Production</span>
                     <h2 class="mt-2 text-2xl font-black text-foreground sm:text-4xl">Featured Web Applications Delivered</h2>
                     <p class="mt-3 text-sm text-muted-foreground">Live production applications demonstrating our architectural reliability and scaling capability.</p>
                 </div>
@@ -151,12 +151,12 @@ const breadcrumbSchema = {
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">
                             <div>
-                                <span class="text-xs font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider">Wellness & Habits</span>
+                                <span class="text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-wider">Wellness & Habits</span>
                                 <h3 class="mt-1 text-xl font-bold text-card-foreground">Habuilt</h3>
                                 <p class="mt-2 text-xs text-muted-foreground leading-relaxed">High-traffic atomic habit platform with 26-week progression tiers. Reduced server latencies by 70%.</p>
                             </div>
                             <div class="mt-6 pt-4 border-t border-border flex items-center justify-between">
-                                <a href="https://www.habuilt.com/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1">Visit Live App ↗</a>
+                                <a href="https://www.habuilt.com/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-sky-700 dark:text-sky-400 hover:underline flex items-center gap-1">Visit Live App ↗</a>
                                 <Link href="/portfolio/habuilt" class="text-xs font-bold text-muted-foreground hover:text-foreground">Case Study →</Link>
                             </div>
                         </div>
@@ -207,7 +207,7 @@ const breadcrumbSchema = {
                 <h2 class="text-2xl font-black text-card-foreground sm:text-3xl">How We Build Your Web Application</h2>
                 <div class="mt-8 grid gap-6 sm:grid-cols-4">
                     <div class="border-l-2 border-sky-500 pl-4">
-                        <span class="text-xs font-bold text-sky-600 dark:text-sky-400">PHASE 01</span>
+                        <span class="text-xs font-bold text-sky-700 dark:text-sky-400">PHASE 01</span>
                         <h4 class="mt-1 font-bold text-card-foreground">Domain Blueprinting</h4>
                         <p class="mt-2 text-xs text-muted-foreground">Database schema design, API contract definition, and UX wireframes.</p>
                     </div>

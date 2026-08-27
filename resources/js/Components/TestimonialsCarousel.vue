@@ -213,10 +213,10 @@ async function fetchTestimonials() {
                             />
                             <div>
                                 <p class="text-sm font-bold text-card-foreground">{{ item.client_name }}</p>
-                                <p class="text-xs text-muted-foreground">{{ item.role }} · <span class="text-primary font-medium">{{ item.company }}</span></p>
+                                <p class="text-xs text-slate-600 dark:text-slate-300">{{ item.role }} · <span class="text-sky-700 dark:text-sky-300 font-semibold">{{ item.company }}</span></p>
                             </div>
                         </div>
-                        <span class="hidden text-xs text-muted-foreground sm:inline-block">
+                        <span class="hidden text-xs text-slate-600 dark:text-slate-300 sm:inline-block font-medium">
                             Project: {{ item.project_type }}
                         </span>
                     </div>

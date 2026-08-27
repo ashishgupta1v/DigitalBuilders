@@ -284,14 +284,14 @@ const filteredStudies = computed(() => {
     <section id="portfolio" class="mt-20 sm:mt-24" data-reveal>
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
-                <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-[#9dc5ff] font-semibold">Delivered Work & Case Studies</p>
+                <p class="text-sm uppercase tracking-[0.2em] text-sky-700 dark:text-[#9dc5ff] font-semibold">Delivered Work & Case Studies</p>
                 <h2 class="mt-3 text-2xl font-black text-slate-900 dark:text-white sm:text-3xl md:text-4xl">Production Applications Built for Scale</h2>
                 <p class="mt-3 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
                     Explore live web platforms, cloud SaaS engines, and enterprise mobile apps engineered by DigitalBuilders with zero technical debt.
                 </p>
             </div>
             <div class="flex items-center gap-2">
-                <Link href="/estimator" class="rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-2 text-xs font-bold text-sky-600 dark:text-sky-400 hover:bg-sky-500/20 transition-all inline-flex items-center gap-1.5">
+                <Link href="/estimator" class="rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-2 text-xs font-bold text-sky-700 dark:text-sky-400 hover:bg-sky-500/20 transition-all inline-flex items-center gap-1.5">
                     <span>Cost Estimator</span>
                     <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </Link>
@@ -330,11 +330,11 @@ const filteredStudies = computed(() => {
                     <!-- Header Bar with Live Indicator Badge -->
                     <div class="flex items-center justify-between gap-2">
                         <div class="flex items-center gap-2">
-                            <span v-if="!study.isMobile" class="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-1 text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
+                            <span v-if="!study.isMobile" class="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-1 text-[11px] font-bold text-emerald-800 dark:text-emerald-200">
                                 <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                                 Live Web App
                             </span>
-                            <span v-else class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 px-2.5 py-1 text-[11px] font-bold text-indigo-800 dark:text-indigo-300">
+                            <span v-else class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 px-2.5 py-1 text-[11px] font-bold text-indigo-800 dark:text-indigo-200">
                                 <span class="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse" />
                                 Mobile App (iOS/Android)
                             </span>
@@ -438,7 +438,7 @@ const filteredStudies = computed(() => {
                     <!-- Deep Page Case Study Link -->
                     <Link
                         :href="`/portfolio/${study.portfolioSlug}`"
-                        class="inline-flex items-center gap-1 min-h-[44px] rounded-full px-3 py-2 text-xs font-bold text-sky-600 dark:text-sky-400 hover:underline transition-colors ml-auto"
+                        class="inline-flex items-center gap-1 min-h-[44px] rounded-full px-3 py-2 text-xs font-bold text-sky-700 dark:text-sky-400 hover:underline transition-colors ml-auto"
                     >
                         <span>Full Case Study</span>
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>

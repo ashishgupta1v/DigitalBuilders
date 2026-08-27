@@ -116,7 +116,7 @@ const breadcrumbSchema = {
             <!-- Featured Case Studies -->
             <div class="mt-24">
                 <div class="text-center max-w-3xl mx-auto">
-                    <span class="text-xs uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400 font-bold">Custom Workflows In Production</span>
+                    <span class="text-xs uppercase tracking-[0.2em] text-sky-700 dark:text-sky-400 font-bold">Custom Workflows In Production</span>
                     <h2 class="mt-2 text-2xl font-black text-foreground sm:text-4xl">Featured ERP & CRM Systems</h2>
                     <p class="mt-3 text-sm text-muted-foreground">Custom business operational systems replacing messy spreadsheets with automated execution pipelines.</p>
                 </div>

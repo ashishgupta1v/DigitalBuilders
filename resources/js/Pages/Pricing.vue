@@ -606,7 +606,7 @@ function getAddonPrice(addon: AddonModule): string {
                                 'flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap',
                                 activeRegion === region.id
                                     ? 'bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-md scale-[1.02]'
-                                    : 'text-muted-foreground hover:text-foreground hover:bg-accent',
+                                    : 'text-slate-800 dark:text-slate-200 font-bold hover:bg-accent/80 hover:text-foreground',
                             ]"
                         >
                             <span class="text-sm">{{ region.flag }}</span>
@@ -617,7 +617,7 @@ function getAddonPrice(addon: AddonModule): string {
 
                     <!-- Region Context Subtitle -->
                     <div class="mt-3 flex items-center justify-center gap-2 text-xs text-muted-foreground">
-                        <span v-if="isAutoDetected" class="inline-flex items-center gap-1 text-sky-600 dark:text-sky-400 font-medium">
+                        <span v-if="isAutoDetected" class="inline-flex items-center gap-1 text-sky-700 dark:text-sky-400 font-medium">
                             <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                             Auto-localized for {{ currentRegionInfo.label }}
                         </span>
@@ -641,7 +641,7 @@ function getAddonPrice(addon: AddonModule): string {
             <!-- Rate Card Quick Download / Print Bar -->
             <div class="mt-6 mx-auto max-w-4xl flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-card p-4 backdrop-blur-md shadow-sm">
                 <div class="flex items-center gap-3">
-                    <div class="h-9 w-9 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center font-bold shrink-0">
+                    <div class="h-9 w-9 rounded-xl bg-sky-500/10 text-sky-700 dark:text-sky-400 flex items-center justify-center font-bold shrink-0">
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     </div>
                     <div>
@@ -655,7 +655,7 @@ function getAddonPrice(addon: AddonModule): string {
                         target="_blank"
                         rel="noopener noreferrer"
                         @click="trackBrochureDownload('inr')"
-                        class="inline-flex items-center gap-1.5 rounded-xl border border-sky-500/40 bg-sky-500/10 px-3.5 py-2 text-xs font-bold text-sky-600 dark:text-sky-300 hover:bg-sky-500/20 transition-all"
+                        class="inline-flex items-center gap-1.5 rounded-xl border border-sky-500/40 bg-sky-500/10 px-3.5 py-2 text-xs font-bold text-sky-700 dark:text-sky-300 hover:bg-sky-500/20 transition-all"
                     >
                         <span>🇮🇳 India Rate Card (INR)</span>
                     </a>
@@ -664,7 +664,7 @@ function getAddonPrice(addon: AddonModule): string {
                         target="_blank"
                         rel="noopener noreferrer"
                         @click="trackBrochureDownload('usd')"
-                        class="inline-flex items-center gap-1.5 rounded-xl border border-indigo-500/40 bg-indigo-500/10 px-3.5 py-2 text-xs font-bold text-indigo-600 dark:text-indigo-300 hover:bg-indigo-500/20 transition-all"
+                        class="inline-flex items-center gap-1.5 rounded-xl border border-indigo-500/40 bg-indigo-500/10 px-3.5 py-2 text-xs font-bold text-indigo-700 dark:text-indigo-300 hover:bg-indigo-500/20 transition-all"
                     >
                         <span>🌐 International (USD)</span>
                     </a>
@@ -677,20 +677,20 @@ function getAddonPrice(addon: AddonModule): string {
                     <!-- Service Header -->
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-border pb-6">
                         <div class="flex items-start gap-4">
-                            <div class="h-12 w-12 rounded-2xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
+                            <div class="h-12 w-12 rounded-2xl bg-sky-500/10 text-sky-700 dark:text-sky-400 flex items-center justify-center shrink-0">
                                 <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="service.icon" />
                                 </svg>
                             </div>
                             <div>
-                                <span class="text-xs uppercase tracking-widest font-bold text-sky-600 dark:text-sky-400">{{ service.category }}</span>
+                                <span class="text-xs uppercase tracking-widest font-bold text-sky-700 dark:text-sky-400">{{ service.category }}</span>
                                 <h2 class="text-2xl font-black text-card-foreground sm:text-3xl">{{ service.title }}</h2>
                                 <p class="mt-1 text-sm text-muted-foreground">{{ service.description }}</p>
                             </div>
                         </div>
                         <Link
                             :href="`/estimator?type=${service.id}&region=${activeRegion.toLowerCase()}`"
-                            class="inline-flex items-center gap-1.5 self-start md:self-auto rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-2 text-xs font-bold text-sky-600 dark:text-sky-400 hover:bg-sky-500/20 transition-colors"
+                            class="inline-flex items-center gap-1.5 self-start md:self-auto rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-2 text-xs font-bold text-sky-700 dark:text-sky-400 hover:bg-sky-500/20 transition-colors"
                         >
                             <span>Customize in Estimator</span>
                             <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -730,7 +730,7 @@ function getAddonPrice(addon: AddonModule): string {
                                     <span class="text-xs text-muted-foreground font-medium">all-inclusive</span>
                                 </div>
 
-                                <p class="mt-2 text-xs text-sky-600 dark:text-sky-400 font-medium">{{ tier.idealFor }}</p>
+                                <p class="mt-2 text-xs text-sky-700 dark:text-sky-400 font-medium">{{ tier.idealFor }}</p>
 
                                 <div class="mt-6 border-t border-border pt-5">
                                     <p class="text-[11px] uppercase tracking-wider font-bold text-muted-foreground mb-3">Key Deliverables:</p>
@@ -750,7 +750,7 @@ function getAddonPrice(addon: AddonModule): string {
                                         'w-full min-h-[44px] inline-flex items-center justify-center rounded-xl text-xs font-bold transition-all cursor-pointer',
                                         tier.popular
                                             ? 'btn-primary text-white shadow-lg'
-                                            : 'border border-border bg-secondary text-secondary-foreground hover:bg-secondary/80',
+                                            : 'border border-border bg-card text-foreground dark:text-card-foreground hover:bg-secondary hover:border-sky-500/50 shadow-sm',
                                     ]"
                                 >
                                     <span>Select {{ tier.name }} Tier</span>
@@ -896,7 +896,7 @@ function getAddonPrice(addon: AddonModule): string {
                 <div class="mt-8 rounded-2xl border border-border bg-card/70 dark:bg-card/40 p-6 shadow-sm">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-border pb-4">
                         <div>
-                            <span class="text-[11px] uppercase tracking-wider font-bold text-sky-600 dark:text-sky-400">Growth Engineering</span>
+                            <span class="text-[11px] uppercase tracking-wider font-bold text-sky-700 dark:text-sky-400">Growth Engineering</span>
                             <h3 class="text-lg font-bold text-card-foreground">Ongoing SEO & Content Retainers</h3>
                             <p class="text-xs text-muted-foreground">Organic search growth & content updates, billed monthly — separate from Care/AMC uptime cover.</p>
                         </div>
@@ -910,7 +910,7 @@ function getAddonPrice(addon: AddonModule): string {
                             <div>
                                 <div class="flex items-center justify-between">
                                     <h4 class="text-sm font-bold text-card-foreground">Essentials</h4>
-                                    <span class="font-mono text-base font-black text-sky-600 dark:text-sky-400">₹9,999 <span class="text-[11px] font-normal text-muted-foreground">/ mo</span></span>
+                                    <span class="font-mono text-base font-black text-sky-700 dark:text-sky-400">₹9,999 <span class="text-[11px] font-normal text-muted-foreground">/ mo</span></span>
                                 </div>
                                 <p class="mt-2 text-xs text-muted-foreground">Monthly keyword tracking, Core Web Vitals fixes, 2 keyword-mapped blog posts, and monthly Search Console performance audit.</p>
                             </div>
@@ -919,7 +919,7 @@ function getAddonPrice(addon: AddonModule): string {
                             <div>
                                 <div class="flex items-center justify-between">
                                     <h4 class="text-sm font-bold text-card-foreground">Growth ★</h4>
-                                    <span class="font-mono text-base font-black text-sky-600 dark:text-sky-400">₹19,999 <span class="text-[11px] font-normal text-muted-foreground">/ mo</span></span>
+                                    <span class="font-mono text-base font-black text-sky-700 dark:text-sky-400">₹19,999 <span class="text-[11px] font-normal text-muted-foreground">/ mo</span></span>
                                 </div>
                                 <p class="mt-2 text-xs text-muted-foreground">Everything in Essentials, plus authoritative link outreach, 4 articles/mo, competitor keyword gap monitoring, and Google Ads landing-page CRO.</p>
                             </div>
@@ -941,14 +941,14 @@ function getAddonPrice(addon: AddonModule): string {
                 <!-- 3 Staged Milestones -->
                 <div class="mt-8 grid gap-5 md:grid-cols-3">
                     <div class="rounded-2xl border border-border bg-card/60 p-5">
-                        <div class="font-mono text-3xl font-black text-sky-600 dark:text-sky-400">40%</div>
+                        <div class="font-mono text-3xl font-black text-sky-700 dark:text-sky-400">40%</div>
                         <span class="mt-1 block text-xs font-bold uppercase tracking-wider text-card-foreground">At Project Kickoff</span>
                         <p class="mt-2 text-xs text-muted-foreground leading-relaxed">
                             Reserves your dedicated sprint slot. Scope signed, Domain-Driven architecture approved, development begins immediately.
                         </p>
                     </div>
                     <div class="rounded-2xl border border-border bg-card/60 p-5">
-                        <div class="font-mono text-3xl font-black text-sky-600 dark:text-sky-400">40%</div>
+                        <div class="font-mono text-3xl font-black text-sky-700 dark:text-sky-400">40%</div>
                         <span class="mt-1 block text-xs font-bold uppercase tracking-wider text-card-foreground">At Staging Demo</span>
                         <p class="mt-2 text-xs text-muted-foreground leading-relaxed">
                             Complete working system running on live staging environment, thoroughly tested and accepted by your stakeholders.

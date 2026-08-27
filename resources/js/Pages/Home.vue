@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { animate, inView, stagger } from 'motion';
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 import HomeHero from '@/Components/Home/HomeHero.vue';
 import ServicesSection from '@/Components/Home/ServicesSection.vue';
@@ -120,36 +120,40 @@ onMounted(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('scroll', handleScrollProgress, { passive: true });
 
-    // Hero title animation
-    const hero = document.querySelector('[data-hero-title]');
-    if (hero) {
-        motionAnimate(
-            hero,
-            { opacity: [0, 1], transform: ['translateY(24px)', 'translateY(0px)'] },
-            { duration: 0.7, ease: 'ease-out' },
-        );
-    }
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Reveal section animations
-    inView('[data-reveal]', (element) => {
-        motionAnimate(
-            element,
-            { opacity: [0, 1], transform: ['translateY(28px)', 'translateY(0px)'] },
-            { duration: 0.65, ease: 'ease-out' },
-        );
-    });
-
-    // Staggered item animations
-    inView('[data-stagger]', (element) => {
-        const items = element.querySelectorAll('[data-stagger-item]');
-        if (items.length > 0) {
+    if (!prefersReducedMotion) {
+        // Hero title animation - subtle transform only, keeping opacity 1 for instant LCP paint!
+        const hero = document.querySelector('[data-hero-title]');
+        if (hero) {
             motionAnimate(
-                items,
-                { opacity: [0, 1], transform: ['translateY(18px)', 'translateY(0px)'] },
-                { duration: 0.55, delay: stagger(0.08), ease: 'ease-out' },
+                hero,
+                { transform: ['translateY(12px)', 'translateY(0px)'] },
+                { duration: 0.35, ease: 'ease-out' },
             );
         }
-    });
+
+        // Reveal section animations
+        inView('[data-reveal]', (element) => {
+            motionAnimate(
+                element,
+                { opacity: [0.3, 1], transform: ['translateY(18px)', 'translateY(0px)'] },
+                { duration: 0.45, ease: 'ease-out' },
+            );
+        });
+
+        // Staggered item animations
+        inView('[data-stagger]', (element) => {
+            const items = element.querySelectorAll('[data-stagger-item]');
+            if (items.length > 0) {
+                motionAnimate(
+                    items,
+                    { opacity: [0.3, 1], transform: ['translateY(12px)', 'translateY(0px)'] },
+                    { duration: 0.35, delay: stagger(0.05), ease: 'ease-out' },
+                );
+            }
+        });
+    }
 
     // Animated counter values
     const animatedCounters = new Set<Element>();
@@ -162,32 +166,36 @@ onMounted(() => {
         const isDecimal = rawTarget.includes('.');
         const target = parseFloat(rawTarget);
         const suffix = htmlEl.dataset.suffix ?? '';
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
         if (prefersReducedMotion) {
-            htmlEl.textContent = `${isDecimal ? target.toFixed(1) : Math.round(target)}${suffix}`;
+            htmlEl.textContent = isDecimal ? target.toFixed(1) + suffix : Math.round(target) + suffix;
             return;
         }
 
-        const start = Date.now();
-        const duration = 1400;
+        const duration = 1200;
+        const startTime = performance.now();
 
-        const updateCounter = () => {
-            const elapsed = Date.now() - start;
+        function updateCounter(currentTime: number) {
+            const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            const easeOut = 1 - Math.pow(1 - progress, 3);
-            const current = easeOut * target;
-            htmlEl.textContent = `${isDecimal ? current.toFixed(1) : Math.round(current)}${suffix}`;
+            // Ease out quad
+            const eased = 1 - (1 - progress) * (1 - progress);
+            const current = target * eased;
+
+            htmlEl.textContent = isDecimal ? current.toFixed(1) + suffix : Math.round(current) + suffix;
 
             if (progress < 1) {
                 requestAnimationFrame(updateCounter);
+            } else {
+                htmlEl.textContent = isDecimal ? target.toFixed(1) + suffix : Math.round(target) + suffix;
             }
-        };
+        }
 
         requestAnimationFrame(updateCounter);
     });
 });
 
-onBeforeUnmount(() => {
+onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll);
     window.removeEventListener('scroll', handleScrollProgress);
 });
@@ -196,7 +204,8 @@ onBeforeUnmount(() => {
 <template>
     <Head title="DigitalBuilders — Enterprise Web, Mobile & AI Architecture" />
 
-    <div class="db-shell bg-background text-foreground min-h-screen">
+    <div class="relative min-h-screen bg-background text-foreground transition-colors duration-300">
+        <!-- Scroll Progress Bar -->
         <div class="db-progress" />
         <div class="db-grid-overlay" />
 
@@ -206,13 +215,13 @@ onBeforeUnmount(() => {
                 <!-- Logo: icon + brand name -->
                 <ApplicationLogo :is-link="true" href="#top" />
 
-                <nav class="hidden items-center gap-1.5 text-sm font-medium md:flex lg:gap-2">
+                <nav class="hidden items-center gap-1.5 text-sm font-medium lg:flex xl:gap-2">
                     <a href="#services" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Services</a>
                     <a href="#portfolio" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Portfolio</a>
                     <Link href="/pricing" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Pricing</Link>
                     <a href="/downloads/digitalbuilders-pricing-india-inr.html" target="_blank" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground inline-flex items-center gap-1.5">
                         <span>Brochure</span>
-                        <span class="rounded bg-sky-500/10 text-sky-600 dark:text-sky-400 text-[10px] font-bold px-1.5 py-0.5">PDF</span>
+                        <span class="rounded bg-sky-500/10 text-sky-700 dark:text-sky-400 text-[10px] font-bold px-1.5 py-0.5">PDF</span>
                     </a>
                     <Link href="/blog" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Blog</Link>
                     <a href="#about" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">About</a>
@@ -232,7 +241,7 @@ onBeforeUnmount(() => {
                     <!-- Mobile hamburger -->
                     <button
                         @click="mobileMenuOpen = !mobileMenuOpen"
-                        class="flex h-11 w-11 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground md:hidden focus:outline-none cursor-pointer"
+                        class="flex h-11 w-11 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground lg:hidden focus:outline-none cursor-pointer"
                         :aria-expanded="mobileMenuOpen"
                         aria-label="Toggle menu"
                     >
@@ -253,14 +262,14 @@ onBeforeUnmount(() => {
                 leave-active-class="transition-all duration-200 ease-in"
                 leave-to-class="opacity-0 -translate-y-3"
             >
-                <div v-if="mobileMenuOpen" class="border-t border-border bg-card px-4 pb-5 pt-4 sm:px-5 md:hidden">
+                <div v-if="mobileMenuOpen" class="border-t border-border bg-card px-4 pb-5 pt-4 sm:px-5 lg:hidden">
                     <nav class="flex flex-col gap-3 text-sm font-medium">
                         <a href="#services" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Services</a>
                         <a href="#portfolio" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Portfolio</a>
                         <Link href="/pricing" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Pricing</Link>
                         <a href="/downloads/digitalbuilders-pricing-india-inr.html" target="_blank" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground flex items-center justify-between">
                             <span>Brochure (PDF)</span>
-                            <span class="rounded bg-sky-500/10 text-sky-600 dark:text-sky-400 text-[10px] font-bold px-2 py-0.5">Download</span>
+                            <span class="rounded bg-sky-500/10 text-sky-700 dark:text-sky-400 text-[10px] font-bold px-2 py-0.5">Download</span>
                         </a>
                         <Link href="/blog" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Blog</Link>
                         <a href="#about" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">About</a>
@@ -299,7 +308,7 @@ onBeforeUnmount(() => {
             <!-- 8. About & Process Section -->
             <section id="about" class="mt-20 grid gap-6 sm:mt-24 sm:gap-8 lg:grid-cols-[1.2fr_1fr]" data-reveal>
                 <div class="db-antigravity-card rounded-3xl border border-border bg-card text-card-foreground p-6 sm:p-8 shadow-xl">
-                    <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400 font-semibold">About Us</p>
+                    <p class="text-sm uppercase tracking-[0.2em] text-sky-700 dark:text-sky-400 font-semibold">About Us</p>
                     <h2 class="mt-2 text-2xl font-black text-foreground sm:text-3xl">Ashish Gupta</h2>
                     <p class="mt-1 text-sm font-semibold text-indigo-600 dark:text-indigo-400">Lead Digital Architect · Founder</p>
                     <p class="mt-4 text-muted-foreground leading-relaxed">
@@ -321,7 +330,7 @@ onBeforeUnmount(() => {
                     </div>
                 </div>
                 <div class="db-antigravity-card rounded-3xl border border-border bg-card text-card-foreground p-6 sm:p-8 shadow-xl">
-                    <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400 font-semibold">How We Work</p>
+                    <p class="text-sm uppercase tracking-[0.2em] text-sky-700 dark:text-sky-400 font-semibold">How We Work</p>
                     <ol class="mt-4 space-y-4 text-sm text-card-foreground">
                         <li><span class="font-bold text-foreground">01 Understand Your Needs</span> — We discuss goals, challenges, and priorities.</li>
                         <li><span class="font-bold text-foreground">02 Plan the Right Solution</span> — We design the system before development starts.</li>

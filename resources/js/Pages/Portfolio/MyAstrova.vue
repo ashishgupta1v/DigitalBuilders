@@ -40,7 +40,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
                 <h1 class="mt-4 text-3xl font-black text-foreground sm:text-5xl leading-tight">
                     MyAstrova
                 </h1>
-                <p class="mt-4 text-lg font-semibold text-sky-600 dark:text-sky-400">
+                <p class="mt-4 text-lg font-semibold text-sky-700 dark:text-sky-400">
                     AstroTech Computational Engine, Kundali Generation & Live Astrologer Consultations
                 </p>
             </div>
@@ -65,7 +65,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
                     <p class="mt-1 text-xs text-muted-foreground">Call, Chat & Meet Astrologers</p>
                 </div>
                 <div class="rounded-2xl border border-border bg-card text-card-foreground p-6 shadow-sm">
-                    <p class="text-3xl font-black text-sky-600 dark:text-sky-400">99.9%</p>
+                    <p class="text-3xl font-black text-sky-700 dark:text-sky-400">99.9%</p>
                     <p class="mt-1 text-xs text-muted-foreground">Booking & Checkout Uptime</p>
                 </div>
                 <div class="rounded-2xl border border-border bg-card text-card-foreground p-6 shadow-sm">

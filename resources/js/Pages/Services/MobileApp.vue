@@ -116,7 +116,7 @@ const breadcrumbSchema = {
             <!-- Featured Case Studies -->
             <div class="mt-24">
                 <div class="text-center max-w-3xl mx-auto">
-                    <span class="text-xs uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400 font-bold">Mobile Engineering In Action</span>
+                    <span class="text-xs uppercase tracking-[0.2em] text-sky-700 dark:text-sky-400 font-bold">Mobile Engineering In Action</span>
                     <h2 class="mt-2 text-2xl font-black text-foreground sm:text-4xl">Featured Mobile Applications</h2>
                     <p class="mt-3 text-sm text-muted-foreground">Fluid cross-platform apps engineered for offline speed, concurrency safety, and instant feedback.</p>
                 </div>
@@ -168,12 +168,12 @@ const breadcrumbSchema = {
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">
                             <div>
-                                <span class="text-xs font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider">Habit Tracking</span>
+                                <span class="text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-wider">Habit Tracking</span>
                                 <h3 class="mt-1 text-xl font-bold text-card-foreground">Habuilt Mobile Sync</h3>
                                 <p class="mt-2 text-xs text-muted-foreground leading-relaxed">Seamless universal mobile authentication deep linking with sub-100ms streak data syncing.</p>
                             </div>
                             <div class="mt-6 pt-4 border-t border-border flex items-center justify-between">
-                                <a href="https://www.habuilt.com/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1">Visit Live App ↗</a>
+                                <a href="https://www.habuilt.com/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-sky-700 dark:text-sky-400 hover:underline flex items-center gap-1">Visit Live App ↗</a>
                                 <Link href="/portfolio/habuilt" class="text-xs font-bold text-muted-foreground hover:text-foreground">Case Study →</Link>
                             </div>
                         </div>

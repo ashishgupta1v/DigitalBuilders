@@ -31,7 +31,7 @@ const faqs = [
 
 <template>
     <section id="faq" class="mt-20 sm:mt-24" data-reveal>
-        <p class="text-sm uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400 font-semibold">Common Questions</p>
+        <p class="text-sm uppercase tracking-[0.2em] text-sky-700 dark:text-sky-400 font-semibold">Common Questions</p>
         <h2 class="mt-3 text-2xl font-black text-foreground sm:text-3xl md:text-4xl">Frequently Asked Questions</h2>
         <div v-auto-animate class="mt-8 space-y-3" data-stagger>
             <details
@@ -40,9 +40,9 @@ const faqs = [
                 data-stagger-item
                 class="group rounded-2xl border border-border bg-card overflow-hidden shadow-sm"
             >
-                <summary class="flex cursor-pointer items-center justify-between gap-4 p-5 text-sm font-semibold text-card-foreground hover:text-sky-600 dark:hover:text-sky-400 transition-colors list-none">
+                <summary class="flex cursor-pointer items-center justify-between gap-4 p-5 text-sm font-semibold text-card-foreground hover:text-sky-700 dark:hover:text-sky-400 transition-colors list-none">
                     {{ faq.q }}
-                    <svg class="h-4 w-4 shrink-0 text-sky-600 dark:text-sky-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    <svg class="h-4 w-4 shrink-0 text-sky-700 dark:text-sky-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 </summary>
                 <div class="border-t border-border px-5 pb-5 pt-4 text-sm leading-relaxed text-muted-foreground">
                     {{ faq.a }}

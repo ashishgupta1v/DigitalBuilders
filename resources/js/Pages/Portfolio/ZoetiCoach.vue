@@ -40,7 +40,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
                 <h1 class="mt-4 text-3xl font-black text-foreground sm:text-5xl leading-tight">
                     ZoetiCoach AI
                 </h1>
-                <p class="mt-4 text-lg font-semibold text-sky-600 dark:text-sky-400">
+                <p class="mt-4 text-lg font-semibold text-sky-700 dark:text-sky-400">
                     WhatsApp-Native Accountability SaaS, Autonomous RAG Verification & Event-Sourced Ledgers
                 </p>
             </div>
@@ -61,7 +61,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
                     <p class="mt-1 text-xs text-muted-foreground">Client Dropout Reduction</p>
                 </div>
                 <div class="rounded-2xl border border-border bg-card text-card-foreground p-6 shadow-sm">
-                    <p class="text-3xl font-black text-sky-600 dark:text-sky-400">100%</p>
+                    <p class="text-3xl font-black text-sky-700 dark:text-sky-400">100%</p>
                     <p class="mt-1 text-xs text-muted-foreground">WhatsApp Check-in Automation</p>
                 </div>
                 <div class="rounded-2xl border border-border bg-card text-card-foreground p-6 shadow-sm">
