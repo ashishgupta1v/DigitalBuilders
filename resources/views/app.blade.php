@@ -360,23 +360,40 @@
         @endif
         <script>
             (function() {
-                var theme = localStorage.getItem('db-theme');
-                if (theme === 'dark') {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    document.documentElement.classList.add('dark');
-                    document.documentElement.classList.remove('light');
-                } else {
-                    document.documentElement.setAttribute('data-theme', 'light');
-                    document.documentElement.classList.remove('dark');
-                    document.documentElement.classList.add('light');
+                try {
+                    var theme = localStorage.getItem('db-theme');
+                    if (theme === 'dark') {
+                        document.documentElement.setAttribute('data-theme', 'dark');
+                        document.documentElement.classList.add('dark');
+                        document.documentElement.classList.remove('light');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                        document.documentElement.classList.remove('dark');
+                        document.documentElement.classList.add('light');
+                    }
+                } catch(e) {}
+
+                // Proactively unregister legacy service workers and purge stale asset caches
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                        for (var i = 0; i < registrations.length; i++) {
+                            registrations[i].unregister();
+                        }
+                    }).catch(function() {});
+                }
+                if ('caches' in window) {
+                    caches.keys().then(function(names) {
+                        for (var i = 0; i < names.length; i++) {
+                            caches.delete(names[i]);
+                        }
+                    }).catch(function() {});
                 }
 
-                // Register service worker if supported
-                if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
-                    window.addEventListener('load', function() {
-                        navigator.serviceWorker.register('/sw.js').catch(function() {});
-                    });
-                }
+                // Auto-recover from any dynamic chunk load failures
+                window.addEventListener('vite:preloadError', function(event) {
+                    event.preventDefault();
+                    window.location.reload();
+                });
             })();
         </script>
         @inertiaHead

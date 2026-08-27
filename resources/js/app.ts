@@ -44,7 +44,13 @@ const updateScrollProgress = () => {
 };
 
 // Theme persistence — apply before first paint to avoid flash
-const savedTheme = typeof localStorage !== 'undefined' ? localStorage.getItem('db-theme') : null;
+let savedTheme: string | null = null;
+try {
+    savedTheme = typeof localStorage !== 'undefined' ? localStorage.getItem('db-theme') : null;
+} catch {
+    savedTheme = null;
+}
+
 if (savedTheme === 'dark') {
     document.documentElement.setAttribute('data-theme', 'dark');
     document.documentElement.classList.add('dark');
@@ -53,6 +59,13 @@ if (savedTheme === 'dark') {
     document.documentElement.setAttribute('data-theme', 'light');
     document.documentElement.classList.remove('dark');
     document.documentElement.classList.add('light');
+}
+
+if (typeof window !== 'undefined') {
+    window.addEventListener('vite:preloadError', (event) => {
+        event.preventDefault();
+        window.location.reload();
+    });
 }
 
 if (typeof document !== 'undefined') {
@@ -77,11 +90,20 @@ createInertiaApp({
         if (!title) return appName;
         return title.includes(appName) ? title : `${title} — ${appName}`;
     },
-    resolve: (name) =>
-        resolvePageComponent(
-            `./Pages/${name}.vue`,
-            import.meta.glob<DefineComponent>('./Pages/**/*.vue'),
-        ),
+    resolve: async (name) => {
+        try {
+            return await resolvePageComponent(
+                `./Pages/${name}.vue`,
+                import.meta.glob<DefineComponent>('./Pages/**/*.vue'),
+            );
+        } catch (err) {
+            // Auto-recover from stale cached hashes by doing a hard reload
+            if (typeof window !== 'undefined') {
+                window.location.reload();
+            }
+            throw err;
+        }
+    },
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
