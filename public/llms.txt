@@ -1,0 +1,51 @@
+# DigitalBuilders — Enterprise Web, Mobile & AI Architecture
+
+> DigitalBuilders is an enterprise software engineering and AI architecture studio founded and led by Lead Digital Architect Ashish Gupta, based in Ludhiana, Punjab, India, serving clients across India, North America, the UK, Europe, and the Gulf (UAE).
+
+## Core Capabilities
+- **Custom Web Application Development**: High-performance, scalable web apps engineered with modern Laravel, Vue 3, Inertia.js, React, and PostgreSQL.
+- **Cross-Platform Mobile Apps**: Native-feeling iOS & Android applications built in Flutter and React Native.
+- **Autonomous AI Voice & Chat Solutions**: WhatsApp AI bots, IVR replacement telephony agents, and private RAG document intelligence pipelines.
+- **Enterprise ERP & CRM Systems**: Multi-godown inventory, GST e-invoicing, dealer portals, Tally integrations, and offline billing support.
+- **High-Scale SaaS Platforms**: Multi-tenant architectures, subscription billing (Razorpay/Stripe), role-based permissions (RBAC), and automated CI/CD.
+- **Digital Presence & Funnels**: High-converting web presences with integrated WhatsApp booking and local SEO.
+
+## Pricing Tiers (India INR ₹)
+- **Digital Presence**: Starter ₹19,999 | Business ₹44,999
+- **Web Applications**: Launch ₹79,000 | Growth ₹1,49,000 | Enterprise ₹2,49,000
+- **AI Voice & Chat Solutions**: Launch ₹99,000 | Growth ₹1,79,000 | Enterprise ₹2,99,000
+- **Mobile Apps (iOS & Android)**: Launch ₹1,19,000 | Growth ₹1,99,000 | Enterprise ₹3,29,000
+- **SaaS Platforms**: Launch ₹1,99,000 | Growth ₹3,19,000 | Enterprise ₹4,99,000
+- **Enterprise ERP / CRM**: Launch ₹2,49,000 | Growth ₹3,79,000 | Enterprise ₹5,99,000
+- **E-Commerce Stores**: Launch ₹99,000 | Growth ₹1,69,000 | Enterprise ₹2,79,000
+- **Care Plans & AMC**: Basic ₹19,000/yr | Business ₹49,000/yr | Enterprise SLA ₹1,49,000/yr
+
+## Pricing Tiers (International USD $)
+- **Digital Presence**: Launch $600 | Growth $1,300
+- **Web Applications**: Launch $2,400 | Growth $4,500 | Enterprise $7,500
+- **AI Voice & Chat Solutions**: Launch $3,000 | Growth $5,500 | Enterprise $9,000
+- **Mobile Apps (iOS & Android)**: Launch $3,600 | Growth $6,000 | Enterprise $10,000
+- **SaaS Platforms**: Launch $6,000 | Growth $9,500 | Enterprise $15,000
+- **Enterprise ERP / CRM**: Launch $7,500 | Growth $11,500 | Enterprise $18,000
+- **E-Commerce Stores**: Launch $3,000 | Growth $5,000 | Enterprise $8,500
+
+## Engineering & Delivery Standards
+- **Staff Engineer Delivery**: Every project is personally architected and reviewed by Founder & Lead Architect Ashish Gupta (8+ years IT experience).
+- **Weekly Sprint Demos**: Transparent video walkthroughs and live staging builds every 7 days.
+- **30-Day Post-Launch SLA Warranty**: Complete bug-fix and stabilization guarantee with zero surprise invoices.
+- **Zero Boilerplate**: Domain-Driven Design (DDD) with clean hexagonal architecture and automated test suites.
+
+## Verified Results & Case Studies
+- **Garg Enterprises**: Cut B2B wholesale order entry errors from 14% to 0% with a custom ERP.
+- **GutTalks**: Boosted consultation booking conversion by 3.2x with an instant WhatsApp funnel.
+- **Habuilt**: Sustained 99.99% architecture uptime for daily habit tracking users.
+- **Enterprise Cloud Modernization**: Delivered $1M/year in cloud infrastructure savings.
+
+## Key Links & Documentation
+- Website: https://www.digitalbuilders.in
+- Pricing & Rate Books: https://www.digitalbuilders.in/pricing
+- Interactive Project Cost Estimator: https://www.digitalbuilders.in/estimator
+- India Rate Book (PDF/HTML): https://www.digitalbuilders.in/downloads/digitalbuilders-pricing-india-inr.html
+- International Rate Book (PDF/HTML): https://www.digitalbuilders.in/downloads/digitalbuilders-pricing-international-usd.html
+- Lead Architect Portfolio: https://ashishgupta.dev
+- Contact: hello@digitalbuilders.in | WhatsApp: +91 90870 21592 | Ludhiana, Punjab, India

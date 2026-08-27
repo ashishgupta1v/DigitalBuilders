@@ -35,7 +35,10 @@
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{{ $currentMetaTitle }}">
         <meta name="twitter:description" content="{{ $currentMetaDesc }}">
-        <meta name="twitter:image" content="{{ $currentMetaImage }}">
+        <meta name="geo.region" content="IN-PB">
+        <meta name="geo.placename" content="Ludhiana">
+        <meta name="geo.position" content="30.9010;75.8573">
+        <meta name="ICBM" content="30.9010, 75.8573">
 
         @php
             $gaMeasurementId = config('services.ga_measurement_id', env('GA_MEASUREMENT_ID', ''));
@@ -49,25 +52,136 @@
                 "@context": "https://schema.org",
                 "@type": "ProfessionalService",
                 "name": "DigitalBuilders",
+                "alternateName": "Digital Builders Enterprise Software Architecture",
                 "url": "https://www.digitalbuilders.in/",
                 "logo": "https://www.digitalbuilders.in/images/db-logo.png",
                 "image": "https://www.digitalbuilders.in/images/portfolio/habuilt.jpg",
-                "description": "DigitalBuilders delivers enterprise-grade web applications, high-throughput SaaS platforms, mobile apps, and autonomous AI agents.",
+                "description": "DigitalBuilders delivers enterprise-grade web applications, high-throughput SaaS platforms, mobile apps, and autonomous AI agents with Silicon Valley engineering discipline.",
                 "founder": {
                     "@type": "Person",
                     "name": "Ashish Gupta",
-                    "url": "https://ashishgupta.dev"
+                    "jobTitle": "Lead Digital Architect & Founder",
+                    "url": "https://ashishgupta.dev",
+                    "sameAs": [
+                        "https://www.linkedin.com/in/ashishgupta1v/",
+                        "https://github.com/ashishgupta1v",
+                        "https://ashishgupta.dev"
+                    ]
                 },
+                "sameAs": [
+                    "https://www.linkedin.com/in/ashishgupta1v/",
+                    "https://github.com/ashishgupta1v"
+                ],
                 "telephone": "+919087021592",
                 "email": "hello@digitalbuilders.in",
-                "areaServed": ["IN", "US", "GB", "AE", "CA", "SG"],
+                "areaServed": ["IN", "US", "GB", "AE", "CA", "SG", "AU"],
                 "address": {
                     "@type": "PostalAddress",
                     "addressLocality": "Ludhiana",
                     "addressRegion": "Punjab",
                     "addressCountry": "IN"
                 },
-                "priceRange": "$$"
+                "priceRange": "$$",
+                "hasOfferCatalog": {
+                    "@type": "OfferCatalog",
+                    "name": "Software & AI Architecture Services 2026",
+                    "itemListElement": [
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "Digital Presence & Funnel Architecture",
+                                "description": "High-converting web presence with integrated WhatsApp capture and local SEO."
+                            },
+                            "price": "19999",
+                            "priceCurrency": "INR"
+                        },
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "Custom Web Application Development",
+                                "description": "Modular Laravel + Vue 3 applications with domain-driven design and automated testing."
+                            },
+                            "price": "79000",
+                            "priceCurrency": "INR"
+                        },
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "Autonomous AI Voice & Chat Agents",
+                                "description": "WhatsApp bots, WebRTC voice agents, and private RAG document pipelines."
+                            },
+                            "price": "99000",
+                            "priceCurrency": "INR"
+                        },
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "Cross-Platform Mobile App Development",
+                                "description": "Flutter and React Native iOS & Android apps with offline sync and Razorpay/Stripe."
+                            },
+                            "price": "119000",
+                            "priceCurrency": "INR"
+                        },
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "High-Scale SaaS Platform Engineering",
+                                "description": "Multi-tenant platforms with subscription engines, RBAC, and automated CI/CD."
+                            },
+                            "price": "199000",
+                            "priceCurrency": "INR"
+                        },
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "Enterprise ERP & CRM Architecture",
+                                "description": "GST-compliant invoicing, multi-godown stock, Tally sync, and dealer portals."
+                            },
+                            "price": "249000",
+                            "priceCurrency": "INR"
+                        }
+                    ]
+                }
+            }
+        </script>
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "HowTo",
+                "name": "How DigitalBuilders Delivers Enterprise Software Architecture",
+                "description": "A 4-step engineering lifecycle with zero boilerplate and weekly sprint demos.",
+                "step": [
+                    {
+                        "@type": "HowToStep",
+                        "position": 1,
+                        "name": "Understand Your Needs",
+                        "text": "Map your actual business workflows, identify pain points, and define a written fixed scope and quote."
+                    },
+                    {
+                        "@type": "HowToStep",
+                        "position": 2,
+                        "name": "Plan the Right Solution",
+                        "text": "Design domain models, module boundaries, database schemas, and integration points before writing code."
+                    },
+                    {
+                        "@type": "HowToStep",
+                        "position": 3,
+                        "name": "Build and Deliver with Weekly Demos",
+                        "text": "Execute in weekly sprints with working live software demos every 7 days."
+                    },
+                    {
+                        "@type": "HowToStep",
+                        "position": 4,
+                        "name": "Launch, Warranty & Support",
+                        "text": "Zero-downtime deployment, team training, full handover, and 30 days of post-launch SLA warranty."
+                    }
+                ]
             }
         </script>
         <script type="application/ld+json">

@@ -2,5 +2,23 @@ User-agent: *
 Allow: /
 Disallow: /dashboard
 Disallow: /profile
-Disallow: /library/
+Disallow: /library/leads
+
+# AI & Generative Search Crawlers (GEO Optimization)
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
 Sitemap: https://www.digitalbuilders.in/sitemap.xml
+# LLM Information Manifest: https://www.digitalbuilders.in/llms.txt
