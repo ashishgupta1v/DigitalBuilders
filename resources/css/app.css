@@ -45,22 +45,25 @@
 		--db-bg-elev: #f1f5f9;
 		--db-card: #ffffff;
 		--db-card-strong: #e2e8f0;
-		--db-border: rgba(15, 23, 42, 0.12);
+		--db-border: rgba(15, 23, 42, 0.08);
 		--db-text: #0f172a;
-		--db-muted: #475569;
+		--db-muted: #334155;
 		--db-accent-a: #0284c7;
 		--db-accent-b: #db2777;
 		--db-accent-c: #7c3aed;
-		--db-danger: #f43f5e;
-		--db-success: #059669;
-		--db-gradient: linear-gradient(135deg, #0284c7 0%, #6366f1 35%, #9333ea 70%, #db2777 100%);
-		--db-soft-gradient: linear-gradient(140deg, rgba(2, 132, 199, 0.08), rgba(147, 51, 234, 0.08), rgba(225, 29, 72, 0.08));
-		--db-card-gradient: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.92));
-		--db-body-bg: radial-gradient(1100px 600px at -10% -10%, rgba(2, 132, 199, 0.08), transparent 60%),
-			radial-gradient(900px 540px at 110% 10%, rgba(219, 39, 119, 0.08), transparent 58%),
-			linear-gradient(180deg, #f8fafc 0%, #f1f5f9 52%, #f8fafc 100%);
-		--db-panel-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.92));
-		--db-glass-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(241, 245, 249, 0.88));
+		--db-danger: #e11d48;
+		--db-success: #047857;
+		--db-gradient: linear-gradient(135deg, #0284c7 0%, #4f46e5 35%, #7c3aed 70%, #db2777 100%);
+		--db-soft-gradient: linear-gradient(140deg, rgba(2, 132, 199, 0.08), rgba(79, 70, 229, 0.07), rgba(219, 39, 119, 0.07));
+		--db-card-gradient: linear-gradient(165deg, rgba(255, 255, 255, 0.98), rgba(241, 245, 249, 0.94));
+		--db-body-bg: radial-gradient(1200px 700px at -5% -5%, rgba(2, 132, 199, 0.07), transparent 55%),
+			radial-gradient(1000px 600px at 105% 5%, rgba(79, 70, 229, 0.06), transparent 55%),
+			radial-gradient(900px 500px at 50% 40%, rgba(124, 58, 237, 0.04), transparent 60%),
+			radial-gradient(1100px 650px at -10% 85%, rgba(2, 132, 199, 0.05), transparent 55%),
+			radial-gradient(1200px 700px at 110% 95%, rgba(219, 39, 119, 0.05), transparent 55%),
+			linear-gradient(180deg, #f8fafc 0%, #f1f5f9 45%, #f8fafc 100%);
+		--db-panel-bg: linear-gradient(165deg, rgba(255, 255, 255, 0.96), rgba(241, 245, 249, 0.93));
+		--db-glass-bg: linear-gradient(165deg, rgba(255, 255, 255, 0.92), rgba(241, 245, 249, 0.88));
 		--db-nav-bg: rgba(255, 255, 255, 0.92);
 		--db-skeleton-base: rgba(226, 232, 240, 0.8);
 		--db-skeleton-shine: rgba(241, 245, 249, 0.9);
@@ -117,12 +120,15 @@
 		--db-success: #34d399;
 		--db-gradient: linear-gradient(135deg, #38bdf8 0%, #818cf8 35%, #c084fc 70%, #f472b6 100%);
 		--db-soft-gradient: linear-gradient(140deg, rgba(56, 189, 248, 0.12), rgba(192, 132, 252, 0.1), rgba(244, 114, 182, 0.12));
-		--db-card-gradient: linear-gradient(160deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.8));
-		--db-body-bg: radial-gradient(1200px 700px at -10% -10%, rgba(56, 189, 248, 0.12), transparent 60%),
-			radial-gradient(1000px 600px at 110% 10%, rgba(192, 132, 252, 0.12), transparent 58%),
-			linear-gradient(180deg, #0b0f19 0%, #0f172a 52%, #111827 100%);
-		--db-panel-bg: linear-gradient(160deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.9));
-		--db-glass-bg: linear-gradient(160deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.8));
+		--db-card-gradient: linear-gradient(165deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.85));
+		--db-body-bg: radial-gradient(1300px 750px at -10% -10%, rgba(56, 189, 248, 0.14), transparent 58%),
+			radial-gradient(1100px 650px at 110% 10%, rgba(129, 140, 248, 0.12), transparent 56%),
+			radial-gradient(950px 550px at 50% 50%, rgba(192, 132, 252, 0.08), transparent 60%),
+			radial-gradient(1200px 700px at -10% 85%, rgba(56, 189, 248, 0.1), transparent 58%),
+			radial-gradient(1300px 750px at 110% 95%, rgba(244, 114, 182, 0.1), transparent 58%),
+			linear-gradient(180deg, #0b0f19 0%, #0f172a 50%, #0b0f19 100%);
+		--db-panel-bg: linear-gradient(165deg, rgba(30, 41, 59, 0.88), rgba(15, 23, 42, 0.92));
+		--db-glass-bg: linear-gradient(165deg, rgba(30, 41, 59, 0.78), rgba(15, 23, 42, 0.84));
 		--db-nav-bg: rgba(11, 15, 25, 0.88);
 		--db-skeleton-base: rgba(30, 41, 59, 0.6);
 		--db-skeleton-shine: rgba(56, 189, 248, 0.25);
@@ -332,7 +338,7 @@
 		box-shadow: 0 20px 40px -15px rgba(56, 189, 248, 0.2), 0 0 25px rgba(192, 132, 252, 0.15);
 	}
 
-	/* Primary CTA Buttons with Guaranteed Crisp White Text */
+	/* Primary CTA Buttons with Guaranteed Crisp White Text & Shimmer */
 	.btn-primary,
 	.db-action,
 	.db-btn-primary {
@@ -344,6 +350,27 @@
 		font-weight: 700;
 		box-shadow: 0 4px 18px rgba(2, 132, 199, 0.3);
 		transition: transform 0.25s ease, filter 0.25s ease, box-shadow 0.25s ease;
+	}
+
+	.btn-primary::after,
+	.db-action::after,
+	.db-btn-primary::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -120%;
+		width: 60%;
+		height: 100%;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+		transform: skewX(-20deg);
+		transition: left 0.75s ease;
+		pointer-events: none;
+	}
+
+	.btn-primary:hover::after,
+	.db-action:hover::after,
+	.db-btn-primary:hover::after {
+		left: 140%;
 	}
 
 	.btn-primary:hover,
@@ -358,6 +385,107 @@
 	.db-action:active,
 	.db-btn-primary:active {
 		transform: scale(0.98);
+	}
+
+	/* High-Contrast Accessible Badges & Tags */
+	.db-badge-emerald {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		border-radius: 9999px;
+		padding: 0.25rem 0.75rem;
+		font-size: 0.72rem;
+		font-weight: 700;
+		border: 1px solid rgba(4, 120, 87, 0.3);
+		background: linear-gradient(135deg, rgba(4, 120, 87, 0.12), rgba(5, 150, 105, 0.08));
+		color: #047857;
+	}
+	.dark .db-badge-emerald,
+	[data-theme='dark'] .db-badge-emerald {
+		border-color: rgba(52, 211, 153, 0.35);
+		background: linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(16, 185, 129, 0.1));
+		color: #6ee7b7;
+	}
+
+	.db-badge-sky {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		border-radius: 9999px;
+		padding: 0.25rem 0.75rem;
+		font-size: 0.72rem;
+		font-weight: 700;
+		border: 1px solid rgba(3, 105, 161, 0.3);
+		background: linear-gradient(135deg, rgba(3, 105, 161, 0.12), rgba(2, 132, 199, 0.08));
+		color: #0369a1;
+	}
+	.dark .db-badge-sky,
+	[data-theme='dark'] .db-badge-sky {
+		border-color: rgba(56, 189, 248, 0.35);
+		background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(14, 165, 233, 0.1));
+		color: #7dd3fc;
+	}
+
+	.db-badge-indigo {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		border-radius: 9999px;
+		padding: 0.25rem 0.75rem;
+		font-size: 0.72rem;
+		font-weight: 700;
+		border: 1px solid rgba(67, 56, 202, 0.3);
+		background: linear-gradient(135deg, rgba(67, 56, 202, 0.12), rgba(79, 70, 229, 0.08));
+		color: #4338ca;
+	}
+	.dark .db-badge-indigo,
+	[data-theme='dark'] .db-badge-indigo {
+		border-color: rgba(129, 140, 248, 0.35);
+		background: linear-gradient(135deg, rgba(129, 140, 248, 0.15), rgba(99, 102, 241, 0.1));
+		color: #a5b4fc;
+	}
+
+	.db-badge-purple {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		border-radius: 9999px;
+		padding: 0.25rem 0.75rem;
+		font-size: 0.72rem;
+		font-weight: 700;
+		border: 1px solid rgba(109, 40, 217, 0.3);
+		background: linear-gradient(135deg, rgba(109, 40, 217, 0.12), rgba(124, 58, 237, 0.08));
+		color: #6d28d9;
+	}
+	.dark .db-badge-purple,
+	[data-theme='dark'] .db-badge-purple {
+		border-color: rgba(192, 132, 252, 0.35);
+		background: linear-gradient(135deg, rgba(192, 132, 252, 0.15), rgba(168, 85, 247, 0.1));
+		color: #d8b4fe;
+	}
+
+	/* Bento Grid & Card System */
+	.db-bento-card {
+		position: relative;
+		overflow: hidden;
+		border-radius: 1.5rem;
+		border: 1px solid var(--border);
+		background-color: hsl(var(--card));
+		color: hsl(var(--card-foreground));
+		box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+		transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+	.db-bento-card:hover {
+		transform: translateY(-4px);
+		border-color: rgba(2, 132, 199, 0.35);
+		box-shadow: 0 24px 48px -15px rgba(2, 132, 199, 0.15), 0 0 20px rgba(79, 70, 229, 0.08);
+	}
+	.dark .db-bento-card {
+		box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+	}
+	.dark .db-bento-card:hover {
+		border-color: rgba(56, 189, 248, 0.4);
+		box-shadow: 0 24px 48px -15px rgba(56, 189, 248, 0.2), 0 0 25px rgba(192, 132, 252, 0.12);
 	}
 
 	.db-mini,

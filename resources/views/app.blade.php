@@ -44,9 +44,14 @@
 
         @php
             $gaMeasurementId = config('services.ga_measurement_id', env('GA_MEASUREMENT_ID', ''));
+            $sentryDsn = config('services.sentry_dsn', env('SENTRY_DSN', ''));
+            $plausibleDomain = config('services.plausible_domain', env('PLAUSIBLE_DOMAIN', 'digitalbuilders.in'));
         @endphp
         <script>
             window.GA_MEASUREMENT_ID = @json($gaMeasurementId);
+            window.SENTRY_DSN = @json($sentryDsn);
+            window.PLAUSIBLE_DOMAIN = @json($plausibleDomain);
+            window.APP_ENV = @json(app()->environment());
         </script>
         @verbatim
         <script type="application/ld+json">
@@ -57,7 +62,7 @@
                 "alternateName": "Digital Builders Enterprise Software Architecture",
                 "url": "https://www.digitalbuilders.in/",
                 "logo": "https://www.digitalbuilders.in/images/db-logo.png",
-                "image": "https://www.digitalbuilders.in/images/portfolio/habuilt.jpg",
+                "image": "https://www.digitalbuilders.in/images/portfolio/habuilt.webp",
                 "description": "DigitalBuilders delivers enterprise-grade web applications, high-throughput SaaS platforms, mobile apps, and autonomous AI agents with Silicon Valley engineering discipline.",
                 "founder": {
                     "@type": "Person",

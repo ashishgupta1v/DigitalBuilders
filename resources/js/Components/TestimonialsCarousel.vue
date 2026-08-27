@@ -138,14 +138,29 @@ async function fetchTestimonials() {
 <template>
     <section
         aria-label="Client Testimonials and Social Proof"
-        class="db-mini rounded-3xl border border-border bg-card text-card-foreground p-6 sm:p-8 lg:p-10 shadow-xl"
+        class="db-bento-card p-6 sm:p-8 lg:p-10 shadow-xl"
         @mouseenter="stopAutoPlay"
         @mouseleave="startAutoPlay"
     >
+        <!-- Client Logo & Trust Marquee Ribbon -->
+        <div class="mb-8 border-b border-border/80 pb-6">
+            <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground font-semibold text-center mb-4">
+                Trusted by Forward-Thinking Brands & Modern Enterprises
+            </p>
+            <div class="flex flex-wrap items-center justify-center gap-6 sm:gap-10 opacity-80">
+                <span class="text-sm sm:text-base font-extrabold text-foreground tracking-tight">HABUILT<span class="text-sky-500">.</span></span>
+                <span class="text-sm sm:text-base font-extrabold text-foreground tracking-tight">Zoeti<span class="text-indigo-500">Coach</span></span>
+                <span class="text-sm sm:text-base font-extrabold text-foreground tracking-tight">Gut<span class="text-emerald-500">Talks</span></span>
+                <span class="text-sm sm:text-base font-extrabold text-foreground tracking-tight">Dhanda<span class="text-emerald-500">Diary</span></span>
+                <span class="text-sm sm:text-base font-extrabold text-foreground tracking-tight">My<span class="text-purple-500">Astrova</span></span>
+                <span class="text-sm sm:text-base font-extrabold text-foreground tracking-tight">Garg<span class="text-amber-500">Enterprises</span></span>
+            </div>
+        </div>
+
         <!-- Header -->
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <span class="db-chip">Verified Social Proof</span>
+                <span class="db-badge-emerald">Verified Enterprise Testimonials</span>
                 <h2 class="mt-3 text-2xl font-black text-card-foreground sm:text-3xl">What Digital Leaders Say</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Empirical feedback from business founders & tech executives.</p>
             </div>

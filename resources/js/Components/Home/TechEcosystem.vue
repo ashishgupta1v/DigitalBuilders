@@ -28,13 +28,13 @@ const techStack = [
                 v-for="tech in techStack"
                 :key="tech.name"
                 data-stagger-item
-                class="db-antigravity-card rounded-2xl border border-border bg-card text-card-foreground p-5 shadow-sm flex flex-col justify-between"
+                class="db-bento-card p-6 flex flex-col justify-between group"
             >
                 <div>
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400">
+                    <span class="db-badge-sky mb-2">
                         {{ tech.category }}
                     </span>
-                    <h3 class="mt-1.5 text-base font-bold text-card-foreground">
+                    <h3 class="mt-2 text-base font-bold text-card-foreground group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
                         {{ tech.name }}
                     </h3>
                     <p class="mt-2 text-xs text-muted-foreground leading-relaxed">

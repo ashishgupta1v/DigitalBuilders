@@ -102,11 +102,45 @@ export function initPlausible(): void {
     isPlausibleInitialized = true;
 }
 
+let isSentryInitialized = false;
+
+/**
+ * Dynamically injects Sentry Error Monitoring when SENTRY_DSN is configured.
+ */
+export function initSentry(): void {
+    if (typeof window === 'undefined' || isSentryInitialized) return;
+
+    const sentryDsn = (window as any).SENTRY_DSN;
+    if (!sentryDsn || typeof sentryDsn !== 'string' || !sentryDsn.startsWith('http')) {
+        return;
+    }
+
+    const script = document.createElement('script');
+    script.defer = true;
+    script.crossOrigin = 'anonymous';
+    script.src = 'https://js.sentry-cdn.com/' + sentryDsn.split('@')[0].replace('https://', '') + '.min.js';
+    
+    script.onload = () => {
+        if ((window as any).Sentry) {
+            (window as any).Sentry.init({
+                dsn: sentryDsn,
+                tracesSampleRate: 0.2,
+                environment: (window as any).APP_ENV || 'production',
+            });
+        }
+    };
+    document.head.appendChild(script);
+    isSentryInitialized = true;
+}
+
 /**
  * Client-side unhandled exception and performance monitoring.
  */
 export function initErrorMonitoring(): void {
     if (typeof window === 'undefined' || isErrorMonitoringInitialized) return;
+
+    // Boot Sentry if DSN provided
+    initSentry();
 
     window.addEventListener('error', (event) => {
         const errorData = {
@@ -119,6 +153,11 @@ export function initErrorMonitoring(): void {
             url: window.location.href,
         };
 
+        // Dispatch to Sentry if active
+        if ((window as any).Sentry?.captureException && event.error) {
+            (window as any).Sentry.captureException(event.error);
+        }
+
         trackEvent('app_error', {
             event_category: 'System',
             event_label: event.message,
@@ -128,6 +167,12 @@ export function initErrorMonitoring(): void {
 
     window.addEventListener('unhandledrejection', (event) => {
         const reason = event.reason?.message || String(event.reason);
+
+        // Dispatch to Sentry if active
+        if ((window as any).Sentry?.captureException && event.reason) {
+            (window as any).Sentry.captureException(event.reason);
+        }
+
         trackEvent('promise_rejection', {
             event_category: 'System',
             event_label: reason,

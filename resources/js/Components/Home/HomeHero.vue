@@ -51,28 +51,31 @@ defineProps<{
         <!-- Key Architectural Pillars -->
         <section class="mt-12 grid gap-5 md:grid-cols-3" data-stagger data-reveal>
             <h2 class="sr-only">Core Architectural Capabilities</h2>
-            <article data-stagger-item class="db-antigravity-card rounded-2xl border border-border bg-card text-card-foreground p-6 shadow-sm flex flex-col justify-between">
+            <article data-stagger-item class="db-bento-card p-7 flex flex-col justify-between group">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div>
-                    <div class="h-10 w-10 mb-4 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center font-bold">
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    <div class="h-12 w-12 mb-5 rounded-2xl bg-gradient-to-br from-sky-500/20 to-indigo-500/10 border border-sky-500/30 text-sky-700 dark:text-sky-400 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </div>
                     <h3 class="text-lg font-bold text-card-foreground">Staff Engineer Architecture</h3>
                     <p class="mt-2.5 text-sm text-muted-foreground leading-relaxed">Engineered with domain-driven modular monoliths for zero technical debt and sub-100ms response times.</p>
                 </div>
             </article>
-            <article data-stagger-item class="db-antigravity-card rounded-2xl border border-border bg-card text-card-foreground p-6 shadow-sm flex flex-col justify-between">
+            <article data-stagger-item class="db-bento-card p-7 flex flex-col justify-between group">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div>
-                    <div class="h-10 w-10 mb-4 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+                    <div class="h-12 w-12 mb-5 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/10 border border-indigo-500/30 text-indigo-700 dark:text-indigo-400 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
                     </div>
                     <h3 class="text-lg font-bold text-card-foreground">Autonomous AI Integration</h3>
                     <p class="mt-2.5 text-sm text-muted-foreground leading-relaxed">Voice agents, intelligent lead qualification, and automated workflow pipelines fitted seamlessly into your stack.</p>
                 </div>
             </article>
-            <article data-stagger-item class="db-antigravity-card rounded-2xl border border-border bg-card text-card-foreground p-6 shadow-sm flex flex-col justify-between">
+            <article data-stagger-item class="db-bento-card p-7 flex flex-col justify-between group">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div>
-                    <div class="h-10 w-10 mb-4 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                    <div class="h-12 w-12 mb-5 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/10 border border-purple-500/30 text-purple-700 dark:text-purple-400 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                     </div>
                     <h3 class="text-lg font-bold text-card-foreground">Production-Grade Delivery</h3>
                     <p class="mt-2.5 text-sm text-muted-foreground leading-relaxed">Transparent weekly sprint demos, full test coverage, zero-downtime deployment, and 30-day post-launch warranty.</p>
@@ -80,26 +83,38 @@ defineProps<{
             </article>
         </section>
 
-        <!-- Stats Bar Grid -->
+        <!-- Stats Bento Grid -->
         <section class="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-stagger data-reveal>
-            <div data-stagger-item class="db-antigravity-card rounded-2xl border border-border bg-card text-card-foreground p-6 text-center sm:text-left shadow-sm">
-                <p class="text-3xl font-black db-gradient-text" data-counter="10" data-suffix="+">10+</p>
-                <p class="mt-2 text-sm font-semibold text-card-foreground">Years Enterprise Experience</p>
+            <div data-stagger-item class="db-bento-card p-6 text-center sm:text-left">
+                <div class="flex items-baseline gap-2 justify-center sm:justify-start">
+                    <p class="text-3xl sm:text-4xl font-black db-gradient-text" data-counter="10" data-suffix="+">10+</p>
+                </div>
+                <div class="mt-2 h-1 w-12 rounded-full bg-gradient-to-r from-sky-500 to-indigo-500 mx-auto sm:mx-0" />
+                <p class="mt-3 text-sm font-bold text-card-foreground">Years Enterprise Experience</p>
                 <p class="mt-1 text-xs text-muted-foreground">Enterprise software & cloud systems</p>
             </div>
-            <div data-stagger-item class="db-antigravity-card rounded-2xl border border-border bg-card text-card-foreground p-6 text-center sm:text-left shadow-sm">
-                <p class="text-3xl font-black db-gradient-text" data-counter="25" data-suffix="+">25+</p>
-                <p class="mt-2 text-sm font-semibold text-card-foreground">Projects Delivered</p>
+            <div data-stagger-item class="db-bento-card p-6 text-center sm:text-left">
+                <div class="flex items-baseline gap-2 justify-center sm:justify-start">
+                    <p class="text-3xl sm:text-4xl font-black db-gradient-text" data-counter="25" data-suffix="+">25+</p>
+                </div>
+                <div class="mt-2 h-1 w-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto sm:mx-0" />
+                <p class="mt-3 text-sm font-bold text-card-foreground">Projects Delivered</p>
                 <p class="mt-1 text-xs text-muted-foreground">Web, mobile, AI & ERP platforms</p>
             </div>
-            <div data-stagger-item class="db-antigravity-card rounded-2xl border border-border bg-card text-card-foreground p-6 text-center sm:text-left shadow-sm">
-                <p class="text-3xl font-black db-gradient-text" data-counter="99.9" data-suffix="%">99.9%</p>
-                <p class="mt-2 text-sm font-semibold text-card-foreground">Architecture Uptime</p>
+            <div data-stagger-item class="db-bento-card p-6 text-center sm:text-left">
+                <div class="flex items-baseline gap-2 justify-center sm:justify-start">
+                    <p class="text-3xl sm:text-4xl font-black db-gradient-text" data-counter="99.9" data-suffix="%">99.9%</p>
+                </div>
+                <div class="mt-2 h-1 w-12 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 mx-auto sm:mx-0" />
+                <p class="mt-3 text-sm font-bold text-card-foreground">Architecture Uptime</p>
                 <p class="mt-1 text-xs text-muted-foreground">Resilient infrastructure scaling</p>
             </div>
-            <div data-stagger-item class="db-antigravity-card rounded-2xl border border-border bg-card text-card-foreground p-6 text-center sm:text-left shadow-sm">
-                <p class="text-3xl font-black db-gradient-text">100%</p>
-                <p class="mt-2 text-sm font-semibold text-card-foreground">Sprint Delivery Rate</p>
+            <div data-stagger-item class="db-bento-card p-6 text-center sm:text-left">
+                <div class="flex items-baseline gap-2 justify-center sm:justify-start">
+                    <p class="text-3xl sm:text-4xl font-black db-gradient-text">100%</p>
+                </div>
+                <div class="mt-2 h-1 w-12 rounded-full bg-gradient-to-r from-amber-500 to-pink-500 mx-auto sm:mx-0" />
+                <p class="mt-3 text-sm font-bold text-card-foreground">Sprint Delivery Rate</p>
                 <p class="mt-1 text-xs text-muted-foreground">Zero broken deadlines</p>
             </div>
         </section>

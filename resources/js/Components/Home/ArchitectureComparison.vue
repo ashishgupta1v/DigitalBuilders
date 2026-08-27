@@ -36,8 +36,8 @@ const comparisons = [
 <template>
     <section class="mt-20 sm:mt-24" data-reveal>
         <div class="text-center max-w-3xl mx-auto">
-            <p class="text-sm uppercase tracking-[0.2em] text-sky-700 dark:text-sky-400 font-semibold">Engineering Philosophy</p>
-            <h2 class="mt-3 text-2xl font-black text-foreground sm:text-3xl md:text-4xl">
+            <span class="db-badge-sky mb-3">Engineering Philosophy</span>
+            <h2 class="mt-2 text-2xl font-black text-foreground sm:text-3xl md:text-4xl">
                 The DigitalBuilders Standard vs Traditional Agencies
             </h2>
             <p class="mt-3 text-sm text-muted-foreground">
@@ -45,7 +45,7 @@ const comparisons = [
             </p>
         </div>
 
-        <div class="mt-10 overflow-hidden rounded-3xl border border-border bg-card text-card-foreground shadow-xl">
+        <div class="mt-10 overflow-hidden db-bento-card shadow-xl">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm">
                     <thead>

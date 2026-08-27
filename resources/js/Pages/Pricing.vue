@@ -673,7 +673,7 @@ function getAddonPrice(addon: AddonModule): string {
 
             <!-- Core Architectural Services Section -->
             <div class="mt-16 space-y-16">
-                <div v-for="service in SERVICES" :key="service.id" class="rounded-3xl border border-border bg-card text-card-foreground p-6 sm:p-8 backdrop-blur-md shadow-xl">
+                <div v-for="service in SERVICES" :key="service.id" class="db-bento-card p-6 sm:p-8 shadow-xl">
                     <!-- Service Header -->
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-border pb-6">
                         <div class="flex items-start gap-4">

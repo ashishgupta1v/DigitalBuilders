@@ -155,44 +155,73 @@ onMounted(() => {
         });
     }
 
-    // Animated counter values
-    const animatedCounters = new Set<Element>();
-    inView('[data-counter]', (el: Element) => {
-        if (animatedCounters.has(el)) return;
-        animatedCounters.add(el);
+    // Animated counter values - strictly single run
+    const counterElements = document.querySelectorAll('[data-counter]');
+    if ('IntersectionObserver' in window) {
+        const counterObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
 
-        const htmlEl = el as HTMLElement;
-        const rawTarget = htmlEl.dataset.counter ?? '0';
-        const isDecimal = rawTarget.includes('.');
-        const target = parseFloat(rawTarget);
-        const suffix = htmlEl.dataset.suffix ?? '';
+                    const htmlEl = entry.target as HTMLElement;
+                    if (htmlEl.getAttribute('data-counter-done') === 'true' || htmlEl.dataset.animating === 'true') {
+                        counterObserver.unobserve(htmlEl);
+                        return;
+                    }
 
-        if (prefersReducedMotion) {
+                    // Stop observing immediately once intersected
+                    counterObserver.unobserve(htmlEl);
+                    htmlEl.dataset.animating = 'true';
+
+                    const rawTarget = htmlEl.dataset.counter ?? '0';
+                    const isDecimal = rawTarget.includes('.');
+                    const target = parseFloat(rawTarget);
+                    const suffix = htmlEl.dataset.suffix ?? '';
+
+                    if (prefersReducedMotion) {
+                        htmlEl.textContent = isDecimal ? target.toFixed(1) + suffix : Math.round(target) + suffix;
+                        htmlEl.setAttribute('data-counter-done', 'true');
+                        delete htmlEl.dataset.animating;
+                        return;
+                    }
+
+                    const duration = 1000;
+                    const startTime = performance.now();
+
+                    function updateCounter(currentTime: number) {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const eased = 1 - Math.pow(1 - progress, 3); // Smooth cubic ease-out
+                        const current = target * eased;
+
+                        htmlEl.textContent = isDecimal ? current.toFixed(1) + suffix : Math.round(current) + suffix;
+
+                        if (progress < 1) {
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            htmlEl.textContent = isDecimal ? target.toFixed(1) + suffix : Math.round(target) + suffix;
+                            htmlEl.setAttribute('data-counter-done', 'true');
+                            delete htmlEl.dataset.animating;
+                        }
+                    }
+
+                    requestAnimationFrame(updateCounter);
+                });
+            },
+            { threshold: 0.2 },
+        );
+
+        counterElements.forEach((el) => counterObserver.observe(el));
+    } else {
+        counterElements.forEach((el) => {
+            const htmlEl = el as HTMLElement;
+            const rawTarget = htmlEl.dataset.counter ?? '0';
+            const isDecimal = rawTarget.includes('.');
+            const target = parseFloat(rawTarget);
+            const suffix = htmlEl.dataset.suffix ?? '';
             htmlEl.textContent = isDecimal ? target.toFixed(1) + suffix : Math.round(target) + suffix;
-            return;
-        }
-
-        const duration = 1200;
-        const startTime = performance.now();
-
-        function updateCounter(currentTime: number) {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            // Ease out quad
-            const eased = 1 - (1 - progress) * (1 - progress);
-            const current = target * eased;
-
-            htmlEl.textContent = isDecimal ? current.toFixed(1) + suffix : Math.round(current) + suffix;
-
-            if (progress < 1) {
-                requestAnimationFrame(updateCounter);
-            } else {
-                htmlEl.textContent = isDecimal ? target.toFixed(1) + suffix : Math.round(target) + suffix;
-            }
-        }
-
-        requestAnimationFrame(updateCounter);
-    });
+        });
+    }
 });
 
 onUnmounted(() => {

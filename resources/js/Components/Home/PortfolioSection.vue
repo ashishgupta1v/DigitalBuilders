@@ -355,24 +355,35 @@ const filteredStudies = computed(() => {
                         ⚡ {{ study.metricBadge }}
                     </div>
 
-                    <!-- Live Architecture Snapshot Image -->
-                    <div class="relative mt-4 aspect-video w-full overflow-hidden rounded-2xl border border-border bg-slate-900 group cursor-pointer" @click="openStudyModal(study)">
-                        <img
-                            :src="study.image"
-                            :alt="study.client"
-                            class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                            loading="lazy"
-                            decoding="async"
-                            width="600"
-                            height="338"
-                        />
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3">
-                            <span class="text-[11px] font-bold text-white bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20">
-                                Live UI Snapshot
-                            </span>
-                            <span class="text-[11px] font-semibold text-sky-300 bg-sky-950/80 px-2 py-0.5 rounded-full">
-                                Click to Expand ↗
-                            </span>
+                    <!-- Live Architecture Snapshot Browser / Device Frame Container -->
+                    <div class="mt-4 rounded-2xl border border-border bg-card/80 overflow-hidden shadow-sm group cursor-pointer" @click="openStudyModal(study)">
+                        <!-- Mockup Top Bar -->
+                        <div class="flex items-center gap-1.5 px-3 py-2 bg-secondary/80 border-b border-border text-[10px] text-muted-foreground">
+                            <span class="h-2 w-2 rounded-full bg-red-400/80 inline-block" />
+                            <span class="h-2 w-2 rounded-full bg-amber-400/80 inline-block" />
+                            <span class="h-2 w-2 rounded-full bg-emerald-400/80 inline-block" />
+                            <div class="ml-2 flex-1 max-w-[200px] truncate bg-background px-2 py-0.5 rounded text-[10px] font-mono border border-border text-muted-foreground">
+                                {{ study.liveUrl || 'https://' + study.portfolioSlug + '.app' }}
+                            </div>
+                        </div>
+                        <div class="relative aspect-video w-full overflow-hidden bg-slate-900">
+                            <img
+                                :src="study.image"
+                                :alt="study.client"
+                                class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                                loading="lazy"
+                                decoding="async"
+                                width="600"
+                                height="338"
+                            />
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3.5">
+                                <span class="text-[11px] font-bold text-white bg-black/70 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 shadow">
+                                    Interactive Architecture Breakdown
+                                </span>
+                                <span class="text-[11px] font-bold text-sky-300 bg-sky-950/90 px-2.5 py-1 rounded-full border border-sky-400/30">
+                                    Expand Case Study ↗
+                                </span>
+                            </div>
                         </div>
                     </div>
 
