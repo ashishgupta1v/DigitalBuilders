@@ -338,9 +338,12 @@
 
         <title inertia>{{ config('app.name', 'DigitalBuilders') }}</title>
 
-        <link rel="icon" type="image/png" href="{{ asset('images/db-logo.png') }}">
-        <link rel="apple-touch-icon" href="{{ asset('images/db-logo.png') }}">
-        <link rel="alternate icon" href="{{ asset('favicon.png') }}">
+        <link rel="icon" type="image/png" sizes="48x48" href="{{ asset('favicon-48x48.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('images/db-icon-192.png') }}">
+        <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('favicon.png') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
         <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
 
         <!-- Google Fonts: Libre Baskerville (Headings & Display), Outfit (Body & UI), JetBrains Mono (Prices & Data) -->
