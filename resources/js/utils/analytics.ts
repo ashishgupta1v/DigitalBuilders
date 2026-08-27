@@ -105,28 +105,61 @@ export function initPlausible(): void {
 let isSentryInitialized = false;
 
 /**
- * Dynamically injects Sentry Error Monitoring when SENTRY_DSN is configured.
+ * Dynamically injects Sentry Error Monitoring.
+ * If SENTRY_DSN is configured, initializes Sentry Browser SDK.
+ * Exposes a robust window.Sentry interface so window.Sentry is never undefined.
  */
 export function initSentry(): void {
-    if (typeof window === 'undefined' || isSentryInitialized) return;
+    if (typeof window === 'undefined') return;
+
+    // Ensure window.Sentry is always globally available
+    if (!(window as any).Sentry) {
+        (window as any).Sentry = {
+            captureException: (err: any, extra?: any) => {
+                trackEvent('app_error', {
+                    event_category: 'Sentry_Telemetry',
+                    event_label: err?.message || String(err),
+                    error_details: JSON.stringify({ err, extra, url: window.location.href }),
+                });
+            },
+            captureMessage: (msg: string, level = 'info') => {
+                trackEvent('app_log', {
+                    event_category: 'Sentry_Message',
+                    event_label: msg,
+                    level,
+                });
+            },
+            setUser: (user: any) => {
+                (window as any).__db_user = user;
+            },
+            init: (options: any) => {
+                console.info('[Sentry] Telemetry active with options:', options);
+            },
+        };
+    }
+
+    if (isSentryInitialized) return;
 
     const sentryDsn = (window as any).SENTRY_DSN;
     if (!sentryDsn || typeof sentryDsn !== 'string' || !sentryDsn.startsWith('http')) {
+        isSentryInitialized = true;
         return;
     }
 
+    // Load full Sentry Browser SDK bundle
     const script = document.createElement('script');
     script.defer = true;
     script.crossOrigin = 'anonymous';
-    script.src = 'https://js.sentry-cdn.com/' + sentryDsn.split('@')[0].replace('https://', '') + '.min.js';
-    
+    script.src = 'https://browser.sentry-cdn.com/7.100.0/bundle.min.js';
+
     script.onload = () => {
-        if ((window as any).Sentry) {
+        if ((window as any).Sentry?.init) {
             (window as any).Sentry.init({
                 dsn: sentryDsn,
                 tracesSampleRate: 0.2,
                 environment: (window as any).APP_ENV || 'production',
             });
+            console.info('[Sentry] Remote error monitoring successfully initialized.');
         }
     };
     document.head.appendChild(script);
@@ -139,7 +172,7 @@ export function initSentry(): void {
 export function initErrorMonitoring(): void {
     if (typeof window === 'undefined' || isErrorMonitoringInitialized) return;
 
-    // Boot Sentry if DSN provided
+    // Boot Sentry
     initSentry();
 
     window.addEventListener('error', (event) => {
@@ -153,7 +186,7 @@ export function initErrorMonitoring(): void {
             url: window.location.href,
         };
 
-        // Dispatch to Sentry if active
+        // Dispatch to Sentry
         if ((window as any).Sentry?.captureException && event.error) {
             (window as any).Sentry.captureException(event.error);
         }

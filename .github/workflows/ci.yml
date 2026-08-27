@@ -54,5 +54,8 @@ jobs:
       - name: Install NPM Dependencies
         run: npm ci
 
+      - name: WCAG 2.2 AA Contrast & Theme Token Audit
+        run: npm run audit:contrast
+
       - name: TypeCheck & Build Assets
         run: npm run build

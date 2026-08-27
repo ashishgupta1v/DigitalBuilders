@@ -147,6 +147,29 @@ EOT;
     {
         $q = strtolower($query);
 
+        // AMC, Maintenance, Support, Care Plans, Warranty, SLA
+        if (preg_match('/\b(amc|maintenance|support|care|retainer|warranty|sla|post launch|after launch|bug fix|updates|upkeep)\b/i', $query)) {
+            return "Yes! We provide 3 structured Care & Annual Maintenance (AMC) plans for post-launch peace of mind:\n"
+                . "• 🛡️ Basic Care (₹19,000/yr · ₹1,583/mo): Continuous uptime monitoring, monthly security patches, and quarterly dependency upgrades.\n"
+                . "• ⭐ Business Care ★ (₹49,000/yr · ₹4,083/mo): Monthly security updates, database vacuuming & automated backup restore tests, sub-24h SLA. (Pay for 10 months, get 12!)\n"
+                . "• 🚀 Enterprise SLA (From ₹1,49,000/yr): Dedicated engineer allocation, sub-4h SLA, and 24/7 on-call incident response.\n\n"
+                . "Note: Every new system built by DigitalBuilders includes a complimentary 30-day post-launch bug warranty at zero extra charge!";
+        }
+
+        // Booking, consultation, calendar, schedule meeting, call
+        if (preg_match('/\b(book|booking|schedule|calendar|cal\.com|calendly|consultation|strategy call|discovery call|meeting|demo call)\b/i', $query)) {
+            return "You can book a 30-minute system architecture strategy session directly with Lead Architect Ashish Gupta:\n"
+                . "• 📅 Pick an instant slot on Cal.com: https://cal.com/digitalbuilders/30min\n"
+                . "• 💬 Or schedule directly via WhatsApp: +91 90870 21592\n"
+                . "• ✉️ Or email hello@digitalbuilders.in with your preferred time.\n\n"
+                . "We'll review your technical bottlenecks, scale requirements, and provide a tailored system roadmap.";
+        }
+
+        // Privacy, GDPR, DPDP, DSAR, data deletion, export
+        if (preg_match('/\b(privacy|gdpr|dpdp|dsar|data deletion|delete data|export data|data retention)\b/i', $query)) {
+            return "DigitalBuilders is fully compliant with India's DPDP Act 2023 and EU GDPR. Your data is encrypted in transit (TLS 1.3) and at rest (AES-256). You can request data access, export (JSON/CSV), or immediate erasure anytime by emailing hello@digitalbuilders.in with the subject 'DSAR Request' or visiting /library/privacy-policy.";
+        }
+
         // Blockchain, Rust, Go, microservices, specialized tech
         if (preg_match('/\b(blockchain|rust|go|golang|solidity|web3|crypto|smart contract|microservice|microservices)\b/i', $query)) {
             return "Yes! While our primary core stack is a Domain-Driven modular monolith (Laravel 13 + Vue 3 + Inertia + PostgreSQL), we regularly engineer high-throughput microservices and cryptographic modules in Rust and Go for specialized compute tasks, sub-millisecond data pipelines, and smart contract integrations. Let's discuss your architectural requirements!";
@@ -179,7 +202,7 @@ EOT;
 
         // Founder, Ashish, team, experience
         if (preg_match('/\b(founder|ashish|gupta|team|experience|who are you|background)\b/i', $query)) {
-            return "DigitalBuilders is led by Ashish Gupta, a Senior Digital Architect with 8+ years of experience engineering enterprise software, legacy healthcare/aviation modernization, and high-throughput cloud platforms with over $1M/yr cloud cost reductions. View his portfolio at https://ashishgupta.dev.";
+            return "DigitalBuilders is led by Ashish Gupta, a Senior Digital Architect with 10+ years of experience engineering enterprise software, legacy modernization, and high-throughput cloud platforms with over $1M/yr cloud cost reductions. View his portfolio at https://ashishgupta.dev.";
         }
 
         // Case studies, past work, portfolio, clients
@@ -189,7 +212,7 @@ EOT;
 
         // Contact, call, whatsapp, phone, email
         if (preg_match('/\b(contact|call|whatsapp|phone|email|talk|reach|meeting|hire)\b/i', $query)) {
-            return "You can reach Lead Architect Ashish Gupta directly on WhatsApp/Phone at +91 90870 21592 or by email at hello@digitalbuilders.in. You can also submit the discovery form on our homepage for a detailed proposal within 24 hours.";
+            return "You can reach Lead Architect Ashish Gupta directly on WhatsApp/Phone at +91 90870 21592 or by email at hello@digitalbuilders.in. You can also pick an instant slot on Cal.com (https://cal.com/digitalbuilders/30min) or submit our homepage discovery form.";
         }
 
         // Default greeting / general inquiry

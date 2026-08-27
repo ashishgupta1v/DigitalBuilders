@@ -41,6 +41,27 @@ class AiChatEndpointTest extends TestCase
         $this->assertStringContainsString('Rust', $response->json('response'));
     }
 
+    public function test_ai_chat_handles_amc_and_maintenance_inquiry(): void
+    {
+        $response = $this->postJson('/ajax/ai-chat', [
+            'message' => 'Do you offer AMC or post-launch maintenance plans?',
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertStringContainsString('Basic Care', $response->json('response'));
+        $this->assertStringContainsString('warranty', strtolower($response->json('response')));
+    }
+
+    public function test_ai_chat_handles_booking_and_calendar_inquiry(): void
+    {
+        $response = $this->postJson('/ajax/ai-chat', [
+            'message' => 'Can I book a consultation or schedule a strategy call?',
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertStringContainsString('cal.com', strtolower($response->json('response')));
+    }
+
     public function test_testimonials_endpoints_work(): void
     {
         $resAjax = $this->getJson('/ajax/testimonials');

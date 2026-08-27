@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { trackContactSubmit, trackWhatsAppClick, trackPhoneClick, trackEmailClick } from '@/utils/analytics';
+import { trackContactSubmit, trackWhatsAppClick, trackPhoneClick, trackEmailClick, trackEvent } from '@/utils/analytics';
 
 const page = usePage();
 const flashError = computed(() => (page.props as any).flash?.error as string | undefined);
@@ -278,16 +278,28 @@ function submitLead() {
                     <p class="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                         Prefer an interactive deep-dive? Book a 30-minute system architecture review directly with Lead Architect Ashish Gupta.
                     </p>
-                    <a
-                        href="https://wa.me/919087021592?text=Hi%20Ashish,%20I'd%20like%20to%20schedule%20a%2030-minute%20system%20architecture%20strategy%20session."
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        @click="trackWhatsAppClick('strategy_session')"
-                        class="btn-primary mt-4 inline-flex w-full items-center justify-center gap-2 min-h-[44px] rounded-full px-5 py-3 text-xs font-bold text-white shadow transition hover:scale-[1.02]"
-                    >
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        Schedule 30-Min Strategy Call
-                    </a>
+                    <div class="mt-4 flex flex-col gap-2.5">
+                        <a
+                            href="https://cal.com/digitalbuilders/30min"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            @click="trackEvent('book_meeting_click', { method: 'cal_com', location: 'contact_section' })"
+                            class="btn-primary inline-flex w-full items-center justify-center gap-2 min-h-[44px] rounded-full px-5 py-3 text-xs font-bold text-white shadow-md transition hover:scale-[1.02]"
+                        >
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            <span>Pick a Time on Cal.com (Instant Slot)</span>
+                        </a>
+                        <a
+                            href="https://wa.me/919087021592?text=Hi%20Ashish,%20I'd%20like%20to%20schedule%20a%2030-minute%20system%20architecture%20strategy%20session."
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            @click="trackWhatsAppClick('strategy_session')"
+                            class="inline-flex w-full items-center justify-center gap-2 min-h-[44px] rounded-full border border-border bg-card px-5 py-2.5 text-xs font-bold text-card-foreground hover:bg-secondary transition shadow-sm"
+                        >
+                            <svg class="h-4 w-4 text-emerald-500 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.815 11.815 0 018.413 3.479 11.821 11.821 0 013.48 8.413c-.003 6.558-5.339 11.893-11.893 11.893h-.005a11.882 11.882 0 01-5.683-1.448L0 24h.057z"/></svg>
+                            <span>Or Schedule via WhatsApp</span>
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Official 2026 Brochure Download Card -->
