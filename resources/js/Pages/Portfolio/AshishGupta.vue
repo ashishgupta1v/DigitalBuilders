@@ -48,7 +48,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
             <!-- Screenshot Hero Container -->
             <div class="mt-8 overflow-hidden rounded-3xl border border-border shadow-2xl bg-card">
                 <img
-                    src="/images/portfolio/ashishgupta.jpg"
+                    src="/images/portfolio/ashishgupta.webp"
                     alt="Ashish Gupta Portfolio & Architecture Hub Snapshot"
                     class="w-full h-auto object-cover object-top"
                     loading="eager"
@@ -59,7 +59,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
             <!-- Key Metrics Bar -->
             <div class="mt-12 grid gap-4 sm:grid-cols-4 text-center">
                 <div class="rounded-2xl border border-border bg-card text-card-foreground p-6 shadow-sm">
-                    <p class="text-3xl font-black text-emerald-600 dark:text-emerald-400">9+ Yrs</p>
+                    <p class="text-3xl font-black text-emerald-600 dark:text-emerald-400">10+ Yrs</p>
                     <p class="mt-1 text-xs text-muted-foreground">Enterprise IT Experience</p>
                 </div>
                 <div class="rounded-2xl border border-border bg-card text-card-foreground p-6 shadow-sm">

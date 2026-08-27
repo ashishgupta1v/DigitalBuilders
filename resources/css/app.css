@@ -180,6 +180,12 @@
 		color: #ffffff;
 	}
 
+	*,
+	*::before,
+	*::after {
+		-webkit-text-fill-color: currentColor;
+	}
+
 	* {
 		scrollbar-color: rgba(148, 163, 184, 0.4) rgba(15, 23, 42, 0.5);
 	}
@@ -274,12 +280,13 @@
 		font-weight: 700;
 		text-transform: uppercase;
 		letter-spacing: 0.18em;
-		color: #0284c7;
+		color: #0369a1;
 		background: rgba(2, 132, 199, 0.08);
 		box-shadow: 0 0 15px rgba(2, 132, 199, 0.1);
 	}
 
-	.dark .db-chip {
+	.dark .db-chip,
+	[data-theme='dark'] .db-chip {
 		border-color: rgba(56, 189, 248, 0.35);
 		color: #7dd3fc;
 		background: rgba(56, 189, 248, 0.1);
@@ -394,6 +401,7 @@
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
+		-webkit-text-fill-color: transparent !important;
 	}
 
 	.db-focus {

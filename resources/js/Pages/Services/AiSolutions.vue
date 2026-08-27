@@ -125,33 +125,33 @@ const breadcrumbSchema = {
                     <!-- ZoetiCoach AI -->
                     <div class="group rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-xl flex flex-col">
                         <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="/images/portfolio/zoeticoach.jpg" alt="ZoetiCoach AI" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                            <span class="absolute top-3 right-3 rounded-full bg-cyan-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">RAG + pgvector</span>
+                            <img src="/images/portfolio/zoeticoach.webp" alt="ZoetiCoach AI" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <span class="absolute top-3 right-3 rounded-full bg-sky-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">RAG AI Verified</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">
                             <div>
-                                <span class="text-xs font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-wider">AI Accountability Agent</span>
+                                <span class="text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-wider">WhatsApp RAG AI</span>
                                 <h3 class="mt-1 text-xl font-bold text-card-foreground">ZoetiCoach AI</h3>
-                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">OpenAI RAG agent processing natural-language WhatsApp voice/text check-ins, reducing client dropout by 65%.</p>
+                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">WhatsApp coaching SaaS with autonomous photo proof AI verification and event-sourced client ledgers.</p>
                             </div>
                             <div class="mt-6 pt-4 border-t border-border flex items-center justify-between">
-                                <a href="https://zoeticoach.com/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-cyan-600 dark:text-cyan-400 hover:underline flex items-center gap-1">Visit Live App ↗</a>
+                                <a href="https://zoeticoach.com/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-sky-700 dark:text-sky-400 hover:underline flex items-center gap-1">Visit Live App ↗</a>
                                 <Link href="/portfolio/zoeticoach" class="text-xs font-bold text-muted-foreground hover:text-foreground">Case Study →</Link>
                             </div>
                         </div>
                     </div>
 
-                    <!-- GutTalks AI Intake -->
+                    <!-- GutTalks -->
                     <div class="group rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-xl flex flex-col">
                         <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="/images/portfolio/guttalks.jpg" alt="GutTalks Clinical Intake" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                            <span class="absolute top-3 right-3 rounded-full bg-emerald-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">Automated Intake</span>
+                            <img src="/images/portfolio/guttalks.webp" alt="GutTalks Clinical Intake" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <span class="absolute top-3 right-3 rounded-full bg-emerald-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">10k+ Patients</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">
                             <div>
-                                <span class="text-xs font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider">Clinical Telehealth</span>
-                                <h3 class="mt-1 text-xl font-bold text-card-foreground">GutTalks Diagnostics</h3>
-                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">Intelligent medical intake routing matching patients to Root Rx doctors and sequencing test kits.</p>
+                                <span class="text-xs font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider">Telehealth Clinic</span>
+                                <h3 class="mt-1 text-xl font-bold text-card-foreground">GutTalks</h3>
+                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">Clinical triage and personalized lifestyle medicine sequencing with ₹499 Root Rx consultation booking.</p>
                             </div>
                             <div class="mt-6 pt-4 border-t border-border flex items-center justify-between">
                                 <a href="https://guttalks.in/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-emerald-700 dark:text-emerald-300 hover:underline flex items-center gap-1">Visit Live App ↗</a>
@@ -160,10 +160,10 @@ const breadcrumbSchema = {
                         </div>
                     </div>
 
-                    <!-- GauSeva Connect Meta Cloud API -->
+                    <!-- Gaushala Connect -->
                     <div class="group rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-xl flex flex-col">
                         <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="/images/portfolio/gaushala.jpg" alt="GauSeva Connect" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <img src="/images/portfolio/gaushala.webp" alt="GauSeva Connect" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                             <span class="absolute top-3 right-3 rounded-full bg-amber-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">Meta Cloud Webhook</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">

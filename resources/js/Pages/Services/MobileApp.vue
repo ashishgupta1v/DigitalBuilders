@@ -125,18 +125,18 @@ const breadcrumbSchema = {
                     <!-- Sports Club -->
                     <div class="group rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-xl flex flex-col">
                         <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="/images/portfolio/sportsclub.jpg" alt="Sports Club App" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                            <span class="absolute top-3 right-3 rounded-full bg-cyan-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">0 Collision Locks</span>
+                            <img src="/images/portfolio/sportsclub.webp" alt="Sports Club App" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <span class="absolute top-3 right-3 rounded-full bg-emerald-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">0 Collisions</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">
                             <div>
-                                <span class="text-xs font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-wider">Facility & Club App</span>
-                                <h3 class="mt-1 text-xl font-bold text-card-foreground">SportsEntertainmentClub</h3>
-                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">60 FPS mobile app with atomic slot booking locks, digital QR passes, and live tournament draws.</p>
+                                <span class="text-xs font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider">Facility Booking App</span>
+                                <h3 class="mt-1 text-xl font-bold text-card-foreground">SportsClub</h3>
+                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">Cross-platform iOS & Android court reservation system with atomic slot locks and QR member passes.</p>
                             </div>
                             <div class="mt-6 pt-4 border-t border-border flex items-center justify-between">
-                                <Link href="/portfolio/sports-club" class="text-xs font-bold text-cyan-600 dark:text-cyan-400 hover:underline flex items-center gap-1">Read Case Study ↗</Link>
-                                <a href="/#contact" class="text-xs font-bold text-muted-foreground hover:text-foreground">Request APK →</a>
+                                <span class="text-xs font-bold text-muted-foreground">iOS · Android</span>
+                                <Link href="/portfolio/sports-club" class="text-xs font-bold text-emerald-700 dark:text-emerald-300 hover:text-emerald-600">Case Study →</Link>
                             </div>
                         </div>
                     </div>
@@ -144,18 +144,18 @@ const breadcrumbSchema = {
                     <!-- Garg Enterprises -->
                     <div class="group rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-xl flex flex-col">
                         <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="/images/portfolio/gargenterprises.jpg" alt="Garg Enterprises B2B App" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                            <span class="absolute top-3 right-3 rounded-full bg-indigo-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">Offline SQLite</span>
+                            <img src="/images/portfolio/gargenterprises.webp" alt="Garg Enterprises B2B App" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <span class="absolute top-3 right-3 rounded-full bg-sky-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">10k+ SKUs</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">
                             <div>
-                                <span class="text-xs font-bold text-indigo-700 dark:text-indigo-300 uppercase tracking-wider">B2B Wholesale App</span>
+                                <span class="text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-wider">B2B Wholesale Ordering</span>
                                 <h3 class="mt-1 text-xl font-bold text-card-foreground">Garg Enterprises</h3>
-                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">Rugged B2B wholesale ordering app with offline SQLite cart drafting and 1-tap GST invoices for 10k+ SKUs.</p>
+                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">Android wholesale ordering app with offline drafting, dealer credit reconciliation, and 1-tap GST PDFs.</p>
                             </div>
                             <div class="mt-6 pt-4 border-t border-border flex items-center justify-between">
-                                <Link href="/portfolio/garg-enterprises" class="text-xs font-bold text-indigo-700 dark:text-indigo-300 hover:underline flex items-center gap-1">Read Case Study ↗</Link>
-                                <a href="/#contact" class="text-xs font-bold text-muted-foreground hover:text-foreground">Request APK →</a>
+                                <span class="text-xs font-bold text-muted-foreground">Android Native</span>
+                                <Link href="/portfolio/garg-enterprises" class="text-xs font-bold text-sky-700 dark:text-sky-400 hover:text-sky-600">Case Study →</Link>
                             </div>
                         </div>
                     </div>
@@ -163,7 +163,7 @@ const breadcrumbSchema = {
                     <!-- Habuilt Mobile Deep Linking -->
                     <div class="group rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-xl flex flex-col">
                         <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="/images/portfolio/habuilt.jpg" alt="Habuilt Universal Sync" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <img src="/images/portfolio/habuilt.webp" alt="Habuilt Universal Sync" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                             <span class="absolute top-3 right-3 rounded-full bg-sky-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">Deep Linking</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">

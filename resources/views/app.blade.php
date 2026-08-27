@@ -62,7 +62,8 @@
                 "founder": {
                     "@type": "Person",
                     "name": "Ashish Gupta",
-                    "jobTitle": "Lead Digital Architect & Founder",
+                    "jobTitle": "Lead Digital Architect & Founder (10+ Years Enterprise Experience)",
+                    "description": "Enterprise software architect and founder with over 10+ years experience designing resilient web, mobile, and AI systems.",
                     "url": "https://ashishgupta.dev",
                     "sameAs": [
                         "https://www.linkedin.com/in/ashishgupta1v/",

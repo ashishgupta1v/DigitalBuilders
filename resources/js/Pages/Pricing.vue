@@ -750,7 +750,7 @@ function getAddonPrice(addon: AddonModule): string {
                                         'w-full min-h-[44px] inline-flex items-center justify-center rounded-xl text-xs font-bold transition-all cursor-pointer',
                                         tier.popular
                                             ? 'btn-primary text-white shadow-lg'
-                                            : 'border border-border bg-card text-foreground dark:text-card-foreground hover:bg-secondary hover:border-sky-500/50 shadow-sm',
+                                            : 'border border-slate-300 dark:border-slate-700 bg-secondary text-secondary-foreground font-bold hover:border-sky-500/70 hover:bg-secondary/80 shadow-sm',
                                     ]"
                                 >
                                     <span>Select {{ tier.name }} Tier</span>

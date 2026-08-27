@@ -125,14 +125,14 @@ const breadcrumbSchema = {
                     <!-- Dhanda Diary -->
                     <div class="group rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-xl flex flex-col">
                         <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="/images/portfolio/dhandadiary.jpg" alt="Dhanda Diary" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                            <span class="absolute top-3 right-3 rounded-full bg-emerald-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">DCR Compliance</span>
+                            <img src="/images/portfolio/dhandadiary.webp" alt="Dhanda Diary" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <span class="absolute top-3 right-3 rounded-full bg-emerald-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">ERP Ledger</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">
                             <div>
-                                <span class="text-xs font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider">Business Execution CRM</span>
+                                <span class="text-xs font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider">Business Ledger SaaS</span>
                                 <h3 class="mt-1 text-xl font-bold text-card-foreground">Dhanda Diary</h3>
-                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">Centralized business management cockpit with daily routines, ApexCharts KPI trackers, and Kanban boards.</p>
+                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">Multi-tenant business ERP with automated DCR routines, ApexCharts KPIs, and discipline streak multipliers.</p>
                             </div>
                             <div class="mt-6 pt-4 border-t border-border flex items-center justify-between">
                                 <a href="https://dhandadiary.cloud/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-emerald-700 dark:text-emerald-300 hover:underline flex items-center gap-1">Visit Live App ↗</a>
@@ -144,18 +144,18 @@ const breadcrumbSchema = {
                     <!-- Garg Enterprises -->
                     <div class="group rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-xl flex flex-col">
                         <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="/images/portfolio/gargenterprises.jpg" alt="Garg Enterprises" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                            <span class="absolute top-3 right-3 rounded-full bg-indigo-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">Dealer Ledger</span>
+                            <img src="/images/portfolio/gargenterprises.webp" alt="Garg Enterprises" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <span class="absolute top-3 right-3 rounded-full bg-sky-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">10k+ SKUs</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">
                             <div>
-                                <span class="text-xs font-bold text-indigo-700 dark:text-indigo-300 uppercase tracking-wider">Distribution ERP</span>
+                                <span class="text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-wider">B2B Wholesale Ordering</span>
                                 <h3 class="mt-1 text-xl font-bold text-card-foreground">Garg Enterprises</h3>
-                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">Wholesale dealer credit ledger, outstanding balance sync, and dispatch management across 10,000+ SKUs.</p>
+                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">Android wholesale ordering app with offline drafting, dealer credit reconciliation, and 1-tap GST PDFs.</p>
                             </div>
                             <div class="mt-6 pt-4 border-t border-border flex items-center justify-between">
-                                <Link href="/portfolio/garg-enterprises" class="text-xs font-bold text-indigo-700 dark:text-indigo-300 hover:underline flex items-center gap-1">Read Case Study ↗</Link>
-                                <a href="/#contact" class="text-xs font-bold text-muted-foreground hover:text-foreground">Request Demo →</a>
+                                <span class="text-xs font-bold text-muted-foreground">Android Native</span>
+                                <Link href="/portfolio/garg-enterprises" class="text-xs font-bold text-sky-700 dark:text-sky-400 hover:text-sky-600">Case Study →</Link>
                             </div>
                         </div>
                     </div>
@@ -163,7 +163,7 @@ const breadcrumbSchema = {
                     <!-- Krishan Balram Gaushala -->
                     <div class="group rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-xl flex flex-col">
                         <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="/images/portfolio/gaushala.jpg" alt="Gaushala Connect" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <img src="/images/portfolio/gaushala.webp" alt="Gaushala Connect" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                             <span class="absolute top-3 right-3 rounded-full bg-amber-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">80G Tax Engine</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">

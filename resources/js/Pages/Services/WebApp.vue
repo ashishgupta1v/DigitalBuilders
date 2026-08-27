@@ -146,7 +146,7 @@ const breadcrumbSchema = {
                     <!-- Habuilt -->
                     <div class="group rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-xl flex flex-col">
                         <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="/images/portfolio/habuilt.jpg" alt="Habuilt Platform" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <img src="/images/portfolio/habuilt.webp" alt="Habuilt Platform" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                             <span class="absolute top-3 right-3 rounded-full bg-sky-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">99.99% Uptime</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">
@@ -165,7 +165,7 @@ const breadcrumbSchema = {
                     <!-- GutTalks -->
                     <div class="group rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-xl flex flex-col">
                         <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="/images/portfolio/guttalks.jpg" alt="GutTalks Clinic" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <img src="/images/portfolio/guttalks.webp" alt="GutTalks Clinic" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                             <span class="absolute top-3 right-3 rounded-full bg-emerald-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">10k+ Patients</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">
@@ -184,7 +184,7 @@ const breadcrumbSchema = {
                     <!-- Ashish Gupta Hub -->
                     <div class="group rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-xl flex flex-col">
                         <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="/images/portfolio/ashishgupta.jpg" alt="Ashish Gupta Hub" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <img src="/images/portfolio/ashishgupta.webp" alt="Ashish Gupta Hub" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                             <span class="absolute top-3 right-3 rounded-full bg-purple-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">$1M+ Savings</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">

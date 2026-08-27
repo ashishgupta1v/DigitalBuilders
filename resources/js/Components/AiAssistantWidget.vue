@@ -170,9 +170,10 @@ function handleOptionClick(action: string, label: string) {
             messages.value.push({
                 id: Date.now() + 1,
                 sender: 'bot',
-                text: 'Ashish Gupta is our Lead Digital Architect & Founder with over 8+ years in enterprise IT. He brings Silicon Valley engineering discipline and AI automation expertise to ambitious businesses.',
+                text: 'Ashish Gupta is our Lead Digital Architect & Founder with over 10+ years in enterprise IT. He brings Silicon Valley engineering discipline and AI automation expertise to ambitious businesses.',
                 options: [
                     { label: 'View Ashish\'s Portfolio', action: 'portfolio_link' },
+                    { label: 'Chat on WhatsApp with Ashish', action: 'whatsapp_chat' },
                     { label: 'Schedule Strategy Session', action: 'lead_form' },
                 ],
             });

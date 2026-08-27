@@ -48,9 +48,11 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
             <!-- Screenshot Hero Container -->
             <div class="mt-8 overflow-hidden rounded-3xl border border-border shadow-2xl bg-card">
                 <img
-                    src="/images/portfolio/gaushala.jpg"
-                    alt="Krishan Balram Gaushala GauSeva Connect Snapshot"
+                    src="/images/portfolio/gaushala.webp"
+                    alt="GauSeva Connect Portal Snapshot"
                     class="w-full h-auto object-cover object-top"
+                    loading="eager"
+                    decoding="async"
                 />
             </div>
 

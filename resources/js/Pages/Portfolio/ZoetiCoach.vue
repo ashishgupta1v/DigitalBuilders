@@ -48,9 +48,11 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
             <!-- Screenshot Hero Container -->
             <div class="mt-8 overflow-hidden rounded-3xl border border-border shadow-2xl bg-card">
                 <img
-                    src="/images/portfolio/zoeticoach.jpg"
-                    alt="ZoetiCoach AI WhatsApp Coaching SaaS Platform Snapshot"
+                    src="/images/portfolio/zoeticoach.webp"
+                    alt="ZoetiCoach AI WhatsApp Coaching System Snapshot"
                     class="w-full h-auto object-cover object-top"
+                    loading="eager"
+                    decoding="async"
                 />
             </div>
 

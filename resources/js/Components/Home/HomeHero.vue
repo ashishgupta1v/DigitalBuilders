@@ -83,8 +83,8 @@ defineProps<{
         <!-- Stats Bar Grid -->
         <section class="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-stagger data-reveal>
             <div data-stagger-item class="db-antigravity-card rounded-2xl border border-border bg-card text-card-foreground p-6 text-center sm:text-left shadow-sm">
-                <p class="text-3xl font-black db-gradient-text" data-counter="8" data-suffix="+">8+</p>
-                <p class="mt-2 text-sm font-semibold text-card-foreground">Years IT Experience</p>
+                <p class="text-3xl font-black db-gradient-text" data-counter="10" data-suffix="+">10+</p>
+                <p class="mt-2 text-sm font-semibold text-card-foreground">Years Enterprise Experience</p>
                 <p class="mt-1 text-xs text-muted-foreground">Enterprise software & cloud systems</p>
             </div>
             <div data-stagger-item class="db-antigravity-card rounded-2xl border border-border bg-card text-card-foreground p-6 text-center sm:text-left shadow-sm">

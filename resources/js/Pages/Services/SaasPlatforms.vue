@@ -125,14 +125,14 @@ const breadcrumbSchema = {
                     <!-- Dhanda Diary -->
                     <div class="group rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-xl flex flex-col">
                         <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="/images/portfolio/dhandadiary.jpg" alt="Dhanda Diary SaaS" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                            <span class="absolute top-3 right-3 rounded-full bg-emerald-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">&lt;50ms Sync</span>
+                            <img src="/images/portfolio/dhandadiary.webp" alt="Dhanda Diary SaaS" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <span class="absolute top-3 right-3 rounded-full bg-emerald-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">Sub-50ms Sync</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">
                             <div>
-                                <span class="text-xs font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider">Business Cockpit SaaS</span>
+                                <span class="text-xs font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider">Business Ledger SaaS</span>
                                 <h3 class="mt-1 text-xl font-bold text-card-foreground">Dhanda Diary</h3>
-                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">Execution cockpit with Daily Compliance Reports (DCR), ApexCharts KPI telemetry, and VAPID Push.</p>
+                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">Execution cockpit with automated DCR routines, ApexCharts KPIs, and discipline streak multipliers.</p>
                             </div>
                             <div class="mt-6 pt-4 border-t border-border flex items-center justify-between">
                                 <a href="https://dhandadiary.cloud/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-emerald-700 dark:text-emerald-300 hover:underline flex items-center gap-1">Visit Live App ↗</a>
@@ -144,14 +144,14 @@ const breadcrumbSchema = {
                     <!-- ZoetiCoach AI -->
                     <div class="group rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-xl flex flex-col">
                         <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="/images/portfolio/zoeticoach.jpg" alt="ZoetiCoach AI" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                            <span class="absolute top-3 right-3 rounded-full bg-sky-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">-65% Dropout</span>
+                            <img src="/images/portfolio/zoeticoach.webp" alt="ZoetiCoach AI" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <span class="absolute top-3 right-3 rounded-full bg-sky-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">RAG AI Verified</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">
                             <div>
-                                <span class="text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-wider">Coaching Accountability</span>
+                                <span class="text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-wider">Coaching ERP SaaS</span>
                                 <h3 class="mt-1 text-xl font-bold text-card-foreground">ZoetiCoach AI</h3>
-                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">WhatsApp-first B2B2C coaching accountability SaaS with OpenAI RAG habit verification and event ledgers.</p>
+                                <p class="mt-2 text-xs text-muted-foreground leading-relaxed">WhatsApp-first accountability SaaS with autonomous photo proof AI verification and event-sourced ledgers.</p>
                             </div>
                             <div class="mt-6 pt-4 border-t border-border flex items-center justify-between">
                                 <a href="https://zoeticoach.com/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-sky-700 dark:text-sky-400 hover:underline flex items-center gap-1">Visit Live App ↗</a>
@@ -163,7 +163,7 @@ const breadcrumbSchema = {
                     <!-- Habuilt -->
                     <div class="group rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-xl flex flex-col">
                         <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="/images/portfolio/habuilt.jpg" alt="Habuilt Platform" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <img src="/images/portfolio/habuilt.webp" alt="Habuilt Platform" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                             <span class="absolute top-3 right-3 rounded-full bg-purple-600/90 backdrop-blur px-3 py-1 text-[11px] font-bold text-white shadow">99.99% Uptime</span>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">

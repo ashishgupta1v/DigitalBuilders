@@ -312,7 +312,7 @@ onUnmounted(() => {
                     <h2 class="mt-2 text-2xl font-black text-foreground sm:text-3xl">Ashish Gupta</h2>
                     <p class="mt-1 text-sm font-semibold text-indigo-600 dark:text-indigo-400">Lead Digital Architect · Founder</p>
                     <p class="mt-4 text-muted-foreground leading-relaxed">
-                        Over 8 years in enterprise IT designing and deploying complex large-scale software systems. DigitalBuilders was founded to deliver production-grade architecture, not fragile templates.
+                        Over 10+ years in enterprise IT designing and deploying complex large-scale software systems. DigitalBuilders was founded to deliver production-grade architecture, not fragile templates.
                     </p>
                     <div class="mt-6 flex items-center gap-3">
                         <a href="https://www.linkedin.com/in/ashishgupta1v/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:border-[#0a66c2] hover:text-[#0a66c2] transition-colors">
@@ -425,26 +425,6 @@ onUnmounted(() => {
 <style scoped>
 html {
     scroll-behavior: smooth;
-}
-
-.db-brand-logo-text {
-    background: linear-gradient(135deg, #0284c7 0%, #4f46e5 45%, #7c3aed 80%, #db2777 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
-    filter: none;
-    text-shadow: none;
-}
-
-.dark .db-brand-logo-text,
-[data-theme='dark'] .db-brand-logo-text {
-    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 35%, #c084fc 70%, #f472b6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
-    filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.25));
 }
 
 .whatsapp-fab {

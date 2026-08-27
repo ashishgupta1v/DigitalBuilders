@@ -1,6 +1,7 @@
 /**
  * DigitalBuilders Telemetry & Analytics Hub
- * Privacy-first event dispatcher supporting GA4, Plausible, and custom web-vitals RUM.
+ * Privacy-first event dispatcher supporting GA4, Plausible, Sentry/Error telemetry,
+ * and custom Core Web-Vitals RUM (compliant with India DPDP Act 2023 & GDPR).
  */
 
 export interface ConsentSettings {
@@ -12,6 +13,8 @@ export interface ConsentSettings {
 
 const CONSENT_STORAGE_KEY = 'db_cookie_consent';
 let isGAInitialized = false;
+let isPlausibleInitialized = false;
+let isErrorMonitoringInitialized = false;
 
 export function getStoredConsent(): ConsentSettings | null {
     if (typeof window === 'undefined') return null;
@@ -81,6 +84,62 @@ export function initGA4(): void {
 }
 
 /**
+ * Dynamically injects Plausible Analytics when enabled.
+ */
+export function initPlausible(): void {
+    if (typeof window === 'undefined' || isPlausibleInitialized) return;
+
+    const consent = getStoredConsent();
+    if (!consent?.analytics) return;
+
+    const plausibleDomain = (window as any).PLAUSIBLE_DOMAIN || 'digitalbuilders.in';
+    const script = document.createElement('script');
+    script.defer = true;
+    script.dataset.domain = plausibleDomain;
+    script.src = 'https://plausible.io/js/script.tagged-events.js';
+    document.head.appendChild(script);
+
+    isPlausibleInitialized = true;
+}
+
+/**
+ * Client-side unhandled exception and performance monitoring.
+ */
+export function initErrorMonitoring(): void {
+    if (typeof window === 'undefined' || isErrorMonitoringInitialized) return;
+
+    window.addEventListener('error', (event) => {
+        const errorData = {
+            message: event.message,
+            filename: event.filename,
+            lineno: event.lineno,
+            colno: event.colno,
+            stack: event.error?.stack?.substring(0, 500),
+            timestamp: new Date().toISOString(),
+            url: window.location.href,
+        };
+
+        trackEvent('app_error', {
+            event_category: 'System',
+            event_label: event.message,
+            error_details: JSON.stringify(errorData),
+        });
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+        const reason = event.reason?.message || String(event.reason);
+        trackEvent('promise_rejection', {
+            event_category: 'System',
+            event_label: reason,
+            timestamp: new Date().toISOString(),
+            url: window.location.href,
+        });
+    });
+
+    isErrorMonitoringInitialized = true;
+}
+
+/**
  * Generic event tracker respecting user consent.
  */
 export function trackEvent(eventName: string, params: Record<string, any> = {}): void {
@@ -99,7 +158,7 @@ export function trackEvent(eventName: string, params: Record<string, any> = {}):
         (window as any).plausible(eventName, { props: params });
     }
 
-    // 3. Custom internal event dispatch for in-app monitoring
+    // 3. Custom internal event dispatch for in-app monitoring & RUM
     window.dispatchEvent(new CustomEvent('db:telemetry', {
         detail: { event: eventName, params, timestamp: Date.now() },
     }));
@@ -168,6 +227,15 @@ export function trackEstimatorSubmit(projectType: string, budget: string): void 
     });
 }
 
+export function trackTierSelected(serviceId: string, tierName: string, region: string): void {
+    trackEvent('pricing_tier_selected', {
+        event_category: 'Conversion',
+        service_id: serviceId,
+        tier_name: tierName,
+        region: region,
+    });
+}
+
 export function trackPhoneClick(): void {
     trackEvent('phone_call_click', {
         event_category: 'Contact',
@@ -180,14 +248,18 @@ export function trackEmailClick(): void {
     });
 }
 
-// Auto-initialize GA4 if consent is already given, or upon consent change
+// Auto-initialize trackers and error monitoring if consent is already given
 if (typeof window !== 'undefined') {
     (window as any).dbTrack = trackEvent;
     (window as any).dbTrackPageView = trackPageView;
 
     initGA4();
+    initErrorMonitoring();
 
-    window.addEventListener('db:consent-updated', () => {
-        initGA4();
+    window.addEventListener('db:consent-updated', (e: any) => {
+        if (e.detail?.analytics) {
+            initGA4();
+            initPlausible();
+        }
     });
 }

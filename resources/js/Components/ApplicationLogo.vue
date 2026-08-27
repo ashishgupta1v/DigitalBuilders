@@ -46,25 +46,3 @@ const props = withDefaults(defineProps<Props>(), {
         </span>
     </component>
 </template>
-
-<style scoped>
-.db-brand-logo-text {
-    background: linear-gradient(135deg, #0284c7 0%, #4f46e5 45%, #7c3aed 80%, #db2777 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
-    filter: none;
-    text-shadow: none;
-}
-
-:global(.dark) .db-brand-logo-text,
-:global([data-theme='dark']) .db-brand-logo-text {
-    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 35%, #c084fc 70%, #f472b6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
-    filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.25));
-}
-</style>
