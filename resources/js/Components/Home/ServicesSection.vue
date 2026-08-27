@@ -10,6 +10,10 @@ interface ServiceItem {
 defineProps<{
     services: readonly ServiceItem[];
 }>();
+
+const emit = defineEmits<{
+    (e: 'open-brochure'): void;
+}>();
 </script>
 
 <template>
@@ -151,24 +155,14 @@ defineProps<{
                 </div>
             </div>
             <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto shrink-0">
-                <a
-                    href="/downloads/digitalbuilders-pricing-india-inr.html"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-full border border-sky-500/40 bg-sky-500/10 px-5 py-2.5 text-xs font-bold text-sky-700 dark:text-sky-300 hover:bg-sky-500/20 transition-all shadow-sm cursor-pointer"
+                <button
+                    type="button"
+                    @click="emit('open-brochure')"
+                    class="btn-primary inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full px-6 py-3 min-h-[44px] text-xs font-bold text-white transition-all shadow-md cursor-pointer"
                 >
-                    <span>🇮🇳 India (INR ₹)</span>
-                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </a>
-                <a
-                    href="/downloads/digitalbuilders-pricing-international-usd.html"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="btn-primary inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-full px-5 py-2.5 text-xs font-bold text-white transition-all shadow-sm cursor-pointer"
-                >
-                    <span>🌐 International (USD $)</span>
-                    <svg class="h-3.5 w-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </a>
+                    <span>Instant Price Book & Specs (PDF)</span>
+                    <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </button>
             </div>
         </div>
     </section>

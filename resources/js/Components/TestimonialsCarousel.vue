@@ -144,16 +144,23 @@ async function fetchTestimonials() {
     >
         <!-- Client Logo & Trust Marquee Ribbon -->
         <div class="mb-8 border-b border-border/80 pb-6">
-            <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground font-semibold text-center mb-4">
-                Trusted by Forward-Thinking Brands & Modern Enterprises
-            </p>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground font-semibold">
+                    Trusted by High-Growth Digital Brands
+                </p>
+                <div class="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-900 dark:text-amber-300 self-start sm:self-auto">
+                    <span class="text-amber-500 font-bold">★★★★★</span>
+                    <span class="font-bold text-foreground">5.0 Google Score</span>
+                    <span class="text-muted-foreground">• 100% Client Satisfaction</span>
+                </div>
+            </div>
             <div class="flex flex-wrap items-center justify-center gap-6 sm:gap-10 opacity-80">
-                <span class="text-sm sm:text-base font-extrabold text-foreground tracking-tight">HABUILT<span class="text-sky-500">.</span></span>
-                <span class="text-sm sm:text-base font-extrabold text-foreground tracking-tight">Zoeti<span class="text-indigo-500">Coach</span></span>
-                <span class="text-sm sm:text-base font-extrabold text-foreground tracking-tight">Gut<span class="text-emerald-500">Talks</span></span>
-                <span class="text-sm sm:text-base font-extrabold text-foreground tracking-tight">Dhanda<span class="text-emerald-500">Diary</span></span>
-                <span class="text-sm sm:text-base font-extrabold text-foreground tracking-tight">My<span class="text-purple-500">Astrova</span></span>
-                <span class="text-sm sm:text-base font-extrabold text-foreground tracking-tight">Garg<span class="text-amber-500">Enterprises</span></span>
+                <span class="text-sm sm:text-base font-black text-foreground tracking-tight">HABUILT<span class="text-sky-500">.</span></span>
+                <span class="text-sm sm:text-base font-black text-foreground tracking-tight">Zoeti<span class="text-indigo-500">Coach</span></span>
+                <span class="text-sm sm:text-base font-black text-foreground tracking-tight">Gut<span class="text-emerald-500">Talks</span></span>
+                <span class="text-sm sm:text-base font-black text-foreground tracking-tight">Dhanda<span class="text-emerald-500">Diary</span></span>
+                <span class="text-sm sm:text-base font-black text-foreground tracking-tight">My<span class="text-purple-500">Astrova</span></span>
+                <span class="text-sm sm:text-base font-black text-foreground tracking-tight">Garg<span class="text-amber-500">Enterprises</span></span>
             </div>
         </div>
 
@@ -196,8 +203,13 @@ async function fetchTestimonials() {
                 >
                     <!-- Metric Chip + Rating -->
                     <div class="flex flex-wrap items-center justify-between gap-3">
-                        <div class="flex items-center gap-1 text-amber-500 text-sm" aria-label="5 star rating">
-                            <span v-for="star in 5" :key="star">★</span>
+                        <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-1 text-amber-500 text-sm" aria-label="5 star rating">
+                                <span v-for="star in 5" :key="star">★</span>
+                            </div>
+                            <span class="rounded bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[11px] font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1">
+                                <span>✓ Verified Project</span>
+                            </span>
                         </div>
                         <span
                             v-if="item.metric_highlight"

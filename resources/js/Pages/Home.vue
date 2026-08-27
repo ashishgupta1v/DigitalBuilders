@@ -16,6 +16,8 @@ import AiAssistantWidget from '@/Components/AiAssistantWidget.vue';
 import CookieConsent from '@/Components/CookieConsent.vue';
 import StickyMobileCta from '@/Components/StickyMobileCta.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import BookingModal from '@/Components/BookingModal.vue';
+import BrochureLeadMagnetModal from '@/Components/BrochureLeadMagnetModal.vue';
 import { trackWhatsAppClick } from '@/utils/analytics';
 
 type MotionAnimate = (
@@ -26,11 +28,26 @@ type MotionAnimate = (
 
 const motionAnimate = animate as unknown as MotionAnimate;
 
-
-
 const mobileMenuOpen = ref(false);
 const showBackToTop = ref(false);
 const isDarkMode = ref(false);
+const showBookingModal = ref(false);
+const showBrochureModal = ref(false);
+
+function triggerBrochureIfUnseen() {
+    if (typeof window === 'undefined') return;
+    const alreadyShown = sessionStorage.getItem('db_lead_magnet_shown');
+    if (!alreadyShown && !showBookingModal.value) {
+        sessionStorage.setItem('db_lead_magnet_shown', 'true');
+        showBrochureModal.value = true;
+    }
+}
+
+function handleMouseLeave(e: MouseEvent) {
+    if (e.clientY <= 15) {
+        triggerBrochureIfUnseen();
+    }
+}
 
 function toggleTheme() {
     isDarkMode.value = !isDarkMode.value;
@@ -47,6 +64,8 @@ function toggleTheme() {
     }
 }
 
+let scrollTimer: ReturnType<typeof setTimeout> | null = null;
+
 const handleScroll = () => {
     showBackToTop.value = window.scrollY > 600;
 };
@@ -56,6 +75,14 @@ const handleScrollProgress = () => {
     const docHeight = document.body.scrollHeight - window.innerHeight;
     const pct = docHeight > 0 ? (scrolled / docHeight) * 100 : 0;
     document.documentElement.style.setProperty('--db-scroll', `${pct}%`);
+
+    if (pct > 65) {
+        if (!scrollTimer) {
+            scrollTimer = setTimeout(() => {
+                triggerBrochureIfUnseen();
+            }, 15000);
+        }
+    }
 };
 
 function scrollToTop() {
@@ -222,18 +249,22 @@ onMounted(() => {
             htmlEl.textContent = isDecimal ? target.toFixed(1) + suffix : Math.round(target) + suffix;
         });
     }
+
+    document.addEventListener('mouseleave', handleMouseLeave);
 });
 
 onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll);
     window.removeEventListener('scroll', handleScrollProgress);
+    document.removeEventListener('mouseleave', handleMouseLeave);
+    if (scrollTimer) clearTimeout(scrollTimer);
 });
 </script>
 
 <template>
     <Head title="DigitalBuilders — Enterprise Web, Mobile & AI Architecture" />
 
-    <div class="relative min-h-screen bg-background text-foreground transition-colors duration-300">
+    <div class="relative min-h-screen bg-background text-foreground transition-colors duration-300 db-blueprint-grid">
         <!-- Scroll Progress Bar -->
         <div class="db-progress" />
         <div class="db-grid-overlay" />
@@ -248,20 +279,30 @@ onUnmounted(() => {
                     <a href="#services" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Services</a>
                     <a href="#portfolio" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Portfolio</a>
                     <Link href="/pricing" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Pricing</Link>
-                    <a href="/downloads/digitalbuilders-pricing-india-inr.html" target="_blank" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground inline-flex items-center gap-1.5">
-                        <span>Brochure</span>
+                    <button type="button" @click="showBrochureModal = true" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground inline-flex items-center gap-1.5 cursor-pointer">
+                        <span>Price Book</span>
                         <span class="rounded bg-sky-500/10 text-sky-700 dark:text-sky-400 text-[10px] font-bold px-1.5 py-0.5">PDF</span>
-                    </a>
+                    </button>
                     <Link href="/blog" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Blog</Link>
                     <a href="#about" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">About</a>
                     <a href="#contact" class="px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:text-foreground">Contact</a>
                 </nav>
 
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2.5">
+                    <!-- Direct Book Call Action -->
+                    <button
+                        type="button"
+                        @click="showBookingModal = true"
+                        class="btn-primary hidden sm:inline-flex items-center gap-1.5 rounded-full px-4 py-2 min-h-[44px] text-xs font-bold text-white shadow-md transition hover:scale-105 cursor-pointer"
+                    >
+                        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <span>Schedule Call</span>
+                    </button>
+
                     <!-- Theme Toggle -->
                     <button
                         @click="toggleTheme"
-                        class="hidden h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground sm:inline-flex cursor-pointer"
+                        class="h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground inline-flex cursor-pointer"
                         :aria-label="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
                     >
                         <svg v-if="isDarkMode" class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
@@ -296,24 +337,38 @@ onUnmounted(() => {
                         <a href="#services" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Services</a>
                         <a href="#portfolio" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Portfolio</a>
                         <Link href="/pricing" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Pricing</Link>
-                        <a href="/downloads/digitalbuilders-pricing-india-inr.html" target="_blank" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground flex items-center justify-between">
-                            <span>Brochure (PDF)</span>
-                            <span class="rounded bg-sky-500/10 text-sky-700 dark:text-sky-400 text-[10px] font-bold px-2 py-0.5">Download</span>
-                        </a>
+                        <button type="button" @click="mobileMenuOpen = false; showBrochureModal = true" class="text-muted-foreground transition hover:text-foreground flex items-center justify-between text-left">
+                            <span>2026 Price Book</span>
+                            <span class="rounded bg-sky-500/10 text-sky-700 dark:text-sky-400 text-[10px] font-bold px-2 py-0.5">PDF</span>
+                        </button>
                         <Link href="/blog" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Blog</Link>
                         <a href="#about" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">About</a>
                         <a href="#contact" @click="mobileMenuOpen = false" class="text-muted-foreground transition hover:text-foreground">Contact</a>
+                        <button
+                            type="button"
+                            @click="mobileMenuOpen = false; showBookingModal = true"
+                            class="btn-primary w-full rounded-full py-3 text-center text-xs font-bold text-white mt-2 shadow-md"
+                        >
+                            Schedule Architecture Session
+                        </button>
                     </nav>
                 </div>
             </Transition>
         </header>
 
-        <main id="top" class="mx-auto max-w-7xl px-4 pb-12 sm:px-5 sm:pb-16 lg:px-8">
-            <!-- 1. Hero & Core Pillars -->
-            <HomeHero :is-dark-mode="isDarkMode" />
+        <main id="main-content" class="mx-auto max-w-7xl px-4 sm:px-5 lg:px-8">
+            <!-- 1. Hero Section -->
+            <HomeHero
+                :is-dark-mode="isDarkMode"
+                @open-booking="showBookingModal = true"
+                @open-brochure="showBrochureModal = true"
+            />
 
             <!-- 2. Services Section -->
-            <ServicesSection :services="services" />
+            <ServicesSection
+                :services="services"
+                @open-brochure="showBrochureModal = true"
+            />
 
             <!-- 3. Portfolio & Case Studies Showcase -->
             <PortfolioSection />
@@ -448,6 +503,12 @@ onUnmounted(() => {
 
         <!-- Privacy-First Cookie Consent Banner -->
         <CookieConsent />
+
+        <!-- Instant Cal.com & WhatsApp Booking Modal -->
+        <BookingModal :show="showBookingModal" @close="showBookingModal = false" />
+
+        <!-- 2026 Price Book & Specification Lead Magnet Modal -->
+        <BrochureLeadMagnetModal :show="showBrochureModal" @close="showBrochureModal = false" />
     </div>
 </template>
 

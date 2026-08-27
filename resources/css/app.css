@@ -751,3 +751,67 @@ summary:focus-visible {
 	align-items: center;
 	justify-content: center;
 }
+
+/* ==========================================================================
+   Studio Visual Elevation (Blueprint Grid, Icon Rings, Device Mockups)
+   ========================================================================== */
+
+/* Architectural Blueprint Grid Pattern */
+.db-blueprint-grid {
+	background-size: 40px 40px;
+	background-image: 
+		linear-gradient(to right, rgba(2, 132, 199, 0.04) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(2, 132, 199, 0.04) 1px, transparent 1px);
+}
+
+.dark .db-blueprint-grid,
+[data-theme='dark'] .db-blueprint-grid {
+	background-image: 
+		linear-gradient(to right, rgba(56, 189, 248, 0.035) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(56, 189, 248, 0.035) 1px, transparent 1px);
+}
+
+/* Duotone Gradient Icon Ring */
+.db-icon-tile-lg {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 3.5rem;
+	height: 3.5rem;
+	border-radius: 1rem;
+	background: linear-gradient(135deg, rgba(2, 132, 199, 0.12), rgba(79, 70, 229, 0.08));
+	border: 1px solid rgba(2, 132, 199, 0.25);
+	box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
+	transition: all 0.3s ease;
+}
+
+.dark .db-icon-tile-lg,
+[data-theme='dark'] .db-icon-tile-lg {
+	background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(129, 140, 248, 0.1));
+	border-color: rgba(56, 189, 248, 0.3);
+	box-shadow: 0 4px 16px rgba(56, 189, 248, 0.12);
+}
+
+/* Browser Device Mockup Chrome */
+.db-browser-frame {
+	border-radius: 1.25rem;
+	border: 1px solid var(--border);
+	background-color: hsl(var(--card));
+	overflow: hidden;
+	box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.15), 0 0 1px 1px rgba(15, 23, 42, 0.05);
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.db-browser-frame:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 25px 55px -10px rgba(2, 132, 199, 0.2), 0 0 20px rgba(79, 70, 229, 0.1);
+}
+
+.db-browser-header {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.65rem 1rem;
+	background: var(--db-bg-elev);
+	border-bottom: 1px solid var(--border);
+}

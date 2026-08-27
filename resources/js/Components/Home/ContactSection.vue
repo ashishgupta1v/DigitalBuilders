@@ -162,7 +162,10 @@ function submitLead() {
                     </div>
 
                     <div>
-                        <label for="contact-email" class="block text-sm font-medium text-card-foreground">Email Address *</label>
+                        <div class="flex items-center justify-between">
+                            <label for="contact-email" class="block text-sm font-medium text-card-foreground">Email Address *</label>
+                            <span class="text-[11px] text-muted-foreground">For formal proposal & scope doc</span>
+                        </div>
                         <input
                             id="contact-email"
                             name="email"
@@ -180,7 +183,10 @@ function submitLead() {
                     </div>
 
                     <div>
-                        <label for="contact-phone" class="block text-sm font-medium text-card-foreground">Phone Number *</label>
+                        <div class="flex items-center justify-between">
+                            <label for="contact-phone" class="block text-sm font-medium text-card-foreground">Phone Number / WhatsApp *</label>
+                            <span class="text-[11px] text-emerald-700 dark:text-emerald-400 font-medium">For direct WhatsApp updates</span>
+                        </div>
                         <input
                             id="contact-phone"
                             name="phone"
@@ -233,6 +239,14 @@ function submitLead() {
                     >
                         {{ form.processing ? 'Submitting Inquiry...' : 'Request a Project Quote' }}
                     </button>
+
+                    <div class="flex items-center justify-center gap-3 text-[11px] text-muted-foreground text-center">
+                        <span>🔒 100% Free Mutual NDA</span>
+                        <span>•</span>
+                        <span>⚡ 24-Hr Turnaround</span>
+                        <span>•</span>
+                        <span>🛡️ Zero Spam</span>
+                    </div>
 
                     <div v-if="form.recentlySuccessful" role="alert" aria-live="polite" class="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-sm text-emerald-800 dark:text-emerald-200 space-y-3">
                         <p class="font-semibold flex items-center gap-2">
