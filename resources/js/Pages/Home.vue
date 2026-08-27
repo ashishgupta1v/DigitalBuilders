@@ -194,19 +194,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <Head title="DigitalBuilders — Enterprise Web, Mobile & AI Architecture">
-        <meta head-key="description" name="description" content="DigitalBuilders delivers enterprise-grade web applications, mobile apps, and AI solutions engineered for scale. Based in Ludhiana, Punjab, India." />
-        <meta head-key="robots" name="robots" content="index, follow" />
-        <link head-key="canonical" rel="canonical" :href="canonicalUrl" />
-        <meta head-key="og-title" property="og:title" content="DigitalBuilders — Enterprise Web, Mobile & AI Architecture" />
-        <meta head-key="og-description" property="og:description" content="Custom software engineered with a Staff Engineer mindset. Web apps, mobile apps, AI agents, ERP/CRM — built to scale your business." />
-        <meta head-key="og-type" property="og:type" content="website" />
-        <meta head-key="og-url" property="og:url" :content="canonicalUrl" />
-        <meta head-key="og-locale" property="og:locale" content="en_IN" />
-        <meta head-key="twitter-card" name="twitter:card" content="summary_large_image" />
-        <meta head-key="twitter-title" name="twitter:title" content="DigitalBuilders" />
-        <meta head-key="twitter-description" name="twitter:description" content="Enterprise-grade web, mobile, and AI architecture for ambitious businesses." />
-    </Head>
+    <Head title="DigitalBuilders — Enterprise Web, Mobile & AI Architecture" />
 
     <div class="db-shell bg-background text-foreground min-h-screen">
         <div class="db-progress" />
