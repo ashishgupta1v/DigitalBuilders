@@ -41,8 +41,22 @@ class PricingPageTest extends TestCase
         $this->assertStringContainsString('Gulf', $content);
     }
 
+    public function test_pricing_pdf_files_exist(): void
+    {
+        $this->assertFileExists(public_path('downloads/digitalbuilders-pricing-india-inr.pdf'));
+        $this->assertFileExists(public_path('downloads/digitalbuilders-pricing-international-usd.pdf'));
+    }
+
     public function test_brochures_accessible_via_http_route(): void
     {
+        $resInrPdf = $this->get('/downloads/digitalbuilders-pricing-india-inr.pdf');
+        $resInrPdf->assertStatus(200);
+        $resInrPdf->assertHeader('Content-Type', 'application/pdf');
+
+        $resUsdPdf = $this->get('/downloads/digitalbuilders-pricing-international-usd.pdf');
+        $resUsdPdf->assertStatus(200);
+        $resUsdPdf->assertHeader('Content-Type', 'application/pdf');
+
         $resInr = $this->get('/downloads/digitalbuilders-pricing-india-inr.html');
         $resInr->assertStatus(200);
         $resInr->assertSee('India Price Book');

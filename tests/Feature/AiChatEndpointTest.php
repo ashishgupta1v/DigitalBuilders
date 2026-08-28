@@ -59,7 +59,37 @@ class AiChatEndpointTest extends TestCase
         ]);
 
         $response->assertStatus(200);
-        $this->assertStringContainsString('cal.com', strtolower($response->json('response')));
+        $this->assertStringContainsString('/book', strtolower($response->json('response')));
+    }
+
+    public function test_ai_chat_handles_nda_inquiry(): void
+    {
+        $response = $this->postJson('/ajax/ai-chat', [
+            'message' => 'Do you sign an NDA before we share our proprietary system requirements?',
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertStringContainsString('nda', strtolower($response->json('response')));
+    }
+
+    public function test_ai_chat_handles_refund_and_cancellation_inquiry(): void
+    {
+        $response = $this->postJson('/ajax/ai-chat', [
+            'message' => 'What is your refund policy or cancellation terms?',
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertStringContainsString('milestone', strtolower($response->json('response')));
+    }
+
+    public function test_ai_chat_handles_code_ownership_inquiry(): void
+    {
+        $response = $this->postJson('/ajax/ai-chat', [
+            'message' => 'Who owns the code and intellectual property after completion?',
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertStringContainsString('ownership', strtolower($response->json('response')));
     }
 
     public function test_testimonials_endpoints_work(): void

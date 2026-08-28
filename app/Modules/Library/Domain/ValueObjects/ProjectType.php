@@ -46,6 +46,16 @@ final class ProjectType
         'ai solutions'                           => 'ai_solutions',
         'ai voice/chat agent'                    => 'ai_solutions',
         'ai voice agents and chatbots'           => 'ai_solutions',
+        'digital_presence'                       => 'web_app',
+        'digital presence'                       => 'web_app',
+        'landing_page'                           => 'web_app',
+        'landing page'                           => 'web_app',
+        'discovery_sprint'                       => 'web_app',
+        'architecture discovery sprint'          => 'web_app',
+        'amc_care'                               => 'other',
+        'care'                                   => 'other',
+        'amc'                                    => 'other',
+        'seo_retainer'                           => 'other',
         'other'                                  => 'other',
     ];
 

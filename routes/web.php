@@ -66,10 +66,16 @@ Route::get('/downloads/{file}', function (string $file) {
     if (!file_exists($path)) {
         abort(404);
     }
+    
+    $mimeType = str_ends_with(strtolower($file), '.pdf') 
+        ? 'application/pdf' 
+        : 'text/html; charset=utf-8';
+
     return response(file_get_contents($path), 200, [
-        'Content-Type' => 'text/html; charset=utf-8',
+        'Content-Type' => $mimeType,
+        'Cache-Control' => 'public, max-age=3600',
     ]);
-})->where('file', '[A-Za-z0-9\-\_\.]+')->name('downloads.show');
+})->where('file', '[A-Za-z0-9\-\_\.]+\.(pdf|html)')->name('downloads.show');
 
 // Estimator routes (public)
 Route::get('/estimator', [EstimatorController::class, 'index'])->name('estimator.index');

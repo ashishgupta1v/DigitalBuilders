@@ -12,6 +12,7 @@ const projectTypes = [
     { value: 'erp_crm', label: 'Enterprise ERP / CRM' },
     { value: 'saas', label: 'SaaS Platform' },
     { value: 'ai_solutions', label: 'AI Voice/Chat Agents & Workflows' },
+    { value: 'digital_presence', label: 'Digital Presence & Landing Architecture' },
     { value: 'other', label: 'Other Architecture Project' },
 ] as const;
 
@@ -32,12 +33,34 @@ onMounted(() => {
         const region = params.get('region');
 
         if (service === 'discovery_sprint') {
+            form.project_type = 'web_app';
             form.description = `[Architecture Discovery Sprint inquiry · Region: ${region?.toUpperCase() ?? 'INR'}]`;
+        } else if (service === 'amc_care') {
+            form.project_type = 'other';
+            form.description = `[Enterprise Care SLA / AMC · Tier: ${tier?.toUpperCase() ?? 'Business'} · Region: ${region?.toUpperCase() ?? 'INR'}]`;
+        } else if (service === 'seo_retainer') {
+            form.project_type = 'other';
+            form.description = `[Ongoing SEO & Content Retainer · Region: ${region?.toUpperCase() ?? 'INR'}]`;
+        } else if (service === 'digital_presence') {
+            form.project_type = 'digital_presence';
+            if (tier) {
+                form.description = `[Selected Scope: Digital Presence (${tier.toUpperCase()}) · Region: ${region?.toUpperCase() ?? 'INR'}]`;
+            }
         } else if (service && projectTypes.some((p) => p.value === service)) {
             form.project_type = service;
             if (tier) {
                 form.description = `[Selected Scope: ${tier.toUpperCase()} Tier · Region: ${region?.toUpperCase() ?? 'INR'}]`;
             }
+        }
+
+        // Auto-scroll to #contact if hash is present or service parameter was passed
+        if (window.location.hash === '#contact' || service) {
+            setTimeout(() => {
+                const el = document.getElementById('contact');
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 120);
         }
     }
 });
@@ -328,19 +351,19 @@ function submitLead() {
                     </p>
                     <div class="mt-4 flex flex-col sm:flex-row gap-2">
                         <a
-                            href="/downloads/digitalbuilders-pricing-india-inr.html"
+                            href="/downloads/digitalbuilders-pricing-india-inr.pdf"
                             target="_blank"
                             class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full border border-sky-500/40 bg-sky-500/10 px-4 py-2.5 text-xs font-bold text-sky-700 dark:text-sky-300 hover:bg-sky-500/20 transition-all shadow-sm"
                         >
-                            <span>🇮🇳 India (INR)</span>
+                            <span>🇮🇳 India Price Card (PDF)</span>
                             <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                         </a>
                         <a
-                            href="/downloads/digitalbuilders-pricing-international-usd.html"
+                            href="/downloads/digitalbuilders-pricing-international-usd.pdf"
                             target="_blank"
                             class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full border border-border bg-secondary px-4 py-2.5 text-xs font-bold text-secondary-foreground hover:bg-secondary/80 transition-all shadow-sm"
                         >
-                            <span>🌍 Global (USD)</span>
+                            <span>🌍 Global Price Card (PDF)</span>
                             <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                         </a>
                     </div>

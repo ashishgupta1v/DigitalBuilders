@@ -221,9 +221,9 @@ function handleOptionClick(action: string, label: string) {
         } else if (action === 'dsar_info') {
             window.open('/library/privacy-policy#section-6', '_blank');
         } else if (action === 'open_brochure_inr') {
-            window.open('/downloads/digitalbuilders-pricing-india-inr.html', '_blank');
+            window.open('/downloads/digitalbuilders-pricing-india-inr.pdf', '_blank');
         } else if (action === 'open_brochure_usd') {
-            window.open('/downloads/digitalbuilders-pricing-international-usd.html', '_blank');
+            window.open('/downloads/digitalbuilders-pricing-international-usd.pdf', '_blank');
         } else if (action === 'portfolio_link') {
             window.open('https://ashishgupta.dev', '_blank');
         } else if (action === 'lead_form') {

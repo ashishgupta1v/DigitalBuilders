@@ -526,7 +526,7 @@ function formatMoney(val: number): string {
                         Request Formal Proposal for this Scope →
                     </button>
                     <a
-                        :href="currency === 'INR' ? '/downloads/digitalbuilders-pricing-india-inr.html' : '/downloads/digitalbuilders-pricing-international-usd.html'"
+                        :href="currency === 'INR' ? '/downloads/digitalbuilders-pricing-india-inr.pdf' : '/downloads/digitalbuilders-pricing-international-usd.pdf'"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="inline-flex w-full min-h-[40px] items-center justify-center gap-2 rounded-full border border-border bg-secondary/80 px-5 py-2.5 text-center text-xs font-bold text-secondary-foreground transition hover:bg-secondary hover:border-sky-500/50 shadow-sm cursor-pointer"

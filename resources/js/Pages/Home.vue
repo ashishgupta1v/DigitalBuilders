@@ -495,7 +495,7 @@ onUnmounted(() => {
                     <p>© {{ new Date().getFullYear() }} DigitalBuilders. All rights reserved.</p>
                     <div class="flex flex-wrap gap-4">
                         <Link href="/pricing" class="hover:text-foreground transition-colors">Pricing</Link>
-                        <a href="/downloads/digitalbuilders-pricing-india-inr.html" target="_blank" class="hover:text-foreground transition-colors">Price Book (PDF)</a>
+                        <a href="/downloads/digitalbuilders-pricing-india-inr.pdf" target="_blank" class="hover:text-foreground transition-colors">Price Book (PDF)</a>
                         <Link href="/estimator" class="hover:text-foreground transition-colors">Estimator</Link>
                         <Link href="/blog" class="hover:text-foreground transition-colors">Blog</Link>
                         <Link href="/library/privacy-policy" class="hover:text-foreground transition-colors">Privacy Policy</Link>

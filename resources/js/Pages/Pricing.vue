@@ -597,7 +597,7 @@ function getAddonPrice(addon: AddonModule): string {
                     <Link href="/#services" class="hidden text-xs font-semibold text-muted-foreground hover:text-foreground md:inline-flex items-center min-h-[44px] px-2 transition-colors">Services</Link>
                     <Link href="/#portfolio" class="hidden text-xs font-semibold text-muted-foreground hover:text-foreground md:inline-flex items-center min-h-[44px] px-2 transition-colors">Portfolio</Link>
                     <Link href="/estimator" class="text-xs font-semibold text-sky-600 dark:text-sky-400 hover:underline min-h-[44px] inline-flex items-center px-2">Estimator</Link>
-                    <Link href="/#contact" class="btn-primary inline-flex items-center justify-center rounded-full px-4 py-2 min-h-[44px] text-xs font-bold text-white shadow transition hover:scale-105">
+                    <Link href="/book" class="btn-primary inline-flex items-center justify-center rounded-full px-4 py-2 min-h-[44px] text-xs font-bold text-white shadow transition hover:scale-105">
                         Book Discovery
                     </Link>
                 </nav>
@@ -671,22 +671,22 @@ function getAddonPrice(addon: AddonModule): string {
                 </div>
                 <div class="flex items-center gap-2">
                     <a
-                        href="/downloads/digitalbuilders-pricing-india-inr.html"
+                        href="/downloads/digitalbuilders-pricing-india-inr.pdf"
                         target="_blank"
                         rel="noopener noreferrer"
                         @click="trackBrochureDownload('inr')"
                         class="inline-flex items-center gap-1.5 rounded-xl border border-sky-500/40 bg-sky-500/10 px-3.5 py-2 text-xs font-bold text-sky-700 dark:text-sky-300 hover:bg-sky-500/20 transition-all"
                     >
-                        <span>🇮🇳 India Rate Card (INR)</span>
+                        <span>🇮🇳 India Rate Card (PDF)</span>
                     </a>
                     <a
-                        href="/downloads/digitalbuilders-pricing-international-usd.html"
+                        href="/downloads/digitalbuilders-pricing-international-usd.pdf"
                         target="_blank"
                         rel="noopener noreferrer"
                         @click="trackBrochureDownload('usd')"
                         class="inline-flex items-center gap-1.5 rounded-xl border border-indigo-500/40 bg-indigo-500/10 px-3.5 py-2 text-xs font-bold text-indigo-700 dark:text-indigo-300 hover:bg-indigo-500/20 transition-all"
                     >
-                        <span>🌐 International (USD)</span>
+                        <span>🌐 International Rate Card (PDF)</span>
                     </a>
                 </div>
             </div>
@@ -765,7 +765,7 @@ function getAddonPrice(addon: AddonModule): string {
 
                             <div class="mt-8 pt-4 border-t border-border">
                                 <a
-                                    :href="`/#contact?service=${service.id}&tier=${tier.name.toLowerCase()}&region=${activeRegion.toLowerCase()}`"
+                                    :href="`/?service=${encodeURIComponent(service.id)}&tier=${encodeURIComponent(tier.name.toLowerCase())}&region=${encodeURIComponent(activeRegion.toLowerCase())}#contact`"
                                     :class="[
                                         'w-full min-h-[44px] inline-flex items-center justify-center rounded-xl text-xs font-bold transition-all cursor-pointer',
                                         tier.popular
@@ -852,7 +852,7 @@ function getAddonPrice(addon: AddonModule): string {
                                 <li class="flex items-center gap-2">✓ 48-hour issue turnaround SLA</li>
                             </ul>
                         </div>
-                        <a href="/#contact" class="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-border bg-secondary py-2.5 text-xs font-bold text-secondary-foreground hover:bg-secondary/80 transition-colors">
+                        <a :href="`/?service=amc_care&tier=basic&region=${encodeURIComponent(activeRegion.toLowerCase())}#contact`" class="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-border bg-secondary py-2.5 text-xs font-bold text-secondary-foreground hover:bg-secondary/80 transition-colors">
                             Select Basic
                         </a>
                     </div>
@@ -878,7 +878,7 @@ function getAddonPrice(addon: AddonModule): string {
                                 <li class="flex items-center gap-2">✓ 12-hour priority emergency SLA</li>
                             </ul>
                         </div>
-                        <a href="/#contact" class="mt-6 inline-flex w-full items-center justify-center rounded-xl btn-primary py-2.5 text-xs font-bold text-white shadow-md">
+                        <a :href="`/?service=amc_care&tier=business&region=${encodeURIComponent(activeRegion.toLowerCase())}#contact`" class="mt-6 inline-flex w-full items-center justify-center rounded-xl btn-primary py-2.5 text-xs font-bold text-white shadow-md">
                             Select Business
                         </a>
                     </div>
@@ -901,7 +901,7 @@ function getAddonPrice(addon: AddonModule): string {
                                 <li class="flex items-center gap-2">✓ Custom disaster recovery drills</li>
                             </ul>
                         </div>
-                        <a href="/#contact" class="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-border bg-secondary py-2.5 text-xs font-bold text-secondary-foreground hover:bg-secondary/80 transition-colors">
+                        <a :href="`/?service=amc_care&tier=enterprise&region=${encodeURIComponent(activeRegion.toLowerCase())}#contact`" class="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-border bg-secondary py-2.5 text-xs font-bold text-secondary-foreground hover:bg-secondary/80 transition-colors">
                             Custom SLA
                         </a>
                     </div>
@@ -920,7 +920,7 @@ function getAddonPrice(addon: AddonModule): string {
                             <h3 class="text-lg font-bold text-card-foreground">Ongoing SEO & Content Retainers</h3>
                             <p class="text-xs text-muted-foreground">Organic search growth & content updates, billed monthly — separate from Care/AMC uptime cover.</p>
                         </div>
-                        <a href="/#contact" class="inline-flex items-center gap-1.5 self-start md:self-auto rounded-full border border-border bg-secondary px-4 py-1.5 text-xs font-bold text-secondary-foreground hover:bg-secondary/80 transition-colors">
+                        <a :href="`/?service=seo_retainer&region=${encodeURIComponent(activeRegion.toLowerCase())}#contact`" class="inline-flex items-center gap-1.5 self-start md:self-auto rounded-full border border-border bg-secondary px-4 py-1.5 text-xs font-bold text-secondary-foreground hover:bg-secondary/80 transition-colors">
                             <span>Book SEO Retainer</span>
                             <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         </a>
@@ -1039,22 +1039,22 @@ function getAddonPrice(addon: AddonModule): string {
 
                     <div class="flex flex-wrap items-center gap-4 w-full lg:w-auto">
                         <a
-                            href="/downloads/digitalbuilders-pricing-india-inr.html"
+                            href="/downloads/digitalbuilders-pricing-india-inr.pdf"
                             target="_blank"
                             class="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-2xl bg-secondary border border-border px-6 py-3.5 text-xs font-bold text-secondary-foreground hover:bg-secondary/80 transition-all shadow-sm"
                         >
                             <span class="text-base">🇮🇳</span>
-                            <span>India Price Card (INR ₹)</span>
+                            <span>India Price Card (PDF)</span>
                             <svg class="h-4 w-4 text-sky-600 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                         </a>
 
                         <a
-                            href="/downloads/digitalbuilders-pricing-international-usd.html"
+                            href="/downloads/digitalbuilders-pricing-international-usd.pdf"
                             target="_blank"
                             class="btn-primary inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-xs font-bold text-white shadow-lg"
                         >
                             <span class="text-base">🌍</span>
-                            <span>International Price Card (USD $)</span>
+                            <span>International Price Card (PDF)</span>
                             <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                         </a>
                     </div>
@@ -1083,7 +1083,7 @@ function getAddonPrice(addon: AddonModule): string {
                     </p>
                 </div>
                 <a
-                    :href="`/#contact?service=discovery_sprint&region=${activeRegion.toLowerCase()}`"
+                    :href="`/?service=discovery_sprint&region=${encodeURIComponent(activeRegion.toLowerCase())}#contact`"
                     class="btn-primary shrink-0 inline-flex items-center justify-center rounded-full px-6 py-3 min-h-[44px] text-xs font-bold text-white shadow-lg transition hover:scale-105"
                 >
                     Book Discovery Sprint

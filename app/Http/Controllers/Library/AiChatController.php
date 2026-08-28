@@ -147,6 +147,31 @@ EOT;
     {
         $q = strtolower($query);
 
+        // NDA & Confidentiality
+        if (preg_match('/\b(nda|non[- ]disclosure|confidential|confidentiality|protect.*idea|proprietary)\b/i', $query)) {
+            return "Yes, absolutely! We execute a complimentary Mutual NDA (Non-Disclosure Agreement) before reviewing any proprietary business logic, schemas, or existing codebases. Your intellectual property and architectural trade secrets are legally protected from day zero.";
+        }
+
+        // Code Ownership & IP Handover
+        if (preg_match('/\b(code ownership|ip ownership|who owns the (code|ip|project)|intellectual property|source code|repo transfer|handover|vendor lock)\b/i', $query)) {
+            return "You have 100% full ownership of all source code, designs, database schemas, and cloud deployment configs. Upon milestone completion, the complete GitHub repository, Docker setups, and CI/CD pipelines are transferred to your organization with zero vendor lock-in.";
+        }
+
+        // Refund, Cancellation & Milestone Guarantees
+        if (preg_match('/\b(refund|refunds|cancellation|cancel|money back|guarantee|risk|dispute|deposit)\b/i', $query)) {
+            return "We operate on a transparent milestone model: 40% Kickoff, 40% Staging Demo Signoff, and 20% Production Handover. You review working software on private staging servers before releasing milestone funds. If you cancel prior to development kickoff, deposits are refunded. Every deployment also includes a complimentary 30-day post-launch bug warranty!";
+        }
+
+        // Payment Terms, Invoicing & Currencies
+        if (preg_match('/\b(payment terms|milestones|invoicing|gst invoice|international wire|stripe|razorpay|bank transfer|currency|currencies)\b/i', $query)) {
+            return "We support GST-compliant invoicing (18% ITC for Indian businesses) via Bank NEFT/RTGS/UPI, and International Wire (SWIFT/ACH) or Stripe credit card payments in USD, AED, EUR, and GBP with zero currency conversion markups. Standard milestone structure: 40% Kickoff, 40% Staging Approval, 20% Production Handover.";
+        }
+
+        // Architecture Discovery Sprint
+        if (preg_match('/\b(discovery sprint|blueprint|tech sprint|roadmap|feasibility sprint)\b/i', $query)) {
+            return "Our 1-Week Architecture Discovery Sprint (₹19,000 INR / $750 USD / $500 Gulf) maps your database schema, API contracts, cloud architecture, and fixed-scope timeline. 100% of this discovery fee is credited directly toward your build contract upon kickoff!";
+        }
+
         // AMC, Maintenance, Support, Care Plans, Warranty, SLA
         if (preg_match('/\b(amc|maintenance|support|care|retainer|warranty|sla|post launch|after launch|bug fix|updates|upkeep)\b/i', $query)) {
             return "Yes! We provide 3 structured Care & Annual Maintenance (AMC) plans for post-launch peace of mind:\n"
@@ -159,8 +184,8 @@ EOT;
         // Booking, consultation, calendar, schedule meeting, call
         if (preg_match('/\b(book|booking|schedule|calendar|cal\.com|calendly|consultation|strategy call|discovery call|meeting|demo call)\b/i', $query)) {
             return "You can book a 30-minute system architecture strategy session directly with Lead Architect Ashish Gupta:\n"
-                . "• 📅 Pick an instant slot on Cal.com: https://cal.com/digitalbuilders/30min\n"
-                . "• 💬 Or schedule directly via WhatsApp: +91 90870 21592\n"
+                . "• 📅 Pick an instant slot on our Scheduler: /book\n"
+                . "• 💬 Or message directly via WhatsApp: +91 90870 21592\n"
                 . "• ✉️ Or email hello@digitalbuilders.in with your preferred time.\n\n"
                 . "We'll review your technical bottlenecks, scale requirements, and provide a tailored system roadmap.";
         }
@@ -212,10 +237,10 @@ EOT;
 
         // Contact, call, whatsapp, phone, email
         if (preg_match('/\b(contact|call|whatsapp|phone|email|talk|reach|meeting|hire)\b/i', $query)) {
-            return "You can reach Lead Architect Ashish Gupta directly on WhatsApp/Phone at +91 90870 21592 or by email at hello@digitalbuilders.in. You can also pick an instant slot on Cal.com (https://cal.com/digitalbuilders/30min) or submit our homepage discovery form.";
+            return "You can reach Lead Architect Ashish Gupta directly on WhatsApp/Phone at +91 90870 21592 or by email at hello@digitalbuilders.in. You can also pick an instant slot on /book or submit our homepage discovery form.";
         }
 
-        // Default greeting / general inquiry
-        return "Hello! I am the DigitalBuilders AI Assistant. We engineer enterprise-grade web applications, mobile apps, SaaS platforms, and autonomous AI agents with sub-100ms response times. Would you like to estimate your project scope on our /estimator or schedule a discovery call with our Lead Architect?";
+        // Default greeting / general inquiry with clear escalation
+        return "Hello! I am the DigitalBuilders AI Assistant. We engineer enterprise-grade web applications, mobile apps, SaaS platforms, and autonomous AI agents with sub-100ms response times. Would you like to estimate your project scope on /estimator, book a call on /book, or discuss directly with Lead Architect Ashish Gupta on WhatsApp (+91 90870 21592)?";
     }
 }

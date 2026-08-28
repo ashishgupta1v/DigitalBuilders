@@ -31,8 +31,8 @@ function handleDirectDownload(edition: 'inr' | 'usd') {
     trackBrochureDownload(edition, edition === 'inr' ? 'INR' : 'USD');
     trackEvent('lead_magnet_direct_download', { edition });
     const url = edition === 'inr'
-        ? '/downloads/digitalbuilders-pricing-india-inr.html'
-        : '/downloads/digitalbuilders-pricing-international-usd.html';
+        ? '/downloads/digitalbuilders-pricing-india-inr.pdf'
+        : '/downloads/digitalbuilders-pricing-international-usd.pdf';
     window.open(url, '_blank');
 }
 
