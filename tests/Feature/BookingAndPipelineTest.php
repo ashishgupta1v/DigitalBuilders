@@ -72,4 +72,21 @@ class BookingAndPipelineTest extends TestCase
         $this->assertEquals('AE', $pageProps['geo']['country'] ?? null);
         $this->assertEquals('GULF', $pageProps['geo']['region'] ?? null);
     }
+
+    public function test_newsletter_email_capture_creates_lead_record(): void
+    {
+        $payload = [
+            'email' => 'subscriber@enterprise.com',
+            'source' => 'newsletter',
+        ];
+
+        $response = $this->post(route('library.leads.store'), $payload);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('leads', [
+            'email' => 'subscriber@enterprise.com',
+            'source' => 'newsletter',
+            'name' => 'Newsletter Subscriber',
+        ]);
+    }
 }

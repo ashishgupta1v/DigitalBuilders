@@ -6,7 +6,14 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, DefineComponent, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import Toast from './Components/Toast.vue';
-import { trackPageView } from './utils/analytics';
+import { trackPageView, initSentry, initPlausible, initGA4 } from './utils/analytics';
+
+// Boot error monitoring and privacy-first analytics
+if (typeof window !== 'undefined') {
+    initSentry();
+    initPlausible();
+    initGA4();
+}
 
 // Auto-track Inertia SPA transitions
 router.on('navigate', (event) => {

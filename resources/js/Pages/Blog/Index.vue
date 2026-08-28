@@ -2,6 +2,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import { trackNewsletterSignup } from '@/utils/analytics';
 
 interface PostMeta {
     slug: string;
@@ -50,14 +51,16 @@ async function handleSubscribe() {
             body: JSON.stringify({
                 name: 'Newsletter Subscriber',
                 email: subscriberEmail.value,
-                phone: '9999999999',
-                project_type: 'Other',
-                project_description: 'Architecture Digest & Engineering Newsletter Subscription',
+                phone: '+91 00000 00000',
+                project_type: 'other',
+                source: 'newsletter',
+                description: '[Architecture Digest & Engineering Newsletter Subscription]',
             }),
         });
 
         if (res.ok) {
             subscribeStatus.value = 'success';
+            trackNewsletterSignup();
             subscriberEmail.value = '';
         } else {
             subscribeStatus.value = 'error';

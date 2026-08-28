@@ -17,8 +17,16 @@ class StoreLeadRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $source = $this->input('source') ?: 'contact';
+        $name = $this->input('name') ?: ($source === 'newsletter' ? 'Newsletter Subscriber' : ($source === 'brochure' ? 'Brochure Lead' : null));
+        $phone = $this->input('phone') ?: (($source === 'newsletter' || $source === 'brochure') ? '+91 00000 00000' : null);
+        $projectType = $this->input('project_type') ?: (($source === 'newsletter' || $source === 'brochure') ? 'other' : null);
+
         $this->merge([
-            'source'       => $this->input('source') ?: 'contact',
+            'name'         => $name ?? $this->input('name'),
+            'phone'        => $phone ?? $this->input('phone'),
+            'project_type' => $projectType,
+            'source'       => $source,
             'utm_source'   => $this->input('utm_source') ?: $this->query('utm_source'),
             'utm_medium'   => $this->input('utm_medium') ?: $this->query('utm_medium'),
             'utm_campaign' => $this->input('utm_campaign') ?: $this->query('utm_campaign'),

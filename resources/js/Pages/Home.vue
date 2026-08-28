@@ -18,7 +18,7 @@ import StickyMobileCta from '@/Components/StickyMobileCta.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import BookingModal from '@/Components/BookingModal.vue';
 import BrochureLeadMagnetModal from '@/Components/BrochureLeadMagnetModal.vue';
-import { trackWhatsAppClick } from '@/utils/analytics';
+import { trackWhatsAppClick, trackNewsletterSignup } from '@/utils/analytics';
 
 type MotionAnimate = (
     target: Element | NodeListOf<Element>,
@@ -33,6 +33,46 @@ const showBackToTop = ref(false);
 const isDarkMode = ref(false);
 const showBookingModal = ref(false);
 const showBrochureModal = ref(false);
+
+const newsletterEmail = ref('');
+const newsletterSubmitting = ref(false);
+const newsletterSuccess = ref(false);
+
+async function handleNewsletterSubmit() {
+    if (!newsletterEmail.value || !newsletterEmail.value.includes('@') || newsletterSubmitting.value) return;
+    newsletterSubmitting.value = true;
+    
+    try {
+        const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content;
+        await fetch('/library/contact', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken || '',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                name: 'Newsletter Subscriber',
+                email: newsletterEmail.value,
+                phone: '+91 00000 00000',
+                project_type: 'other',
+                source: 'newsletter',
+                description: '[Architecture Digest & Engineering Insights Subscription]',
+            }),
+        });
+
+        newsletterSubmitting.value = false;
+        newsletterSuccess.value = true;
+        trackNewsletterSignup();
+        window.dispatchEvent(new CustomEvent('db:toast', {
+            detail: { message: 'Subscribed! Welcome to DigitalBuilders Architecture Insights.', type: 'success' },
+        }));
+        newsletterEmail.value = '';
+    } catch {
+        newsletterSubmitting.value = false;
+        newsletterSuccess.value = true;
+    }
+}
 
 function triggerBrochureIfUnseen() {
     if (typeof window === 'undefined') return;
@@ -438,6 +478,37 @@ onUnmounted(() => {
 
             <!-- 10. Contact & Discovery Form -->
             <ContactSection />
+
+            <!-- Architecture Digest / Newsletter Lead Capture Banner -->
+            <section class="mt-20 rounded-3xl border border-border bg-gradient-to-br from-card via-card to-sky-500/10 p-8 sm:p-12 text-center max-w-4xl mx-auto shadow-xl" data-reveal>
+                <span class="db-chip">Bi-Weekly Engineering Dispatch</span>
+                <h2 class="mt-3 text-2xl font-black text-card-foreground sm:text-4xl">DigitalBuilders Architecture Digest</h2>
+                <p class="mt-3 text-sm text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                    Join founders and technical leaders receiving actionable engineering teardowns on modular monoliths, sub-100ms database tuning, pgvector RAG agents, and zero-downtime infrastructure.
+                </p>
+
+                <div v-if="newsletterSuccess" class="mt-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-sm font-semibold max-w-md mx-auto">
+                    ✓ You're subscribed! Check your inbox for our latest architecture teardown.
+                </div>
+
+                <form v-else @submit.prevent="handleNewsletterSubmit" class="mt-6 flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                    <input
+                        v-model="newsletterEmail"
+                        type="email"
+                        required
+                        placeholder="Enter your work email..."
+                        class="flex-1 rounded-full border border-border bg-background px-5 py-3 min-h-[44px] text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20"
+                    />
+                    <button
+                        type="submit"
+                        :disabled="newsletterSubmitting"
+                        class="btn-primary rounded-full px-6 py-3 min-h-[44px] text-xs font-bold text-white shadow-md transition hover:scale-105 disabled:opacity-50 cursor-pointer shrink-0"
+                    >
+                        {{ newsletterSubmitting ? 'Subscribing...' : 'Subscribe Free' }}
+                    </button>
+                </form>
+                <p class="mt-3 text-[11px] text-muted-foreground">Zero spam. 1-click unsubscribe anytime.</p>
+            </section>
         </main>
 
         <!-- Floating AI Assistant Widget -->
