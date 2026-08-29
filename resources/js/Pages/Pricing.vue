@@ -912,38 +912,153 @@ function getAddonPrice(addon: AddonModule): string {
                     💡 <strong class="text-foreground">Annual prepay = 2 months free.</strong> Care plans start after your 30-day post-launch warranty ends. All plans are cancellable at renewal, and unused change hours roll over one month.
                 </div>
 
-                <!-- Ongoing SEO & Content Retainer Band -->
-                <div class="mt-8 rounded-2xl border border-border bg-card/70 dark:bg-card/40 p-6 shadow-sm">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-border pb-4">
+                <!-- Build + Grow: Strategic Growth Retainers Band -->
+                <div class="mt-10 rounded-3xl border border-sky-500/30 bg-gradient-to-br from-card via-card to-sky-500/5 p-6 sm:p-8 shadow-lg">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6">
                         <div>
-                            <span class="text-[11px] uppercase tracking-wider font-bold text-sky-700 dark:text-sky-400">Growth Engineering</span>
-                            <h3 class="text-lg font-bold text-card-foreground">Ongoing SEO & Content Retainers</h3>
-                            <p class="text-xs text-muted-foreground">Organic search growth & content updates, billed monthly — separate from Care/AMC uptime cover.</p>
+                            <span class="db-badge-sky mb-2">Build + Grow Pillar</span>
+                            <h3 class="text-xl sm:text-2xl font-black text-card-foreground">Strategic Growth & Customer Acquisition Retainers</h3>
+                            <p class="mt-1.5 text-xs sm:text-sm text-muted-foreground max-w-2xl">
+                                "We don't just build your software — we help you get customers to it." Engineering-led SEO, AI content engines, WhatsApp automation, and high-conversion performance marketing.
+                            </p>
                         </div>
-                        <a :href="`/?service=seo_retainer&region=${encodeURIComponent(activeRegion.toLowerCase())}#contact`" class="inline-flex items-center gap-1.5 self-start md:self-auto rounded-full border border-border bg-secondary px-4 py-1.5 text-xs font-bold text-secondary-foreground hover:bg-secondary/80 transition-colors">
-                            <span>Book SEO Retainer</span>
+                        <a :href="`/?service=growth_retainer&region=${encodeURIComponent(activeRegion.toLowerCase())}#contact`" class="btn-primary inline-flex items-center gap-2 self-start md:self-auto rounded-full px-5 py-2.5 text-xs font-bold text-white shadow-md transition hover:scale-105">
+                            <span>Book Growth Discovery</span>
                             <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         </a>
                     </div>
-                    <div class="mt-5 grid gap-4 sm:grid-cols-2">
-                        <div class="rounded-xl border border-border bg-card p-4 flex flex-col justify-between">
+
+                    <!-- 3 Growth Retainer Tiers Grid -->
+                    <div class="mt-6 grid gap-5 md:grid-cols-3">
+                        <!-- Tier 1: Growth Starter -->
+                        <div class="rounded-2xl border border-border bg-card/80 p-6 flex flex-col justify-between shadow-sm">
                             <div>
                                 <div class="flex items-center justify-between">
-                                    <h4 class="text-sm font-bold text-card-foreground">Essentials</h4>
-                                    <span class="font-mono text-base font-black text-sky-700 dark:text-sky-400">₹9,999 <span class="text-[11px] font-normal text-muted-foreground">/ mo</span></span>
+                                    <h4 class="text-base font-bold text-card-foreground">Grow Starter</h4>
+                                    <span class="rounded-full bg-secondary border border-border px-2.5 py-0.5 text-[10px] font-semibold text-muted-foreground">Organic Focus</span>
                                 </div>
-                                <p class="mt-2 text-xs text-muted-foreground">Monthly keyword tracking, Core Web Vitals fixes, 2 keyword-mapped blog posts, and monthly Search Console performance audit.</p>
+                                <div class="mt-3 font-mono text-2xl font-black text-card-foreground">
+                                    <span v-if="activeRegion === 'INR'">
+                                        ₹14,999 <span class="text-xs font-normal text-muted-foreground">/ mo + GST</span>
+                                    </span>
+                                    <span v-else-if="activeRegion === 'GULF'">
+                                        $349 <span class="text-xs font-normal text-muted-foreground">/ mo</span>
+                                    </span>
+                                    <span v-else>
+                                        $449 <span class="text-xs font-normal text-muted-foreground">/ mo</span>
+                                    </span>
+                                </div>
+                                <p class="mt-2 text-xs text-muted-foreground">For local businesses, clinics, and trade brands getting found by local customers.</p>
+                                <ul class="mt-4 space-y-2 text-xs text-card-foreground/90">
+                                    <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">✓</span> Google Business Profile setup & Local SEO</li>
+                                    <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">✓</span> AI Content Engine: 4 keyword-targeted articles/mo</li>
+                                    <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">✓</span> Core Web Vitals & structured schema fixes</li>
+                                    <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">✓</span> Monthly Search Console ranking & traffic report</li>
+                                </ul>
                             </div>
+                            <a :href="`/?service=growth_retainer&tier=starter&region=${encodeURIComponent(activeRegion.toLowerCase())}#contact`" class="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-border bg-secondary py-2.5 text-xs font-bold text-secondary-foreground hover:bg-secondary/80 transition-colors">
+                                Select Starter
+                            </a>
                         </div>
-                        <div class="rounded-xl border border-sky-500/40 bg-sky-500/5 p-4 flex flex-col justify-between">
+
+                        <!-- Tier 2: Growth Business ★ -->
+                        <div class="rounded-2xl border-2 border-sky-500 bg-sky-50/60 dark:bg-sky-950/20 p-6 flex flex-col justify-between shadow-lg relative">
+                            <div class="absolute -top-3 right-4 rounded-full bg-sky-500 px-3 py-0.5 text-[10px] font-bold text-white shadow-sm">
+                                Most Popular ★
+                            </div>
                             <div>
                                 <div class="flex items-center justify-between">
-                                    <h4 class="text-sm font-bold text-card-foreground">Growth ★</h4>
-                                    <span class="font-mono text-base font-black text-sky-700 dark:text-sky-400">₹19,999 <span class="text-[11px] font-normal text-muted-foreground">/ mo</span></span>
+                                    <h4 class="text-base font-bold text-card-foreground">Grow Business</h4>
+                                    <span class="rounded-full bg-sky-500/20 px-2 py-0.5 text-[10px] font-bold text-sky-700 dark:text-sky-300">Paid + Organic</span>
                                 </div>
-                                <p class="mt-2 text-xs text-muted-foreground">Everything in Essentials, plus authoritative link outreach, 4 articles/mo, competitor keyword gap monitoring, and Google Ads landing-page CRO.</p>
+                                <div class="mt-3 font-mono text-2xl font-black text-card-foreground">
+                                    <span v-if="activeRegion === 'INR'">
+                                        ₹29,999 <span class="text-xs font-normal text-sky-700 dark:text-sky-300">/ mo + GST</span>
+                                    </span>
+                                    <span v-else-if="activeRegion === 'GULF'">
+                                        $699 <span class="text-xs font-normal text-sky-700 dark:text-sky-300">/ mo</span>
+                                    </span>
+                                    <span v-else>
+                                        $899 <span class="text-xs font-normal text-sky-700 dark:text-sky-300">/ mo</span>
+                                    </span>
+                                </div>
+                                <p class="mt-2 text-xs text-muted-foreground">For scaling stores, B2B companies, and SaaS actively driving customer enquiries.</p>
+                                <ul class="mt-4 space-y-2 text-xs text-card-foreground/90">
+                                    <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">✓</span> Everything in Starter tier</li>
+                                    <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">✓</span> Google Search & Meta Performance Ads management</li>
+                                    <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">✓</span> 1 High-converting landing page / month (CRO)</li>
+                                    <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">✓</span> WhatsApp & email automated lead qualification bot</li>
+                                    <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">✓</span> 8 AI-assisted authoritative content pieces/mo</li>
+                                </ul>
+                            </div>
+                            <a :href="`/?service=growth_retainer&tier=business&region=${encodeURIComponent(activeRegion.toLowerCase())}#contact`" class="mt-6 inline-flex w-full items-center justify-center rounded-xl btn-primary py-2.5 text-xs font-bold text-white shadow-md">
+                                Select Business Growth
+                            </a>
+                        </div>
+
+                        <!-- Tier 3: Growth Enterprise -->
+                        <div class="rounded-2xl border border-border bg-card/80 p-6 flex flex-col justify-between shadow-sm">
+                            <div>
+                                <div class="flex items-center justify-between">
+                                    <h4 class="text-base font-bold text-card-foreground">Grow Enterprise</h4>
+                                    <span class="rounded-full bg-secondary border border-border px-2.5 py-0.5 text-[10px] font-semibold text-muted-foreground">Full-Funnel</span>
+                                </div>
+                                <div class="mt-3 font-mono text-2xl font-black text-card-foreground">
+                                    <span v-if="activeRegion === 'INR'">
+                                        From ₹59,999 <span class="text-xs font-normal text-muted-foreground">/ mo</span>
+                                    </span>
+                                    <span v-else-if="activeRegion === 'GULF'">
+                                        From $1,399 <span class="text-xs font-normal text-muted-foreground">/ mo</span>
+                                    </span>
+                                    <span v-else>
+                                        From $1,799 <span class="text-xs font-normal text-muted-foreground">/ mo</span>
+                                    </span>
+                                </div>
+                                <p class="mt-2 text-xs text-muted-foreground">For multi-city enterprises and high-scale platforms demanding full-funnel growth engineering.</p>
+                                <ul class="mt-4 space-y-2 text-xs text-muted-foreground">
+                                    <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">✓</span> Full-funnel omnichannel growth architecture</li>
+                                    <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">✓</span> Custom real-time Acquisition Dashboard (ApexCharts)</li>
+                                    <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">✓</span> Dedicated Growth Strategist & bi-weekly sprint syncs</li>
+                                    <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold">✓</span> Competitor keyword & funnel reverse-engineering</li>
+                                </ul>
+                            </div>
+                            <a :href="`/?service=growth_retainer&tier=enterprise&region=${encodeURIComponent(activeRegion.toLowerCase())}#contact`" class="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-border bg-secondary py-2.5 text-xs font-bold text-secondary-foreground hover:bg-secondary/80 transition-colors">
+                                Custom Enterprise Growth
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- À-la-carte One-Time Growth Modules Strip -->
+                    <div class="mt-6 pt-6 border-t border-border/60">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">À-la-Carte Growth Modules (One-Time)</h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
+                            <div class="p-3 rounded-xl border border-border bg-secondary/40">
+                                <span class="font-bold text-foreground block">SEO Audit</span>
+                                <span class="font-mono text-sky-600 dark:text-sky-400 font-bold">{{ activeRegion === 'INR' ? '₹9,999' : '$299' }}</span>
+                            </div>
+                            <div class="p-3 rounded-xl border border-border bg-secondary/40">
+                                <span class="font-bold text-foreground block">AI Content (10)</span>
+                                <span class="font-mono text-sky-600 dark:text-sky-400 font-bold">{{ activeRegion === 'INR' ? '₹7,999' : '$249' }}</span>
+                            </div>
+                            <div class="p-3 rounded-xl border border-border bg-secondary/40">
+                                <span class="font-bold text-foreground block">Ad Setup</span>
+                                <span class="font-mono text-sky-600 dark:text-sky-400 font-bold">{{ activeRegion === 'INR' ? '₹14,999' : '$449' }}</span>
+                            </div>
+                            <div class="p-3 rounded-xl border border-border bg-secondary/40">
+                                <span class="font-bold text-foreground block">WhatsApp Bot</span>
+                                <span class="font-mono text-sky-600 dark:text-sky-400 font-bold">{{ activeRegion === 'INR' ? '₹19,999' : '$599' }}</span>
+                            </div>
+                            <div class="p-3 rounded-xl border border-border bg-secondary/40 col-span-2 sm:col-span-1">
+                                <span class="font-bold text-foreground block">Landing Page</span>
+                                <span class="font-mono text-sky-600 dark:text-sky-400 font-bold">{{ activeRegion === 'INR' ? '₹12,999' : '$399' }}</span>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Honest notice & launch bundle -->
+                    <div class="mt-5 p-4 rounded-2xl bg-secondary/60 border border-border text-xs text-muted-foreground space-y-1">
+                        <p>💡 <strong class="text-foreground">Honest Transparency:</strong> Platform ad spend is billed directly by Google/Meta to your account. Retainers include transparent monthly reports, strategic reviews, and no long-term lock-in (cancel anytime at renewal).</p>
+                        <p class="text-sky-600 dark:text-sky-400 font-semibold">🎁 <strong>Launch Bundle:</strong> Pair any Build package with 3 months of Grow and get 1 Month of Grow completely FREE.</p>
                     </div>
                 </div>
             </div>

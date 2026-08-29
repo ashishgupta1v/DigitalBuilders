@@ -36,9 +36,9 @@ const studies: CaseStudy[] = [
         liveUrl: 'https://www.habuilt.com/',
         isMobile: false,
         image: '/images/portfolio/habuilt.webp',
-        metricBadge: '50 Habits · 4 Tiers · 99.99% Uptime',
+        metricBadge: '50 Habits · 4 Tiers · 70% Latency Drop',
         techStack: ['Next.js / Vue 3', 'TypeScript', 'Tailwind CSS', 'Redis Caching', 'Mobile Deep Linking'],
-        tldr: 'Progressive atomic habit tracking platform with 50 habits, 4 progression tiers, streak mechanics, and mobile deep link auth.',
+        tldr: 'Daily habit tracking platform with 50 habits, 4 progression tiers, streak mechanics, and instant mobile deep-link authentication.',
         problem: 'Building lasting daily habits requires continuous positive reinforcement without complex friction or mobile disconnect.',
         challenge: 'Supporting high-frequency daily habit check-ins and streaks across 26-week progression tiers with instant mobile app handoff.',
         architectureActions: [
@@ -49,7 +49,7 @@ const studies: CaseStudy[] = [
         businessImpact: [
             '1% daily compounding discipline engine adopted by thousands of active habit builders.',
             'Zero-latency habit completion sync and interactive weekly completion heatmaps.',
-            '99.99% uptime with high-concurrency atomic data persistence.',
+            'High-availability infrastructure with atomic data persistence under peak daily loads.',
         ],
         quote: 'DigitalBuilders brought Silicon Valley-level engineering standards. Our server latencies dropped by 70% and habit check-in throughput doubled within weeks.',
         quoteAuthor: 'Gurpreet Singh, CTO & Co-Founder, Habuilt Technologies',
@@ -63,7 +63,7 @@ const studies: CaseStudy[] = [
         liveUrl: 'https://dhandadiary.cloud/',
         isMobile: false,
         image: '/images/portfolio/dhandadiary.webp',
-        metricBadge: 'Daily Compliance Engine · Sub-50ms Sync',
+        metricBadge: 'Daily Compliance Cockpit · 85% Routine Completion',
         techStack: ['Laravel 13', 'Vue 3', 'Inertia.js', 'ApexCharts', 'VAPID Web Push', 'Google OAuth'],
         tldr: 'Execution cockpit & daily compliance SaaS with automated DCR routines, Kanban task boards, ApexCharts KPI trackers, and discipline streak multipliers.',
         problem: 'Founders and enterprise teams lack a centralized execution cockpit to monitor daily compliance, habit discipline, and business KPIs in one place.',
@@ -86,11 +86,11 @@ const studies: CaseStudy[] = [
         client: 'ZoetiCoach AI',
         portfolioSlug: 'zoeticoach',
         category: 'saas',
-        categoryLabel: 'WhatsApp-First B2B2C Coaching ERP',
+        categoryLabel: 'WhatsApp-First Coaching Management',
         liveUrl: 'https://zoeticoach.com/',
         isMobile: false,
         image: '/images/portfolio/zoeticoach.webp',
-        metricBadge: 'OpenAI RAG Pipeline · Zero Client Drop-off',
+        metricBadge: 'WhatsApp AI Assistant · 65% Lower Churn',
         techStack: ['Laravel 13', 'Vue 3', 'pgvector', 'OpenAI RAG', 'WhatsApp Cloud API', 'Modular Monolith'],
         tldr: 'WhatsApp-first accountability SaaS for professional coaches featuring autonomous AI habit verification and event-sourced client ledgers.',
         problem: 'Professional fitness and mindset coaches lose 40%+ of clients due to accountability drop-off outside of weekly calls.',
@@ -117,7 +117,7 @@ const studies: CaseStudy[] = [
         liveUrl: 'https://guttalks.in/',
         isMobile: false,
         image: '/images/portfolio/guttalks.webp',
-        metricBadge: '10k+ Clients · 4.8★ Rating · ₹499 Root Rx',
+        metricBadge: '10k+ Clients · 4.8★ Rating · 3.2x Bookings',
         techStack: ['Next.js', 'React', 'Tailwind CSS', 'Razorpay Checkout', 'Microbiome API', 'Doctor Telehealth'],
         tldr: 'Evidence-based gut health platform connecting patients to gastroenterologists via Root Rx consultations and GutMap Complete™ at-home microbiome testing.',
         problem: 'Patients with chronic bloating, IBS, and digestive fatigue face fragmented advice and high consultation barriers.',
@@ -128,7 +128,7 @@ const studies: CaseStudy[] = [
             'Integrated Razorpay payment gateway and automated WhatsApp consultation reminders.',
         ],
         businessImpact: [
-            'Over 10,000+ happy clients treated with 4.8-star verified Google rating.',
+            'Over 10,000+ happy clients treated with 4.8-star verified client rating.',
             '3.2x increase in consultation conversion rate compared to standard static medical forms.',
             'Full doctor-approved lifestyle roadmap delivered within 30 days of initial consultation.',
         ],
@@ -198,7 +198,7 @@ const studies: CaseStudy[] = [
         liveUrl: 'https://ashishgupta.dev/',
         isMobile: false,
         image: '/images/portfolio/ashishgupta.webp',
-        metricBadge: 'VILT Stack · 10+ Yrs Enterprise IT · $1M Cloud Savings',
+        metricBadge: '10+ Yrs Enterprise IT · $1M+ Cloud Optimizations',
         techStack: ['Laravel 12/13', 'Vue 3', 'Inertia.js', 'Tailwind CSS', 'PWA Offline', 'Filament CMS'],
         tldr: 'High-performance engineering hub showcasing modernizing legacy healthcare/aviation monoliths, live telemetry metrics, and VILT stack architecture.',
         problem: 'Technical decision-makers needed verified proof of enterprise architectural leadership, DDD modernization, and cost optimization.',
@@ -252,9 +252,9 @@ const studies: CaseStudy[] = [
         liveUrl: null,
         isMobile: true,
         image: '/images/portfolio/gargenterprises.webp',
-        metricBadge: '0% Order Errors · 10k+ SKUs · Offline Sync',
+        metricBadge: '14% → 0% Order Errors · 10k+ SKUs · Offline Sync',
         techStack: ['Android Native / Kotlin', 'Offline SQLite Sync', 'GST Invoice PDF', 'Tiered B2B Pricing'],
-        tldr: 'B2B wholesale ordering app with offline drafting, dealer credit ledger reconciliation, 1-tap GST invoice downloads, and 10k+ SKU catalog.',
+        tldr: 'B2B wholesale ordering app with offline drafting, dealer credit ledger reconciliation, 1-tap GST invoice downloads, and 10,000+ SKU catalog.',
         problem: 'Wholesale dealers placed orders over handwritten notes and phone calls, causing order errors, inventory mismatches, and ledger disputes.',
         challenge: 'Ensuring fast order placement in low-connectivity warehouse environments with dealer-specific tiered pricing and credit limits.',
         architectureActions: [
@@ -285,9 +285,9 @@ const filteredStudies = computed(() => {
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
                 <p class="text-sm uppercase tracking-[0.2em] text-sky-700 dark:text-[#9dc5ff] font-semibold">Delivered Work & Case Studies</p>
-                <h2 class="mt-3 text-2xl font-black text-slate-900 dark:text-white sm:text-3xl md:text-4xl">Production Applications Built for Scale</h2>
+                <h2 class="mt-3 text-2xl font-black text-slate-900 dark:text-white sm:text-3xl md:text-4xl">Real Apps We've Built for Real Businesses</h2>
                 <p class="mt-3 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
-                    Explore live web platforms, cloud SaaS engines, and enterprise mobile apps engineered by DigitalBuilders with zero technical debt.
+                    Explore live web platforms, client apps, and automated workflows engineered by DigitalBuilders to solve real operational bottlenecks.
                 </p>
             </div>
             <div class="flex items-center gap-2">

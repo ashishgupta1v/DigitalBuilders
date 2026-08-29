@@ -305,6 +305,15 @@ export function trackBookingCompleted(bookingType: string, region: string, extra
     });
 }
 
+export function trackGrowthCheckBooked(region = 'INR', extra: Record<string, any> = {}): void {
+    trackEvent('Growth Check Booked', {
+        event_category: 'Conversion',
+        event_label: 'Free 15-Min Growth Check',
+        region,
+        ...extra,
+    });
+}
+
 export function trackBrochureDownload(tier: 'india' | 'international' | string, region = 'INR'): void {
     trackEvent('Brochure Download', {
         event_category: 'Conversion',

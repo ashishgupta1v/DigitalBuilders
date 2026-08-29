@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { useForm, usePage } from '@inertiajs/vue3';
+import { useForm, usePage, Link } from '@inertiajs/vue3';
 import { trackContactSubmit, trackWhatsAppClick, trackPhoneClick, trackEmailClick, trackEvent } from '@/utils/analytics';
 
 const page = usePage();
@@ -112,10 +112,10 @@ function submitLead() {
 
 <template>
     <div>
-        <!-- Ready to Architect Callout Banner -->
+        <!-- Ready to Build Callout Banner -->
         <section class="mt-20 rounded-3xl border border-sky-500/30 bg-sky-500/10 p-6 text-center sm:mt-24 sm:p-10 shadow-lg" data-reveal>
-            <h2 class="text-2xl font-black text-foreground sm:text-3xl md:text-4xl">Ready to Architect Your Solution?</h2>
-            <p class="mx-auto mt-3 max-w-3xl text-sm sm:text-base text-muted-foreground">Stop settling. Start building. Engineer the resilient digital systems your business needs.</p>
+            <h2 class="text-2xl font-black text-foreground sm:text-3xl md:text-4xl">Ready to build software that grows your business?</h2>
+            <p class="mx-auto mt-3 max-w-3xl text-sm sm:text-base text-muted-foreground">Stop settling for fragile templates. Let's turn your business bottlenecks into a fast, reliable digital platform.</p>
             <a href="#contact" class="btn-primary mt-7 inline-flex w-full items-center justify-center rounded-full px-7 py-3.5 min-h-[44px] text-sm font-bold text-white shadow-lg transition hover:scale-[1.02] sm:w-auto">
                 Schedule Your Strategy Session
             </a>
@@ -316,16 +316,14 @@ function submitLead() {
                         Prefer an interactive deep-dive? Book a 30-minute system architecture review directly with Lead Architect Ashish Gupta.
                     </p>
                     <div class="mt-4 flex flex-col gap-2.5">
-                        <a
-                            href="https://cal.com/digitalbuilders/30min"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            @click="trackEvent('book_meeting_click', { method: 'cal_com', location: 'contact_section' })"
+                        <Link
+                            href="/book"
+                            @click="trackEvent('book_meeting_click', { method: 'scheduler_page', location: 'contact_section' })"
                             class="btn-primary inline-flex w-full items-center justify-center gap-2 min-h-[44px] rounded-full px-5 py-3 text-xs font-bold text-white shadow-md transition hover:scale-[1.02]"
                         >
                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            <span>Pick a Time on Cal.com (Instant Slot)</span>
-                        </a>
+                            <span>Pick a Date & Time (Instant Slot)</span>
+                        </Link>
                         <a
                             href="https://wa.me/919087021592?text=Hi%20Ashish,%20I'd%20like%20to%20schedule%20a%2030-minute%20system%20architecture%20strategy%20session."
                             target="_blank"

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
 interface ServiceItem {
@@ -14,14 +15,30 @@ defineProps<{
 const emit = defineEmits<{
     (e: 'open-brochure'): void;
 }>();
+
+const expandedTechnical = ref<Record<string, boolean>>({
+    web: false,
+    mobile: false,
+    ai: false,
+    erp: false,
+    saas: false,
+    growth: false,
+});
+
+function toggleTechnical(key: string) {
+    expandedTechnical.value[key] = !expandedTechnical.value[key];
+}
 </script>
 
 <template>
     <section id="services" class="mt-20 sm:mt-24" data-reveal>
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
-                <span class="db-badge-sky mb-3">Enterprise Practice Areas</span>
-                <h2 class="mt-2 text-2xl font-black text-foreground sm:text-3xl md:text-4xl">Architectural Services Built for Scalability</h2>
+                <span class="db-badge-sky mb-3">What We Build for You</span>
+                <h2 class="mt-2 text-2xl font-black text-foreground sm:text-3xl md:text-4xl">Software Solutions Built to Grow Your Business</h2>
+                <p class="mt-2 text-sm text-muted-foreground max-w-2xl">
+                    Tailor-made web applications, mobile platforms, and AI workflows designed around how your business works.
+                </p>
             </div>
             <Link href="/estimator" class="rounded-full border border-sky-500/30 bg-sky-500/10 px-5 py-2.5 min-h-[44px] text-xs font-bold text-sky-700 dark:text-sky-300 hover:bg-sky-500/20 transition-all inline-flex items-center gap-2 self-start md:self-auto shadow-sm">
                 <span>Scope Your Project</span>
@@ -39,17 +56,37 @@ const emit = defineEmits<{
                         <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-sky-500/20 to-indigo-500/15 border border-sky-500/30 text-sky-700 dark:text-sky-400 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
                             <svg class="h-7 w-7 text-sky-600 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                         </div>
-                        <span class="db-badge-emerald">Sub-100ms Latency</span>
+                        <div class="flex items-center gap-2">
+                            <span class="rounded-full bg-secondary border border-border px-3 py-1 text-xs font-semibold text-secondary-foreground font-mono">Tech: Laravel + Vue 3</span>
+                            <span class="db-badge-emerald hidden sm:inline-flex">Sub-100ms Latency</span>
+                        </div>
                     </div>
                     <h3 class="text-xl font-bold text-card-foreground">Custom Web Applications & Portals</h3>
-                    <p class="mt-3 text-sm text-muted-foreground leading-relaxed max-w-2xl">High-concurrency web platforms engineered with Laravel, Vue 3, and Inertia.js. Domain-driven architecture designed to handle thousands of concurrent transactions with zero technical debt.</p>
+                    <p class="mt-3 text-sm text-muted-foreground leading-relaxed max-w-2xl">Software built around exactly how your business works: fast, secure, and made to grow with your team without template restrictions.</p>
+
+                    <!-- Technical Specs Expandable Trigger -->
+                    <div class="mt-4">
+                        <button
+                            type="button"
+                            @click="toggleTechnical('web')"
+                            class="text-xs font-bold text-sky-700 dark:text-sky-400 hover:underline inline-flex items-center gap-1.5 cursor-pointer py-1"
+                        >
+                            <span>{{ expandedTechnical.web ? 'Hide technical details ↑' : 'For technical teams: Architecture specs →' }}</span>
+                        </button>
+                        <div v-if="expandedTechnical.web" class="mt-3 p-4 rounded-2xl bg-secondary/60 border border-border text-xs text-muted-foreground space-y-2 font-mono">
+                            <p><strong class="text-foreground font-sans">Pattern:</strong> Domain-Driven Modular Monolith (Clean Bounded Contexts)</p>
+                            <p><strong class="text-foreground font-sans">Stack:</strong> Laravel 13, Vue 3, Inertia.js, TypeScript, Tailwind CSS</p>
+                            <p><strong class="text-foreground font-sans">Database & Cache:</strong> PostgreSQL (Neon) with optimized indexes & Redis queue workers</p>
+                            <p><strong class="text-foreground font-sans">Performance:</strong> Sub-100ms API response times with zero client-side hydration bloat</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="mt-8 pt-4 border-t border-border/80 flex items-center justify-between">
                     <Link href="/services/web-applications" class="inline-flex items-center gap-1.5 min-h-[44px] py-2 text-xs font-bold text-sky-700 dark:text-sky-400 hover:underline">
-                        Explore Web Architecture
+                        Explore Web Solutions
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </Link>
-                    <span class="text-xs text-muted-foreground font-mono">Vue 3 · Inertia · Laravel</span>
+                    <span class="text-xs text-muted-foreground font-medium">Fixed Milestones · 30-Day Warranty</span>
                 </div>
             </article>
 
@@ -61,17 +98,33 @@ const emit = defineEmits<{
                         <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/15 border border-indigo-500/30 text-indigo-700 dark:text-indigo-400 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
                             <svg class="h-7 w-7 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                         </div>
-                        <span class="db-badge-indigo">60 FPS Fluid UI</span>
+                        <span class="rounded-full bg-secondary border border-border px-3 py-1 text-xs font-semibold text-secondary-foreground font-mono">Tech: iOS & Android</span>
                     </div>
                     <h3 class="text-lg font-bold text-card-foreground">Native & Cross-Platform Mobile Apps</h3>
-                    <p class="mt-3 text-sm text-muted-foreground leading-relaxed">Smooth iOS & Android apps built with Flutter, React Native, or Kotlin Native with offline SQLite sync and biometric security.</p>
+                    <p class="mt-3 text-sm text-muted-foreground leading-relaxed">Smooth iOS & Android apps that keep your customers engaged and your field operations connected anywhere — even with offline sync.</p>
+
+                    <!-- Technical Specs Expandable Trigger -->
+                    <div class="mt-4">
+                        <button
+                            type="button"
+                            @click="toggleTechnical('mobile')"
+                            class="text-xs font-bold text-indigo-700 dark:text-indigo-400 hover:underline inline-flex items-center gap-1.5 cursor-pointer py-1"
+                        >
+                            <span>{{ expandedTechnical.mobile ? 'Hide technical details ↑' : 'For technical teams: Architecture specs →' }}</span>
+                        </button>
+                        <div v-if="expandedTechnical.mobile" class="mt-3 p-4 rounded-2xl bg-secondary/60 border border-border text-xs text-muted-foreground space-y-2 font-mono">
+                            <p><strong class="text-foreground font-sans">Frameworks:</strong> Flutter / React Native with TypeScript</p>
+                            <p><strong class="text-foreground font-sans">Sync:</strong> Offline SQLite local cache with background synchronization</p>
+                            <p><strong class="text-foreground font-sans">Hardware:</strong> Biometrics (FaceID/TouchID), FCM push notifications, dynamic QR codes</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="mt-8 pt-4 border-t border-border/80 flex items-center justify-between">
                     <Link href="/services/mobile-apps" class="inline-flex items-center gap-1.5 min-h-[44px] py-2 text-xs font-bold text-indigo-700 dark:text-indigo-400 hover:underline">
                         Explore Mobile Apps
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </Link>
-                    <span class="text-xs text-muted-foreground font-mono">iOS & Android</span>
+                    <span class="text-xs text-muted-foreground font-medium">App Store Ready</span>
                 </div>
             </article>
 
@@ -83,17 +136,33 @@ const emit = defineEmits<{
                         <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/15 border border-purple-500/30 text-purple-700 dark:text-purple-400 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
                             <svg class="h-7 w-7 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
                         </div>
-                        <span class="db-badge-purple">RAG + WhatsApp</span>
+                        <span class="rounded-full bg-secondary border border-border px-3 py-1 text-xs font-semibold text-secondary-foreground font-mono">Tech: AI & WhatsApp</span>
                     </div>
-                    <h3 class="text-lg font-bold text-card-foreground">Voice AI & Autonomous Agents</h3>
-                    <p class="mt-3 text-sm text-muted-foreground leading-relaxed">Enterprise conversational AI agents, WhatsApp automated qualification workflows, and zero-hallucination vector search.</p>
+                    <h3 class="text-lg font-bold text-card-foreground">AI Voice & Smart Chatbots</h3>
+                    <p class="mt-3 text-sm text-muted-foreground leading-relaxed">Autonomous conversational AI agents and WhatsApp workflows that qualify leads 24/7 and cut hours of manual support time.</p>
+
+                    <!-- Technical Specs Expandable Trigger -->
+                    <div class="mt-4">
+                        <button
+                            type="button"
+                            @click="toggleTechnical('ai')"
+                            class="text-xs font-bold text-purple-700 dark:text-purple-400 hover:underline inline-flex items-center gap-1.5 cursor-pointer py-1"
+                        >
+                            <span>{{ expandedTechnical.ai ? 'Hide technical details ↑' : 'For technical teams: Architecture specs →' }}</span>
+                        </button>
+                        <div v-if="expandedTechnical.ai" class="mt-3 p-4 rounded-2xl bg-secondary/60 border border-border text-xs text-muted-foreground space-y-2 font-mono">
+                            <p><strong class="text-foreground font-sans">Engine:</strong> Context-grounded RAG with pgvector embeddings & custom guardrails</p>
+                            <p><strong class="text-foreground font-sans">Channels:</strong> Meta WhatsApp Cloud API webhooks & WebRTC low-latency voice</p>
+                            <p><strong class="text-foreground font-sans">Safety:</strong> Zero-hallucination document search with automated human escalation</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="mt-8 pt-4 border-t border-border/80 flex items-center justify-between">
                     <Link href="/services/ai-solutions" class="inline-flex items-center gap-1.5 min-h-[44px] py-2 text-xs font-bold text-purple-700 dark:text-purple-400 hover:underline">
-                        Explore AI Agents
+                        Explore AI Solutions
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </Link>
-                    <span class="text-xs text-muted-foreground font-mono">pgvector · OpenAI</span>
+                    <span class="text-xs text-muted-foreground font-medium">WhatsApp Integrated</span>
                 </div>
             </article>
 
@@ -105,17 +174,33 @@ const emit = defineEmits<{
                         <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
                             <svg class="h-7 w-7 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
                         </div>
-                        <span class="db-badge-emerald">GST & Multi-Branch</span>
+                        <span class="rounded-full bg-secondary border border-border px-3 py-1 text-xs font-semibold text-secondary-foreground font-mono">Tech: Multi-Branch & GST</span>
                     </div>
                     <h3 class="text-lg font-bold text-card-foreground">Enterprise ERP & CRM Systems</h3>
-                    <p class="mt-3 text-sm text-muted-foreground leading-relaxed">Centralized business ERPs, daily compliance ledgers, inventory reconciliation, and custom invoicing workflows.</p>
+                    <p class="mt-3 text-sm text-muted-foreground leading-relaxed">Centralized business management: inventory, dealer orders, GST compliance, and daily operations in one place — replacing messy spreadsheets.</p>
+
+                    <!-- Technical Specs Expandable Trigger -->
+                    <div class="mt-4">
+                        <button
+                            type="button"
+                            @click="toggleTechnical('erp')"
+                            class="text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline inline-flex items-center gap-1.5 cursor-pointer py-1"
+                        >
+                            <span>{{ expandedTechnical.erp ? 'Hide technical details ↑' : 'For technical teams: Architecture specs →' }}</span>
+                        </button>
+                        <div v-if="expandedTechnical.erp" class="mt-3 p-4 rounded-2xl bg-secondary/60 border border-border text-xs text-muted-foreground space-y-2 font-mono">
+                            <p><strong class="text-foreground font-sans">Design:</strong> Multi-branch data isolation, role-based access control (RBAC), ACID ledgers</p>
+                            <p><strong class="text-foreground font-sans">Bridges:</strong> GST / E-Way bill generation, Tally data import/export, barcode/QR tracking</p>
+                            <p><strong class="text-foreground font-sans">Speed:</strong> Sub-second ledger reporting and automated daily management PDF digests</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="mt-8 pt-4 border-t border-border/80 flex items-center justify-between">
                     <Link href="/services/erp-crm" class="inline-flex items-center gap-1.5 min-h-[44px] py-2 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline">
                         Explore ERP Solutions
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </Link>
-                    <span class="text-xs text-muted-foreground font-mono">Multi-Tenant</span>
+                    <span class="text-xs text-muted-foreground font-medium">GST Ready</span>
                 </div>
             </article>
 
@@ -127,17 +212,72 @@ const emit = defineEmits<{
                         <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-400 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
                             <svg class="h-7 w-7 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                         </div>
-                        <span class="db-badge-sky">Multi-Tenant SaaS</span>
+                        <span class="rounded-full bg-secondary border border-border px-3 py-1 text-xs font-semibold text-secondary-foreground font-mono">Tech: Stripe & Razorpay</span>
                     </div>
                     <h3 class="text-lg font-bold text-card-foreground">High-Scale SaaS Platforms</h3>
-                    <p class="mt-3 text-sm text-muted-foreground leading-relaxed">SaaS platforms with automated recurring billing, Stripe/Razorpay checkouts, webhook queues, and granular RBAC.</p>
+                    <p class="mt-3 text-sm text-muted-foreground leading-relaxed">Turnkey software products with recurring subscriptions, self-serve client onboarding, and secure customer portals built to scale.</p>
+
+                    <!-- Technical Specs Expandable Trigger -->
+                    <div class="mt-4">
+                        <button
+                            type="button"
+                            @click="toggleTechnical('saas')"
+                            class="text-xs font-bold text-amber-700 dark:text-amber-400 hover:underline inline-flex items-center gap-1.5 cursor-pointer py-1"
+                        >
+                            <span>{{ expandedTechnical.saas ? 'Hide technical details ↑' : 'For technical teams: Architecture specs →' }}</span>
+                        </button>
+                        <div v-if="expandedTechnical.saas" class="mt-3 p-4 rounded-2xl bg-secondary/60 border border-border text-xs text-muted-foreground space-y-2 font-mono">
+                            <p><strong class="text-foreground font-sans">Multi-Tenancy:</strong> Isolated tenant models with custom domain & white-label mapping</p>
+                            <p><strong class="text-foreground font-sans">Billing:</strong> Automated Stripe/Razorpay checkouts, webhook queues & metered pricing</p>
+                            <p><strong class="text-foreground font-sans">Security:</strong> SOC2-ready RBAC, tokenized sessions & event stream audit logs</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="mt-8 pt-4 border-t border-border/80 flex items-center justify-between">
                     <Link href="/services/saas-platforms" class="inline-flex items-center gap-1.5 min-h-[44px] py-2 text-xs font-bold text-amber-700 dark:text-amber-400 hover:underline">
                         Explore SaaS Platforms
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </Link>
-                    <span class="text-xs text-muted-foreground font-mono">Stripe · Razorpay</span>
+                    <span class="text-xs text-muted-foreground font-medium">Subscription Engine</span>
+                </div>
+            </article>
+
+            <!-- Bento Card 6: Strategic Growth & Customer Acquisition (Build + Grow) -->
+            <article data-stagger-item class="db-bento-card p-8 flex flex-col justify-between group">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-500 via-sky-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div>
+                    <div class="flex items-center justify-between gap-4 mb-6">
+                        <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-teal-500/20 to-sky-500/15 border border-teal-500/30 text-teal-700 dark:text-teal-400 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
+                            <svg class="h-7 w-7 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                        </div>
+                        <span class="rounded-full bg-secondary border border-border px-3 py-1 text-xs font-semibold text-secondary-foreground font-mono">Tech: SEO · AI Content · Ads · CRO</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-card-foreground">Customer Acquisition (Build + Grow)</h3>
+                    <p class="mt-3 text-sm text-muted-foreground leading-relaxed">"We don't just build your software — we help you get customers to it." Technical SEO, AI content engines, WhatsApp automation, and high-conversion performance marketing.</p>
+
+                    <!-- Technical Specs Expandable Trigger -->
+                    <div class="mt-4">
+                        <button
+                            type="button"
+                            @click="toggleTechnical('growth')"
+                            class="text-xs font-bold text-teal-700 dark:text-teal-400 hover:underline inline-flex items-center gap-1.5 cursor-pointer py-1"
+                        >
+                            <span>{{ expandedTechnical.growth ? 'Hide technical details ↑' : 'For technical teams: Architecture specs →' }}</span>
+                        </button>
+                        <div v-if="expandedTechnical.growth" class="mt-3 p-4 rounded-2xl bg-secondary/60 border border-border text-xs text-muted-foreground space-y-2 font-mono">
+                            <p><strong class="text-foreground font-sans">Technical SEO:</strong> JSON-LD schema, Core Web Vitals <0.5s, Local Google Business optimization</p>
+                            <p><strong class="text-foreground font-sans">AI Content Pipeline:</strong> Automated keyword-mapped content engines & case studies</p>
+                            <p><strong class="text-foreground font-sans">Funnel Automation:</strong> Meta WhatsApp Cloud API qualification webhooks & CRM sync</p>
+                            <p><strong class="text-foreground font-sans">Performance & CRO:</strong> Google & Meta CAPI server-side event telemetry & landing page A/B tests</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 pt-4 border-t border-border/80 flex items-center justify-between">
+                    <Link href="/services/growth" class="inline-flex items-center gap-1.5 min-h-[44px] py-2 text-xs font-bold text-teal-700 dark:text-teal-400 hover:underline">
+                        Explore Growth Services
+                        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </Link>
+                    <span class="text-xs text-muted-foreground font-medium">Monthly Retainers</span>
                 </div>
             </article>
         </div>
@@ -150,7 +290,7 @@ const emit = defineEmits<{
                 </div>
                 <div>
                     <span class="db-badge-sky mb-1.5">Printable Brochure</span>
-                    <h3 class="text-base sm:text-lg font-bold text-foreground">2026 Architectural Price Book & Service Catalogue</h3>
+                    <h3 class="text-base sm:text-lg font-bold text-foreground">2026 Price Book & Service Catalogue</h3>
                     <p class="text-xs sm:text-sm text-muted-foreground mt-0.5">Explore full system deliverables, add-on modules, SLAs, and fixed pricing in a clean printable format.</p>
                 </div>
             </div>
@@ -167,3 +307,4 @@ const emit = defineEmits<{
         </div>
     </section>
 </template>
+

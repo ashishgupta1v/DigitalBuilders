@@ -211,13 +211,13 @@ function handleOptionClick(action: string, label: string) {
                 sender: 'bot',
                 text: 'We offer 3 comprehensive post-launch Care & Maintenance plans:\n\n1. 🛡️ Basic Care (₹19,000/yr · ₹1,583/mo): Uptime monitoring, monthly patches & quarterly dependency upgrades.\n2. ⭐ Business Care ★ (₹49,000/yr · ₹4,083/mo): Monthly security updates, database vacuuming & automated backup restore tests, sub-24h SLA. (Pay 10 months, get 12!)\n3. 🚀 Enterprise SLA (From ₹1,49,000/yr): Dedicated engineer allocation, 4-hour SLA & 24/7 on-call.\n\nEvery custom build also includes a complimentary 30-day bug warranty.',
                 options: [
-                    { label: '📅 Pick a Time on Cal.com', action: 'cal_com' },
+                    { label: '📅 Book 30-Min Strategy Call', action: 'cal_com' },
                     { label: 'Chat on WhatsApp with Ashish', action: 'whatsapp_chat' },
                     { label: '📄 Download 2026 Price Book', action: 'brochure_download' },
                 ],
             });
         } else if (action === 'cal_com') {
-            window.open('https://cal.com/digitalbuilders/30min', '_blank');
+            window.location.href = '/book';
         } else if (action === 'dsar_info') {
             window.open('/library/privacy-policy#section-6', '_blank');
         } else if (action === 'open_brochure_inr') {

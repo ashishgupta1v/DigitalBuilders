@@ -150,8 +150,8 @@ async function fetchTestimonials() {
                 </p>
                 <div class="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-900 dark:text-amber-300 self-start sm:self-auto">
                     <span class="text-amber-500 font-bold">★★★★★</span>
-                    <span class="font-bold text-foreground">5.0 Google Score</span>
-                    <span class="text-muted-foreground">• 100% Client Satisfaction</span>
+                    <span class="font-bold text-foreground">5.0 ★ Client Satisfaction Score</span>
+                    <span class="text-muted-foreground">• 100% On-Time Track Record</span>
                 </div>
             </div>
             <div class="flex flex-wrap items-center justify-center gap-6 sm:gap-10 opacity-80">

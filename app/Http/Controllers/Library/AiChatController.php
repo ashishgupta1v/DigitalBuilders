@@ -59,7 +59,10 @@ Services, Decoupled Regional Price Books (India vs International):
   • Basic AMC: ₹19,000 / yr (₹1,583/mo)
   • Business AMC ★: ₹49,000 / yr (₹4,083/mo) (Prepay 12 mo get 2 free)
   • Enterprise SLA: From ₹1,49,000 / yr
-- SEO & Content Retainers: Essentials ₹9,999 / mo | Growth ₹19,999 / mo
+- Build + Grow Strategic Growth Retainers ("We don't just build your software — we help you get customers to it."):
+  • Growth Starter (Local SEO + AI Content): ₹14,999 / mo ($450 Gulf / $600 USD)
+  • Growth Business ★ (SEO + Google/Meta Ads + WhatsApp Nurture + CRO): ₹29,999 / mo ($950 Gulf / $1,250 USD)
+  • Growth Enterprise (Full-Funnel Omnichannel + Custom Telemetry Dashboard): ₹59,999 / mo ($1,800 Gulf / $2,400 USD)
 - Commercials: 40% Kickoff, 40% Staging Demo, 20% Launch. 30-day warranty. Free Mutual NDA. Govt Reg: UDYAM-PB-12-0217716.
 - Architecture Discovery Sprint: ₹19,000 INR / $750 USD ($500 Gulf) (100% credited to build).
 - Interactive Scope Estimator & Full Price Book: Available on /pricing and /estimator.
@@ -179,6 +182,15 @@ EOT;
                 . "• ⭐ Business Care ★ (₹49,000/yr · ₹4,083/mo): Monthly security updates, database vacuuming & automated backup restore tests, sub-24h SLA. (Pay for 10 months, get 12!)\n"
                 . "• 🚀 Enterprise SLA (From ₹1,49,000/yr): Dedicated engineer allocation, sub-4h SLA, and 24/7 on-call incident response.\n\n"
                 . "Note: Every new system built by DigitalBuilders includes a complimentary 30-day post-launch bug warranty at zero extra charge!";
+        }
+
+        // Growth Retainers, Marketing, SEO, Ads, AI Content, Customer Acquisition
+        if (preg_match('/\b(growth|marketing|seo|search engine|content engine|ads|google ads|meta ads|facebook ads|instagram ads|cro|funnel|lead gen|lead generation|get customers|customer acquisition|traffic)\b/i', $query)) {
+            return "Through our 'Build + Grow' pillar, we help you get customers to the software we build:\n"
+                . "• 🚀 Growth Starter (₹14,999/mo · $450 Gulf / $600 USD): Google Business Profile, local SEO citations, AI Content Engine (4 authoritative articles/mo), and Core Web Vitals monitoring.\n"
+                . "• 📈 Growth Business ★ (₹29,999/mo · $950 Gulf / $1,250 USD): Google/Meta performance ads management, landing page A/B testing (CRO), and automated WhatsApp/email lead nurture workflows.\n"
+                . "• 🏢 Growth Enterprise (₹59,999/mo · $1,800 Gulf / $2,400 USD): Full-funnel omnichannel architecture, custom real-time Growth Dashboard, and dedicated Growth Engineer.\n\n"
+                . "Explore full scope on /pricing or discuss your customer acquisition strategy directly on WhatsApp (+91 90870 21592)!";
         }
 
         // Booking, consultation, calendar, schedule meeting, call

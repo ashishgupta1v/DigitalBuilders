@@ -101,6 +101,15 @@ const PROJECT_TYPES: ProjectOption[] = [
         baseDays: 21,
         description: 'Catalog, COD checkout, WhatsApp order alerts & inventory sync',
     },
+    {
+        id: 'grow_marketing',
+        label: 'Grow & Customer Acquisition',
+        basePriceInr: 14999,
+        basePriceGulf: 349,
+        basePriceUsd: 449,
+        baseDays: 30,
+        description: 'Technical SEO, AI content engine, Google/Meta ads & WhatsApp lead nurture',
+    },
 ];
 
 const SCALE_OPTIONS: ScaleOption[] = [
@@ -189,6 +198,38 @@ const FEATURES_LIST: FeatureOption[] = [
         priceUsd: 500,
         days: 3,
     },
+    {
+        id: 'seo_growth_starter',
+        label: 'Technical & Local SEO Setup + Schema Markup',
+        priceInr: 14999,
+        priceGulf: 450,
+        priceUsd: 600,
+        days: 3,
+    },
+    {
+        id: 'ai_content_engine',
+        label: 'AI Content Engine (4 SEO-Optimized Articles/Mo)',
+        priceInr: 9999,
+        priceGulf: 300,
+        priceUsd: 400,
+        days: 2,
+    },
+    {
+        id: 'crm_whatsapp_nurture',
+        label: 'WhatsApp Lead Nurture & Automated CRM Funnel',
+        priceInr: 19000,
+        priceGulf: 500,
+        priceUsd: 700,
+        days: 3,
+    },
+    {
+        id: 'performance_ads_setup',
+        label: 'Performance Ads Setup & Conversion Tracking (Google/Meta)',
+        priceInr: 15000,
+        priceGulf: 450,
+        priceUsd: 600,
+        days: 3,
+    },
 ];
 
 const currency = ref<RegionMode>('INR');
@@ -250,6 +291,10 @@ const calculatedTotal = computed(() => {
 });
 
 const calculatedDays = computed(() => {
+    if (selectedType.value === 'grow_marketing') {
+        return 'Monthly Retainer (Cancel Anytime)';
+    }
+
     let days = currentProjectTypeObj.value.baseDays;
     selectedFeatures.value.forEach((featId) => {
         const feat = FEATURES_LIST.find((f) => f.id === featId);
@@ -492,15 +537,18 @@ function formatMoney(val: number): string {
                     <div class="mt-3">
                         <span class="text-3xl font-black text-card-foreground sm:text-4xl">
                             {{ formatMoney(calculatedTotal.min) }} — {{ formatMoney(calculatedTotal.max) }}
+                            <span v-if="selectedType === 'grow_marketing'" class="text-sm font-normal text-sky-700 dark:text-sky-300">/ mo</span>
                         </span>
-                        <p class="mt-1.5 text-xs text-muted-foreground">Fixed all-inclusive scope · Full test coverage · 30-day post-launch warranty.</p>
+                        <p class="mt-1.5 text-xs text-muted-foreground">
+                            {{ selectedType === 'grow_marketing' ? 'Transparent monthly growth retainer · No long-term lock-in · GST invoice.' : 'Fixed all-inclusive scope · Full test coverage · 30-day post-launch warranty.' }}
+                        </p>
                     </div>
 
                     <div class="my-6 h-px bg-border" />
 
                     <div class="space-y-4">
                         <div class="flex justify-between text-sm">
-                            <span class="text-muted-foreground">Estimated Timeline:</span>
+                            <span class="text-muted-foreground">{{ selectedType === 'grow_marketing' ? 'Billing Cycle:' : 'Estimated Timeline:' }}</span>
                             <span class="font-bold text-card-foreground">{{ calculatedDays }}</span>
                         </div>
                         <div class="flex justify-between text-sm">
@@ -523,7 +571,7 @@ function formatMoney(val: number): string {
                         @click="openInquiryModal"
                         class="btn-primary w-full min-h-[44px] rounded-full px-6 py-3.5 text-center text-sm font-bold text-white transition hover:scale-[1.01] shadow-lg cursor-pointer"
                     >
-                        Request Formal Proposal for this Scope →
+                        {{ selectedType === 'grow_marketing' ? 'Book a Free 15-Min Growth Check →' : 'Request Formal Proposal for this Scope →' }}
                     </button>
                     <a
                         :href="currency === 'INR' ? '/downloads/digitalbuilders-pricing-india-inr.pdf' : '/downloads/digitalbuilders-pricing-international-usd.pdf'"

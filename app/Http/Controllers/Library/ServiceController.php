@@ -72,6 +72,17 @@ class ServiceController extends Controller
         ]);
     }
 
+    public function growth(): Response
+    {
+        return $this->renderWithMeta('Services/Growth', [
+            'title' => 'Strategic Growth, Technical SEO & Customer Acquisition | DigitalBuilders',
+            'description' => 'Great software is step one. Getting customers is step two. We help your website, app, or store get seen, get enquiries, and convert paying customers with technical SEO, AI content engines, and WhatsApp lead nurture automation.',
+            'image' => asset('images/portfolio/habuilt.jpg'),
+            'url' => url('/services/growth'),
+            'type' => 'website',
+        ]);
+    }
+
     public function pricing(): Response
     {
         return $this->renderWithMeta('Pricing', [

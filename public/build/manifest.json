@@ -6,37 +6,37 @@
       "_index.esm-CnfFLMTz.js"
     ]
   },
-  "_CookieConsent-CUH9gsxQ.js": {
-    "file": "assets/CookieConsent-CUH9gsxQ.js",
+  "_CookieConsent-CoBXuLR2.js": {
+    "file": "assets/CookieConsent-CoBXuLR2.js",
     "name": "CookieConsent",
     "imports": [
       "_index.esm-CnfFLMTz.js",
-      "_analytics-CG4OigJJ.js"
+      "_analytics-BKikPJ4G.js"
     ]
   },
-  "_ProjectEstimator-CYQks7WN.js": {
-    "file": "assets/ProjectEstimator-CYQks7WN.js",
+  "_ProjectEstimator-ipbB6khE.js": {
+    "file": "assets/ProjectEstimator-ipbB6khE.js",
     "name": "ProjectEstimator",
     "imports": [
       "_index.esm-CnfFLMTz.js",
-      "_analytics-CG4OigJJ.js",
+      "_analytics-BKikPJ4G.js",
       "_geo-BPwoSY06.js"
     ]
   },
-  "_StickyMobileCta-BHkESo6r.js": {
-    "file": "assets/StickyMobileCta-BHkESo6r.js",
+  "_StickyMobileCta-txroEJMq.js": {
+    "file": "assets/StickyMobileCta-txroEJMq.js",
     "name": "StickyMobileCta",
     "imports": [
       "_index.esm-CnfFLMTz.js",
-      "_analytics-CG4OigJJ.js"
+      "_analytics-BKikPJ4G.js"
     ]
   },
   "__plugin-vue_export-helper-B80Cc4Ui.js": {
     "file": "assets/_plugin-vue_export-helper-B80Cc4Ui.js",
     "name": "_plugin-vue_export-helper"
   },
-  "_analytics-CG4OigJJ.js": {
-    "file": "assets/analytics-CG4OigJJ.js",
+  "_analytics-BKikPJ4G.js": {
+    "file": "assets/analytics-BKikPJ4G.js",
     "name": "analytics"
   },
   "_geo-BPwoSY06.js": {
@@ -48,14 +48,14 @@
     "name": "index.esm"
   },
   "resources/js/Pages/Blog/Index.vue": {
-    "file": "assets/Index-B0VzCAXz.js",
+    "file": "assets/Index-BdWoOuBD.js",
     "name": "Index",
     "src": "resources/js/Pages/Blog/Index.vue",
     "isDynamicEntry": true,
     "imports": [
       "_index.esm-CnfFLMTz.js",
       "_ApplicationLogo-D8iP7h7t.js",
-      "_analytics-CG4OigJJ.js"
+      "_analytics-BKikPJ4G.js"
     ]
   },
   "resources/js/Pages/Blog/Show.vue": {
@@ -72,15 +72,15 @@
     ]
   },
   "resources/js/Pages/Book.vue": {
-    "file": "assets/Book-VXoh4Ivd.js",
+    "file": "assets/Book-dkX2rize.js",
     "name": "Book",
     "src": "resources/js/Pages/Book.vue",
     "isDynamicEntry": true,
     "imports": [
       "_index.esm-CnfFLMTz.js",
       "_ApplicationLogo-D8iP7h7t.js",
-      "_CookieConsent-CUH9gsxQ.js",
-      "_analytics-CG4OigJJ.js",
+      "_CookieConsent-CoBXuLR2.js",
+      "_analytics-BKikPJ4G.js",
       "_geo-BPwoSY06.js"
     ]
   },
@@ -94,18 +94,18 @@
     ]
   },
   "resources/js/Pages/Estimator.vue": {
-    "file": "assets/Estimator-uhqRJfGA.js",
+    "file": "assets/Estimator-DzJxOy3J.js",
     "name": "Estimator",
     "src": "resources/js/Pages/Estimator.vue",
     "isDynamicEntry": true,
     "imports": [
       "_index.esm-CnfFLMTz.js",
       "_ApplicationLogo-D8iP7h7t.js",
-      "_ProjectEstimator-CYQks7WN.js"
+      "_ProjectEstimator-ipbB6khE.js"
     ]
   },
   "resources/js/Pages/Home.vue": {
-    "file": "assets/Home-D7o2ozGS.js",
+    "file": "assets/Home-BXz6l-Ri.js",
     "name": "Home",
     "src": "resources/js/Pages/Home.vue",
     "isDynamicEntry": true,
@@ -113,14 +113,14 @@
       "__plugin-vue_export-helper-B80Cc4Ui.js",
       "_index.esm-CnfFLMTz.js",
       "_ApplicationLogo-D8iP7h7t.js",
-      "_CookieConsent-CUH9gsxQ.js",
-      "_ProjectEstimator-CYQks7WN.js",
-      "_StickyMobileCta-BHkESo6r.js",
-      "_analytics-CG4OigJJ.js",
+      "_CookieConsent-CoBXuLR2.js",
+      "_ProjectEstimator-ipbB6khE.js",
+      "_StickyMobileCta-txroEJMq.js",
+      "_analytics-BKikPJ4G.js",
       "_geo-BPwoSY06.js"
     ],
     "css": [
-      "assets/Home-DyilMlqL.css"
+      "assets/Home-D3uJn1Bm.css"
     ]
   },
   "resources/js/Pages/Library/ContactForm.vue": {
@@ -232,83 +232,96 @@
     ]
   },
   "resources/js/Pages/Pricing.vue": {
-    "file": "assets/Pricing-kzwses2B.js",
+    "file": "assets/Pricing-B7-KYLCA.js",
     "name": "Pricing",
     "src": "resources/js/Pages/Pricing.vue",
     "isDynamicEntry": true,
     "imports": [
       "_index.esm-CnfFLMTz.js",
       "_ApplicationLogo-D8iP7h7t.js",
-      "_CookieConsent-CUH9gsxQ.js",
-      "_StickyMobileCta-BHkESo6r.js",
-      "_analytics-CG4OigJJ.js",
+      "_CookieConsent-CoBXuLR2.js",
+      "_StickyMobileCta-txroEJMq.js",
+      "_analytics-BKikPJ4G.js",
       "_geo-BPwoSY06.js"
     ]
   },
   "resources/js/Pages/Services/AiSolutions.vue": {
-    "file": "assets/AiSolutions-7kIt0ifi.js",
+    "file": "assets/AiSolutions-B-FakaLQ.js",
     "name": "AiSolutions",
     "src": "resources/js/Pages/Services/AiSolutions.vue",
     "isDynamicEntry": true,
     "imports": [
       "_index.esm-CnfFLMTz.js",
       "_ApplicationLogo-D8iP7h7t.js",
-      "_StickyMobileCta-BHkESo6r.js"
+      "_StickyMobileCta-txroEJMq.js"
     ]
   },
   "resources/js/Pages/Services/ErpCrm.vue": {
-    "file": "assets/ErpCrm-70cyF_OE.js",
+    "file": "assets/ErpCrm-BJMnQgad.js",
     "name": "ErpCrm",
     "src": "resources/js/Pages/Services/ErpCrm.vue",
     "isDynamicEntry": true,
     "imports": [
       "_index.esm-CnfFLMTz.js",
       "_ApplicationLogo-D8iP7h7t.js",
-      "_StickyMobileCta-BHkESo6r.js"
+      "_StickyMobileCta-txroEJMq.js"
+    ]
+  },
+  "resources/js/Pages/Services/Growth.vue": {
+    "file": "assets/Growth-Hr7UHty5.js",
+    "name": "Growth",
+    "src": "resources/js/Pages/Services/Growth.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "_index.esm-CnfFLMTz.js",
+      "_ApplicationLogo-D8iP7h7t.js",
+      "_CookieConsent-CoBXuLR2.js",
+      "_StickyMobileCta-txroEJMq.js",
+      "_geo-BPwoSY06.js"
     ]
   },
   "resources/js/Pages/Services/MobileApp.vue": {
-    "file": "assets/MobileApp-COz1gruA.js",
+    "file": "assets/MobileApp-B0EN-XSU.js",
     "name": "MobileApp",
     "src": "resources/js/Pages/Services/MobileApp.vue",
     "isDynamicEntry": true,
     "imports": [
       "_index.esm-CnfFLMTz.js",
       "_ApplicationLogo-D8iP7h7t.js",
-      "_StickyMobileCta-BHkESo6r.js"
+      "_StickyMobileCta-txroEJMq.js"
     ]
   },
   "resources/js/Pages/Services/SaasPlatforms.vue": {
-    "file": "assets/SaasPlatforms-C8M4ZSHZ.js",
+    "file": "assets/SaasPlatforms-D6vXMy3h.js",
     "name": "SaasPlatforms",
     "src": "resources/js/Pages/Services/SaasPlatforms.vue",
     "isDynamicEntry": true,
     "imports": [
       "_index.esm-CnfFLMTz.js",
       "_ApplicationLogo-D8iP7h7t.js",
-      "_StickyMobileCta-BHkESo6r.js"
+      "_StickyMobileCta-txroEJMq.js"
     ]
   },
   "resources/js/Pages/Services/WebApp.vue": {
-    "file": "assets/WebApp-DE29RfiP.js",
+    "file": "assets/WebApp-DpnHM8H8.js",
     "name": "WebApp",
     "src": "resources/js/Pages/Services/WebApp.vue",
     "isDynamicEntry": true,
     "imports": [
       "_index.esm-CnfFLMTz.js",
       "_ApplicationLogo-D8iP7h7t.js",
-      "_StickyMobileCta-BHkESo6r.js"
+      "_StickyMobileCta-txroEJMq.js"
     ]
   },
   "resources/js/app.ts": {
-    "file": "assets/app-CF2S1bkW.js",
+    "file": "assets/app-aDfoBgrB.js",
     "name": "app",
     "src": "resources/js/app.ts",
     "isEntry": true,
     "imports": [
       "__plugin-vue_export-helper-B80Cc4Ui.js",
       "_index.esm-CnfFLMTz.js",
-      "_analytics-CG4OigJJ.js"
+      "_analytics-BKikPJ4G.js"
     ],
     "dynamicImports": [
       "resources/js/Pages/Blog/Index.vue",
@@ -331,12 +344,13 @@
       "resources/js/Pages/Pricing.vue",
       "resources/js/Pages/Services/AiSolutions.vue",
       "resources/js/Pages/Services/ErpCrm.vue",
+      "resources/js/Pages/Services/Growth.vue",
       "resources/js/Pages/Services/MobileApp.vue",
       "resources/js/Pages/Services/SaasPlatforms.vue",
       "resources/js/Pages/Services/WebApp.vue"
     ],
     "css": [
-      "assets/app-CzpyPb0e.css"
+      "assets/app-l9DY4nke.css"
     ]
   }
 }

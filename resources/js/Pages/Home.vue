@@ -325,6 +325,7 @@ onUnmounted(() => {
 
                 <nav aria-label="Primary navigation" class="hidden items-center gap-1.5 text-sm font-medium lg:flex xl:gap-2">
                     <a href="#services" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">Services</a>
+                    <a href="#process" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">How It Works</a>
                     <a href="#portfolio" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">Portfolio</a>
                     <Link href="/pricing" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">Pricing</Link>
                     <button type="button" @click="showBrochureModal = true" class="px-3 py-1.5 min-h-[44px] text-muted-foreground transition-all duration-200 hover:text-foreground inline-flex items-center gap-1.5 cursor-pointer">
@@ -418,6 +419,98 @@ onUnmounted(() => {
                 :services="services"
                 @open-brochure="showBrochureModal = true"
             />
+
+            <!-- 2.5 How It Works in Plain English (Simple 4-Step Process) -->
+            <section id="process" class="mt-20 sm:mt-24" data-reveal>
+                <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                    <div>
+                        <span class="db-badge-indigo mb-3">Simple 4-Step Journey</span>
+                        <h2 class="mt-2 text-2xl font-black text-foreground sm:text-3xl md:text-4xl">How It Works, in Plain English</h2>
+                        <p class="mt-2 text-sm text-muted-foreground max-w-2xl">
+                            No surprises, no hidden fees, and zero tech jargon. Here is exactly how we take your project from initial concept to a fast, reliable live system.
+                        </p>
+                    </div>
+                    <div class="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/70 px-4 py-2 text-xs font-semibold text-foreground self-start md:self-auto shadow-sm">
+                        <span class="text-emerald-500 font-bold">✓</span>
+                        <span>Fixed Milestone Pricing • 100% Code Ownership</span>
+                    </div>
+                </div>
+
+                <!-- 4-Step Process Grid -->
+                <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" data-stagger>
+                    <!-- Step 1 -->
+                    <div data-stagger-item class="db-bento-card p-6 flex flex-col justify-between group relative overflow-hidden">
+                        <div class="absolute top-0 left-0 right-0 h-1 bg-sky-500 opacity-80" />
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-3xl font-black text-sky-600 dark:text-sky-400 font-mono">01</span>
+                                <span class="rounded-full bg-sky-500/10 border border-sky-500/30 px-2.5 py-0.5 text-[11px] font-bold text-sky-700 dark:text-sky-300">Days 1–3</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-foreground">Discovery & Needs</h3>
+                            <p class="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                                We discuss your business workflow, operational bottlenecks, and core goals. No tech speak — just clarity on what needs solving.
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-3 border-t border-border/70 text-[11px] font-semibold text-sky-700 dark:text-sky-400 flex items-center gap-1">
+                            <span>Deliverable: Solution Scope</span>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div data-stagger-item class="db-bento-card p-6 flex flex-col justify-between group relative overflow-hidden">
+                        <div class="absolute top-0 left-0 right-0 h-1 bg-indigo-500 opacity-80" />
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-3xl font-black text-indigo-600 dark:text-indigo-400 font-mono">02</span>
+                                <span class="rounded-full bg-indigo-500/10 border border-indigo-500/30 px-2.5 py-0.5 text-[11px] font-bold text-indigo-700 dark:text-indigo-300">Days 4–7</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-foreground">Design & Fixed Quote</h3>
+                            <p class="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                                We build clean wireframes and a phased milestone roadmap with a guaranteed fixed quote before writing code.
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-3 border-t border-border/70 text-[11px] font-semibold text-indigo-700 dark:text-indigo-400 flex items-center gap-1">
+                            <span>Deliverable: Wireframes & Fixed Quote</span>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div data-stagger-item class="db-bento-card p-6 flex flex-col justify-between group relative overflow-hidden">
+                        <div class="absolute top-0 left-0 right-0 h-1 bg-purple-500 opacity-80" />
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-3xl font-black text-purple-600 dark:text-purple-400 font-mono">03</span>
+                                <span class="rounded-full bg-purple-500/10 border border-purple-500/30 px-2.5 py-0.5 text-[11px] font-bold text-purple-700 dark:text-purple-300">Sprint 1–3</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-foreground">Build with Weekly Demos</h3>
+                            <p class="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                                We build your software in 1-2 week sprints. You test real working features every week on private staging links with full transparency.
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-3 border-t border-border/70 text-[11px] font-semibold text-purple-700 dark:text-purple-400 flex items-center gap-1">
+                            <span>Deliverable: Weekly Live Previews</span>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div data-stagger-item class="db-bento-card p-6 flex flex-col justify-between group relative overflow-hidden">
+                        <div class="absolute top-0 left-0 right-0 h-1 bg-emerald-500 opacity-80" />
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-3xl font-black text-emerald-600 dark:text-emerald-400 font-mono">04</span>
+                                <span class="rounded-full bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-300">Launch & Beyond</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-foreground">Launch & 30-Day Warranty</h3>
+                            <p class="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                                We deploy to production, train your team, and provide 30 days of included warranty support to guarantee uninterrupted operation.
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-3 border-t border-border/70 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
+                            <span>Deliverable: Full Code + Warranty</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <!-- 3. Portfolio & Case Studies Showcase -->
             <PortfolioSection />
@@ -565,6 +658,7 @@ onUnmounted(() => {
                 <div class="mt-8 border-t border-border pt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-xs text-muted-foreground">
                     <p>© {{ new Date().getFullYear() }} DigitalBuilders. All rights reserved.</p>
                     <div class="flex flex-wrap gap-4">
+                        <Link href="/services/growth" class="hover:text-foreground transition-colors text-sky-600 dark:text-sky-400 font-semibold">Growth Services</Link>
                         <Link href="/pricing" class="hover:text-foreground transition-colors">Pricing</Link>
                         <a href="/downloads/digitalbuilders-pricing-india-inr.pdf" target="_blank" class="hover:text-foreground transition-colors">Price Book (PDF)</a>
                         <Link href="/estimator" class="hover:text-foreground transition-colors">Estimator</Link>

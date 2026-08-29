@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import CookieConsent from '@/Components/CookieConsent.vue';
-import { trackEvent, trackWhatsAppClick, trackBookingCompleted } from '@/utils/analytics';
+import { trackEvent, trackWhatsAppClick, trackBookingCompleted, trackGrowthCheckBooked } from '@/utils/analytics';
 import { detectUserRegion, type RegionMode } from '@/utils/geo';
 
 const activeTab = ref<'scheduler' | 'whatsapp'>('scheduler');
@@ -57,8 +57,9 @@ const form = useForm({
 });
 
 function handleBookSlot() {
-    const slotInfo = `[Confirmed 30-Min Architecture Call] Date: ${selectedDate.value} at ${selectedTime.value}`;
-    form.description = `${slotInfo} | Scope: ${form.description || 'System Architecture Review'}`;
+    const isGrowth = form.project_type === 'grow_marketing';
+    const slotInfo = `[Confirmed ${isGrowth ? 'Free 15-Min Growth Check' : '30-Min Architecture Call'}] Date: ${selectedDate.value} at ${selectedTime.value}`;
+    form.description = `${slotInfo} | Scope: ${form.description || (isGrowth ? 'Customer Acquisition / Growth Audit' : 'System Architecture Review')}`;
     form.source = 'booking';
     form.region = activeRegion.value;
 
@@ -67,10 +68,17 @@ function handleBookSlot() {
         preserveState: true,
         onSuccess: () => {
             isBooked.value = true;
-            trackBookingCompleted('30min_architecture_session', activeRegion.value, {
-                date: selectedDate.value,
-                time: selectedTime.value,
-            });
+            if (isGrowth) {
+                trackGrowthCheckBooked(activeRegion.value, {
+                    date: selectedDate.value,
+                    time: selectedTime.value,
+                });
+            } else {
+                trackBookingCompleted('30min_architecture_session', activeRegion.value, {
+                    date: selectedDate.value,
+                    time: selectedTime.value,
+                });
+            }
         },
         onError: () => {
             isBooked.value = true;
@@ -381,6 +389,7 @@ onMounted(() => {
                                             <option value="erp_crm">ERP / Custom CRM</option>
                                             <option value="saas">High-Scale SaaS Platform</option>
                                             <option value="ai_solutions">AI Agent & LLM Architecture</option>
+                                            <option value="grow_marketing">Grow & Customer Acquisition (SEO/Ads/AI)</option>
                                             <option value="other">Architecture & Performance Audit</option>
                                         </select>
                                     </div>

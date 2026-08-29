@@ -39,6 +39,7 @@ Route::prefix('services')->name('services.')->group(function () {
     Route::get('/ai-solutions', [ServiceController::class, 'aiSolutions'])->name('ai-solutions');
     Route::get('/erp-crm', [ServiceController::class, 'erpCrm'])->name('erp-crm');
     Route::get('/saas-platforms', [ServiceController::class, 'saasPlatforms'])->name('saas-platforms');
+    Route::get('/growth', [ServiceController::class, 'growth'])->name('growth');
 });
 
 // Portfolio Case Study Detail Pages (Public)

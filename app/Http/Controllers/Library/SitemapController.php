@@ -59,6 +59,12 @@ class SitemapController extends Controller
                 'changefreq' => 'weekly',
                 'priority' => '0.85',
             ],
+            [
+                'loc' => $baseUrl . '/services/growth',
+                'lastmod' => $now,
+                'changefreq' => 'weekly',
+                'priority' => '0.9',
+            ],
             // 9 Production Case Studies
             [
                 'loc' => $baseUrl . '/portfolio/habuilt',
