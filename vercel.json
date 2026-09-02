@@ -43,6 +43,10 @@
       "dest": "/public/downloads/$1"
     },
     {
+      "src": "/(anant-kashi-PRD|anant-kashi-prd|anant-kashi-PRD\\.html|anant-kashi-prd\\.html)",
+      "dest": "/public/anant-kashi-PRD.html"
+    },
+    {
       "src": "/(favicon\\.ico|favicon\\.png|robots\\.txt|manifest\\.webmanifest|sw\\.js)",
       "dest": "/public/$1"
     },

@@ -425,7 +425,7 @@ onUnmounted(() => {
                 <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                     <div>
                         <span class="db-badge-indigo mb-3">Simple 4-Step Journey</span>
-                        <h2 class="mt-2 text-2xl font-black text-foreground sm:text-3xl md:text-4xl">How It Works, in Plain English</h2>
+                        <h2 class="mt-2 text-2xl font-black text-foreground sm:text-3xl md:text-4xl">How It Works</h2>
                         <p class="mt-2 text-sm text-muted-foreground max-w-2xl">
                             No surprises, no hidden fees, and zero tech jargon. Here is exactly how we take your project from initial concept to a fast, reliable live system.
                         </p>
