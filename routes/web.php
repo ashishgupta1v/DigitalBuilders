@@ -82,6 +82,30 @@ Route::get('/anant-kashi-PRD.html', function () {
     return redirect('/anant-kashi-PRD', 301);
 });
 
+// Static Dependencies Document Serving
+Route::get('/anant-kashi-Dependencies', function () {
+    $path = public_path('anant-kashi-Dependencies.html');
+    if (!file_exists($path)) {
+        abort(404);
+    }
+    return response(file_get_contents($path), 200, [
+        'Content-Type' => 'text/html; charset=utf-8',
+        'Cache-Control' => 'public, max-age=3600',
+    ]);
+})->name('anant-kashi-dependencies');
+
+Route::get('/anant-kashi-dependencies', function () {
+    return redirect('/anant-kashi-Dependencies', 301);
+});
+
+Route::get('/anant-kashi-Dependencies.html', function () {
+    return redirect('/anant-kashi-Dependencies', 301);
+});
+
+Route::get('/anant-kashi-dependencies.html', function () {
+    return redirect('/anant-kashi-Dependencies', 301);
+});
+
 Route::get('/downloads/{file}', function (string $file) {
     $path = public_path('downloads/' . $file);
     if (!file_exists($path)) {

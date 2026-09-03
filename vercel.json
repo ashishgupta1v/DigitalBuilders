@@ -47,6 +47,10 @@
       "dest": "/public/anant-kashi-PRD.html"
     },
     {
+      "src": "/(anant-kashi-Dependencies|anant-kashi-dependencies|anant-kashi-Dependencies\\.html|anant-kashi-dependencies\\.html)",
+      "dest": "/public/anant-kashi-Dependencies.html"
+    },
+    {
       "src": "/(favicon\\.ico|favicon\\.png|robots\\.txt|manifest\\.webmanifest|sw\\.js)",
       "dest": "/public/$1"
     },
