@@ -51,4 +51,21 @@ return Application::configure(basePath: dirname(__DIR__))
 
             return $response;
         });
+    })
+    ->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule): void {
+        // Loop 1: Poll market requirements every 5 minutes
+        $schedule->command('market:poll-requirements')
+            ->everyFiveMinutes()
+            ->withoutOverlapping()
+            ->runInBackground();
+
+        // Loop 2: Process sales cadence daily at 09:30 AM IST
+        $schedule->command('crm:process-cadence')
+            ->dailyAt('09:30')
+            ->withoutOverlapping();
+
+        // Loop 3: Send Founder Morning Battle Card at 08:00 AM IST
+        $schedule->command('crm:morning-battlecard')
+            ->dailyAt('08:00')
+            ->withoutOverlapping();
     })->create();

@@ -8,8 +8,10 @@ use App\Http\Controllers\Crm\CrmAuthController;
 use App\Http\Controllers\Crm\CrmDashboardController;
 use App\Http\Controllers\Crm\CrmDealController;
 use App\Http\Controllers\Crm\CrmLeadController;
+use App\Http\Controllers\Crm\CrmMarketIngestionController;
 use App\Http\Controllers\Crm\CrmPaymentController;
 use App\Http\Controllers\Crm\CrmProposalController;
+use App\Http\Controllers\Crm\TelegramWebhookController;
 use Illuminate\Support\Facades\Route;
 
 // Public CRM Auth Routes
@@ -71,4 +73,7 @@ Route::prefix('api/crm')->name('api.crm.')->group(function () {
     Route::post('/leads/webhook', [CrmLeadController::class, 'handleExternalWebhook'])->name('leads.webhook');
     Route::post('/webhooks/razorpay', [CrmPaymentController::class, 'handleRazorpayWebhook'])->name('webhooks.razorpay');
     Route::post('/webhooks/stripe', [CrmPaymentController::class, 'handleStripeWebhook'])->name('webhooks.stripe');
+    Route::post('/ingest/indiamart', [CrmMarketIngestionController::class, 'handleIndiaMartPush'])->name('ingest.indiamart');
+    Route::post('/ingest/requirement', [CrmMarketIngestionController::class, 'handleExternalRequirement'])->name('ingest.requirement');
+    Route::post('/webhooks/telegram', [TelegramWebhookController::class, 'handle'])->name('webhooks.telegram');
 });
