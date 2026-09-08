@@ -69,4 +69,10 @@ return [
         'upwork_feed_url' => env('UPWORK_RSS_FEED_URL'),
     ],
 
+    'reddit' => [
+        'client_id' => env('REDDIT_CLIENT_ID'),
+        'client_secret' => env('REDDIT_CLIENT_SECRET'),
+    ],
+
 ];
+

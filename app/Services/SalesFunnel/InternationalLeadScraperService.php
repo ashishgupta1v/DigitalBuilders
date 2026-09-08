@@ -401,8 +401,8 @@ class InternationalLeadScraperService
      */
     public function pollReddit(): int
     {
-        $clientId = env('REDDIT_CLIENT_ID');
-        $clientSecret = env('REDDIT_CLIENT_SECRET');
+        $clientId = config('services.reddit.client_id') ?? env('REDDIT_CLIENT_ID');
+        $clientSecret = config('services.reddit.client_secret') ?? env('REDDIT_CLIENT_SECRET');
 
         if (!$clientId || !$clientSecret) {
             return 0;
