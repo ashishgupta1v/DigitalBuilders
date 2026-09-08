@@ -19,10 +19,18 @@ Route::middleware(['web'])->prefix('crm')->group(function () {
     Route::post('/logout', [CrmAuthController::class, 'logout'])->name('crm.logout');
 });
 
-// Public Client Proposal Review Portal
+// Public Client Proposal Review Portal & Payment Link Fallback
 Route::middleware(['web'])->group(function () {
     Route::get('/proposal/{token}', [CrmProposalController::class, 'publicView'])->name('crm.proposal.public');
     Route::post('/proposal/{token}/accept', [CrmProposalController::class, 'accept'])->name('crm.proposal.accept');
+    Route::get('/checkout/pay', function (\Illuminate\Http\Request $request) {
+        $dealId = $request->query('deal');
+        $deal = $dealId ? \App\Models\Deal::find($dealId) : null;
+        if ($deal && $deal->proposal_token) {
+            return redirect()->route('crm.proposal.public', ['token' => $deal->proposal_token]);
+        }
+        return redirect('/pricing')->with('info', 'For wire transfers or direct payment coordination, please connect with our team on WhatsApp.');
+    })->name('crm.checkout.pay');
 });
 
 // Protected Executive CRM Cockpit

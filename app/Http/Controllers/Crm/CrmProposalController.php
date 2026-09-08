@@ -7,10 +7,13 @@ namespace App\Http\Controllers\Crm;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Deal;
+use App\Mail\ProposalAcceptedMail;
 use App\Modules\Library\Application\Interfaces\MarkdownRendererInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -196,6 +199,14 @@ class CrmProposalController extends Controller
                 'subject'     => 'Client Accepted Proposal Online',
                 'description' => "Proposal formally accepted online by {$deal->lead->name} for {$deal->title}.",
             ]);
+        }
+
+        // Dispatch instant leadership email alert
+        try {
+            $to = config('mail.lead_inbox', 'ashishgupta1v@gmail.com');
+            Mail::to($to)->send(new ProposalAcceptedMail($deal));
+        } catch (\Throwable $e) {
+            Log::warning('Failed to dispatch proposal accepted email: ' . $e->getMessage());
         }
 
         if ($request->wantsJson()) {

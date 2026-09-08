@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Mail\ProposalAcceptedMail;
 use App\Models\Activity;
 use App\Models\Deal;
 use App\Models\Lead;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class CrmProposalTest extends TestCase
@@ -135,6 +137,7 @@ class CrmProposalTest extends TestCase
 
     public function test_client_can_accept_proposal_online(): void
     {
+        Mail::fake();
         $token = $this->deal->getOrCreateProposalToken();
 
         $response = $this->postJson("/proposal/{$token}/accept");
@@ -149,5 +152,22 @@ class CrmProposalTest extends TestCase
             'deal_id' => $this->deal->id,
             'subject' => 'Client Accepted Proposal Online',
         ]);
+
+        Mail::assertSent(ProposalAcceptedMail::class, function ($mail) {
+            return $mail->deal->id === $this->deal->id;
+        });
+    }
+
+    public function test_checkout_pay_redirects_to_proposal_or_pricing(): void
+    {
+        $token = $this->deal->getOrCreateProposalToken();
+
+        // When deal has proposal token, redirects to proposal portal
+        $response = $this->get("/checkout/pay?deal={$this->deal->id}");
+        $response->assertRedirect("/proposal/{$token}");
+
+        // When no deal or unknown id, redirects to pricing
+        $responseUnknown = $this->get("/checkout/pay?deal=99999");
+        $responseUnknown->assertRedirect('/pricing');
     }
 }
