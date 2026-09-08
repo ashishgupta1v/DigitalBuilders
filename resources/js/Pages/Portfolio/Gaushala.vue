@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import SiteHeader from '@/Components/SiteHeader.vue';
 </script>
 
 <template>
-    <Head title="Govardhan Gaushala Case Study — Trust ERP & 80G Receipts | DigitalBuilders">
-        <meta name="description" content="How DigitalBuilders engineered a dedicated NGO operating system with instant automated 80G tax receipt PDF generation and transparent donation audit trails." />
-        <meta property="og:title" content="Govardhan Gaushala Case Study — Trust ERP & 80G Receipts | DigitalBuilders" />
-        <meta property="og:description" content="How DigitalBuilders engineered a dedicated NGO operating system with instant automated 80G tax receipt PDF generation and transparent donation audit trails." />
+    <Head title="Shree Krishan Balram Gaushala Case Study — Trust ERP & Donation Portal | DigitalBuilders">
+        <meta name="description" content="How DigitalBuilders engineered a high-transparency nonprofit donation portal with 80G tax receipt automation and livestock telemetry." />
+        <meta property="og:title" content="Shree Krishan Balram Gaushala Case Study — Trust ERP & Donation Portal | DigitalBuilders" />
+        <meta property="og:description" content="How DigitalBuilders engineered a high-transparency nonprofit donation portal with 80G tax receipt automation and livestock telemetry." />
         <meta property="og:image" content="https://www.digitalbuilders.in/images/portfolio/gaushala.jpg" />
         <meta property="og:url" content="https://www.digitalbuilders.in/portfolio/gaushala" />
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Govardhan Gaushala Case Study — Trust ERP | DigitalBuilders" />
-        <meta name="twitter:description" content="Dedicated NGO operating system with automated 80G tax receipts and donation tracking." />
+        <meta name="twitter:title" content="Gaushala Trust ERP Case Study | DigitalBuilders" />
+        <meta name="twitter:description" content="Nonprofit donation portal with instant 80G tax certificate generation and donor telemetry." />
         <meta name="twitter:image" content="https://www.digitalbuilders.in/images/portfolio/gaushala.jpg" />
     </Head>
 
@@ -21,18 +22,8 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
         <div class="db-progress" />
         <div class="db-grid-overlay" />
 
-        <header class="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-md">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <ApplicationLogo :is-link="true" href="/" />
-                <div class="flex items-center gap-4">
-                    <Link href="/" class="text-sm font-medium text-muted-foreground hover:text-foreground">← Home</Link>
-                    <a href="https://krishanbalramgaushala.com/" target="_blank" rel="noopener noreferrer" class="rounded-full bg-secondary border border-border px-4 py-2 text-xs font-semibold text-secondary-foreground hover:bg-secondary/80 inline-flex items-center gap-1.5">
-                        Visit Live Portal
-                        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                    </a>
-                </div>
-            </div>
-        </header>
+        <!-- Header -->
+        <SiteHeader active-route="/portfolio" />
 
         <main class="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
             <div class="text-center">

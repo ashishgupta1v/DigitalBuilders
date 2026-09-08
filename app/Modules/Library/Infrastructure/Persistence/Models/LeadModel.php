@@ -14,10 +14,14 @@ class LeadModel extends Model
     protected $table = 'leads';
 
     protected $fillable = [
+        'organization_id',
         'name',
+        'company',
+        'role_title',
         'email',
         'phone',
         'project_type',
+        'segment',
         'source',
         'region',
         'description',
@@ -26,6 +30,12 @@ class LeadModel extends Model
         'score',
         'estimated_value',
         'notes_count',
+        'touchpoint_count',
+        'last_contact_date',
+        'next_action_date',
+        'next_action_note',
+        'ai_summary',
+        'objection_flag',
         'utm_source',
         'utm_medium',
         'utm_campaign',
@@ -33,9 +43,40 @@ class LeadModel extends Model
         'utm_term',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'score'             => 'integer',
+            'touchpoint_count'  => 'integer',
+            'notes_count'       => 'integer',
+            'last_contact_date' => 'datetime',
+            'next_action_date'  => 'datetime',
+        ];
+    }
+
+    public function organization(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Organization::class, 'organization_id');
+    }
+
+    public function deals(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\Deal::class, 'lead_id')->orderBy('created_at', 'desc');
+    }
+
+    public function activities(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\Activity::class, 'lead_id')->orderBy('created_at', 'desc');
+    }
+
     public function notes(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\App\Models\LeadNote::class, 'lead_id')->orderBy('created_at', 'desc');
+    }
+
+    public function payments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\Payment::class, 'lead_id')->orderBy('created_at', 'desc');
     }
 
     protected static function newFactory(): \App\Modules\Library\Infrastructure\Persistence\Factories\LeadModelFactory

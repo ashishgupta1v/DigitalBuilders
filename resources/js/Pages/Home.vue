@@ -16,9 +16,11 @@ import AiAssistantWidget from '@/Components/AiAssistantWidget.vue';
 import CookieConsent from '@/Components/CookieConsent.vue';
 import StickyMobileCta from '@/Components/StickyMobileCta.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import SiteHeader from '@/Components/SiteHeader.vue';
 import BookingModal from '@/Components/BookingModal.vue';
 import BrochureLeadMagnetModal from '@/Components/BrochureLeadMagnetModal.vue';
 import { trackWhatsAppClick, trackNewsletterSignup } from '@/utils/analytics';
+import { useTheme } from '@/composables/useTheme';
 
 type MotionAnimate = (
     target: Element | NodeListOf<Element>,
@@ -28,9 +30,8 @@ type MotionAnimate = (
 
 const motionAnimate = animate as unknown as MotionAnimate;
 
-const mobileMenuOpen = ref(false);
+const { isDark: isDarkMode, toggleTheme } = useTheme();
 const showBackToTop = ref(false);
-const isDarkMode = ref(false);
 const showBookingModal = ref(false);
 const showBrochureModal = ref(false);
 
@@ -86,21 +87,6 @@ function triggerBrochureIfUnseen() {
 function handleMouseLeave(e: MouseEvent) {
     if (e.clientY <= 15) {
         triggerBrochureIfUnseen();
-    }
-}
-
-function toggleTheme() {
-    isDarkMode.value = !isDarkMode.value;
-    if (isDarkMode.value) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        document.documentElement.classList.add('dark');
-        document.documentElement.classList.remove('light');
-        localStorage.setItem('db-theme', 'dark');
-    } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-        document.documentElement.classList.remove('dark');
-        document.documentElement.classList.add('light');
-        localStorage.setItem('db-theme', 'light');
     }
 }
 
@@ -169,20 +155,6 @@ const services = [
 const canonicalUrl = 'https://www.digitalbuilders.in/';
 
 onMounted(() => {
-    // Restore saved theme (default Light)
-    const savedTheme = localStorage.getItem('db-theme');
-    if (savedTheme === 'dark') {
-        isDarkMode.value = true;
-        document.documentElement.setAttribute('data-theme', 'dark');
-        document.documentElement.classList.add('dark');
-        document.documentElement.classList.remove('light');
-    } else {
-        isDarkMode.value = false;
-        document.documentElement.setAttribute('data-theme', 'light');
-        document.documentElement.classList.remove('dark');
-        document.documentElement.classList.add('light');
-    }
-
     // Scroll listeners
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('scroll', handleScrollProgress, { passive: true });
@@ -318,93 +290,11 @@ onUnmounted(() => {
         <div class="db-grid-overlay" />
 
         <!-- Navigation Header -->
-        <header class="sticky top-0 z-50 border-b border-border bg-[var(--db-nav-bg)] backdrop-blur-xl transition-colors duration-300">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-3.5 lg:px-8">
-                <!-- Logo: icon + brand name -->
-                <ApplicationLogo :is-link="true" href="#top" />
-
-                <nav aria-label="Primary navigation" class="hidden items-center gap-1.5 text-sm font-medium lg:flex xl:gap-2">
-                    <a href="#services" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">Services</a>
-                    <a href="#process" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">How It Works</a>
-                    <a href="#portfolio" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">Portfolio</a>
-                    <Link href="/pricing" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">Pricing</Link>
-                    <button type="button" @click="showBrochureModal = true" class="px-3 py-1.5 min-h-[44px] text-muted-foreground transition-all duration-200 hover:text-foreground inline-flex items-center gap-1.5 cursor-pointer">
-                        <span>Price Book</span>
-                        <span class="rounded bg-sky-500/10 text-sky-700 dark:text-sky-400 text-[10px] font-bold px-1.5 py-0.5">PDF</span>
-                    </button>
-                    <Link href="/blog" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">Blog</Link>
-                    <a href="#about" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">About</a>
-                    <a href="#contact" class="px-3 py-1.5 min-h-[44px] inline-flex items-center text-muted-foreground transition-all duration-200 hover:text-foreground">Contact</a>
-                </nav>
-
-                <div class="flex items-center gap-2.5">
-                    <!-- Direct Book Call Action -->
-                    <button
-                        type="button"
-                        @click="showBookingModal = true"
-                        class="btn-primary hidden sm:inline-flex items-center gap-1.5 rounded-full px-4 py-2 min-h-[44px] text-xs font-bold text-white shadow-md transition hover:scale-105 cursor-pointer"
-                    >
-                        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        <span>Schedule Call</span>
-                    </button>
-
-                    <!-- Theme Toggle (≥44px Touch Target) -->
-                    <button
-                        @click="toggleTheme"
-                        class="h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground inline-flex cursor-pointer"
-                        :aria-label="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
-                    >
-                        <svg v-if="isDarkMode" class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-                        <svg v-else class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-                    </button>
-
-                    <!-- Mobile hamburger (≥44px Touch Target) -->
-                    <button
-                        @click="mobileMenuOpen = !mobileMenuOpen"
-                        class="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-border text-muted-foreground transition hover:text-foreground lg:hidden focus:outline-none cursor-pointer"
-                        :aria-expanded="mobileMenuOpen"
-                        aria-label="Toggle menu"
-                    >
-                        <svg v-if="!mobileMenuOpen" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                        </svg>
-                        <svg v-else class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Mobile menu drawer -->
-            <Transition
-                enter-active-class="transition-all duration-300 ease-out"
-                enter-from-class="opacity-0 -translate-y-3"
-                leave-active-class="transition-all duration-200 ease-in"
-                leave-to-class="opacity-0 -translate-y-3"
-            >
-                <div v-if="mobileMenuOpen" class="border-t border-border bg-card px-4 pb-5 pt-4 sm:px-5 lg:hidden">
-                    <nav aria-label="Mobile navigation" class="flex flex-col gap-3 text-sm font-medium">
-                        <a href="#services" @click="mobileMenuOpen = false" class="min-h-[44px] flex items-center text-muted-foreground transition hover:text-foreground">Services</a>
-                        <a href="#portfolio" @click="mobileMenuOpen = false" class="min-h-[44px] flex items-center text-muted-foreground transition hover:text-foreground">Portfolio</a>
-                        <Link href="/pricing" @click="mobileMenuOpen = false" class="min-h-[44px] flex items-center text-muted-foreground transition hover:text-foreground">Pricing</Link>
-                        <button type="button" @click="mobileMenuOpen = false; showBrochureModal = true" class="min-h-[44px] text-muted-foreground transition hover:text-foreground flex items-center justify-between text-left">
-                            <span>2026 Price Book</span>
-                            <span class="rounded bg-sky-500/10 text-sky-700 dark:text-sky-400 text-[10px] font-bold px-2 py-0.5">PDF</span>
-                        </button>
-                        <Link href="/blog" @click="mobileMenuOpen = false" class="min-h-[44px] flex items-center text-muted-foreground transition hover:text-foreground">Blog</Link>
-                        <a href="#about" @click="mobileMenuOpen = false" class="min-h-[44px] flex items-center text-muted-foreground transition hover:text-foreground">About</a>
-                        <a href="#contact" @click="mobileMenuOpen = false" class="min-h-[44px] flex items-center text-muted-foreground transition hover:text-foreground">Contact</a>
-                        <button
-                            type="button"
-                            @click="mobileMenuOpen = false; showBookingModal = true"
-                            class="btn-primary w-full min-h-[44px] rounded-full py-3 text-center text-xs font-bold text-white mt-2 shadow-md cursor-pointer"
-                        >
-                            Schedule Architecture Session
-                        </button>
-                    </nav>
-                </div>
-            </Transition>
-        </header>
+        <SiteHeader
+            :is-home="true"
+            @open-booking="showBookingModal = true"
+            @open-brochure="showBrochureModal = true"
+        />
 
         <main id="main-content" class="mx-auto max-w-7xl px-4 sm:px-5 lg:px-8">
             <!-- 1. Hero Section -->

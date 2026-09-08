@@ -2,6 +2,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import SiteHeader from '@/Components/SiteHeader.vue';
 import { trackNewsletterSignup } from '@/utils/analytics';
 
 interface PostMeta {
@@ -95,18 +96,7 @@ async function handleSubscribe() {
         <div class="db-grid-overlay" />
 
         <!-- Header -->
-        <header class="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-md">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <ApplicationLogo :is-link="true" href="/" />
-                <nav aria-label="Primary navigation" class="flex items-center gap-4">
-                    <Link href="/" class="text-sm font-medium text-muted-foreground hover:text-foreground min-h-[44px] inline-flex items-center px-2">← Home</Link>
-                    <Link href="/pricing" class="hidden sm:inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground min-h-[44px] px-2">Pricing</Link>
-                    <Link href="/estimator" class="hidden rounded-full btn-primary px-4 py-2 min-h-[44px] text-xs font-semibold text-white sm:inline-flex items-center justify-center">
-                        Cost Estimator
-                    </Link>
-                </nav>
-            </div>
-        </header>
+        <SiteHeader active-route="/blog" />
 
         <main id="main-content" class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
             <!-- Hero -->

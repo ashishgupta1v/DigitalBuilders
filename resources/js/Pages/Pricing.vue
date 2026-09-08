@@ -5,6 +5,7 @@ import { detectUserRegion, REGIONS, type RegionMode, saveUserRegion } from '@/ut
 import CookieConsent from '@/Components/CookieConsent.vue';
 import StickyMobileCta from '@/Components/StickyMobileCta.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import SiteHeader from '@/Components/SiteHeader.vue';
 import { trackBrochureDownload, trackWhatsAppClick, trackPricingRegionViewed, trackTierSelected } from '@/utils/analytics';
 
 const page = usePage();
@@ -590,19 +591,7 @@ function getAddonPrice(addon: AddonModule): string {
         <div class="db-grid-overlay" />
 
         <!-- Header Navigation -->
-        <header class="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <ApplicationLogo :is-link="true" href="/" />
-                <nav aria-label="Primary navigation" class="flex items-center gap-3 sm:gap-5">
-                    <Link href="/#services" class="hidden text-xs font-semibold text-muted-foreground hover:text-foreground md:inline-flex items-center min-h-[44px] px-2 transition-colors">Services</Link>
-                    <Link href="/#portfolio" class="hidden text-xs font-semibold text-muted-foreground hover:text-foreground md:inline-flex items-center min-h-[44px] px-2 transition-colors">Portfolio</Link>
-                    <Link href="/estimator" class="text-xs font-semibold text-sky-600 dark:text-sky-400 hover:underline min-h-[44px] inline-flex items-center px-2">Estimator</Link>
-                    <Link href="/book" class="btn-primary inline-flex items-center justify-center rounded-full px-4 py-2 min-h-[44px] text-xs font-bold text-white shadow transition hover:scale-105">
-                        Book Discovery
-                    </Link>
-                </nav>
-            </div>
-        </header>
+        <SiteHeader active-route="/pricing" />
 
         <main id="main-content" class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
             <!-- Hero Header -->

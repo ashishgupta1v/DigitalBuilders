@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ProjectEstimator from '@/Components/ProjectEstimator.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import SiteHeader from '@/Components/SiteHeader.vue';
 import { Head, Link } from '@inertiajs/vue3';
 </script>
 
@@ -19,19 +20,8 @@ import { Head, Link } from '@inertiajs/vue3';
         <div class="db-progress" />
         <div class="db-grid-overlay" />
 
-        <!-- Simple Nav -->
-        <header class="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-md">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <ApplicationLogo :is-link="true" href="/" />
-                <nav aria-label="Primary navigation" class="flex items-center gap-4">
-                    <Link href="/pricing" class="text-xs font-semibold text-sky-700 dark:text-sky-400 hover:underline min-h-[44px] inline-flex items-center px-2">View Full Price Book</Link>
-                    <Link href="/" class="text-sm font-medium text-muted-foreground hover:text-foreground min-h-[44px] inline-flex items-center px-2">← Home</Link>
-                    <Link href="/book" class="hidden rounded-full btn-primary px-4 py-2 min-h-[44px] text-xs font-semibold text-white sm:inline-flex items-center justify-center">
-                        Book Consultation
-                    </Link>
-                </nav>
-            </div>
-        </header>
+        <!-- Header -->
+        <SiteHeader active-route="/estimator" />
 
         <main id="main-content" class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
             <div class="mb-10 text-center">

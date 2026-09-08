@@ -4,6 +4,7 @@ import { computed, onMounted, ref } from 'vue';
 import { detectUserRegion, REGIONS, type RegionMode, saveUserRegion } from '@/utils/geo';
 import StickyMobileCta from '@/Components/StickyMobileCta.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import SiteHeader from '@/Components/SiteHeader.vue';
 import CookieConsent from '@/Components/CookieConsent.vue';
 
 const page = usePage();
@@ -98,18 +99,8 @@ const breadcrumbSchema = {
         <div class="db-progress" />
         <div class="db-grid-overlay" />
 
-        <header class="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-md">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 sm:py-4 lg:px-8">
-                <ApplicationLogo :is-link="true" href="/" />
-                <nav aria-label="Primary navigation" class="flex items-center gap-4">
-                    <Link href="/" class="text-sm font-medium text-muted-foreground hover:text-foreground min-h-[44px] inline-flex items-center px-2">← Home</Link>
-                    <Link href="/pricing" class="hidden text-sm font-medium text-muted-foreground hover:text-foreground md:inline-flex items-center min-h-[44px] px-2">Pricing</Link>
-                    <Link href="/book" class="btn-primary inline-flex items-center justify-center rounded-full px-4 py-2 min-h-[44px] text-xs font-semibold text-white shadow transition hover:scale-105">
-                        Free Growth Check
-                    </Link>
-                </nav>
-            </div>
-        </header>
+        <!-- Header -->
+        <SiteHeader active-route="/services/growth" />
 
         <main id="main-content" class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
             <!-- Hero Section -->

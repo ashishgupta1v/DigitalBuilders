@@ -368,6 +368,9 @@
             (function() {
                 try {
                     var theme = localStorage.getItem('db-theme');
+                    if (!theme) {
+                        theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+                    }
                     if (theme === 'dark') {
                         document.documentElement.setAttribute('data-theme', 'dark');
                         document.documentElement.classList.add('dark');

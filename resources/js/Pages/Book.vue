@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import SiteHeader from '@/Components/SiteHeader.vue';
 import CookieConsent from '@/Components/CookieConsent.vue';
 import { trackEvent, trackWhatsAppClick, trackBookingCompleted, trackGrowthCheckBooked } from '@/utils/analytics';
 import { detectUserRegion, type RegionMode } from '@/utils/geo';
@@ -144,36 +145,7 @@ onMounted(() => {
         <div class="pointer-events-none absolute top-1/2 -right-40 w-96 h-96 bg-purple-500/10 blur-3xl" />
 
         <!-- Header -->
-        <header class="relative z-20 border-b border-border/80 bg-background/80 backdrop-blur-md">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-                <Link href="/" class="flex items-center gap-3 transition-opacity hover:opacity-90 min-h-[44px]">
-                    <ApplicationLogo class="h-9 w-auto" />
-                    <div class="flex flex-col">
-                        <span class="text-base font-black tracking-tight text-foreground">DigitalBuilders</span>
-                        <span class="text-[10px] uppercase font-mono tracking-widest text-muted-foreground">Architect Booking</span>
-                    </div>
-                </Link>
-
-                <div class="flex items-center gap-3">
-                    <Link
-                        href="/"
-                        class="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors px-3 py-2 rounded-xl hover:bg-secondary min-h-[44px]"
-                    >
-                        ← Back to Home
-                    </Link>
-                    <a
-                        href="https://wa.me/919087021592?text=Hi%20Ashish,%20I'd%20like%20to%20schedule%20an%20architecture%20consultation"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        @click="handleWhatsAppDirect"
-                        class="inline-flex items-center gap-2 rounded-xl bg-[#25d366]/15 hover:bg-[#25d366]/25 border border-[#25d366]/40 text-[#128c7e] dark:text-[#25d366] px-3.5 py-2 text-xs font-bold transition min-h-[44px]"
-                    >
-                        <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
-                        <span>WhatsApp Fast-Track</span>
-                    </a>
-                </div>
-            </div>
-        </header>
+        <SiteHeader active-route="/book" />
 
         <!-- Main Content -->
         <main id="main-content" class="relative z-10 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 flex-1">

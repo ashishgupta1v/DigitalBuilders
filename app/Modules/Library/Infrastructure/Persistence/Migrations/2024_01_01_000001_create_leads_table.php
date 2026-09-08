@@ -11,9 +11,9 @@ return new class extends Migration
         Schema::create('leads', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
-            $table->string('email', 255);
-            $table->string('phone', 20);
-            $table->string('project_type', 50);
+            $table->string('email', 255)->nullable();
+            $table->string('phone', 20)->nullable();
+            $table->string('project_type', 50)->nullable()->default('custom_software');
             $table->text('description')->nullable();
             $table->timestamps();
         });

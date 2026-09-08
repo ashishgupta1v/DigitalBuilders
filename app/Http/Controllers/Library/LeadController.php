@@ -47,16 +47,53 @@ class LeadController extends Controller
 
         // Enrich created LeadModel with growth CRM pipeline fields & UTM attribution
         if ($leadDTO->id) {
+            $estimatedVal = $validated['estimated_value'] ?? null;
+            $amount = 149000;
+            $currency = 'INR';
+            if ($estimatedVal) {
+                $numericVal = (float) preg_replace('/[^0-9.]/', '', $estimatedVal);
+                if ($numericVal > 0) $amount = $numericVal;
+                if (str_contains(strtoupper((string) $estimatedVal), '$') || str_contains(strtoupper((string) $estimatedVal), 'USD')) {
+                    $currency = 'USD';
+                }
+            }
+
+            $stage = $validated['stage'] ?? 'new';
+
             \App\Modules\Library\Infrastructure\Persistence\Models\LeadModel::where('id', $leadDTO->id)->update([
-                'source'          => $validated['source'] ?? 'contact',
-                'region'          => $validated['region'] ?? null,
-                'stage'           => $validated['stage'] ?? 'new',
-                'estimated_value' => $validated['estimated_value'] ?? null,
-                'utm_source'      => $validated['utm_source'] ?? null,
-                'utm_medium'      => $validated['utm_medium'] ?? null,
-                'utm_campaign'    => $validated['utm_campaign'] ?? null,
-                'utm_content'     => $validated['utm_content'] ?? null,
-                'utm_term'        => $validated['utm_term'] ?? null,
+                'source'           => $validated['source'] ?? 'website_contact',
+                'region'           => $validated['region'] ?? 'IN',
+                'stage'            => $stage,
+                'score'            => 75,
+                'touchpoint_count' => 0,
+                'next_action_date' => now(),
+                'next_action_note' => 'Send Touch 1 on WhatsApp',
+                'estimated_value'  => $estimatedVal,
+                'utm_source'       => $validated['utm_source'] ?? null,
+                'utm_medium'       => $validated['utm_medium'] ?? null,
+                'utm_campaign'     => $validated['utm_campaign'] ?? null,
+                'utm_content'      => $validated['utm_content'] ?? null,
+                'utm_term'         => $validated['utm_term'] ?? null,
+            ]);
+
+            $deal = \App\Models\Deal::create([
+                'title'               => $leadDTO->name . ' — ' . ($leadDTO->projectTypeLabel ?? 'Custom Solution'),
+                'lead_id'             => $leadDTO->id,
+                'amount'              => $amount,
+                'currency'            => $currency,
+                'stage'               => $stage,
+                'probability'         => \App\Models\Deal::DEFAULT_PROBABILITIES[$stage] ?? 15,
+                'expected_close_date' => now()->addDays(21),
+                'scope_summary'       => $validated['description'] ?? 'Inbound website inquiry',
+            ]);
+
+            \App\Models\Activity::create([
+                'lead_id'           => $leadDTO->id,
+                'deal_id'           => $deal->id,
+                'type'              => 'stage_change',
+                'subject'           => 'Website Inbound Inquiry Captured',
+                'description'       => "Project Type: {$leadDTO->projectTypeLabel}. Ingested into CRM with target value {$deal->formatted_amount}.",
+                'touchpoint_number' => 0,
             ]);
         }
 

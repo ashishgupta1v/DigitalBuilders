@@ -143,3 +143,7 @@ Route::prefix('library')->name('library.')->group(function () {
     Route::view('/privacy-policy', 'pages.privacy-policy')->name('privacy');
     Route::view('/terms-of-service', 'pages.terms-of-service')->name('terms');
 });
+
+// Executive CRM Routes
+require __DIR__ . '/crm.php';
+

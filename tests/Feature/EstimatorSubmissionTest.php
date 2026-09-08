@@ -79,4 +79,45 @@ class EstimatorSubmissionTest extends TestCase
             'email' => 'bot@spammer.com',
         ]);
     }
+
+    public function test_estimator_submission_auto_ingests_into_crm_pipeline_with_deal_and_scoring(): void
+    {
+        $response = $this->post(route('estimator.submit'), [
+            'name' => 'Rahul Sharma',
+            'email' => 'rahul@apextech.in',
+            'phone' => '+91 9811223344',
+            'project_type' => 'erp_crm',
+            'estimated_budget' => '₹2,50,000 - ₹3,50,000 (INR)',
+            'estimated_timeline' => '6 - 8 Weeks',
+            'features' => ['Enterprise ERP', 'Inventory Sync', 'WhatsApp Bots'],
+            'description' => 'Need custom ERP system for 3 warehouses and automated GST invoicing.',
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('leads', [
+            'name' => 'Rahul Sharma',
+            'email' => 'rahul@apextech.in',
+            'source' => 'estimator_calculator',
+            'segment' => 'manufacturer',
+            'stage' => 'new',
+        ]);
+
+        $lead = \App\Modules\Library\Infrastructure\Persistence\Models\LeadModel::where('email', 'rahul@apextech.in')->first();
+        $this->assertNotNull($lead);
+        $this->assertGreaterThanOrEqual(85, $lead->score);
+
+        $this->assertDatabaseHas('deals', [
+            'lead_id' => $lead->id,
+            'stage' => 'new',
+            'currency' => 'INR',
+            'amount' => 300000.00, // Average of 250k and 350k
+        ]);
+
+        $this->assertDatabaseHas('activities', [
+            'lead_id' => $lead->id,
+            'type' => 'stage_change',
+            'subject' => 'Estimator Inbound Lead Captured',
+        ]);
+    }
 }

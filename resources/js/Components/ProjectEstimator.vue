@@ -252,6 +252,13 @@ const form = useForm({
     _hp_company: '',
 });
 
+function onEstimatorPhoneBlur() {
+    let p = form.phone.trim().replace(/[^0-9+]/g, '');
+    if (p.length === 10 && !p.startsWith('+')) {
+        form.phone = `+91 ${p.substring(0, 5)} ${p.substring(5)}`;
+    }
+}
+
 const currentProjectTypeObj = computed(() =>
     PROJECT_TYPES.find((p) => p.id === selectedType.value) ?? PROJECT_TYPES[0]
 );
@@ -601,9 +608,12 @@ function formatMoney(val: number): string {
                     <h3 id="estimator-inquiry-modal-title" class="text-xl font-bold text-card-foreground">Submit Estimate Inquiry</h3>
                     <button @click="showLeadModal = false" aria-label="Close modal" class="text-muted-foreground hover:text-foreground cursor-pointer">✕</button>
                 </div>
-                <p class="mt-2 text-xs text-muted-foreground">
-                    We'll attach your configured estimate ({{ form.estimated_budget }}, {{ form.estimated_timeline }}) directly to your inquiry.
-                </p>
+                <div class="mt-3 p-3 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-xs text-sky-800 dark:text-sky-300 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-sky-500 animate-ping shrink-0"></span>
+                    <span class="font-medium">
+                        Direct to CRM Pipeline: <strong class="font-bold">{{ form.estimated_budget }}</strong> ({{ form.estimated_timeline }})
+                    </span>
+                </div>
 
                 <!-- Modal Error Alert Banner -->
                 <div
@@ -663,6 +673,7 @@ function formatMoney(val: number): string {
                             id="estimator-phone"
                             name="phone"
                             v-model="form.phone"
+                            @blur="onEstimatorPhoneBlur"
                             required
                             type="tel"
                             autocomplete="tel"
