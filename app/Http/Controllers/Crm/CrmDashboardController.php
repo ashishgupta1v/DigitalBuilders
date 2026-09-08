@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Crm;
 use App\Http\Controllers\Controller;
 use App\Models\Deal;
 use App\Models\Lead;
+use App\Models\MarketRequirement;
 use App\Models\Organization;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -168,6 +169,32 @@ class CrmDashboardController extends Controller
             ];
         }
 
+        $marketRequirements = MarketRequirement::query()
+            ->latest()
+            ->limit(20)
+            ->get()
+            ->map(function ($req) {
+                return [
+                    'id'               => $req->id,
+                    'source'           => $req->source,
+                    'title'            => $req->title,
+                    'raw_text'         => $req->raw_text,
+                    'budget'           => $req->formatted_amount,
+                    'currency'         => $req->currency,
+                    'contact_name'     => $req->contact_name,
+                    'contact_company'  => $req->contact_company,
+                    'contact_email'    => $req->contact_email,
+                    'contact_phone'    => $req->contact_phone,
+                    'location'         => $req->location,
+                    'matched_segment'  => $req->matched_segment,
+                    'relevance_score'  => (int) $req->relevance_score,
+                    'pitch_draft'      => $req->pitch_draft,
+                    'status'           => $req->status,
+                    'url'              => $req->metadata['url'] ?? $req->metadata['hn_url'] ?? null,
+                    'created_at'       => $req->created_at->diffForHumans(),
+                ];
+            });
+
         return Inertia::render('Crm/Dashboard', [
             'telemetry' => [
                 'total_pipeline_inr' => (float) $totalPipelineInr,
@@ -178,10 +205,11 @@ class CrmDashboardController extends Controller
                 'win_rate'           => $winRate,
                 'overdue_count'      => $overdueCount,
             ],
-            'action_queue'  => $actionQueue,
-            'stages'        => $groupedDeals,
-            'all_deals'     => $allDeals,
-            'filters'       => [
+            'action_queue'        => $actionQueue,
+            'market_requirements' => $marketRequirements,
+            'stages'              => $groupedDeals,
+            'all_deals'           => $allDeals,
+            'filters'             => [
                 'segment'  => $segment,
                 'currency' => $currency,
                 'search'   => $search,

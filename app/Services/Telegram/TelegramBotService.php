@@ -30,41 +30,54 @@ class TelegramBotService
         }
 
         $sourceLabel = match ($req->source) {
-            'indiamart' => '🇮🇳 IndiaMART Buy Lead',
-            'upwork'    => '🌍 Upwork Verified Job',
-            'job_board' => '💼 Tech Hiring Backlog',
-            default     => '⚡ Inbound / Market Feed',
+            'indiamart'      => '🇮🇳 IndiaMART Buy Lead',
+            'upwork'         => '🟢 Upwork Verified RFP',
+            'hackernews'     => '🟠 Hacker News (Founder RFP)',
+            'weworkremotely' => '💼 WeWorkRemotely (Contract)',
+            'remoteok'       => '🚀 RemoteOK (Funded Startup)',
+            'reddit'         => '🔴 Reddit (r/forhire)',
+            'job_board'      => '💼 Tech Hiring Backlog',
+            default          => '⚡ Inbound / Market Feed',
         };
 
         $budget = $req->formatted_amount;
         $name = htmlspecialchars((string) ($req->contact_name ?: 'Prospect'));
         $company = htmlspecialchars((string) ($req->contact_company ?: 'Direct Buyer'));
-        $location = htmlspecialchars((string) ($req->location ?: 'India'));
+        $location = htmlspecialchars((string) ($req->location ?: 'Global'));
         $caseStudy = htmlspecialchars((string) ($pitchData['case_study'] ?? 'DigitalBuilders'));
 
-        $text = "🎯 *NEW HIGH-INTENT REQUIREMENT*\n"
+        $proposalPreview = $pitchData['upwork_proposal'] ?? $pitchData['reddit_dm'] ?? $pitchData['short_pitch'];
+
+        $text = "🎯 *NEW HIGH-INTENT INTERNATIONAL RFP*\n"
             . "━━━━━━━━━━━━━━━━━━━━\n"
             . "• *Source:* {$sourceLabel}\n"
-            . "• *Client:* {$name} ({$company})\n"
+            . "• *Client:* {$name}" . ($company !== 'Direct Buyer' ? " ({$company})" : "") . "\n"
             . "• *Location:* {$location}\n"
             . "• *Budget Band:* `{$budget}`\n"
             . "• *Matched Proof:* `{$caseStudy}`\n\n"
             . "📋 *Raw Requirement:*\n"
             . "_{$req->raw_text}_\n\n"
-            . "✍️ *Generated Pitch Preview:*\n"
-            . "```\n" . substr($pitchData['short_pitch'], 0, 350) . "...\n```";
+            . "✍️ *One-Click Copyable Pitch:*\n"
+            . "```\n" . substr($proposalPreview, 0, 500) . "\n```";
 
         $crmUrl = url('/crm');
+        $originUrl = $req->metadata['url'] ?? $req->metadata['hn_url'] ?? null;
+
+        $actionRow = [
+            ['text' => '🚀 Approve & Mark Pitched', 'callback_data' => "req:approve:{$req->id}"],
+            ['text' => '❌ Skip', 'callback_data' => "req:skip:{$req->id}"],
+        ];
+
+        $linksRow = [];
+        if ($originUrl) {
+            $linksRow[] = ['text' => '🔗 Open Original Post', 'url' => $originUrl];
+        }
+        $linksRow[] = ['text' => '📊 Open CRM Cockpit', 'url' => $crmUrl];
 
         $keyboard = [
             'inline_keyboard' => [
-                [
-                    ['text' => '🚀 Approve & Send Pitch', 'callback_data' => "req:approve:{$req->id}"],
-                    ['text' => '❌ Skip / Pass', 'callback_data' => "req:skip:{$req->id}"],
-                ],
-                [
-                    ['text' => '📊 Open Executive CRM', 'url' => $crmUrl],
-                ],
+                $actionRow,
+                $linksRow,
             ],
         ];
 

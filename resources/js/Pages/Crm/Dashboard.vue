@@ -4,7 +4,8 @@ import { Head, router, Link } from '@inertiajs/vue3'
 import {
   TrendingUp, Users, DollarSign, AlertCircle, Plus, Upload, Search,
   Filter, LayoutGrid, List, MessageSquare, LogOut, CheckCircle2,
-  Sparkles, ExternalLink, ShieldAlert, ArrowRight, Building2, Check, Clock, X
+  Sparkles, ExternalLink, ShieldAlert, ArrowRight, Building2, Check, Clock, X,
+  Globe, Copy
 } from 'lucide-vue-next'
 
 import KanbanColumn from '@/Components/Crm/KanbanColumn.vue'
@@ -26,6 +27,7 @@ const props = defineProps<{
     overdue_count: number
   }
   action_queue: any[]
+  market_requirements?: any[]
   stages: Record<string, any>
   all_deals: any[]
   filters: {
@@ -69,6 +71,22 @@ const dismissedQueueIds = ref<number[]>([])
 const activeQueue = computed(() => {
   return props.action_queue.filter(item => !dismissedQueueIds.value.includes(item.id))
 })
+
+// 24/7 International RFP Stream State & Actions
+const showGlobalRfps = ref(true)
+const copiedReqId = ref<number | null>(null)
+const copyReqPitch = async (req: any) => {
+  if (!req.pitch_draft) return
+  try {
+    await navigator.clipboard.writeText(req.pitch_draft)
+    copiedReqId.value = req.id
+    setTimeout(() => {
+      if (copiedReqId.value === req.id) copiedReqId.value = null
+    }, 2500)
+  } catch (err) {
+    console.error('Failed to copy pitch: ', err)
+  }
+}
 
 // Modals & Drawer State
 const selectedDealId = ref<number | null>(null)
@@ -459,6 +477,99 @@ const getStageBadgeClass = (stage: string) => {
                   <Check class="w-3.5 h-3.5" />
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2.5. 24/7 International Lead Hunter & Global RFP Stream -->
+      <div v-if="market_requirements && market_requirements.length > 0" class="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-purple-50/90 via-white to-sky-50/90 dark:from-purple-950/20 dark:via-slate-900/90 dark:to-cyan-950/20 border border-purple-200 dark:border-purple-500/20 shadow-sm dark:shadow-xl">
+        <div class="flex items-center justify-between gap-2 mb-3">
+          <div class="flex items-center gap-2 sm:gap-2.5">
+            <Globe class="w-4 h-4 text-purple-600 dark:text-purple-400 animate-pulse shrink-0" />
+            <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider truncate">
+              24/7 International Lead Hunter (Hacker News • WeWorkRemotely • RemoteOK • Reddit)
+            </h3>
+            <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-700 dark:text-purple-400 font-bold border border-purple-500/20 shrink-0">
+              {{ market_requirements.length }} Qualified RFPs
+            </span>
+          </div>
+          <button
+            type="button"
+            @click="showGlobalRfps = !showGlobalRfps"
+            class="text-xs font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition cursor-pointer"
+          >
+            {{ showGlobalRfps ? 'Hide Stream' : 'Show Stream' }}
+          </button>
+        </div>
+
+        <div v-if="showGlobalRfps" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 max-h-[440px] overflow-y-auto custom-scrollbar p-1">
+          <div
+            v-for="req in market_requirements"
+            :key="req.id"
+            class="p-3.5 rounded-xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-500/40 shadow-sm transition-all flex flex-col justify-between"
+          >
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span
+                  class="text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase tracking-wider shrink-0"
+                  :class="{
+                    'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20': req.source === 'hackernews',
+                    'bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border-indigo-500/20': req.source === 'weworkremotely',
+                    'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20': req.source === 'remoteok',
+                    'bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20': req.source === 'upwork',
+                    'bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20': req.source === 'reddit',
+                    'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300': !['hackernews', 'weworkremotely', 'remoteok', 'upwork', 'reddit'].includes(req.source)
+                  }"
+                >
+                  {{ req.source }}
+                </span>
+                <span class="text-xs font-mono font-extrabold text-purple-600 dark:text-purple-300 tabular-nums">
+                  {{ req.budget }}
+                </span>
+              </div>
+
+              <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 line-clamp-1 mb-1">
+                {{ req.title }}
+              </h4>
+
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-3 mb-2.5 leading-relaxed">
+                {{ req.raw_text }}
+              </p>
+
+              <div class="flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500 font-medium mb-3">
+                <span>{{ req.location }}</span>
+                <span>•</span>
+                <span class="text-emerald-600 dark:text-emerald-400 font-semibold">{{ req.relevance_score }}/100 Match</span>
+                <span>•</span>
+                <span>{{ req.created_at }}</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+              <button
+                type="button"
+                @click="copyReqPitch(req)"
+                class="flex-1 inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer"
+                :class="copiedReqId === req.id
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-purple-600 hover:bg-purple-700 text-white shadow-sm'"
+              >
+                <Check v-if="copiedReqId === req.id" class="w-3.5 h-3.5" />
+                <Copy v-else class="w-3.5 h-3.5" />
+                <span>{{ copiedReqId === req.id ? 'Copied Pitch!' : 'Copy USD Pitch' }}</span>
+              </button>
+
+              <a
+                v-if="req.url"
+                :href="req.url"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="View original job post"
+                class="inline-flex items-center justify-center p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition"
+              >
+                <ExternalLink class="w-3.5 h-3.5" />
+              </a>
             </div>
           </div>
         </div>

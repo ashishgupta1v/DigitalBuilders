@@ -138,16 +138,17 @@ class AiPitchGeneratorService
         $timeline = '4 to 6 weeks';
         $budgetRange = $isUsd ? '$4,500 – $8,500' : '₹1.5L – ₹3.5L';
 
-        // 1. WhatsApp / Short Pitch (Punchy, 4-5 sentences, human, no fluff)
+        // 1. WhatsApp / Short Pitch (Punchy, 4-5 sentences, human, no fluff, Dual CTA)
         $shortPitch = "Hi {$greetingName},\n\n"
             . "I'm Ashish, founder and lead architect at DigitalBuilders. Saw your requirement{$companyContext}.\n\n"
             . "{$case['hook']}\n\n"
             . "For your scope, we can ship a production Phase 1 in {$timeline} (typically {$budgetRange}, fixed price with 100% source code ownership and 60 days warranty).\n\n"
             . "Would you like to see a live architecture diagram or 5-min demo of how we built this?\n\n"
-            . "You can pick a 15-min slot directly on my calendar: https://www.digitalbuilders.in/book\n"
-            . "Or feel free to reply right here with your preferred time.";
+            . "• Pick a 15-min slot on my calendar: https://www.digitalbuilders.in/book\n"
+            . "• Or run an instant sprint estimate: https://www.digitalbuilders.in/estimator\n"
+            . "Feel free to reply right here with your preferred time.";
 
-        // 2. Email Pitch (Detailed, structured, authoritative)
+        // 2. Email Pitch (Detailed, structured, authoritative, Dual CTA)
         $subject = "Architecture & Timeline Proposal for {$greetingName}" . ($company ? " — {$company}" : '');
         $emailPitch = "Hi {$greetingName},\n\n"
             . "I hope you are doing well.\n\n"
@@ -164,21 +165,48 @@ class AiPitchGeneratorService
             . "• Estimated Investment Band: {$budgetRange} (Fixed Milestone Pricing)\n"
             . "• IP & Code Ownership: 100% transferred to you upon completion\n"
             . "• Post-Launch Warranty: 60 days dedicated bug-fix and deployment support included\n\n"
-            . "If this aligns with your vision, you can book a 15-minute technical discovery session directly on my calendar here: https://www.digitalbuilders.in/book\n\n"
+            . "### Next Steps:\n"
+            . "1. Book a 15-minute technical discovery session directly on my calendar: https://www.digitalbuilders.in/book\n"
+            . "2. Or configure your feature scope and generate an instant PDF sprint breakdown: https://www.digitalbuilders.in/estimator\n\n"
             . "Looking forward to building together.\n\n"
             . "Best regards,\n"
             . "Ashish Gupta\n"
             . "Founder & Lead Architect — DigitalBuilders\n"
             . "Direct: +91 90870 21592 | https://www.digitalbuilders.in";
 
+        // 3. Upwork / International RFP Proposal (Under 180 words, punchy, Dual CTA)
+        $upworkProposal = "Hi {$greetingName},\n\n"
+            . "I'm Ashish, founder and lead architect at DigitalBuilders (https://www.digitalbuilders.in). Saw your requirement{$companyContext}.\n\n"
+            . "Here is how we recently solved this exact challenge:\n"
+            . "• Client: {$case['client']} ({$case['location']})\n"
+            . "• Solution: {$case['solution']}\n"
+            . "• Verified Result: {$case['metric']}\n"
+            . "• Case Proof: {$case['proof_url']}\n\n"
+            . "For your scope, we can engineer and ship Phase 1 in {$timeline} (typically {$budgetRange} fixed-price milestone with 100% source code ownership and 60 days warranty included).\n\n"
+            . "Next Steps & Dual CTA:\n"
+            . "1. Book a 15-min discovery call (auto-converts to your timezone): https://www.digitalbuilders.in/book\n"
+            . "2. Or calculate your exact feature scope and sprint estimate instantly: https://www.digitalbuilders.in/estimator\n\n"
+            . "Happy to answer any technical questions right here.\n"
+            . "Best,\nAshish Gupta | Lead Architect, DigitalBuilders";
+
+        // 4. Reddit DM / Quick Outreach Note
+        $redditDm = "Hey {$greetingName} — saw your post regarding your project{$companyContext}.\n\n"
+            . "I'm Ashish, founder at DigitalBuilders (https://www.digitalbuilders.in). {$case['hook']}\n\n"
+            . "We can take this from spec to production in {$timeline} with clean architecture, 100% code ownership, and fixed milestone pricing.\n\n"
+            . "• Check our live work and grab a 15-min chat: https://www.digitalbuilders.in/book\n"
+            . "• Or run your feature list through our sprint cost calculator: https://www.digitalbuilders.in/estimator\n\n"
+            . "Let me know if you'd like to connect!";
+
         return [
-            'segment'      => $segment,
-            'case_study'   => $case['client'],
-            'short_pitch'  => $shortPitch,
-            'email_pitch'  => $emailPitch,
-            'email_subject'=> $subject,
-            'budget_range' => $budgetRange,
-            'timeline'     => $timeline,
+            'segment'         => $segment,
+            'case_study'      => $case['client'],
+            'short_pitch'     => $shortPitch,
+            'email_pitch'     => $emailPitch,
+            'email_subject'   => $subject,
+            'upwork_proposal' => $upworkProposal,
+            'reddit_dm'       => $redditDm,
+            'budget_range'    => $budgetRange,
+            'timeline'        => $timeline,
         ];
     }
 }
