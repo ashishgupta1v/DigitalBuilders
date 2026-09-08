@@ -4,33 +4,38 @@
 # ==============================================================================
 set -e
 
-APP_DIR="/var/www/digitalbuilders"
+APP_DIR="/var/www/DigitalBuilders"
 cd "$APP_DIR"
 
-echo ">>> [1/6] Pulling latest code from GitHub main..."
+echo ">>> [1/7] Pulling latest code from GitHub main..."
 git fetch origin main
 git reset --hard origin/main
 
-echo ">>> [2/6] Installing PHP production dependencies..."
+echo ">>> [2/7] Installing PHP production dependencies..."
 composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
-echo ">>> [3/6] Installing Node dependencies and building Vite assets..."
+echo ">>> [3/7] Installing Node dependencies and building Vite assets..."
 npm ci --silent
 npm run build
 
-echo ">>> [4/6] Running database migrations..."
+echo ">>> [4/7] Ensuring storage links and file permissions..."
+php artisan storage:link || true
+chown -R www-data:www-data "$APP_DIR"
+chmod -R 775 "$APP_DIR/storage" "$APP_DIR/bootstrap/cache"
+
+echo ">>> [5/7] Running database migrations..."
 php artisan migrate --force
 
-echo ">>> [5/6] Caching configuration, routes, and compiled views..."
+echo ">>> [6/7] Caching configuration, routes, and compiled views..."
 php artisan optimize:clear
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-echo ">>> [6/6] Restarting Supervisor background queue workers & Nginx..."
+echo ">>> [7/7] Restarting DigitalBuilders Supervisor workers & reloading Nginx..."
 supervisorctl reread
 supervisorctl update
-supervisorctl restart all
+supervisorctl restart digitalbuilders-worker:* || supervisorctl start digitalbuilders-worker:*
 systemctl reload nginx
 
 echo "=============================================================================="

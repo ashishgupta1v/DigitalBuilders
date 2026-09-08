@@ -41,4 +41,32 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    'openai' => [
+        'api_key' => env('OPENAI_API_KEY'),
+        'model' => env('OPENAI_MODEL', 'gpt-4o-mini'),
+    ],
+
+    'telegram' => [
+        'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+        'chat_id' => env('TELEGRAM_CHAT_ID'),
+    ],
+
+    'indiamart' => [
+        'webhook_secret' => env('INDIAMART_WEBHOOK_SECRET'),
+    ],
+
+    'razorpay' => [
+        'key_id' => env('RAZORPAY_KEY_ID'),
+        'key_secret' => env('RAZORPAY_KEY_SECRET'),
+    ],
+
+    'stripe' => [
+        'secret_key' => env('STRIPE_SECRET_KEY'),
+    ],
+
+    'crm' => [
+        'webhook_secret' => env('CRM_WEBHOOK_SECRET'),
+        'upwork_feed_url' => env('UPWORK_RSS_FEED_URL'),
+    ],
+
 ];
