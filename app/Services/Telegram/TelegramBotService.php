@@ -35,6 +35,8 @@ class TelegramBotService
             'hackernews'     => '🟠 Hacker News (Founder RFP)',
             'weworkremotely' => '💼 WeWorkRemotely (Contract)',
             'remoteok'       => '🚀 RemoteOK (Funded Startup)',
+            'remotive'       => '🌐 Remotive (Software RFP)',
+            'himalayas'      => '🏔️ Himalayas (Tech Contract)',
             'reddit'         => '🔴 Reddit (r/forhire)',
             'job_board'      => '💼 Tech Hiring Backlog',
             default          => '⚡ Inbound / Market Feed',

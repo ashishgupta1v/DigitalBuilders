@@ -517,9 +517,11 @@ const getStageBadgeClass = (stage: string) => {
                     'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20': req.source === 'hackernews',
                     'bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border-indigo-500/20': req.source === 'weworkremotely',
                     'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20': req.source === 'remoteok',
+                    'bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border-cyan-500/20': req.source === 'remotive',
+                    'bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/20': req.source === 'himalayas',
                     'bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20': req.source === 'upwork',
                     'bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20': req.source === 'reddit',
-                    'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300': !['hackernews', 'weworkremotely', 'remoteok', 'upwork', 'reddit'].includes(req.source)
+                    'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300': !['hackernews', 'weworkremotely', 'remoteok', 'remotive', 'himalayas', 'upwork', 'reddit'].includes(req.source)
                   }"
                 >
                   {{ req.source }}

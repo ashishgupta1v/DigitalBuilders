@@ -24,6 +24,8 @@ class PollMarketRequirementsCommand extends Command
                 ['Hacker News (Seeking Freelancer)', $stats['hn']],
                 ['WeWorkRemotely (Full-Stack / Contracts)', $stats['weworkremotely']],
                 ['RemoteOK (Funded Startups)', $stats['remoteok']],
+                ['Remotive (Global Software RFPs)', $stats['remotive']],
+                ['Himalayas (International Dev Contracts)', $stats['himalayas']],
                 ['Upwork (Personal RSS Stream)', $stats['upwork']],
                 ['Reddit (r/forhire & r/freelance_forhire)', $stats['reddit']],
                 ['Total Newly Ingested', $stats['total']],

@@ -45,6 +45,8 @@ class InternationalLeadScraperService
             'hn'             => $this->pollHackerNews(),
             'weworkremotely' => $this->pollWeWorkRemotely(),
             'remoteok'       => $this->pollRemoteOk(),
+            'remotive'       => $this->pollRemotive(),
+            'himalayas'      => $this->pollHimalayas(),
             'upwork'         => $this->pollUpwork(),
             'reddit'         => $this->pollReddit(),
         ];
@@ -320,6 +322,182 @@ class InternationalLeadScraperService
             }
         } catch (\Throwable $e) {
             Log::warning('RemoteOK polling exception: ' . $e->getMessage());
+        }
+
+        return $ingested;
+    }
+
+    /**
+     * Poll Remotive public API for international software engineering and contract RFPs.
+     */
+    public function pollRemotive(): int
+    {
+        $ingested = 0;
+
+        try {
+            $response = Http::timeout(12)->withHeaders([
+                'User-Agent' => 'DigitalBuilders/1.0 (LeadHunter; founder@digitalbuilders.in)',
+            ])->get('https://remotive.com/api/remote-jobs', [
+                'category' => 'software-dev',
+                'limit'    => 20,
+            ]);
+
+            if (!$response->successful()) {
+                return 0;
+            }
+
+            $jobs = $response->json('jobs') ?? [];
+            if (!is_array($jobs)) {
+                return 0;
+            }
+
+            foreach ($jobs as $job) {
+                $id = (string) ($job['id'] ?? '');
+                $title = (string) ($job['title'] ?? '');
+                $company = (string) ($job['company_name'] ?? '');
+                $description = strip_tags((string) ($job['description'] ?? ''));
+                $url = (string) ($job['url'] ?? '');
+                $salary = (string) ($job['salary'] ?? '');
+                $location = (string) ($job['candidate_required_location'] ?? 'Remote (Global)');
+
+                if (!$id || !$title || MarketRequirement::where('source', 'remotive')->where('external_id', $id)->exists()) {
+                    continue;
+                }
+
+                $fullText = "{$title} at {$company}. {$description}";
+                if (!$this->passesTier1Filters($fullText)) {
+                    continue;
+                }
+
+                $isRelevant = preg_match('/\b(vue|react|laravel|full-stack|fullstack|node|python|mobile|pwa|mvp|ai|saas|api|web|architect)\b/i', $fullText);
+                if (!$isRelevant) {
+                    continue;
+                }
+
+                $budget = $this->extractBudget($salary . ' ' . $description, '$5,000 – $12,000');
+                $score = $this->pitchGenerator->scoreRelevance($fullText, $budget['raw'], null, null);
+                if ($score < 55) {
+                    continue;
+                }
+
+                $pitchData = $this->pitchGenerator->generatePitch($fullText, null, $company, 'USD');
+
+                $req = MarketRequirement::create([
+                    'source'           => 'remotive',
+                    'external_id'      => $id,
+                    'title'            => substr("Remotive: {$title} — {$company}", 0, 190),
+                    'raw_text'         => substr($description, 0, 3000),
+                    'budget_raw'       => $budget['raw'],
+                    'estimated_amount' => min($budget['amount'], 18000.00),
+                    'currency'         => 'USD',
+                    'contact_company'  => $company,
+                    'location'         => $location,
+                    'matched_segment'  => $pitchData['segment'],
+                    'relevance_score'  => $score,
+                    'pitch_draft'      => $pitchData['email_pitch'],
+                    'status'           => 'qualified',
+                    'metadata'         => [
+                        'url'     => $url,
+                        'company' => $company,
+                    ],
+                ]);
+
+                $this->telegramBot->sendOpportunityAlert($req, $pitchData);
+                $ingested++;
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Remotive polling exception: ' . $e->getMessage());
+        }
+
+        return $ingested;
+    }
+
+    /**
+     * Poll Himalayas public API for international remote developer and contract roles.
+     */
+    public function pollHimalayas(): int
+    {
+        $ingested = 0;
+
+        try {
+            $response = Http::timeout(12)->withHeaders([
+                'User-Agent' => 'DigitalBuilders/1.0 (LeadHunter; founder@digitalbuilders.in)',
+            ])->get('https://himalayas.app/jobs/api', [
+                'limit' => 20,
+            ]);
+
+            if (!$response->successful()) {
+                return 0;
+            }
+
+            $jobs = $response->json('jobs') ?? [];
+            if (!is_array($jobs)) {
+                return 0;
+            }
+
+            foreach ($jobs as $job) {
+                $guid = (string) ($job['guid'] ?? $job['applicationLink'] ?? '');
+                $title = (string) ($job['title'] ?? '');
+                $company = (string) ($job['companyName'] ?? '');
+                $description = strip_tags((string) ($job['description'] ?? ''));
+                $url = (string) ($job['applicationLink'] ?? '');
+
+                if (!$guid || !$title || MarketRequirement::where('source', 'himalayas')->where('external_id', $guid)->exists()) {
+                    continue;
+                }
+
+                $fullText = "{$title} at {$company}. {$description}";
+                if (!$this->passesTier1Filters($fullText)) {
+                    continue;
+                }
+
+                $isRelevant = preg_match('/\b(vue|react|laravel|full-stack|fullstack|node|python|mobile|pwa|mvp|ai|saas|developer|engineer|software)\b/i', $fullText);
+                if (!$isRelevant) {
+                    continue;
+                }
+
+                $minSalary = (float) ($job['minSalary'] ?? 0);
+                $maxSalary = (float) ($job['maxSalary'] ?? 0);
+                $budgetRaw = '$6,000 – $14,000';
+                $amount = 8000.00;
+
+                if ($minSalary > 0 && $maxSalary > 0) {
+                    $budgetRaw = '$' . number_format($minSalary) . ' – $' . number_format($maxSalary);
+                    $amount = round(($minSalary + $maxSalary) / 2);
+                }
+
+                $score = $this->pitchGenerator->scoreRelevance($fullText, $budgetRaw, null, null);
+                if ($score < 55) {
+                    continue;
+                }
+
+                $pitchData = $this->pitchGenerator->generatePitch($fullText, null, $company, 'USD');
+
+                $req = MarketRequirement::create([
+                    'source'           => 'himalayas',
+                    'external_id'      => substr($guid, 0, 190),
+                    'title'            => substr("Himalayas: {$title} — {$company}", 0, 190),
+                    'raw_text'         => substr($description, 0, 3000),
+                    'budget_raw'       => $budgetRaw,
+                    'estimated_amount' => min($amount, 20000.00),
+                    'currency'         => 'USD',
+                    'contact_company'  => $company,
+                    'location'         => 'Remote (Global)',
+                    'matched_segment'  => $pitchData['segment'],
+                    'relevance_score'  => $score,
+                    'pitch_draft'      => $pitchData['email_pitch'],
+                    'status'           => 'qualified',
+                    'metadata'         => [
+                        'url'     => $url,
+                        'company' => $company,
+                    ],
+                ]);
+
+                $this->telegramBot->sendOpportunityAlert($req, $pitchData);
+                $ingested++;
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Himalayas polling exception: ' . $e->getMessage());
         }
 
         return $ingested;

@@ -92,11 +92,83 @@ class InternationalLeadFunnelTest extends TestCase
         ]);
     }
 
+    public function test_remotive_polling_ingests_and_notifies(): void
+    {
+        Http::fake([
+            'https://remotive.com/api/remote-jobs*' => Http::response([
+                'jobs' => [
+                    [
+                        'id'                          => 771122,
+                        'title'                       => 'Senior Full Stack Laravel & Vue Architect',
+                        'company_name'                => 'SaaS Rocket Ltd',
+                        'candidate_required_location' => 'USA / Europe Remote',
+                        'salary'                      => '$8,000 - $12,000 monthly',
+                        'description'                 => 'We are looking for an expert fullstack software engineer to scale our cloud SaaS platform built on Laravel and Vue.js.',
+                        'url'                         => 'https://remotive.com/job/771122',
+                    ]
+                ]
+            ], 200),
+            'https://api.telegram.org/*' => Http::response(['ok' => true], 200),
+        ]);
+
+        $pitchGenerator = new AiPitchGeneratorService();
+        $telegramBot = new TelegramBotService();
+        $scraper = new InternationalLeadScraperService($pitchGenerator, $telegramBot);
+
+        $ingested = $scraper->pollRemotive();
+
+        $this->assertEquals(1, $ingested);
+        $this->assertDatabaseHas('market_requirements', [
+            'source'          => 'remotive',
+            'external_id'     => '771122',
+            'contact_company' => 'SaaS Rocket Ltd',
+            'currency'        => 'USD',
+            'status'          => 'qualified',
+        ]);
+    }
+
+    public function test_himalayas_polling_ingests_and_notifies(): void
+    {
+        Http::fake([
+            'https://himalayas.app/jobs/api*' => Http::response([
+                'jobs' => [
+                    [
+                        'guid'            => 'https://himalayas.app/jobs/himalaya-mock-99',
+                        'applicationLink' => 'https://himalayas.app/jobs/himalaya-mock-99',
+                        'title'           => 'Fullstack Web App Developer',
+                        'companyName'     => 'Atlas Global',
+                        'minSalary'       => 7000,
+                        'maxSalary'       => 15000,
+                        'description'     => 'Seeking contract full-stack developer with Vue, TypeScript and Node experience to build customer dashboard.',
+                    ]
+                ]
+            ], 200),
+            'https://api.telegram.org/*' => Http::response(['ok' => true], 200),
+        ]);
+
+        $pitchGenerator = new AiPitchGeneratorService();
+        $telegramBot = new TelegramBotService();
+        $scraper = new InternationalLeadScraperService($pitchGenerator, $telegramBot);
+
+        $ingested = $scraper->pollHimalayas();
+
+        $this->assertEquals(1, $ingested);
+        $this->assertDatabaseHas('market_requirements', [
+            'source'          => 'himalayas',
+            'external_id'     => 'https://himalayas.app/jobs/himalaya-mock-99',
+            'contact_company' => 'Atlas Global',
+            'currency'        => 'USD',
+            'status'          => 'qualified',
+        ]);
+    }
+
     public function test_poll_market_requirements_command_executes(): void
     {
         Http::fake([
-            'https://hn.algolia.com/*' => Http::response(['hits' => []], 200),
-            'https://remoteok.com/*'   => Http::response([], 200),
+            'https://hn.algolia.com/*'     => Http::response(['hits' => []], 200),
+            'https://remoteok.com/*'       => Http::response([], 200),
+            'https://remotive.com/*'       => Http::response(['jobs' => []], 200),
+            'https://himalayas.app/*'      => Http::response(['jobs' => []], 200),
             'https://weworkremotely.com/*' => Http::response('', 200),
         ]);
 
