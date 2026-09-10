@@ -118,6 +118,9 @@ class Deal extends Model
 
     public function getFormattedAmountAttribute(): string
     {
+        if ((float) $this->amount <= 0) {
+            return '—';
+        }
         if (strtoupper((string) $this->currency) === 'USD') {
             return '$' . number_format((float) $this->amount, 0);
         }
@@ -126,6 +129,9 @@ class Deal extends Model
 
     public function getFormattedAmountPaidAttribute(): string
     {
+        if ((float) $this->amount_paid <= 0) {
+            return '—';
+        }
         if (strtoupper((string) $this->currency) === 'USD') {
             return '$' . number_format((float) $this->amount_paid, 0);
         }

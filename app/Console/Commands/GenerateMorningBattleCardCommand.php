@@ -27,7 +27,8 @@ class GenerateMorningBattleCardCommand extends Command
         // Overdue Follow-ups
         $overdueLeads = Lead::whereNotNull('next_action_date')
             ->where('next_action_date', '<=', now()->endOfDay())
-            ->whereNotIn('stage', ['won', 'lost'])
+            ->whereNotIn('stage', ['closed_won', 'closed_lost', 'won', 'lost', 'converted'])
+            ->whereNotIn('status', ['converted', 'archived'])
             ->orderBy('next_action_date', 'asc')
             ->limit(5)
             ->get();

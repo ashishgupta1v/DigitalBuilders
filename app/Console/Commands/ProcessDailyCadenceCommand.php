@@ -18,7 +18,8 @@ class ProcessDailyCadenceCommand extends Command
 
         $leadsNeedingAction = Lead::whereNotNull('next_action_date')
             ->where('next_action_date', '<=', now())
-            ->whereNotIn('stage', ['won', 'lost', 'converted'])
+            ->whereNotIn('stage', ['closed_won', 'closed_lost', 'won', 'lost', 'converted'])
+            ->whereNotIn('status', ['converted', 'archived'])
             ->get();
 
         $count = 0;

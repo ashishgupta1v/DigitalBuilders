@@ -21,12 +21,12 @@ const form = useForm({
   email: '',
   segment: 'manufacturer',
   stage: 'new',
-  project_type: 'Custom ERP & Mobile Ordering App',
-  deal_amount: 249000,
+  project_type: '',
+  deal_amount: null as number | null,
   currency: 'INR',
   pricing_tier: 'growth',
   description: '',
-  score: 75,
+  score: 60,
 })
 
 watch(
@@ -47,30 +47,18 @@ const onPhoneBlur = () => {
 }
 
 const onSegmentChange = () => {
-  if (form.segment === 'manufacturer') {
-    form.project_type = 'Custom ERP & Mobile Ordering App'
-    form.deal_amount = 379000
-    form.currency = 'INR'
-  } else if (form.segment === 'retail') {
-    form.project_type = 'E-Commerce Store & WhatsApp UPI Catalog'
-    form.deal_amount = 169000
-    form.currency = 'INR'
-  } else if (form.segment === 'clinic') {
-    form.project_type = 'Telehealth Booking & WhatsApp Reminder Portal'
-    form.deal_amount = 149000
-    form.currency = 'INR'
-  } else if (form.segment === 'coaching') {
-    form.project_type = 'Attendance & WhatsApp Fee Collection App'
-    form.deal_amount = 199000
-    form.currency = 'INR'
-  } else if (form.segment === 'startup') {
-    form.project_type = 'Full-Stack MVP Platform (Vue/Laravel)'
-    form.deal_amount = 149000
-    form.currency = 'INR'
-  } else if (form.segment === 'international') {
-    form.project_type = 'High-Throughput SaaS Monolith (Laravel/Vue)'
-    form.deal_amount = 6500
+  if (form.segment === 'international') {
     form.currency = 'USD'
+    if (!form.project_type) form.project_type = 'High-Throughput Web App'
+  } else {
+    form.currency = 'INR'
+    if (!form.project_type) {
+      if (form.segment === 'manufacturer') form.project_type = 'Custom ERP & Mobile Ordering App'
+      else if (form.segment === 'retail') form.project_type = 'E-Commerce Store & Catalog'
+      else if (form.segment === 'clinic') form.project_type = 'Clinic Booking & Reminder Portal'
+      else if (form.segment === 'coaching') form.project_type = 'Attendance & Fee Management App'
+      else if (form.segment === 'startup') form.project_type = 'Full-Stack MVP Platform'
+    }
   }
 }
 
@@ -194,6 +182,7 @@ const submit = () => {
               v-model="form.deal_amount"
               type="number"
               min="0"
+              placeholder="e.g. 150000"
               class="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-xl text-slate-900 dark:text-slate-200 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
             />
           </div>

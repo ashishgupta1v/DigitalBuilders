@@ -161,14 +161,18 @@ class CrmLeadController extends Controller
 
             // Calculate starting qualification score
             $score = $validated['score'] ?? 60;
-            $dealAmount = (float) ($validated['deal_amount'] ?? 149000);
+            $dealAmount = isset($validated['deal_amount']) && $validated['deal_amount'] !== '' && (float) $validated['deal_amount'] > 0 
+                ? (float) $validated['deal_amount'] 
+                : 0.0;
             $currency = $validated['currency'] ?? ($validated['segment'] === 'international' ? 'USD' : 'INR');
             $initialStage = $validated['stage'] ?? 'new';
 
-            if ($currency === 'INR' && $dealAmount >= 249000) {
-                $score += 15;
-            } elseif ($currency === 'USD' && $dealAmount >= 5000) {
-                $score += 20;
+            if ($dealAmount > 0) {
+                if ($currency === 'INR' && $dealAmount >= 249000) {
+                    $score += 15;
+                } elseif ($currency === 'USD' && $dealAmount >= 5000) {
+                    $score += 20;
+                }
             }
 
             $lead = Lead::create([
@@ -176,7 +180,7 @@ class CrmLeadController extends Controller
                 'name'              => $validated['name'],
                 'company'           => $validated['company'] ?? null,
                 'role_title'        => $validated['role_title'] ?? null,
-                'email'             => $validated['email'] ?? 'pending-' . uniqid() . '@lead.local',
+                'email'             => $validated['email'] ?? null,
                 'phone'             => $validated['phone'],
                 'project_type'      => $validated['project_type'] ?? 'Custom Architecture & Software',
                 'segment'           => $validated['segment'],
@@ -186,7 +190,7 @@ class CrmLeadController extends Controller
                 'score'             => min(100, $score),
                 'touchpoint_count'  => 0,
                 'next_action_date'  => now(),
-                'next_action_note'  => 'Send Touch 1 on WhatsApp',
+                'next_action_note'  => 'Send Touch 1 Outreach',
                 'description'       => $validated['description'] ?? null,
             ]);
 
@@ -291,13 +295,12 @@ class CrmLeadController extends Controller
                 }
 
                 $name = trim($row[$nameIdx]);
-                $phone = ($phoneIdx !== false && isset($row[$phoneIdx])) ? trim($row[$phoneIdx]) : '+91 00000 00000';
+                $phone = ($phoneIdx !== false && isset($row[$phoneIdx]) && trim($row[$phoneIdx]) !== '') ? trim($row[$phoneIdx]) : null;
                 $email = ($emailIdx !== false && isset($row[$emailIdx]) && filter_var(trim($row[$emailIdx]), FILTER_VALIDATE_EMAIL)) 
                     ? trim($row[$emailIdx]) 
-                    : 'prospect-' . uniqid() . '@outreach.local';
-                $company = ($companyIdx !== false && isset($row[$companyIdx])) ? trim($row[$companyIdx]) : null;
-                $amount = ($amountIdx !== false && isset($row[$amountIdx])) ? (float) preg_replace('/[^0-9.]/', '', $row[$amountIdx]) : 199000;
-                if ($amount <= 0) $amount = 199000;
+                    : null;
+                $company = ($companyIdx !== false && isset($row[$companyIdx]) && trim($row[$companyIdx]) !== '') ? trim($row[$companyIdx]) : null;
+                $amount = ($amountIdx !== false && isset($row[$amountIdx])) ? (float) preg_replace('/[^0-9.]/', '', $row[$amountIdx]) : 0.0;
 
                 $segment = $request->input('segment', 'manufacturer');
                 $currency = ($segment === 'international') ? 'USD' : 'INR';
@@ -306,7 +309,7 @@ class CrmLeadController extends Controller
                 if ($company) {
                     $org = Organization::firstOrCreate(
                         ['name' => $company],
-                        ['industry' => $segment, 'phone' => $phone]
+                        ['industry' => $segment, 'phone' => $phone, 'email' => $email]
                     );
                     $orgId = $org->id;
                 }
@@ -317,7 +320,7 @@ class CrmLeadController extends Controller
                     'company'          => $company,
                     'email'            => $email,
                     'phone'            => $phone,
-                    'project_type'     => 'Custom ERP / Software System',
+                    'project_type'     => 'Custom Software System',
                     'segment'          => $segment,
                     'source'           => 'csv_import',
                     'status'           => 'new',
@@ -325,7 +328,7 @@ class CrmLeadController extends Controller
                     'score'            => 65,
                     'touchpoint_count' => 0,
                     'next_action_date' => now(),
-                    'next_action_note' => 'Touch 1: Send WhatsApp Intro & Garg Case Study',
+                    'next_action_note' => 'Touch 1: Send Value Proposition & Portfolio',
                 ]);
 
                 Deal::create([
@@ -371,7 +374,9 @@ class CrmLeadController extends Controller
 
         $segment = $validated['segment'] ?? 'general';
         $currency = $validated['currency'] ?? ($segment === 'international' ? 'USD' : 'INR');
-        $dealAmount = (float) ($validated['deal_amount'] ?? 149000);
+        $dealAmount = isset($validated['deal_amount']) && $validated['deal_amount'] !== '' && (float) $validated['deal_amount'] > 0 
+            ? (float) $validated['deal_amount'] 
+            : 0.0;
 
         return DB::transaction(function () use ($validated, $segment, $currency, $dealAmount) {
             $orgId = null;
@@ -388,7 +393,7 @@ class CrmLeadController extends Controller
                 'name'              => $validated['name'],
                 'company'           => $validated['company'] ?? null,
                 'role_title'        => $validated['role_title'] ?? null,
-                'email'             => $validated['email'] ?? 'webhook-' . uniqid() . '@inbound.local',
+                'email'             => $validated['email'] ?? null,
                 'phone'             => $validated['phone'],
                 'project_type'      => $validated['project_type'] ?? 'External Webhook Ingestion',
                 'segment'           => $segment,
@@ -398,7 +403,7 @@ class CrmLeadController extends Controller
                 'score'             => 70,
                 'touchpoint_count'  => 0,
                 'next_action_date'  => now(),
-                'next_action_note'  => 'Send Touch 1 on WhatsApp',
+                'next_action_note'  => 'Send Touch 1 Outreach',
                 'description'       => $validated['notes'] ?? null,
             ]);
 
