@@ -162,8 +162,26 @@ badgeTests.forEach(t => {
 console.log('\n[4] Scanning Codebase for Banned Low-Contrast Patterns...');
 
 const bannedPatterns = [
-    { pattern: /text-\[#1a2231\]/g, name: 'Raw #1a2231 text color (dark gray on dark gradients)' },
-    { pattern: /text-slate-700/g, name: 'Hardcoded text-slate-700 without dark variant' },
+    {
+        name: 'Raw #1a2231 text color (dark gray on dark gradients)',
+        check: (content) => {
+            const matches = content.match(/text-\[#1a2231\]/g);
+            return matches ? matches.length : 0;
+        }
+    },
+    {
+        name: 'Hardcoded text-slate-700 without dark variant',
+        check: (content) => {
+            const lines = content.split('\n');
+            let count = 0;
+            for (const line of lines) {
+                if (line.includes('text-slate-700') && !line.includes('dark:')) {
+                    count++;
+                }
+            }
+            return count;
+        }
+    },
 ];
 
 function scanDirectory(dir) {
@@ -175,10 +193,10 @@ function scanDirectory(dir) {
             results.push(...scanDirectory(fullPath));
         } else if (entry.isFile() && (entry.name.endsWith('.vue') || entry.name.endsWith('.ts'))) {
             const content = fs.readFileSync(fullPath, 'utf8');
-            for (const { pattern, name } of bannedPatterns) {
-                const matches = content.match(pattern);
-                if (matches) {
-                    results.push({ file: path.relative(process.cwd(), fullPath), name, count: matches.length });
+            for (const { name, check } of bannedPatterns) {
+                const count = check(content);
+                if (count > 0) {
+                    results.push({ file: path.relative(process.cwd(), fullPath), name, count });
                 }
             }
         }
