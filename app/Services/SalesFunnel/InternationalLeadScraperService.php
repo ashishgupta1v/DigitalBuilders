@@ -50,6 +50,13 @@ class InternationalLeadScraperService
         'desenvolvedor',
         'desenvolvedora',
         'estágio',
+        'mule esb',
+        'network engineer',
+        'solutions consultant',
+        'w2 only',
+        '401k',
+        'healthcare benefits',
+        'relocation assistance',
     ];
 
     public function __construct(
@@ -64,11 +71,11 @@ class InternationalLeadScraperService
     {
         $stats = [
             'hn'             => $this->pollHackerNews(),
+            'upwork'         => $this->pollUpwork(),
             'weworkremotely' => $this->pollWeWorkRemotely(),
             'remoteok'       => $this->pollRemoteOk(),
             'remotive'       => $this->pollRemotive(),
             'himalayas'      => $this->pollHimalayas(),
-            'upwork'         => $this->pollUpwork(),
             'reddit'         => $this->pollReddit(),
         ];
 
@@ -84,11 +91,10 @@ class InternationalLeadScraperService
         $ingested = 0;
 
         try {
-            // Query live comments matching high-intent freelance and hiring tags
             $url = 'https://hn.algolia.com/api/v1/search_by_date?' . http_build_query([
                 'tags'        => 'comment',
-                'query'       => 'SEEKING FREELANCER OR contractor OR "hire developer"',
-                'hitsPerPage' => 15,
+                'query'       => 'SEEKING FREELANCER OR "hire developer" OR "contract developer" OR "freelance project"',
+                'hitsPerPage' => 20,
             ]);
 
             $response = Http::timeout(10)->get($url);
@@ -100,9 +106,9 @@ class InternationalLeadScraperService
             foreach ($hits as $hit) {
                 $commentId = (string) ($hit['objectID'] ?? '');
                 $rawText = (string) ($hit['comment_text'] ?? '');
-                $cleanText = strip_tags(html_entity_decode($rawText, ENT_QUOTES | ENT_HTML5));
+                $cleanText = trim(html_entity_decode(strip_tags($rawText), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
                 $author = (string) ($hit['author'] ?? 'HN Founder');
-                $storyTitle = (string) ($hit['story_title'] ?? 'Hacker News');
+                $storyTitle = trim(html_entity_decode((string) ($hit['story_title'] ?? 'Hacker News'), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
 
                 if (!$commentId || strlen($cleanText) < 60) {
                     continue;
@@ -116,37 +122,42 @@ class InternationalLeadScraperService
                     continue;
                 }
 
-                $budget = $this->extractBudget($cleanText, '$3,500 – $8,000');
-                $score = $this->pitchGenerator->scoreRelevance($cleanText, $budget['raw'], null, null);
-                if ($score < 55) {
-                    continue;
-                }
-
                 // Extract company or email if present
                 preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $cleanText, $emailMatches);
                 $extractedEmail = $emailMatches[0] ?? null;
 
-                $pitchData = $this->pitchGenerator->generatePitch($cleanText, $author, null, 'USD');
+                $budget = $this->extractBudget($cleanText, '$4,000 – $8,000');
+                $score = $this->pitchGenerator->scoreRelevance($cleanText, $budget['raw'], null, $extractedEmail);
+                if ($score < 50) {
+                    continue;
+                }
+
+                $pitchData = $this->pitchGenerator->generateAiPitch($cleanText, $author, null, 'hackernews', 'USD', $budget['raw']);
 
                 $req = MarketRequirement::create([
                     'source'           => 'hackernews',
                     'external_id'      => $commentId,
-                    'title'            => substr("HN RFP: {$storyTitle} (by {$author})", 0, 190),
+                    'title'            => substr("HN: {$storyTitle} (by {$author})", 0, 190),
                     'raw_text'         => $cleanText,
                     'budget_raw'       => $budget['raw'],
-                    'estimated_amount' => $budget['amount'],
+                    'estimated_amount' => $pitchData['estimated_amount'] ?? $budget['amount'],
                     'currency'         => 'USD',
                     'contact_name'     => $author,
                     'contact_email'    => $extractedEmail,
-                    'location'         => 'Global (Hacker News)',
+                    'location'         => 'Remote (US/Global)',
                     'matched_segment'  => $pitchData['segment'],
-                    'relevance_score'  => $score,
+                    'relevance_score'  => $pitchData['relevance_score'] ?? $score,
                     'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
                     'status'           => 'qualified',
                     'metadata'         => [
-                        'hn_url'     => "https://news.ycombinator.com/item?id={$commentId}",
-                        'author'     => $author,
-                        'story_id'   => $hit['story_id'] ?? null,
+                        'hn_url'                  => "https://news.ycombinator.com/item?id={$commentId}",
+                        'author'                  => $author,
+                        'story_id'                => $hit['story_id'] ?? null,
+                        'email_pitch'             => $pitchData['email_pitch'] ?? null,
+                        'email_subject'           => $pitchData['email_subject'] ?? null,
+                        'linkedin_dm'             => $pitchData['linkedin_dm'] ?? null,
+                        'detected_tech_stack'     => $pitchData['detected_tech_stack'] ?? [],
+                        'suggested_architecture'  => $pitchData['suggested_architecture'] ?? null,
                     ],
                 ]);
 
@@ -161,7 +172,91 @@ class InternationalLeadScraperService
     }
 
     /**
-     * Poll WeWorkRemotely RSS feeds for full-stack, front-end, and back-end contracts.
+     * Poll Upwork RSS feed or public search feeds.
+     */
+    public function pollUpwork(): int
+    {
+        $feedUrl = config('services.crm.upwork_feed_url') ?? env('UPWORK_RSS_FEED_URL');
+        // If not configured, use curated public query for Vue, React, Laravel, MVP contract search
+        if (!$feedUrl) {
+            $feedUrl = 'https://www.upwork.com/ab/feed/jobs/rss?q=full+stack+OR+laravel+OR+vue+OR+react+OR+mvp+OR+saas&sort=recency';
+        }
+
+        $ingested = 0;
+
+        try {
+            $response = Http::timeout(12)->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept'     => 'application/rss+xml, application/xml, text/xml',
+            ])->get($feedUrl);
+
+            if (!$response->successful()) {
+                return 0;
+            }
+
+            $xml = @simplexml_load_string($response->body());
+            if (!$xml || !isset($xml->channel->item)) {
+                return 0;
+            }
+
+            foreach ($xml->channel->item as $item) {
+                $link = (string) $item->link;
+                $title = trim(html_entity_decode((string) $item->title, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $description = trim(html_entity_decode(strip_tags((string) $item->description), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $guid = (string) ($item->guid ?: md5($link));
+
+                if (MarketRequirement::where('source', 'upwork')->where('external_id', $guid)->exists()) {
+                    continue;
+                }
+
+                $fullText = "{$title}\n\n{$description}";
+                if (!$this->passesTier1Filters($fullText)) {
+                    continue;
+                }
+
+                $budget = $this->extractBudget($fullText, '$3,500 – $8,000');
+                $score = $this->pitchGenerator->scoreRelevance($fullText, $budget['raw'], null, null);
+                if ($score < 50) {
+                    continue;
+                }
+
+                $pitchData = $this->pitchGenerator->generateAiPitch($fullText, null, null, 'upwork', 'USD', $budget['raw']);
+
+                $req = MarketRequirement::create([
+                    'source'           => 'upwork',
+                    'external_id'      => $guid,
+                    'title'            => substr("Upwork: {$title}", 0, 190),
+                    'raw_text'         => substr($description, 0, 3000),
+                    'budget_raw'       => $budget['raw'],
+                    'estimated_amount' => $pitchData['estimated_amount'] ?? $budget['amount'],
+                    'currency'         => 'USD',
+                    'location'         => 'Remote (Upwork Global)',
+                    'matched_segment'  => $pitchData['segment'],
+                    'relevance_score'  => $pitchData['relevance_score'] ?? $score,
+                    'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
+                    'status'           => 'qualified',
+                    'metadata'         => [
+                        'url'                     => $link,
+                        'email_pitch'             => $pitchData['email_pitch'] ?? null,
+                        'email_subject'           => $pitchData['email_subject'] ?? null,
+                        'linkedin_dm'             => $pitchData['linkedin_dm'] ?? null,
+                        'detected_tech_stack'     => $pitchData['detected_tech_stack'] ?? [],
+                        'suggested_architecture'  => $pitchData['suggested_architecture'] ?? null,
+                    ],
+                ]);
+
+                $this->telegramBot->sendOpportunityAlert($req, $pitchData);
+                $ingested++;
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Upwork polling exception: ' . $e->getMessage());
+        }
+
+        return $ingested;
+    }
+
+    /**
+     * Poll WeWorkRemotely RSS feeds strictly for contract/freelance scopes.
      */
     public function pollWeWorkRemotely(): int
     {
@@ -188,11 +283,17 @@ class InternationalLeadScraperService
 
                 foreach ($xml->channel->item as $item) {
                     $link = (string) $item->link;
-                    $title = (string) $item->title;
-                    $description = strip_tags((string) $item->description);
+                    $title = trim(html_entity_decode((string) $item->title, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                    $description = trim(html_entity_decode(strip_tags((string) $item->description), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
                     $guid = (string) ($item->guid ?: md5($link));
 
                     if (MarketRequirement::where('source', 'weworkremotely')->where('external_id', $guid)->exists()) {
+                        continue;
+                    }
+
+                    // Strict contract requirement: Skip permanent full-time employment
+                    $isContract = preg_match('/\b(contract|contractor|freelance|part-time|consultant|project|mvp)\b/i', $title . ' ' . $description);
+                    if (!$isContract) {
                         continue;
                     }
 
@@ -200,45 +301,42 @@ class InternationalLeadScraperService
                         continue;
                     }
 
-                    // Look for contract/freelance or high-value contract opportunities
-                    $isContract = preg_match('/\b(contract|contractor|freelance|part-time|consultant|project)\b/i', $title . ' ' . $description);
-                    if (!$isContract) {
-                        // Skip permanent full-time employment listings without contract scope
-                        continue;
-                    }
-
                     $budget = $this->extractBudget($description, '$5,000 – $10,000');
                     $score = $this->pitchGenerator->scoreRelevance($description, $budget['raw'], null, null);
-                    if ($score < 55) {
+                    if ($score < 50) {
                         continue;
                     }
 
-                    // Extract company from "Company Name: Job Title" format common in WWR
                     $company = null;
                     if (str_contains($title, ':')) {
                         [$company, ] = explode(':', $title, 2);
                         $company = trim($company);
                     }
 
-                    $pitchData = $this->pitchGenerator->generatePitch($description, null, $company, 'USD');
+                    $pitchData = $this->pitchGenerator->generateAiPitch($description, null, $company, 'weworkremotely', 'USD', $budget['raw']);
 
                     $req = MarketRequirement::create([
                         'source'           => 'weworkremotely',
                         'external_id'      => $guid,
-                        'title'            => substr("WWR: {$title}", 0, 190),
-                        'raw_text'         => $description,
+                        'title'            => substr("WWR Contract: {$title}", 0, 190),
+                        'raw_text'         => substr($description, 0, 3000),
                         'budget_raw'       => $budget['raw'],
-                        'estimated_amount' => $budget['amount'],
+                        'estimated_amount' => $pitchData['estimated_amount'] ?? $budget['amount'],
                         'currency'         => 'USD',
                         'contact_company'  => $company,
-                        'location'         => 'Remote (Global)',
+                        'location'         => 'Remote (US/EU/Global)',
                         'matched_segment'  => $pitchData['segment'],
-                        'relevance_score'  => $score,
-                        'pitch_draft'      => $pitchData['email_pitch'] ?? $pitchData['short_pitch'],
+                        'relevance_score'  => $pitchData['relevance_score'] ?? $score,
+                        'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
                         'status'           => 'qualified',
                         'metadata'         => [
-                            'url'     => $link,
-                            'company' => $company,
+                            'url'                     => $link,
+                            'company'                 => $company,
+                            'email_pitch'             => $pitchData['email_pitch'] ?? null,
+                            'email_subject'           => $pitchData['email_subject'] ?? null,
+                            'linkedin_dm'             => $pitchData['linkedin_dm'] ?? null,
+                            'detected_tech_stack'     => $pitchData['detected_tech_stack'] ?? [],
+                            'suggested_architecture'  => $pitchData['suggested_architecture'] ?? null,
                         ],
                     ]);
 
@@ -254,7 +352,7 @@ class InternationalLeadScraperService
     }
 
     /**
-     * Poll RemoteOK API for funded tech startups with engineering contracts.
+     * Poll RemoteOK API strictly for contract / freelance roles.
      */
     public function pollRemoteOk(): int
     {
@@ -274,14 +372,13 @@ class InternationalLeadScraperService
                 return 0;
             }
 
-            // Slice top 30 freshest jobs (index 0 is API metadata)
             $items = array_slice($jobs, 1, 30);
 
             foreach ($items as $job) {
                 $id = (string) ($job['id'] ?? '');
-                $position = (string) ($job['position'] ?? '');
-                $company = (string) ($job['company'] ?? '');
-                $description = strip_tags((string) ($job['description'] ?? ''));
+                $position = trim(html_entity_decode((string) ($job['position'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $company = trim(html_entity_decode((string) ($job['company'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $description = trim(html_entity_decode(strip_tags((string) ($job['description'] ?? '')), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
                 $url = (string) ($job['url'] ?? '');
                 $tags = implode(', ', (array) ($job['tags'] ?? []));
                 $location = (string) ($job['location'] ?? 'Remote (Global)');
@@ -291,18 +388,19 @@ class InternationalLeadScraperService
                 }
 
                 $fullText = "{$position} at {$company}. Tags: {$tags}. {$description}";
-                if (!$this->passesTier1Filters($fullText)) {
+
+                // Strict contract / freelance requirement
+                if (!preg_match('/\b(contract|contractor|freelance|consultant|project|mvp|part-time)\b/i', $fullText)) {
                     continue;
                 }
 
-                $isRelevant = preg_match('/\b(vue|react|laravel|full-stack|fullstack|node|python|mobile|pwa|mvp|ai|saas)\b/i', $fullText);
-                if (!$isRelevant) {
+                if (!$this->passesTier1Filters($fullText)) {
                     continue;
                 }
 
                 $salaryMin = (float) ($job['salary_min'] ?? 0);
                 $salaryMax = (float) ($job['salary_max'] ?? 0);
-                $budgetRaw = '$4,000 – $9,000';
+                $budgetRaw = '$5,000 – $10,000';
                 $amount = 6500.00;
 
                 if ($salaryMin > 0 && $salaryMax > 0) {
@@ -311,16 +409,16 @@ class InternationalLeadScraperService
                 }
 
                 $score = $this->pitchGenerator->scoreRelevance($fullText, $budgetRaw, null, null);
-                if ($score < 55) {
+                if ($score < 50) {
                     continue;
                 }
 
-                $pitchData = $this->pitchGenerator->generatePitch($fullText, null, $company, 'USD');
+                $pitchData = $this->pitchGenerator->generateAiPitch($fullText, null, $company, 'remoteok', 'USD', $budgetRaw);
 
                 $req = MarketRequirement::create([
                     'source'           => 'remoteok',
                     'external_id'      => $id,
-                    'title'            => substr("RemoteOK: {$position} — {$company}", 0, 190),
+                    'title'            => substr("RemoteOK Contract: {$position} — {$company}", 0, 190),
                     'raw_text'         => substr($description, 0, 3000),
                     'budget_raw'       => $budgetRaw,
                     'estimated_amount' => min($amount, 15000.00),
@@ -328,13 +426,18 @@ class InternationalLeadScraperService
                     'contact_company'  => $company,
                     'location'         => $location,
                     'matched_segment'  => $pitchData['segment'],
-                    'relevance_score'  => $score,
-                    'pitch_draft'      => $pitchData['email_pitch'],
+                    'relevance_score'  => $pitchData['relevance_score'] ?? $score,
+                    'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
                     'status'           => 'qualified',
                     'metadata'         => [
-                        'url'     => $url,
-                        'company' => $company,
-                        'tags'    => $job['tags'] ?? [],
+                        'url'                     => $url,
+                        'company'                 => $company,
+                        'tags'                    => $job['tags'] ?? [],
+                        'email_pitch'             => $pitchData['email_pitch'] ?? null,
+                        'email_subject'           => $pitchData['email_subject'] ?? null,
+                        'linkedin_dm'             => $pitchData['linkedin_dm'] ?? null,
+                        'detected_tech_stack'     => $pitchData['detected_tech_stack'] ?? [],
+                        'suggested_architecture'  => $pitchData['suggested_architecture'] ?? null,
                     ],
                 ]);
 
@@ -349,7 +452,7 @@ class InternationalLeadScraperService
     }
 
     /**
-     * Poll Remotive public API for international software engineering and contract RFPs.
+     * Poll Remotive API strictly for contract / freelance roles.
      */
     public function pollRemotive(): int
     {
@@ -360,7 +463,7 @@ class InternationalLeadScraperService
                 'User-Agent' => 'DigitalBuilders/1.0 (LeadHunter; founder@digitalbuilders.in)',
             ])->get('https://remotive.com/api/remote-jobs', [
                 'category' => 'software-dev',
-                'limit'    => 20,
+                'limit'    => 25,
             ]);
 
             if (!$response->successful()) {
@@ -374,11 +477,12 @@ class InternationalLeadScraperService
 
             foreach ($jobs as $job) {
                 $id = (string) ($job['id'] ?? '');
-                $title = (string) ($job['title'] ?? '');
-                $company = (string) ($job['company_name'] ?? '');
-                $description = strip_tags((string) ($job['description'] ?? ''));
+                $title = trim(html_entity_decode((string) ($job['title'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $company = trim(html_entity_decode((string) ($job['company_name'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $description = trim(html_entity_decode(strip_tags((string) ($job['description'] ?? '')), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
                 $url = (string) ($job['url'] ?? '');
                 $salary = (string) ($job['salary'] ?? '');
+                $jobType = strtolower((string) ($job['job_type'] ?? ''));
                 $location = (string) ($job['candidate_required_location'] ?? 'Remote (Global)');
 
                 if (!$id || !$title || MarketRequirement::where('source', 'remotive')->where('external_id', $id)->exists()) {
@@ -386,27 +490,29 @@ class InternationalLeadScraperService
                 }
 
                 $fullText = "{$title} at {$company}. {$description}";
-                if (!$this->passesTier1Filters($fullText)) {
+
+                // Strict contract / freelance requirement
+                $isContract = ($jobType === 'contract' || $jobType === 'freelance' || preg_match('/\b(contract|contractor|freelance|consultant|project|mvp)\b/i', $fullText));
+                if (!$isContract) {
                     continue;
                 }
 
-                $isRelevant = preg_match('/\b(vue|react|laravel|full-stack|fullstack|node|python|mobile|pwa|mvp|ai|saas|api|web|architect)\b/i', $fullText);
-                if (!$isRelevant) {
+                if (!$this->passesTier1Filters($fullText)) {
                     continue;
                 }
 
                 $budget = $this->extractBudget($salary . ' ' . $description, '$5,000 – $12,000');
                 $score = $this->pitchGenerator->scoreRelevance($fullText, $budget['raw'], null, null);
-                if ($score < 55) {
+                if ($score < 50) {
                     continue;
                 }
 
-                $pitchData = $this->pitchGenerator->generatePitch($fullText, null, $company, 'USD');
+                $pitchData = $this->pitchGenerator->generateAiPitch($fullText, null, $company, 'remotive', 'USD', $budget['raw']);
 
                 $req = MarketRequirement::create([
                     'source'           => 'remotive',
                     'external_id'      => $id,
-                    'title'            => substr("Remotive: {$title} — {$company}", 0, 190),
+                    'title'            => substr("Remotive Contract: {$title} — {$company}", 0, 190),
                     'raw_text'         => substr($description, 0, 3000),
                     'budget_raw'       => $budget['raw'],
                     'estimated_amount' => min($budget['amount'], 18000.00),
@@ -414,12 +520,17 @@ class InternationalLeadScraperService
                     'contact_company'  => $company,
                     'location'         => $location,
                     'matched_segment'  => $pitchData['segment'],
-                    'relevance_score'  => $score,
-                    'pitch_draft'      => $pitchData['email_pitch'],
+                    'relevance_score'  => $pitchData['relevance_score'] ?? $score,
+                    'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
                     'status'           => 'qualified',
                     'metadata'         => [
-                        'url'     => $url,
-                        'company' => $company,
+                        'url'                     => $url,
+                        'company'                 => $company,
+                        'email_pitch'             => $pitchData['email_pitch'] ?? null,
+                        'email_subject'           => $pitchData['email_subject'] ?? null,
+                        'linkedin_dm'             => $pitchData['linkedin_dm'] ?? null,
+                        'detected_tech_stack'     => $pitchData['detected_tech_stack'] ?? [],
+                        'suggested_architecture'  => $pitchData['suggested_architecture'] ?? null,
                     ],
                 ]);
 
@@ -434,7 +545,7 @@ class InternationalLeadScraperService
     }
 
     /**
-     * Poll Himalayas public API for international remote developer and contract roles.
+     * Poll Himalayas public API strictly for contract / freelance developer roles.
      */
     public function pollHimalayas(): int
     {
@@ -444,7 +555,7 @@ class InternationalLeadScraperService
             $response = Http::timeout(12)->withHeaders([
                 'User-Agent' => 'DigitalBuilders/1.0 (LeadHunter; founder@digitalbuilders.in)',
             ])->get('https://himalayas.app/jobs/api', [
-                'limit' => 20,
+                'limit' => 25,
             ]);
 
             if (!$response->successful()) {
@@ -467,24 +578,14 @@ class InternationalLeadScraperService
                     continue;
                 }
 
-                // Deduplicate by clean title across recent requirements
-                if (MarketRequirement::where('title', 'like', "%{$cleanTitle}%")->exists()) {
-                    continue;
-                }
-
-                // Exclude Portuguese / foreign language postings
-                if (preg_match('/\b(vaga|afirmativa|remoto|pleno|sênior|júnior|desenvolvedor|desenvolvedora|estágio|clt|pj)\b/i', $cleanTitle . ' ' . $cleanDescription)) {
-                    continue;
-                }
-
                 $fullText = "{$cleanTitle} at {$cleanCompany}. {$cleanDescription}";
-                if (!$this->passesTier1Filters($fullText)) {
+
+                // Strict contract filter
+                if (!preg_match('/\b(contract|contractor|freelance|consultant|project|mvp|part-time)\b/i', $fullText)) {
                     continue;
                 }
 
-                // Must explicitly target our core product & web engineering capabilities
-                $isRelevant = preg_match('/\b(vue|react|next|laravel|php|full-stack|fullstack|node|python|django|fastapi|pwa|mvp|saas|portal|crm|erp|architect)\b/i', $cleanTitle);
-                if (!$isRelevant) {
+                if (!$this->passesTier1Filters($fullText)) {
                     continue;
                 }
 
@@ -499,11 +600,11 @@ class InternationalLeadScraperService
                 }
 
                 $score = $this->pitchGenerator->scoreRelevance($fullText, $budgetRaw, null, null);
-                if ($score < 55) {
+                if ($score < 50) {
                     continue;
                 }
 
-                $pitchData = $this->pitchGenerator->generatePitch($fullText, null, $cleanCompany, 'USD');
+                $pitchData = $this->pitchGenerator->generateAiPitch($fullText, null, $cleanCompany, 'himalayas', 'USD', $budgetRaw);
 
                 $req = MarketRequirement::create([
                     'source'           => 'himalayas',
@@ -516,12 +617,17 @@ class InternationalLeadScraperService
                     'contact_company'  => $cleanCompany,
                     'location'         => 'Remote (Global)',
                     'matched_segment'  => $pitchData['segment'],
-                    'relevance_score'  => $score,
-                    'pitch_draft'      => $pitchData['email_pitch'],
+                    'relevance_score'  => $pitchData['relevance_score'] ?? $score,
+                    'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
                     'status'           => 'qualified',
                     'metadata'         => [
-                        'url'     => $url,
-                        'company' => $cleanCompany,
+                        'url'                     => $url,
+                        'company'                 => $cleanCompany,
+                        'email_pitch'             => $pitchData['email_pitch'] ?? null,
+                        'email_subject'           => $pitchData['email_subject'] ?? null,
+                        'linkedin_dm'             => $pitchData['linkedin_dm'] ?? null,
+                        'detected_tech_stack'     => $pitchData['detected_tech_stack'] ?? [],
+                        'suggested_architecture'  => $pitchData['suggested_architecture'] ?? null,
                     ],
                 ]);
 
@@ -536,78 +642,7 @@ class InternationalLeadScraperService
     }
 
     /**
-     * Poll Upwork personal RSS feed if configured.
-     */
-    public function pollUpwork(): int
-    {
-        $feedUrl = config('services.crm.upwork_feed_url') ?? env('UPWORK_RSS_FEED_URL');
-        if (!$feedUrl) {
-            return 0;
-        }
-
-        $ingested = 0;
-
-        try {
-            $response = Http::timeout(12)->get($feedUrl);
-            if (!$response->successful()) {
-                return 0;
-            }
-
-            $xml = @simplexml_load_string($response->body());
-            if (!$xml || !isset($xml->channel->item)) {
-                return 0;
-            }
-
-            foreach ($xml->channel->item as $item) {
-                $link = (string) $item->link;
-                $title = (string) $item->title;
-                $description = strip_tags((string) $item->description);
-                $guid = (string) ($item->guid ?: md5($link));
-
-                if (MarketRequirement::where('source', 'upwork')->where('external_id', $guid)->exists()) {
-                    continue;
-                }
-
-                if (!$this->passesTier1Filters($title . ' ' . $description)) {
-                    continue;
-                }
-
-                $budget = $this->extractBudget($description, '$3,000 – $8,000');
-                $score = $this->pitchGenerator->scoreRelevance($description, $budget['raw'], null, null);
-                if ($score < 55) {
-                    continue;
-                }
-
-                $pitchData = $this->pitchGenerator->generatePitch($description, null, null, 'USD');
-
-                $req = MarketRequirement::create([
-                    'source'           => 'upwork',
-                    'external_id'      => $guid,
-                    'title'            => substr("Upwork: {$title}", 0, 190),
-                    'raw_text'         => $description,
-                    'budget_raw'       => $budget['raw'],
-                    'estimated_amount' => $budget['amount'],
-                    'currency'         => 'USD',
-                    'location'         => 'Global (Upwork)',
-                    'matched_segment'  => $pitchData['segment'],
-                    'relevance_score'  => $score,
-                    'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
-                    'status'           => 'qualified',
-                    'metadata'         => ['url' => $link],
-                ]);
-
-                $this->telegramBot->sendOpportunityAlert($req, $pitchData);
-                $ingested++;
-            }
-        } catch (\Throwable $e) {
-            Log::warning('Upwork polling exception: ' . $e->getMessage());
-        }
-
-        return $ingested;
-    }
-
-    /**
-     * Poll Reddit r/forhire and r/freelance_forhire if credentials or access configured.
+     * Poll Reddit r/forhire and r/freelance_forhire if credentials configured.
      */
     public function pollReddit(): int
     {
@@ -621,7 +656,6 @@ class InternationalLeadScraperService
         $ingested = 0;
 
         try {
-            // Obtain Reddit App-Only OAuth Token
             $authResponse = Http::asForm()
                 ->withBasicAuth($clientId, $clientSecret)
                 ->withHeaders(['User-Agent' => 'DigitalBuildersBot/1.0'])
@@ -652,12 +686,11 @@ class InternationalLeadScraperService
                 foreach ($children as $child) {
                     $post = $child['data'] ?? [];
                     $id = (string) ($post['id'] ?? '');
-                    $title = (string) ($post['title'] ?? '');
-                    $selftext = (string) ($post['selftext'] ?? '');
+                    $title = trim(html_entity_decode((string) ($post['title'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                    $selftext = trim(html_entity_decode((string) ($post['selftext'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
                     $author = (string) ($post['author'] ?? 'Redditor');
                     $permalink = 'https://reddit.com' . ($post['permalink'] ?? '');
 
-                    // Must be a [Hiring] post
                     if (!preg_match('/\[hiring\]/i', $title) && !preg_match('/hiring/i', (string) ($post['link_flair_text'] ?? ''))) {
                         continue;
                     }
@@ -671,13 +704,13 @@ class InternationalLeadScraperService
                         continue;
                     }
 
-                    $budget = $this->extractBudget($fullText, '$2,500 – $6,000');
+                    $budget = $this->extractBudget($fullText, '$3,000 – $7,000');
                     $score = $this->pitchGenerator->scoreRelevance($fullText, $budget['raw'], null, null);
-                    if ($score < 55) {
+                    if ($score < 50) {
                         continue;
                     }
 
-                    $pitchData = $this->pitchGenerator->generatePitch($fullText, $author, null, 'USD');
+                    $pitchData = $this->pitchGenerator->generateAiPitch($fullText, $author, null, 'reddit', 'USD', $budget['raw']);
 
                     $req = MarketRequirement::create([
                         'source'           => 'reddit',
@@ -685,18 +718,23 @@ class InternationalLeadScraperService
                         'title'            => substr("Reddit r/{$sub}: {$title}", 0, 190),
                         'raw_text'         => $fullText,
                         'budget_raw'       => $budget['raw'],
-                        'estimated_amount' => $budget['amount'],
+                        'estimated_amount' => $pitchData['estimated_amount'] ?? $budget['amount'],
                         'currency'         => 'USD',
                         'contact_name'     => $author,
                         'location'         => "Reddit (r/{$sub})",
                         'matched_segment'  => $pitchData['segment'],
-                        'relevance_score'  => $score,
-                        'pitch_draft'      => $pitchData['reddit_dm'] ?? $pitchData['short_pitch'],
+                        'relevance_score'  => $pitchData['relevance_score'] ?? $score,
+                        'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
                         'status'           => 'qualified',
                         'metadata'         => [
-                            'url'       => $permalink,
-                            'subreddit' => $sub,
-                            'author'    => $author,
+                            'url'                     => $permalink,
+                            'subreddit'               => $sub,
+                            'author'                  => $author,
+                            'email_pitch'             => $pitchData['email_pitch'] ?? null,
+                            'email_subject'           => $pitchData['email_subject'] ?? null,
+                            'linkedin_dm'             => $pitchData['linkedin_dm'] ?? null,
+                            'detected_tech_stack'     => $pitchData['detected_tech_stack'] ?? [],
+                            'suggested_architecture'  => $pitchData['suggested_architecture'] ?? null,
                         ],
                     ]);
 
@@ -712,22 +750,108 @@ class InternationalLeadScraperService
     }
 
     /**
-     * Tier 1 High-Value Filter Engine: rejects low-value gigs and irrelevant tasks.
+     * Smart URL or Raw Text Ingestion Engine.
+     * Takes any pasted URL (Upwork, LinkedIn, Twitter/X, job board) or raw RFP scope,
+     * extracts text, runs OpenAI analysis, and saves a qualified market requirement.
+     */
+    public function extractFromUrlOrText(
+        string $input,
+        ?string $source = null,
+        ?string $manualTitle = null,
+        ?string $contactName = null,
+        ?string $contactCompany = null
+    ): array {
+        $trimmed = trim($input);
+        $isUrl = (bool) preg_match('/^https?:\/\//i', $trimmed);
+        $extractedText = $trimmed;
+        $url = null;
+
+        if ($isUrl) {
+            $url = $trimmed;
+            try {
+                $resp = Http::timeout(10)->withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'Accept'     => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                ])->get($trimmed);
+
+                if ($resp->successful()) {
+                    $html = $resp->body();
+                    // Remove scripts, styles
+                    $cleanHtml = preg_replace('/<(script|style)[^>]*?>.*?<\/\\1>/si', '', $html);
+                    $extractedText = trim(html_entity_decode(strip_tags($cleanHtml), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                    // Collapse excessive newlines/spaces
+                    $extractedText = preg_replace('/\s+/', ' ', $extractedText);
+                    $extractedText = substr($extractedText, 0, 4000);
+                }
+            } catch (\Throwable $e) {
+                Log::warning("Could not fetch remote URL {$trimmed}: " . $e->getMessage());
+            }
+        }
+
+        $detectedSource = $source ?: ($isUrl ? (str_contains($url, 'upwork.com') ? 'upwork' : (str_contains($url, 'linkedin.com') ? 'linkedin' : 'custom_url')) : 'direct_rfp');
+        $title = $manualTitle ?: (substr($extractedText, 0, 70) . '...');
+
+        $budget = $this->extractBudget($extractedText, '$4,500 – $9,000');
+        $pitchData = $this->pitchGenerator->generateAiPitch(
+            $extractedText,
+            $contactName,
+            $contactCompany,
+            $detectedSource,
+            'USD',
+            $budget['raw']
+        );
+
+        $externalId = 'custom_' . md5($trimmed . microtime());
+
+        $req = MarketRequirement::create([
+            'source'           => $detectedSource,
+            'external_id'      => $externalId,
+            'title'            => substr($title, 0, 190),
+            'raw_text'         => substr($extractedText, 0, 3000),
+            'budget_raw'       => $pitchData['budget_range'] ?? $budget['raw'],
+            'estimated_amount' => $pitchData['estimated_amount'] ?? $budget['amount'],
+            'currency'         => 'USD',
+            'contact_name'     => $contactName,
+            'contact_company'  => $contactCompany,
+            'location'         => 'Remote (US/Global)',
+            'matched_segment'  => $pitchData['segment'],
+            'relevance_score'  => $pitchData['relevance_score'] ?? 80,
+            'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
+            'status'           => 'qualified',
+            'metadata'         => [
+                'url'                     => $url,
+                'email_pitch'             => $pitchData['email_pitch'] ?? null,
+                'email_subject'           => $pitchData['email_subject'] ?? null,
+                'linkedin_dm'             => $pitchData['linkedin_dm'] ?? null,
+                'detected_tech_stack'     => $pitchData['detected_tech_stack'] ?? [],
+                'suggested_architecture'  => $pitchData['suggested_architecture'] ?? null,
+                'client_pain_points'      => $pitchData['client_pain_points'] ?? [],
+            ],
+        ]);
+
+        return [
+            'requirement' => $req,
+            'pitch_data'  => $pitchData,
+        ];
+    }
+
+    /**
+     * Tier 1 Strict Filter: Rejects junk gigs, full-time employment, and non-target tech.
      */
     public function passesTier1Filters(string $text): bool
     {
         $normalized = strtolower($text);
 
-        // 1. Rejection: Negative Keywords
+        // 1. Negative keywords filter
         foreach (self::NEGATIVE_KEYWORDS as $badWord) {
             if (str_contains($normalized, $badWord)) {
                 return false;
             }
         }
 
-        // 2. Minimum technical scope keywords
+        // 2. Minimum technical scope keywords for DigitalBuilders
         $hasTechKeywords = preg_match(
-            '/\b(software|developer|engineer|full-stack|fullstack|frontend|backend|web app|mobile app|pwa|mvp|saas|portal|crm|erp|vue|react|laravel|python|node|api|database|ai|automation)\b/i',
+            '/\b(software|developer|engineer|full-stack|fullstack|frontend|backend|web app|mobile app|pwa|mvp|saas|portal|crm|erp|vue|react|next|nuxt|laravel|python|node|api|database|ai|automation|fastapi|django)\b/i',
             $text
         );
 
@@ -737,26 +861,24 @@ class InternationalLeadScraperService
     /**
      * Extract budget information from text.
      */
-    private function extractBudget(string $text, string $defaultRange = '$3,500 – $8,000'): array
+    public function extractBudget(string $text, string $defaultRange = '$4,000 – $8,000'): array
     {
-        // Check for explicit USD amounts like $4,000 or $5k
         if (preg_match('/\$([0-9]{1,3}(?:,[0-9]{3})+|[0-9]+(?:\.[0-9]{2})?)\s*(?:k\b|grand)?/i', $text, $matches)) {
             $val = (float) str_replace(',', '', $matches[1]);
             if (stripos($matches[0], 'k') !== false) {
                 $val *= 1000;
             }
 
-            // If hourly rate ($40/hr)
             if (preg_match('/\/(?:hr|hour)\b/i', $text) && $val < 300) {
-                $estMonthly = round($val * 80); // ~80 hrs sprint
+                $estSprint = round($val * 80);
                 return [
-                    'amount'    => (float) $estMonthly,
-                    'raw'       => "\${$val}/hr (~$" . number_format($estMonthly) . ' sprint)',
+                    'amount'    => (float) $estSprint,
+                    'raw'       => "\${$val}/hr (~$" . number_format($estSprint) . ' sprint)',
                     'is_hourly' => true,
                 ];
             }
 
-            if ($val >= 1500) {
+            if ($val >= 1000) {
                 return [
                     'amount'    => $val,
                     'raw'       => '$' . number_format($val),
@@ -766,7 +888,7 @@ class InternationalLeadScraperService
         }
 
         return [
-            'amount'    => 5000.00,
+            'amount'    => 5500.00,
             'raw'       => $defaultRange,
             'is_hourly' => false,
         ];

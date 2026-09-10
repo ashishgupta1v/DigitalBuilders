@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\Lead;
 use App\Models\MarketRequirement;
 use App\Models\User;
 use App\Services\SalesFunnel\AiPitchGeneratorService;
@@ -103,6 +104,7 @@ class InternationalLeadFunnelTest extends TestCase
                         'company_name'                => 'SaaS Rocket Ltd',
                         'candidate_required_location' => 'USA / Europe Remote',
                         'salary'                      => '$8,000 - $12,000 monthly',
+                        'job_type'                    => 'contract',
                         'description'                 => 'We are looking for an expert fullstack software engineer to scale our cloud SaaS platform built on Laravel and Vue.js.',
                         'url'                         => 'https://remotive.com/job/771122',
                     ]
@@ -281,6 +283,123 @@ class InternationalLeadFunnelTest extends TestCase
             'id'     => $req2->id,
             'status' => 'rejected',
         ]);
+    }
+
+    public function test_tier1_filters_reject_corporate_w2_and_irrelevant_roles(): void
+    {
+        $pitchGenerator = new AiPitchGeneratorService();
+        $telegramBot = new TelegramBotService();
+        $scraper = new InternationalLeadScraperService($pitchGenerator, $telegramBot);
+
+        // Corporate W-2, healthcare, relocation, Mule ESB, network engineering should fail
+        $this->assertFalse($scraper->passesTier1Filters('Senior Mule ESB Integration Architect wanted for enterprise data migration'));
+        $this->assertFalse($scraper->passesTier1Filters('Network engineer needed for datacenter infrastructure support'));
+        $this->assertFalse($scraper->passesTier1Filters('Staff software engineer role: W2 only with 401k and healthcare benefits'));
+        $this->assertFalse($scraper->passesTier1Filters('Full-time corporate position with relocation assistance'));
+    }
+
+    public function test_crm_market_smart_ingest_processes_raw_scope(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+
+        $response = $this->actingAs($admin)->postJson('/crm/market/smart-ingest', [
+            'input'           => 'We need an experienced full-stack engineer to build a custom SaaS analytics platform with Vue 3, Laravel and PostgreSQL. Target delivery is 6 weeks. Budget is $7,500 fixed.',
+            'contact_name'    => 'Sarah Connor',
+            'contact_company' => 'SkyNet Analytics',
+            'source'          => 'upwork',
+        ]);
+
+        $response->assertStatus(201);
+        $response->assertJson(['success' => true]);
+        $response->assertJsonStructure([
+            'success',
+            'requirement' => ['id', 'title', 'source', 'currency', 'estimated_amount'],
+            'pitch_data'  => ['upwork_proposal', 'email_pitch', 'linkedin_dm'],
+        ]);
+
+        $this->assertDatabaseHas('market_requirements', [
+            'contact_name'    => 'Sarah Connor',
+            'contact_company' => 'SkyNet Analytics',
+            'source'          => 'upwork',
+            'currency'        => 'USD',
+            'status'          => 'qualified',
+        ]);
+    }
+
+    public function test_crm_market_purge_junk_cleans_unqualified_records(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+
+        // Junk requirement
+        $junk = MarketRequirement::create([
+            'source'          => 'hackernews',
+            'title'           => 'Irrelevant Mule ESB project',
+            'raw_text'        => 'legacy system integration',
+            'relevance_score' => 20,
+            'status'          => 'rejected',
+        ]);
+
+        // Qualified requirement
+        $qualified = MarketRequirement::create([
+            'source'           => 'upwork',
+            'title'            => 'Vue 3 & Laravel SaaS MVP',
+            'raw_text'         => 'Need modern web app',
+            'relevance_score'  => 85,
+            'currency'         => 'USD',
+            'estimated_amount' => 6000.00,
+            'status'           => 'qualified',
+        ]);
+
+        $response = $this->actingAs($admin)->postJson('/crm/market/purge-junk');
+        $response->assertStatus(200);
+        $response->assertJson(['success' => true]);
+
+        // Junk should be deleted
+        $this->assertDatabaseMissing('market_requirements', ['id' => $junk->id]);
+
+        // Qualified should still exist
+        $this->assertDatabaseHas('market_requirements', ['id' => $qualified->id]);
+    }
+
+    public function test_crm_leads_directory_index_and_bulk_delete(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+
+        $lead1 = Lead::create([
+            'name'    => 'Alice Johnson',
+            'email'   => 'alice@techstartup.com',
+            'phone'   => '+1-555-0101',
+            'company' => 'Tech Startup Inc',
+            'segment' => 'saas_ai',
+            'status'  => 'active',
+            'score'   => 85,
+        ]);
+
+        $lead2 = Lead::create([
+            'name'    => 'Bob Williams',
+            'email'   => 'bob@venturegrowth.io',
+            'phone'   => '+1-555-0102',
+            'company' => 'Venture Growth',
+            'segment' => 'saas_ai',
+            'status'  => 'active',
+            'score'   => 80,
+        ]);
+
+        // Test Index
+        $indexRes = $this->actingAs($admin)->getJson('/crm/leads?search=Alice');
+        $indexRes->assertStatus(200);
+        $indexRes->assertJsonFragment(['name' => 'Alice Johnson']);
+
+        // Test Bulk Delete
+        $bulkRes = $this->actingAs($admin)->postJson('/crm/leads/bulk', [
+            'lead_ids' => [$lead1->id, $lead2->id],
+            'action'   => 'delete',
+        ]);
+        $bulkRes->assertStatus(200);
+        $bulkRes->assertJson(['success' => true]);
+
+        $this->assertDatabaseMissing('leads', ['id' => $lead1->id]);
+        $this->assertDatabaseMissing('leads', ['id' => $lead2->id]);
     }
 }
 

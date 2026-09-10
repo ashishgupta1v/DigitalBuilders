@@ -17,6 +17,38 @@ use Illuminate\Support\Facades\Log;
 
 class CrmLeadController extends Controller
 {
+    public function index(Request $request): JsonResponse
+    {
+        $search = trim((string) $request->query('search', ''));
+        $segment = $request->query('segment', 'all');
+        $status = $request->query('status', 'all');
+
+        $query = Lead::query()
+            ->with(['organization', 'deals' => fn($q) => $q->latest()])
+            ->latest();
+
+        if ($segment !== 'all') {
+            $query->where('segment', $segment);
+        }
+
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('company', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%");
+            });
+        }
+
+        $leads = $query->paginate(30);
+
+        return response()->json($leads);
+    }
+
     public function show(int $id): JsonResponse
     {
         $lead = Lead::query()
@@ -397,5 +429,48 @@ class CrmLeadController extends Controller
                 'message' => 'Lead successfully ingested into CRM pipeline.',
             ], 201);
         });
+    }
+
+    public function destroy(int $id): JsonResponse
+    {
+        $lead = Lead::findOrFail($id);
+        $name = $lead->name;
+        $lead->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => "Lead {$name} deleted successfully.",
+        ]);
+    }
+
+    public function bulkAction(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'lead_ids'   => ['required', 'array'],
+            'lead_ids.*' => ['integer'],
+            'action'     => ['required', 'string', 'in:delete,update_status,update_stage'],
+            'value'      => ['nullable', 'string'],
+        ]);
+
+        $ids = $validated['lead_ids'];
+        $action = $validated['action'];
+        $value = $validated['value'] ?? '';
+
+        if ($action === 'delete') {
+            $count = Lead::whereIn('id', $ids)->delete();
+            return response()->json(['success' => true, 'message' => "Deleted {$count} leads."]);
+        }
+
+        if ($action === 'update_status') {
+            $count = Lead::whereIn('id', $ids)->update(['status' => $value]);
+            return response()->json(['success' => true, 'message' => "Updated status for {$count} leads."]);
+        }
+
+        if ($action === 'update_stage') {
+            $count = Lead::whereIn('id', $ids)->update(['stage' => $value]);
+            return response()->json(['success' => true, 'message' => "Updated stage for {$count} leads."]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Unknown action.'], 400);
     }
 }

@@ -124,6 +124,32 @@ const applyTemplate = (tplText: string) => {
   newNote.value = tplText
 }
 
+const copiedPitch = ref(false)
+const copyOutreachPitch = async () => {
+  const name = leadData.value?.lead?.name || 'there'
+  const company = leadData.value?.lead?.company || 'your team'
+  const pitch = `Hi ${name},\n\nI'm Ashish, founder and lead architect at DigitalBuilders (https://www.digitalbuilders.in). Saw your project scope for ${company}.\n\nWe specialize in engineering production SaaS MVPs, custom web apps, and AI integrations in 4-6 weeks with 100% code ownership and fixed milestone pricing.\n\n• Book a 15-min discovery call: https://www.digitalbuilders.in/book\n• Or run your feature scope through our sprint estimator: https://www.digitalbuilders.in/estimator\n\nBest regards,\nAshish Gupta | DigitalBuilders`
+  await navigator.clipboard.writeText(pitch)
+  copiedPitch.value = true
+  setTimeout(() => { copiedPitch.value = false }, 2500)
+}
+
+const copiedBooking = ref(false)
+const copyBookingLink = async () => {
+  await navigator.clipboard.writeText('https://www.digitalbuilders.in/book')
+  copiedBooking.value = true
+  setTimeout(() => { copiedBooking.value = false }, 2500)
+}
+
+const sendMailto = () => {
+  if (!leadData.value?.lead?.email) return
+  const name = leadData.value.lead.name || 'there'
+  const company = leadData.value.lead.company || 'Your Project'
+  const subject = encodeURIComponent(`Architecture & Timeline Proposal for ${company}`)
+  const body = encodeURIComponent(`Hi ${name},\n\nI'm Ashish Gupta, founder & lead architect at DigitalBuilders (https://www.digitalbuilders.in).\n\nWanted to connect regarding your software development scope. We specialize in fixed-price 4-6 week sprints with complete source code ownership.\n\nFeel free to pick a 15-min slot on my calendar: https://www.digitalbuilders.in/book\n\nBest regards,\nAshish Gupta\nFounder & Lead Architect, DigitalBuilders`)
+  window.open(`mailto:${leadData.value.lead.email}?subject=${subject}&body=${body}`, '_blank')
+}
+
 const addActivityNote = async () => {
   if (!newNote.value.trim() || !leadData.value?.lead?.id) return
   loggingActivity.value = true
@@ -326,24 +352,65 @@ const submitWirePayment = async () => {
             </div>
           </div>
 
-          <div class="flex items-center gap-2 self-end sm:self-auto shrink-0 w-full sm:w-auto">
+          <div class="flex items-center gap-1.5 self-end sm:self-auto shrink-0 w-full sm:w-auto flex-wrap sm:flex-nowrap">
+            <!-- Send Email -->
+            <button
+              v-if="leadData?.lead?.email"
+              type="button"
+              @click="sendMailto"
+              class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-600 dark:text-sky-400 border border-sky-500/20 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+              title="Open email draft"
+            >
+              <Mail class="w-3.5 h-3.5" />
+              <span>Email</span>
+            </button>
+
+            <!-- Copy Pitch -->
+            <button
+              type="button"
+              @click="copyOutreachPitch"
+              class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer border"
+              :class="copiedPitch ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'"
+              title="Copy customized proposal"
+            >
+              <Check v-if="copiedPitch" class="w-3.5 h-3.5" />
+              <Copy v-else class="w-3.5 h-3.5" />
+              <span>{{ copiedPitch ? 'Copied' : 'Pitch' }}</span>
+            </button>
+
+            <!-- Copy 15-Min Booking Link -->
+            <button
+              type="button"
+              @click="copyBookingLink"
+              class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer border"
+              :class="copiedBooking ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-300 border-purple-500/20'"
+              title="Copy Calendly booking link (https://www.digitalbuilders.in/book)"
+            >
+              <Calendar class="w-3.5 h-3.5" />
+              <span>{{ copiedBooking ? 'Copied Link' : 'Booking' }}</span>
+            </button>
+
+            <!-- Proposal Button -->
             <button
               v-if="activeDeal"
               type="button"
               @click="emit('openProposal', activeDeal.id)"
-              class="flex-1 sm:flex-initial px-3 sm:px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold shadow-md shadow-purple-500/20 flex items-center justify-center gap-1.5 transition cursor-pointer"
+              class="px-3 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold shadow-md shadow-purple-500/20 flex items-center justify-center gap-1.5 transition cursor-pointer"
             >
               <FileText class="w-3.5 h-3.5" />
               <span>{{ activeDeal?.stage === 'proposal_sent' ? 'View Proposal' : 'Proposal' }}</span>
             </button>
 
+            <!-- WhatsApp (Secondary Fallback) -->
             <button
+              v-if="cleanPhone"
               type="button"
               @click="emit('openOutreach', leadData.lead, (leadData?.lead?.touchpoint_count || 0) + 1)"
-              class="flex-1 sm:flex-initial px-3.5 sm:px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white text-xs font-bold shadow-md shadow-emerald-500/20 flex items-center justify-center gap-1.5 transition cursor-pointer"
+              class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
+              title="WhatsApp outreach"
             >
               <MessageSquare class="w-3.5 h-3.5" />
-              <span>1-Click WhatsApp</span>
+              <span>WA</span>
             </button>
           </div>
         </div>

@@ -10,6 +10,7 @@ use App\Models\Deal;
 use App\Models\Lead;
 use App\Models\MarketRequirement;
 use App\Services\SalesFunnel\AiPitchGeneratorService;
+use App\Services\SalesFunnel\InternationalLeadScraperService;
 use App\Services\Telegram\TelegramBotService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,56 +26,44 @@ class CrmMarketIngestionController extends Controller
 
     /**
      * Handle incoming IndiaMART Lead Manager Push API webhook.
-     * Documentation: https://help.indiamart.com/knowledge-base/integration-of-indiamarts-lead-manager-crm-push-api-with-third-party-crms
      */
     public function handleIndiaMartPush(Request $request): JsonResponse
     {
-        // IndiaMART pushes either JSON or form-urlencoded parameters
         $data = $request->all();
         Log::info('IndiaMART Push Webhook received: ', $data);
 
-        // Extract key parameters from IndiaMART payload specification
         $externalId = (string) ($data['QUERY_ID'] ?? $data['query_id'] ?? $data['UNIQUE_QUERY_ID'] ?? uniqid('im_'));
         $name = trim((string) ($data['SENDER_NAME'] ?? $data['sender_name'] ?? 'IndiaMART Inquirer'));
         $phone = trim((string) ($data['GLUSR_USR_PH_MOBILE'] ?? $data['sender_mobile'] ?? $data['SENDER_MOBILE'] ?? ''));
         $email = trim((string) ($data['SENDER_EMAIL'] ?? $data['sender_email'] ?? ''));
         $company = trim((string) ($data['SENDER_COMPANY'] ?? $data['sender_company'] ?? ''));
-        $city = trim((string) ($data['SENDER_CITY'] ?? $data['sender_city'] ?? 'India'));
+        $city = trim((string) ($data['SENDER_CITY'] ?? $data['sender_city'] ?? 'Global'));
         $product = trim((string) ($data['PRODUCT_NAME'] ?? $data['product_name'] ?? 'Software Solution'));
-        $message = trim((string) ($data['ENQ_MESSAGE'] ?? $data['enq_message'] ?? $data['QUERY_MODID'] ?? 'Inquiry via IndiaMART'));
+        $message = trim((string) ($data['ENQ_MESSAGE'] ?? $data['enq_message'] ?? $data['QUERY_MODID'] ?? 'Inquiry via Webhook'));
 
         $fullScopeText = "Product: {$product}. Inquiry: {$message}";
 
-        // Idempotency: Prevent duplicate ingestion of the exact same inquiry ID
         $existing = MarketRequirement::where('source', 'indiamart')
             ->where('external_id', $externalId)
             ->first();
 
         if ($existing) {
             return response()->json([
-                'success' => true,
-                'message' => 'Requirement already ingested.',
+                'success'        => true,
+                'message'        => 'Requirement already ingested.',
                 'requirement_id' => $existing->id,
             ], 200);
         }
 
-        // Score relevance and generate pitch
-        $score = $this->pitchGenerator->scoreRelevance($fullScopeText, null, $phone, $email);
-        $pitchData = $this->pitchGenerator->generatePitch($fullScopeText, $name, $company, 'INR');
-
-        $amount = 185000.00;
-        if ($pitchData['segment'] === 'manufacturing') {
-            $amount = 250000.00;
-        } elseif ($pitchData['segment'] === 'ecommerce') {
-            $amount = 160000.00;
-        }
+        $pitchData = $this->pitchGenerator->generateAiPitch($fullScopeText, $name, $company, 'indiamart', 'INR');
+        $score = $pitchData['relevance_score'] ?? 75;
+        $amount = (float) ($pitchData['estimated_amount'] ?? 185000.00);
 
         $result = DB::transaction(function () use ($externalId, $name, $phone, $email, $company, $city, $fullScopeText, $pitchData, $score, $amount, $data) {
-            // 1. Create Market Requirement Record
             $req = MarketRequirement::create([
                 'source'           => 'indiamart',
                 'external_id'      => $externalId,
-                'title'            => $name . ' — IndiaMART: ' . substr($data['PRODUCT_NAME'] ?? 'Software', 0, 50),
+                'title'            => $name . ' — Inquiry: ' . substr($data['PRODUCT_NAME'] ?? 'Custom Software', 0, 50),
                 'raw_text'         => $fullScopeText,
                 'budget_raw'       => $pitchData['budget_range'],
                 'estimated_amount' => $amount,
@@ -86,41 +75,39 @@ class CrmMarketIngestionController extends Controller
                 'location'         => $city,
                 'matched_segment'  => $pitchData['segment'],
                 'relevance_score'  => $score,
-                'pitch_draft'      => $pitchData['short_pitch'],
+                'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
                 'status'           => 'qualified',
                 'metadata'         => $data,
             ]);
 
-            // 2. Ingest into CRM Lead Engine
             $lead = Lead::create([
                 'name'             => $name,
-                'email'            => $email ?: ('im-' . substr($phone, -6) . '@digitalbuilders.in'),
+                'email'            => $email ?: ('inquiry-' . uniqid() . '@digitalbuilders.in'),
                 'phone'            => $phone,
-                'company'          => $company ?: 'IndiaMART Buyer',
+                'company'          => $company ?: 'Direct Client',
                 'project_type'     => $data['PRODUCT_NAME'] ?? 'Custom Software',
-                'description'      => $fullScopeText,
                 'segment'          => $pitchData['segment'],
                 'source'           => 'indiamart',
-                'region'           => 'IN',
+                'status'           => 'new',
                 'stage'            => 'new',
                 'score'            => $score,
                 'touchpoint_count' => 0,
                 'next_action_date' => now(),
-                'next_action_note' => 'Dispatch Tailored Touch 1 Pitch on WhatsApp/Call',
-                'estimated_value'  => $pitchData['budget_range'],
+                'next_action_note' => 'Send Outreach Email / Proposal',
+                'description'      => $fullScopeText,
             ]);
 
-            // 3. Create Corresponding Deal in CRM Pipeline
             $deal = Deal::create([
-                'title'               => $name . ' — ' . ($data['PRODUCT_NAME'] ?? 'Custom ERP/App'),
+                'title'               => ($company ?: $name) . ' — ' . ($data['PRODUCT_NAME'] ?? 'Software Architecture'),
                 'lead_id'             => $lead->id,
                 'amount'              => $amount,
                 'currency'            => 'INR',
                 'stage'               => 'new',
-                'probability'         => 15,
-                'expected_close_date' => now()->addDays(21),
+                'probability'         => 20,
                 'scope_summary'       => $fullScopeText,
+                'expected_close_date' => now()->addDays(21),
             ]);
+            $deal->getOrCreateProposalToken();
 
             $req->update([
                 'lead_id' => $lead->id,
@@ -131,21 +118,22 @@ class CrmMarketIngestionController extends Controller
                 'lead_id'           => $lead->id,
                 'deal_id'           => $deal->id,
                 'type'              => 'stage_change',
-                'subject'           => 'IndiaMART Lead Ingested into Pipeline',
-                'description'       => "Auto-matched to {$pitchData['case_study']} case study. Scored: {$score} pts.",
+                'subject'           => 'Lead Ingested from Inbound Channel',
+                'description'       => "Source: Inbound Webhook. Estimated USD value: {$deal->formatted_amount}.",
                 'touchpoint_number' => 0,
             ]);
 
-            return $req;
+            return (object) ['lead_id' => $lead->id, 'deal_id' => $deal->id, 'req_id' => $req->id];
         });
 
-        // 4. Send Instant Push Notification Card to Founder on Telegram with 1-Tap Approval
-        $this->telegramBot->sendOpportunityAlert($result, $pitchData);
+        $this->telegramBot->sendOpportunityAlert(
+            MarketRequirement::find($result->req_id),
+            $pitchData
+        );
 
         return response()->json([
             'success'        => true,
-            'message'        => 'IndiaMART inquiry ingested and scored successfully.',
-            'requirement_id' => $result->id,
+            'requirement_id' => $result->req_id,
             'lead_id'        => $result->lead_id,
             'deal_id'        => $result->deal_id,
             'segment'        => $pitchData['segment'],
@@ -153,7 +141,66 @@ class CrmMarketIngestionController extends Controller
     }
 
     /**
-     * General external requirement ingestion (for Upwork, RSS feeds, or manual triggers).
+     * Smart Ingest: Analyze any pasted URL (Upwork, LinkedIn, job link) or raw scope text with OpenAI.
+     */
+    public function smartIngest(Request $request, InternationalLeadScraperService $scraper): JsonResponse
+    {
+        $validated = $request->validate([
+            'input'           => ['required', 'string', 'min:10'],
+            'source'          => ['nullable', 'string', 'max:50'],
+            'title'           => ['nullable', 'string', 'max:255'],
+            'contact_name'    => ['nullable', 'string', 'max:150'],
+            'contact_company' => ['nullable', 'string', 'max:150'],
+        ]);
+
+        try {
+            $result = $scraper->extractFromUrlOrText(
+                $validated['input'],
+                $validated['source'] ?? null,
+                $validated['title'] ?? null,
+                $validated['contact_name'] ?? null,
+                $validated['contact_company'] ?? null
+            );
+
+            /** @var MarketRequirement $req */
+            $req = $result['requirement'];
+            $pitchData = $result['pitch_data'];
+
+            return response()->json([
+                'success'     => true,
+                'message'     => 'RFP successfully analyzed and ingested with AI!',
+                'requirement' => [
+                    'id'                     => $req->id,
+                    'source'                 => $req->source,
+                    'title'                  => $req->title,
+                    'raw_text'               => $req->raw_text,
+                    'budget'                 => $req->formatted_amount,
+                    'estimated_amount'       => (float) $req->estimated_amount,
+                    'currency'               => $req->currency,
+                    'relevance_score'        => $req->relevance_score,
+                    'matched_segment'        => $req->matched_segment,
+                    'pitch_draft'            => $req->pitch_draft,
+                    'upwork_proposal'        => $pitchData['upwork_proposal'] ?? $req->pitch_draft,
+                    'email_pitch'            => $pitchData['email_pitch'] ?? null,
+                    'email_subject'          => $pitchData['email_subject'] ?? null,
+                    'linkedin_dm'            => $pitchData['linkedin_dm'] ?? null,
+                    'detected_tech_stack'    => $pitchData['detected_tech_stack'] ?? [],
+                    'suggested_architecture' => $pitchData['suggested_architecture'] ?? null,
+                    'client_pain_points'     => $pitchData['client_pain_points'] ?? [],
+                ],
+                'pitch_data'  => $pitchData,
+            ], 201);
+        } catch (\Throwable $e) {
+            Log::error('Smart Ingest error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to analyze requirement: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * General external requirement ingestion.
      */
     public function handleExternalRequirement(Request $request): JsonResponse
     {
@@ -171,10 +218,9 @@ class CrmMarketIngestionController extends Controller
             'location'         => ['nullable', 'string', 'max:100'],
         ]);
 
-        $currency = strtoupper($validated['currency'] ?? 'INR');
+        $currency = strtoupper($validated['currency'] ?? 'USD');
         $externalId = $validated['external_id'] ?? md5($validated['title'] . $validated['raw_text']);
 
-        // Check duplicate
         $existing = MarketRequirement::where('source', $validated['source'])
             ->where('external_id', $externalId)
             ->first();
@@ -183,22 +229,16 @@ class CrmMarketIngestionController extends Controller
             return response()->json(['success' => true, 'message' => 'Already ingested', 'requirement_id' => $existing->id], 200);
         }
 
-        $score = $this->pitchGenerator->scoreRelevance(
-            $validated['raw_text'],
-            $validated['budget_raw'] ?? null,
-            $validated['contact_phone'] ?? null,
-            $validated['contact_email'] ?? null
-        );
-
-        $pitchData = $this->pitchGenerator->generatePitch(
+        $pitchData = $this->pitchGenerator->generateAiPitch(
             $validated['raw_text'],
             $validated['contact_name'] ?? null,
             $validated['contact_company'] ?? null,
+            $validated['source'],
             $currency,
             $validated['budget_raw'] ?? null
         );
 
-        $estimatedAmount = ($currency === 'USD') ? 5000.00 : 185000.00;
+        $estimatedAmount = (float) ($pitchData['estimated_amount'] ?? 5500.00);
 
         $req = MarketRequirement::create([
             'source'           => $validated['source'],
@@ -212,22 +252,29 @@ class CrmMarketIngestionController extends Controller
             'contact_email'    => $validated['contact_email'] ?? null,
             'contact_phone'    => $validated['contact_phone'] ?? null,
             'contact_company'  => $validated['contact_company'] ?? null,
-            'location'         => $validated['location'] ?? 'Global',
+            'location'         => $validated['location'] ?? 'Remote (US/Global)',
             'matched_segment'  => $pitchData['segment'],
-            'relevance_score'  => $score,
-            'pitch_draft'      => $pitchData['short_pitch'],
+            'relevance_score'  => $pitchData['relevance_score'] ?? 75,
+            'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
             'status'           => 'qualified',
+            'metadata'         => [
+                'email_pitch'             => $pitchData['email_pitch'] ?? null,
+                'email_subject'           => $pitchData['email_subject'] ?? null,
+                'linkedin_dm'             => $pitchData['linkedin_dm'] ?? null,
+                'detected_tech_stack'     => $pitchData['detected_tech_stack'] ?? [],
+                'suggested_architecture'  => $pitchData['suggested_architecture'] ?? null,
+                'client_pain_points'      => $pitchData['client_pain_points'] ?? [],
+            ],
         ]);
 
-        // Push alert to Telegram
         $this->telegramBot->sendOpportunityAlert($req, $pitchData);
 
         return response()->json([
             'success'        => true,
             'requirement_id' => $req->id,
             'segment'        => $pitchData['segment'],
-            'score'          => $score,
-            'pitch'          => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
+            'score'          => $req->relevance_score,
+            'pitch'          => $req->pitch_draft,
         ], 201);
     }
 
@@ -240,7 +287,7 @@ class CrmMarketIngestionController extends Controller
             $stats = $scraper->pollAll();
             return response()->json([
                 'success' => true,
-                'message' => "Polling cycle complete. Newly ingested: {$stats['total']} RFPs.",
+                'message' => "Live scanning complete! Ingested {$stats['total']} fresh international opportunities.",
                 'stats'   => $stats,
             ]);
         } catch (\Throwable $e) {
@@ -250,6 +297,26 @@ class CrmMarketIngestionController extends Controller
                 'message' => 'Polling failed: ' . $e->getMessage(),
             ], 500);
         }
+    }
+
+    /**
+     * Purge all dismissed or low-relevance junk requirements.
+     */
+    public function purgeJunk(): JsonResponse
+    {
+        $deleted = MarketRequirement::query()
+            ->where(function ($q) {
+                $q->where('status', 'rejected')
+                  ->orWhere('relevance_score', '<', 50);
+            })
+            ->whereNull('deal_id')
+            ->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => "Successfully purged {$deleted} junk and dismissed items.",
+            'count'   => $deleted,
+        ]);
     }
 
     /**
@@ -270,44 +337,48 @@ class CrmMarketIngestionController extends Controller
     }
 
     /**
-     * Convert an RFP directly into an active CRM Lead & Deal.
+     * Convert an RFP directly into an active CRM Lead & Deal in USD.
      */
     public function convertToDeal(Request $request, int $id): JsonResponse
     {
         $req = MarketRequirement::findOrFail($id);
         $stage = (string) $request->input('stage', 'proposal_sent');
 
-        $name = $req->contact_name ?: ($req->contact_company ?: 'RFP Prospect');
-        $company = $req->contact_company ?: 'Direct Client';
-        $email = $req->contact_email ?: ('rfp-' . $req->id . '@digitalbuilders.in');
-        $currency = $req->currency ?: 'USD';
-        $amount = (float) ($req->estimated_amount ?: ($currency === 'USD' ? 5000.00 : 185000.00));
+        $name = $req->contact_name ?: ($req->contact_company ?: 'RFP Founder');
+        $company = $req->contact_company ?: 'Tech Startup Client';
+        $email = $req->contact_email ?: ('client-' . $req->id . '@digitalbuilders.in');
+        $currency = 'USD';
+        $amount = (float) ($req->estimated_amount ?: 5500.00);
 
         $deal = DB::transaction(function () use ($req, $stage, $name, $company, $email, $currency, $amount) {
             $lead = Lead::create([
                 'name'             => $name,
                 'email'            => $email,
-                'phone'            => $req->contact_phone,
+                'phone'            => $req->contact_phone ?: '+1 000 000 0000',
                 'company'          => $company,
-                'segment'          => $req->matched_segment ?: 'general',
+                'segment'          => $req->matched_segment ?: 'saas_ai',
+                'source'           => $req->source,
                 'status'           => 'active',
-                'score'            => max(75, (int) $req->relevance_score),
+                'score'            => max(80, (int) $req->relevance_score),
                 'touchpoint_count' => 1,
                 'last_contact_date'=> now(),
                 'next_action_date' => now()->addDays(2),
                 'next_action_note' => 'Follow up on proposal (Touch 2)',
+                'description'      => $req->raw_text,
             ]);
 
             $deal = Deal::create([
                 'lead_id'             => $lead->id,
-                'title'               => substr($req->title ?: "Project for {$company}", 0, 190),
+                'title'               => substr($req->title ?: "SaaS MVP Architecture for {$company}", 0, 190),
                 'amount'              => $amount,
                 'currency'            => $currency,
                 'stage'               => $stage,
-                'probability'         => $stage === 'proposal_sent' ? 60 : 35,
-                'scope_summary'       => substr($req->raw_text, 0, 500),
-                'expected_close_date' => now()->addDays(14),
+                'probability'         => $stage === 'proposal_sent' ? 65 : 40,
+                'scope_summary'       => substr($req->raw_text, 0, 800),
+                'pricing_tier'        => 'growth',
+                'expected_close_date' => now()->addDays(21),
             ]);
+            $deal->getOrCreateProposalToken();
 
             $req->update([
                 'status'     => 'converted',
@@ -320,19 +391,19 @@ class CrmMarketIngestionController extends Controller
                 'lead_id'      => $lead->id,
                 'deal_id'      => $deal->id,
                 'type'         => 'note',
-                'subject'      => "Converted from {$req->source} RFP",
-                'body'         => "Converted from Market Requirement #{$req->id}.\n\nPitch Draft:\n{$req->pitch_draft}",
-                'performed_at' => now(),
+                'subject'      => "Converted from {$req->source} Opportunity",
+                'description'  => "Converted from Market Requirement #{$req->id}.\n\nAI Proposal Draft:\n{$req->pitch_draft}",
+                'completed_at' => now(),
             ]);
 
             return $deal;
         });
 
         return response()->json([
-            'success' => true,
-            'message' => 'RFP successfully converted to active CRM deal!',
-            'deal_id' => $deal->id,
+            'success'        => true,
+            'message'        => 'RFP successfully converted to active CRM deal in USD!',
+            'deal_id'        => $deal->id,
+            'proposal_token' => $deal->proposal_token,
         ]);
     }
 }
-

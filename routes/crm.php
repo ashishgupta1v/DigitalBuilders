@@ -14,11 +14,16 @@ use App\Http\Controllers\Crm\CrmProposalController;
 use App\Http\Controllers\Crm\TelegramWebhookController;
 use Illuminate\Support\Facades\Route;
 
-// Public CRM Auth Routes
+// Public CRM Auth & Password Recovery Routes
 Route::middleware(['web'])->prefix('crm')->group(function () {
     Route::get('/login', [CrmAuthController::class, 'showLogin'])->name('crm.login');
-    Route::post('/login', [CrmAuthController::class, 'login'])->middleware('throttle:6,1')->name('crm.login.submit');
+    Route::post('/login', [CrmAuthController::class, 'login'])->middleware('throttle:10,1')->name('crm.login.submit');
     Route::post('/logout', [CrmAuthController::class, 'logout'])->name('crm.logout');
+
+    // Security Question Hint Recovery & First-Time Activation
+    Route::post('/password/question', [CrmAuthController::class, 'getSecurityQuestion'])->middleware('throttle:10,1')->name('crm.password.question');
+    Route::post('/password/reset-question', [CrmAuthController::class, 'resetWithSecurityQuestion'])->middleware('throttle:10,1')->name('crm.password.reset-question');
+    Route::post('/password/first-time-update', [CrmAuthController::class, 'firstTimePasswordUpdate'])->middleware('throttle:10,1')->name('crm.password.first-time-update');
 });
 
 // Public Client Proposal Review Portal & Payment Link Fallback
@@ -41,9 +46,12 @@ Route::middleware(['web', 'crm.admin'])->prefix('crm')->name('crm.')->group(func
     Route::get('/', [CrmDashboardController::class, 'index'])->name('dashboard');
 
     // Lead & Prospect Management
+    Route::get('/leads', [CrmLeadController::class, 'index'])->name('leads.index');
     Route::get('/leads/{id}', [CrmLeadController::class, 'show'])->name('leads.show');
     Route::post('/leads', [CrmLeadController::class, 'store'])->name('leads.store');
     Route::patch('/leads/{id}', [CrmLeadController::class, 'update'])->name('leads.update');
+    Route::delete('/leads/{id}', [CrmLeadController::class, 'destroy'])->name('leads.destroy');
+    Route::post('/leads/bulk', [CrmLeadController::class, 'bulkAction'])->name('leads.bulk');
     Route::post('/leads/import', [CrmLeadController::class, 'importCsv'])->name('leads.import');
 
     // Deal & Pipeline Mechanics
@@ -69,9 +77,14 @@ Route::middleware(['web', 'crm.admin'])->prefix('crm')->name('crm.')->group(func
 
     // Market Requirements & Lead Hunter Actions
     Route::post('/market/poll', [CrmMarketIngestionController::class, 'pollLive'])->name('market.poll');
+    Route::post('/market/smart-ingest', [CrmMarketIngestionController::class, 'smartIngest'])->name('market.smart-ingest');
+    Route::post('/market/purge-junk', [CrmMarketIngestionController::class, 'purgeJunk'])->name('market.purge-junk');
     Route::post('/market/ingest-custom', [CrmMarketIngestionController::class, 'handleExternalRequirement'])->name('market.ingest-custom');
     Route::post('/market/requirements/{id}/dismiss', [CrmMarketIngestionController::class, 'dismiss'])->name('market.dismiss');
     Route::post('/market/requirements/{id}/convert', [CrmMarketIngestionController::class, 'convertToDeal'])->name('market.convert');
+
+    // In-Cockpit Security & Password Update
+    Route::post('/profile/password', [CrmAuthController::class, 'updatePassword'])->name('profile.password');
 });
 
 // Public Ingestion & Webhook Endpoints
