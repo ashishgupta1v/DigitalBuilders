@@ -122,7 +122,7 @@
     ]
   },
   "resources/js/Pages/Crm/Dashboard.vue": {
-    "file": "assets/Dashboard-ubjNJdYU.js",
+    "file": "assets/Dashboard-rU-QYky2.js",
     "name": "Dashboard",
     "src": "resources/js/Pages/Crm/Dashboard.vue",
     "isDynamicEntry": true,
@@ -399,7 +399,7 @@
     ]
   },
   "resources/js/app.ts": {
-    "file": "assets/app-u6dU1gpK.js",
+    "file": "assets/app-D51O6SM2.js",
     "name": "app",
     "src": "resources/js/app.ts",
     "isEntry": true,
@@ -438,7 +438,7 @@
       "resources/js/Pages/Services/WebApp.vue"
     ],
     "css": [
-      "assets/app-DboEL9JQ.css"
+      "assets/app-Dq2t_uFj.css"
     ]
   }
 }
