@@ -4,7 +4,7 @@ import {
   X, Building2, User, Phone, Mail, MessageSquare, Calendar, Sparkles,
   CreditCard, CheckCircle2, AlertCircle, ArrowRight, DollarSign, Clock,
   FileText, Send, Copy, Check, ExternalLink, ChevronRight, Edit3,
-  Eye, MousePointerClick, Bot
+  Eye, MousePointerClick, Bot, Receipt, Globe
 } from 'lucide-vue-next'
 
 const props = defineProps<{
@@ -55,6 +55,44 @@ const generatingLink = ref(false)
 const generatedLink = ref<string | null>(null)
 const selectedPercentage = ref(40)
 const linkCopied = ref(false)
+
+// Lead Domain & Intelligence Enrichment
+const enrichingLead = ref(false)
+const enrichSuccess = ref(false)
+
+const enrichLead = async () => {
+  if (!props.leadId || enrichingLead.value) return
+  enrichingLead.value = true
+  enrichSuccess.value = false
+  try {
+    const res = await fetch(`/crm/leads/${props.leadId}/enrich`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+      },
+    })
+    const data = await res.json()
+    if (data.success) {
+      enrichSuccess.value = true
+      if (leadData.value?.lead) {
+        leadData.value.lead.ai_summary = data.ai_summary
+      }
+      if (data.dossier?.domain && leadData.value?.organization) {
+        leadData.value.organization.domain = data.dossier.domain
+      }
+      fetchLeadDetails()
+      emit('updated', 'Lead intelligence dossier enriched!')
+      setTimeout(() => {
+        enrichSuccess.value = false
+      }, 3000)
+    }
+  } catch (err) {
+    console.error('Failed to enrich lead', err)
+  } finally {
+    enrichingLead.value = false
+  }
+}
 
 const noteTemplates = [
   { label: '📞 Discovery Call Done', text: 'Held 20-min architecture discovery call. Mapped operational bottlenecks and agreed on fixed-price scope proposal.' },
@@ -508,6 +546,19 @@ const submitWirePayment = async () => {
               <span>{{ copiedBooking ? 'Copied Link' : 'Booking' }}</span>
             </button>
 
+            <!-- Lead Intelligence Enrichment Button -->
+            <button
+              type="button"
+              @click="enrichLead"
+              :disabled="enrichingLead"
+              class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer border"
+              :class="enrichSuccess ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border-indigo-500/20'"
+              title="Enrich lead with company domain, architecture recommendations, and executive search queries"
+            >
+              <Globe class="w-3.5 h-3.5" :class="{ 'animate-spin': enrichingLead }" />
+              <span>{{ enrichingLead ? 'Enriching...' : (enrichSuccess ? 'Enriched!' : 'Enrich') }}</span>
+            </button>
+
             <!-- Proposal Button -->
             <button
               v-if="activeDeal"
@@ -728,14 +779,26 @@ const submitWirePayment = async () => {
               </div>
             </div>
 
-            <button
-              type="button"
-              @click="emit('openProposal', activeDeal.id)"
-              class="w-full sm:w-auto px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-md shadow-purple-500/20 cursor-pointer shrink-0"
-            >
-              <FileText class="w-3.5 h-3.5" />
-              <span>{{ activeDeal.stage === 'proposal_sent' ? 'View Proposal' : 'Generate Proposal' }}</span>
-            </button>
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <a
+                :href="`/crm/deals/${activeDeal.id}/invoice`"
+                target="_blank"
+                class="flex-1 sm:flex-initial px-3 py-2 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs transition flex items-center justify-center gap-1.5 shrink-0"
+                title="View printable proforma & tax invoice"
+              >
+                <Receipt class="w-3.5 h-3.5 text-purple-500" />
+                <span>GST Invoice</span>
+              </a>
+
+              <button
+                type="button"
+                @click="emit('openProposal', activeDeal.id)"
+                class="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-md shadow-purple-500/20 cursor-pointer shrink-0"
+              >
+                <FileText class="w-3.5 h-3.5" />
+                <span>{{ activeDeal.stage === 'proposal_sent' ? 'View Proposal' : 'Proposal' }}</span>
+              </button>
+            </div>
           </div>
 
           <!-- Payment Action Hub -->

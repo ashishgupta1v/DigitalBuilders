@@ -11,6 +11,7 @@ use App\Models\CrmOutreachEmail;
 use App\Models\Deal;
 use App\Models\Lead;
 use App\Models\Organization;
+use App\Services\SalesFunnel\CrmLeadEnrichmentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -583,6 +584,45 @@ class CrmLeadController extends Controller
             'outreach_id'      => $outreach->id,
             'touchpoint_count' => $lead->fresh()->touchpoint_count,
             'deal_stage'       => $deal?->fresh()->stage,
+        ]);
+    }
+
+    /**
+     * Resolve company domain, tech stack profile, and executive intelligence for a lead.
+     */
+    public function enrich(int $id, CrmLeadEnrichmentService $enrichmentService): JsonResponse
+    {
+        $lead = Lead::query()->with('organization')->findOrFail($id);
+        $dossier = $enrichmentService->enrichLead($lead);
+
+        // Save domain on organization if missing
+        if (!empty($dossier['domain']) && $lead->organization && empty($lead->organization->domain)) {
+            $lead->organization->update(['domain' => $dossier['domain']]);
+        }
+
+        $summary = $lead->ai_summary ?: '';
+        $stackStr = implode(', ', $dossier['suggested_stack'] ?? []);
+        $enrichmentNote = "\n\n[Lead Intelligence Dossier - " . now()->format('d M Y') . "]\n"
+            . "• Domain: " . ($dossier['domain'] ?? 'N/A') . "\n"
+            . "• Suggested Architecture: {$stackStr}\n"
+            . "• LinkedIn: " . ($dossier['linkedin_company_url'] ?? 'N/A');
+
+        $lead->update([
+            'ai_summary' => trim($summary . $enrichmentNote),
+        ]);
+
+        Activity::create([
+            'lead_id'     => $lead->id,
+            'type'        => 'note',
+            'subject'     => 'Executive Domain & Intelligence Dossier Compiled',
+            'description' => "Enriched with domain '{$dossier['domain']}' and suggested architecture profile: {$stackStr}.",
+        ]);
+
+        return response()->json([
+            'success'    => true,
+            'message'    => 'Lead intelligence dossier enriched successfully!',
+            'dossier'    => $dossier,
+            'ai_summary' => $lead->ai_summary,
         ]);
     }
 }

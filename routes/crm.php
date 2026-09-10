@@ -38,6 +38,9 @@ Route::middleware(['web'])->prefix('crm')->group(function () {
 Route::middleware(['web'])->group(function () {
     Route::get('/proposal/{token}', [CrmProposalController::class, 'publicView'])->name('crm.proposal.public');
     Route::post('/proposal/{token}/accept', [CrmProposalController::class, 'accept'])->name('crm.proposal.accept');
+    Route::post('/proposal/{token}/payment-link', [CrmProposalController::class, 'createClientPaymentLink'])->name('crm.proposal.payment-link');
+    Route::post('/proposal/{token}/wire', [CrmProposalController::class, 'submitWirePayment'])->name('crm.proposal.wire');
+    Route::get('/proposal/{token}/invoice', [CrmProposalController::class, 'invoice'])->name('crm.proposal.invoice');
     Route::get('/checkout/pay', function (\Illuminate\Http\Request $request) {
         $dealId = $request->query('deal');
         $deal = $dealId ? \App\Models\Deal::find($dealId) : null;
@@ -63,10 +66,12 @@ Route::middleware(['web', 'crm.admin'])->prefix('crm')->name('crm.')->group(func
     Route::post('/leads/import', [CrmLeadController::class, 'importCsv'])->name('leads.import');
     Route::post('/leads/{id}/send-email', [CrmLeadController::class, 'sendOutreachEmail'])->name('leads.send-email');
     Route::post('/leads/{id}/triage-reply', [CrmInboundReplyController::class, 'triageLeadReply'])->name('leads.triage-reply');
+    Route::post('/leads/{id}/enrich', [CrmLeadController::class, 'enrich'])->name('leads.enrich');
 
     // Deal & Pipeline Mechanics
     Route::post('/deals/{id}/stage', [CrmDealController::class, 'updateStage'])->name('deals.stage');
     Route::patch('/deals/{id}', [CrmDealController::class, 'update'])->name('deals.update');
+    Route::get('/deals/{id}/invoice', [CrmProposalController::class, 'dealInvoice'])->name('deals.invoice');
 
     // Activities & 5-Touch Cadence Engine
     Route::post('/activities', [CrmActivityController::class, 'store'])->name('activities.store');
