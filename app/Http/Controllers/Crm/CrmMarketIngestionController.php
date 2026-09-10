@@ -82,9 +82,9 @@ class CrmMarketIngestionController extends Controller
 
             $lead = Lead::create([
                 'name'             => $name,
-                'email'            => $email ?: ('inquiry-' . uniqid() . '@digitalbuilders.in'),
+                'email'            => $email ?: null,            // no fake email injected
                 'phone'            => $phone,
-                'company'          => $company ?: 'Direct Client',
+                'company'          => $company ?: null,          // no 'Direct Client' placeholder
                 'project_type'     => $data['PRODUCT_NAME'] ?? 'Custom Software',
                 'segment'          => $pitchData['segment'],
                 'source'           => 'indiamart',
@@ -238,7 +238,8 @@ class CrmMarketIngestionController extends Controller
             $validated['budget_raw'] ?? null
         );
 
-        $estimatedAmount = (float) ($pitchData['estimated_amount'] ?? 5500.00);
+        // Use AI-estimated amount only if explicitly returned; do not inject phantom values
+        $estimatedAmount = isset($pitchData['estimated_amount']) ? (float) $pitchData['estimated_amount'] : null;
 
         $req = MarketRequirement::create([
             'source'           => $validated['source'],
@@ -342,19 +343,26 @@ class CrmMarketIngestionController extends Controller
     public function convertToDeal(Request $request, int $id): JsonResponse
     {
         $req = MarketRequirement::findOrFail($id);
-        $stage = (string) $request->input('stage', 'proposal_sent');
+        $stage  = (string) $request->input('stage', 'new');
 
-        $name = $req->contact_name ?: ($req->contact_company ?: 'RFP Founder');
-        $company = $req->contact_company ?: 'Tech Startup Client';
-        $email = $req->contact_email ?: ('client-' . $req->id . '@digitalbuilders.in');
+        // Accept user-supplied contact info (from ConvertToDealModal), fallback to scraped data only
+        $name    = $request->input('contact_name')    ?: $req->contact_name    ?: null;
+        $company = $request->input('contact_company') ?: $req->contact_company ?: null;
+        $email   = $request->input('contact_email')   ?: $req->contact_email   ?: null;
+        $phone   = $request->input('contact_phone')   ?: $req->contact_phone   ?: null;
         $currency = 'USD';
-        $amount = (float) ($req->estimated_amount ?: 5500.00);
 
-        $deal = DB::transaction(function () use ($req, $stage, $name, $company, $email, $currency, $amount) {
+        // Amount: use user-supplied override, then AI estimate; null if genuinely unknown
+        $rawAmount = $request->input('amount');
+        $amount = $rawAmount !== null
+            ? (float) $rawAmount
+            : (isset($req->estimated_amount) && $req->estimated_amount > 0 ? (float) $req->estimated_amount : null);
+
+        $deal = DB::transaction(function () use ($req, $stage, $name, $company, $email, $phone, $currency, $amount) {
             $lead = Lead::create([
                 'name'             => $name,
-                'email'            => $email,
-                'phone'            => $req->contact_phone ?: '+1 000 000 0000',
+                'email'            => $email,           // null-safe – no fake email injected
+                'phone'            => $phone,           // null-safe – no placeholder phone injected
                 'company'          => $company,
                 'segment'          => $req->matched_segment ?: 'saas_ai',
                 'source'           => $req->source,
@@ -363,7 +371,7 @@ class CrmMarketIngestionController extends Controller
                 'touchpoint_count' => 1,
                 'last_contact_date'=> now(),
                 'next_action_date' => now()->addDays(2),
-                'next_action_note' => 'Follow up on proposal (Touch 2)',
+                'next_action_note' => 'Qualify contact details and send initial proposal.',
                 'description'      => $req->raw_text,
             ]);
 

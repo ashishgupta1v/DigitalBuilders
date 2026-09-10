@@ -224,7 +224,7 @@ PROMPT;
                         'linkedin_dm'            => $decoded['linkedin_dm'] ?? '',
                         'reddit_dm'              => $decoded['linkedin_dm'] ?? '',
                         'budget_range'           => $decoded['budget_range'] ?? '$5,000 – $10,000',
-                        'estimated_amount'       => (float) ($decoded['estimated_budget_usd'] ?? 5500),
+                        'estimated_amount'       => isset($decoded['estimated_budget_usd']) ? (float) $decoded['estimated_budget_usd'] : null,
                         'timeline'               => $decoded['timeline'] ?? '4 to 6 weeks',
                     ];
                 }

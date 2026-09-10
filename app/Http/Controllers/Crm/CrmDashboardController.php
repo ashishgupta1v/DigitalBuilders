@@ -27,20 +27,22 @@ class CrmDashboardController extends Controller
         $lostDealsCount = Deal::query()->where('stage', 'closed_lost')->count();
         $wonDealsCount = $wonDeals->count();
 
-        // Standardize pipeline metrics in USD
+        // Standardize pipeline metrics in USD (using configurable exchange rate)
+        $inrToUsdRate = (float) config('services.currency.inr_to_usd_rate', env('EXCHANGE_RATE_INR_TO_USD', 85.0));
         $totalPipelineUsd = (clone $openDeals)->where('currency', 'USD')->sum('amount');
         $wonRevenueUsd = (clone $wonDeals)->where('currency', 'USD')->sum('amount');
         
-        // If INR deals exist, calculate approximate USD equivalent (85 INR = 1 USD)
         $inrOpen = (clone $openDeals)->where('currency', 'INR')->sum('amount');
         $inrWon = (clone $wonDeals)->where('currency', 'INR')->sum('amount');
-        $totalPipelineUsd += round($inrOpen / 85.0);
-        $wonRevenueUsd += round($inrWon / 85.0);
+        if ($inrToUsdRate > 0) {
+            $totalPipelineUsd += round($inrOpen / $inrToUsdRate);
+            $wonRevenueUsd += round($inrWon / $inrToUsdRate);
+        }
 
         $activeDealsCount = $openDeals->count();
         $closedTotal = $wonDealsCount + $lostDealsCount;
         $winRate = $closedTotal > 0 ? (int) round(($wonDealsCount / $closedTotal) * 100) : 0;
-        $avgDealSize = $activeDealsCount > 0 ? round($totalPipelineUsd / $activeDealsCount) : 5500;
+        $avgDealSize = $activeDealsCount > 0 ? round($totalPipelineUsd / $activeDealsCount) : 0;
 
         $overdueCount = Lead::query()
             ->whereNotNull('next_action_date')
@@ -66,16 +68,16 @@ class CrmDashboardController extends Controller
                 return [
                     'id'               => $lead->id,
                     'name'             => $lead->name,
-                    'company'          => $lead->company ?? $lead->organization?->name ?? 'Direct Client',
+                    'company'          => $lead->company ?? $lead->organization?->name ?? null,
                     'phone'            => $lead->phone,
                     'email'            => $lead->email,
                     'segment'          => $lead->segment ?? 'general',
                     'score'            => (int) ($lead->score ?? 50),
                     'touchpoint_count' => (int) ($lead->touchpoint_count ?? 0),
                     'next_action_date' => $lead->next_action_date?->toIso8601String(),
-                    'next_action_note' => $lead->next_action_note ?? 'Send Touch 1 Proposal',
+                    'next_action_note' => $lead->next_action_note,
                     'is_overdue'       => $lead->next_action_date && $lead->next_action_date->isPast(),
-                    'deal_value'       => $latestDeal ? $latestDeal->formatted_amount : '$5,500',
+                    'deal_value'       => $latestDeal ? $latestDeal->formatted_amount : null,
                     'deal_id'          => $latestDeal?->id,
                 ];
             });
@@ -191,7 +193,7 @@ class CrmDashboardController extends Controller
             return [
                 'id'                => $lead->id,
                 'name'              => $lead->name,
-                'company'           => $lead->company ?? $lead->organization?->name ?? 'Direct Client',
+                'company'           => $lead->company ?? $lead->organization?->name ?? null,
                 'email'             => $lead->email,
                 'phone'             => $lead->phone,
                 'segment'           => $lead->segment ?? 'general',
@@ -200,7 +202,7 @@ class CrmDashboardController extends Controller
                 'score'             => (int) ($lead->score ?? 50),
                 'touchpoint_count'  => (int) ($lead->touchpoint_count ?? 0),
                 'deal_id'           => $latestDeal?->id,
-                'deal_amount'       => $latestDeal ? $latestDeal->formatted_amount : '$5,500',
+                'deal_amount'       => $latestDeal ? $latestDeal->formatted_amount : null,
                 'currency'          => $latestDeal?->currency ?? 'USD',
                 'last_contact_date' => $lead->last_contact_date?->format('d M Y'),
                 'next_action_date'  => $lead->next_action_date?->format('d M Y'),

@@ -888,7 +888,7 @@ class InternationalLeadScraperService
         }
 
         return [
-            'amount'    => 5500.00,
+            'amount'    => null,   // No budget found in RFP text; do not inject fake values
             'raw'       => $defaultRange,
             'is_hourly' => false,
         ];

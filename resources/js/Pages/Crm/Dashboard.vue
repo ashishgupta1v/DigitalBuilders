@@ -18,6 +18,7 @@ import ProposalModal from '@/Components/Crm/ProposalModal.vue'
 import CustomRfpModal from '@/Components/Crm/CustomRfpModal.vue'
 import PitchPreviewModal from '@/Components/Crm/PitchPreviewModal.vue'
 import SecuritySettingsModal from '@/Components/Crm/SecuritySettingsModal.vue'
+import ConvertToDealModal from '@/Components/Crm/ConvertToDealModal.vue'
 import ThemeToggle from '@/Components/ThemeToggle.vue'
 
 const showSecurityModal = ref(false)
@@ -97,6 +98,8 @@ const showQuickAdd = ref(false)
 const showCsvImport = ref(false)
 const showProposalModal = ref(false)
 const selectedDealForProposal = ref<number | null>(null)
+const showConvertModal = ref(false)
+const selectedReqForConvert = ref<any | null>(null)
 
 // Toast State
 const toast = ref<{ message: string; id: number } | null>(null)
@@ -244,27 +247,16 @@ const dismissReq = async (reqId: number) => {
   }
 }
 
-const convertReqToDeal = async (reqId: number) => {
-  dismissedReqIds.value.push(reqId)
-  triggerToast('Converting RFP into active CRM USD deal...')
-  try {
-    const res = await fetch(`/crm/market/requirements/${reqId}/convert`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({ stage: 'proposal_sent' }),
-    })
-    const data = await res.json()
-    if (data.success) {
-      triggerToast('Converted to deal in "Proposal Sent" stage!')
-      router.reload({ only: ['stages', 'telemetry', 'action_queue', 'all_deals', 'all_leads'] })
-    }
-  } catch (e) {
-    console.error(e)
-  }
+const convertReqToDeal = (req: any) => {
+  selectedReqForConvert.value = req
+  showConvertModal.value = true
+}
+
+const onConvertSuccess = (dealId: number) => {
+  showConvertModal.value = false
+  selectedReqForConvert.value = null
+  triggerToast('RFP converted to active CRM deal!')
+  router.reload({ only: ['stages', 'telemetry', 'action_queue', 'all_deals', 'all_leads', 'market_requirements'] })
 }
 
 const copiedReqId = ref<number | null>(null)
@@ -644,7 +636,7 @@ const logout = () => {
           <div class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white font-mono tracking-tight">
             {{ telemetry.active_deals_count }} Deals
           </div>
-          <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Avg Deal: ${{ Number(telemetry.avg_deal_size || 5500).toLocaleString() }}</div>
+          <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Avg Deal: {{ telemetry.avg_deal_size ? '$' + Number(telemetry.avg_deal_size).toLocaleString() : '—' }}</div>
         </div>
 
         <!-- Qualified Leads -->
@@ -874,7 +866,7 @@ const logout = () => {
                 <!-- Convert to Deal -->
                 <button
                   type="button"
-                  @click="convertReqToDeal(req.id)"
+                  @click="convertReqToDeal(req)"
                   class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-sm"
                   title="Convert to active Pipeline Deal ($ USD)"
                 >
@@ -1350,6 +1342,14 @@ const logout = () => {
       v-if="showSecurityModal"
       @close="showSecurityModal = false"
       @success="(msg: string) => triggerToast(msg)"
+    />
+
+    <!-- Convert RFP to Deal Modal (collects real contact data, no fake placeholders) -->
+    <ConvertToDealModal
+      :show="showConvertModal"
+      :req="selectedReqForConvert"
+      @close="showConvertModal = false"
+      @converted="onConvertSuccess"
     />
 
     <!-- Global Floating Toast Notification -->

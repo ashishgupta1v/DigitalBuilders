@@ -9,7 +9,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'convert', id: number): void
+  (e: 'convert', req: any): void
 }>()
 
 const activePitchTab = ref<'upwork' | 'email' | 'linkedin' | 'tech'>('upwork')
@@ -59,7 +59,7 @@ const copyToClipboard = async () => {
 
 const onConvert = () => {
   if (props.requirement) {
-    emit('convert', props.requirement.id)
+    emit('convert', props.requirement)  // pass full req object for ConvertToDealModal
     emit('close')
   }
 }
