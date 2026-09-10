@@ -202,4 +202,85 @@ class InternationalLeadFunnelTest extends TestCase
                 ->has('market_requirements', 1)
         );
     }
+
+    public function test_crm_market_ingest_custom_rfp(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+
+        Http::fake([
+            'https://api.telegram.org/*' => Http::response(['ok' => true], 200),
+        ]);
+
+        $response = $this->actingAs($admin)->postJson('/crm/market/ingest-custom', [
+            'title'           => 'Full Stack MVP Development for Logistics SaaS',
+            'source'          => 'upwork',
+            'contact_name'    => 'David Miller',
+            'contact_company' => 'Miller Fleet Ops',
+            'budget_raw'      => '$8,000',
+            'currency'        => 'USD',
+            'raw_text'        => 'Looking for a senior full-stack developer to architect and build a multi-tenant logistics portal with real-time tracking.',
+        ]);
+
+        $response->assertStatus(201);
+        $response->assertJson(['success' => true]);
+
+        $this->assertDatabaseHas('market_requirements', [
+            'source'          => 'upwork',
+            'contact_name'    => 'David Miller',
+            'contact_company' => 'Miller Fleet Ops',
+            'currency'        => 'USD',
+            'status'          => 'qualified',
+        ]);
+    }
+
+    public function test_crm_market_dismiss_and_convert_deal(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+
+        $req = MarketRequirement::create([
+            'source'           => 'upwork',
+            'external_id'      => 'upwork_custom_test_99',
+            'title'            => 'Upwork: Build Telehealth Portal',
+            'contact_name'     => 'Dr. Sarah Smith',
+            'contact_company'  => 'Pulse Health',
+            'raw_text'         => 'HIPAA compliant patient booking and video consultations.',
+            'budget_raw'       => '$10,000',
+            'estimated_amount' => 10000.00,
+            'currency'         => 'USD',
+            'pitch_draft'      => 'Hi Dr. Sarah, we can deliver this in 4 weeks.',
+            'status'           => 'qualified',
+        ]);
+
+        // Test Convert
+        $convertRes = $this->actingAs($admin)->postJson("/crm/market/requirements/{$req->id}/convert", [
+            'stage' => 'proposal_sent',
+        ]);
+        $convertRes->assertStatus(200);
+        $convertRes->assertJson(['success' => true]);
+
+        $this->assertDatabaseHas('deals', [
+            'title'    => 'Upwork: Build Telehealth Portal',
+            'stage'    => 'proposal_sent',
+            'currency' => 'USD',
+            'amount'   => 10000.00,
+        ]);
+
+        // Test Dismiss
+        $req2 = MarketRequirement::create([
+            'source'      => 'hackernews',
+            'title'       => 'Random Dev needed',
+            'raw_text'    => 'Short gig',
+            'status'      => 'qualified',
+        ]);
+
+        $dismissRes = $this->actingAs($admin)->postJson("/crm/market/requirements/{$req2->id}/dismiss");
+        $dismissRes->assertStatus(200);
+        $dismissRes->assertJson(['success' => true]);
+
+        $this->assertDatabaseHas('market_requirements', [
+            'id'     => $req2->id,
+            'status' => 'rejected',
+        ]);
+    }
 }
+

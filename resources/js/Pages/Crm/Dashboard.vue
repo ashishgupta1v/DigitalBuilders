@@ -5,7 +5,7 @@ import {
   TrendingUp, Users, DollarSign, AlertCircle, Plus, Upload, Search,
   Filter, LayoutGrid, List, MessageSquare, LogOut, CheckCircle2,
   Sparkles, ExternalLink, ShieldAlert, ArrowRight, Building2, Check, Clock, X,
-  Globe, Copy
+  Globe, Copy, RefreshCw, Trash2, Kanban, Send
 } from 'lucide-vue-next'
 
 import KanbanColumn from '@/Components/Crm/KanbanColumn.vue'
@@ -14,6 +14,8 @@ import ScriptGeneratorModal from '@/Components/Crm/ScriptGeneratorModal.vue'
 import QuickAddModal from '@/Components/Crm/QuickAddModal.vue'
 import CsvImportModal from '@/Components/Crm/CsvImportModal.vue'
 import ProposalModal from '@/Components/Crm/ProposalModal.vue'
+import CustomRfpModal from '@/Components/Crm/CustomRfpModal.vue'
+import PitchPreviewModal from '@/Components/Crm/PitchPreviewModal.vue'
 import ThemeToggle from '@/Components/ThemeToggle.vue'
 
 const props = defineProps<{
@@ -74,6 +76,105 @@ const activeQueue = computed(() => {
 
 // 24/7 International RFP Stream State & Actions
 const showGlobalRfps = ref(true)
+const showCustomRfpModal = ref(false)
+const showPitchModal = ref(false)
+const selectedReqForPitch = ref<any | null>(null)
+const isPolling = ref(false)
+const selectedSourceFilter = ref('all')
+const dismissedReqIds = ref<number[]>([])
+
+const sourceTabs = [
+  { key: 'all', label: 'All Sources' },
+  { key: 'upwork', label: '🟢 Upwork / Custom' },
+  { key: 'hackernews', label: '🟠 Hacker News' },
+  { key: 'weworkremotely', label: '💼 WeWorkRemotely' },
+  { key: 'remoteok', label: '🚀 RemoteOK' },
+  { key: 'remotive', label: '🌐 Remotive' },
+  { key: 'reddit', label: '🔴 Reddit' },
+]
+
+const filteredMarketRequirements = computed(() => {
+  const list = props.market_requirements || []
+  return list
+    .filter((req: any) => !dismissedReqIds.value.includes(req.id))
+    .filter((req: any) => {
+      if (selectedSourceFilter.value === 'all') return true
+      if (selectedSourceFilter.value === 'upwork') return ['upwork', 'direct', 'linkedin', 'custom'].includes(req.source)
+      return req.source === selectedSourceFilter.value
+    })
+})
+
+const openPitchPreview = (req: any) => {
+  selectedReqForPitch.value = req
+  showPitchModal.value = true
+}
+
+const pollFeedsLive = async () => {
+  if (isPolling.value) return
+  isPolling.value = true
+  triggerToast('Scanning HackerNews, RemoteOK, WWR & feeds for fresh RFPs...')
+  try {
+    const res = await fetch('/crm/market/poll', {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+        'Accept': 'application/json',
+      },
+    })
+    const data = await res.json()
+    if (data.success) {
+      triggerToast(data.message || 'Market polling complete!')
+      router.reload({ only: ['market_requirements'] })
+    } else {
+      triggerToast(data.message || 'Market polling failed')
+    }
+  } catch (e) {
+    console.error('Failed to poll feeds:', e)
+    triggerToast('Network error while polling feeds')
+  } finally {
+    isPolling.value = false
+  }
+}
+
+const dismissReq = async (reqId: number) => {
+  dismissedReqIds.value.push(reqId)
+  triggerToast('RFP dismissed from active feed')
+  try {
+    await fetch(`/crm/market/requirements/${reqId}/dismiss`, {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+        'Accept': 'application/json',
+      },
+    })
+  } catch (e) {
+    console.error('Failed to dismiss req:', e)
+  }
+}
+
+const convertReqToDeal = async (reqId: number) => {
+  dismissedReqIds.value.push(reqId)
+  triggerToast('Converting RFP into active CRM deal...')
+  try {
+    const res = await fetch(`/crm/market/requirements/${reqId}/convert`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({ stage: 'proposal_sent' }),
+    })
+    const data = await res.json()
+    if (data.success) {
+      triggerToast('Converted to deal in "Proposal Sent" stage!')
+      router.reload({ only: ['stages', 'telemetry', 'action_queue'] })
+    }
+  } catch (e) {
+    console.error('Failed to convert req to deal:', e)
+  }
+}
+
 const copiedReqId = ref<number | null>(null)
 const copyReqPitch = async (req: any) => {
   if (!req.pitch_draft) return
@@ -273,6 +374,30 @@ const getStageBadgeClass = (stage: string) => {
           title="Toggle Search"
         >
           <Search class="w-4 h-4" />
+        </button>
+
+        <!-- Sync Feeds Button -->
+        <button
+          type="button"
+          @click="pollFeedsLive"
+          :disabled="isPolling"
+          class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer disabled:opacity-50"
+          title="Scan HackerNews, RemoteOK, WWR & feeds for fresh RFPs"
+        >
+          <RefreshCw class="w-3.5 h-3.5" :class="{ 'animate-spin': isPolling }" />
+          <span class="hidden sm:inline">{{ isPolling ? 'Syncing...' : 'Sync Feeds' }}</span>
+        </button>
+
+        <!-- Ingest Upwork / RFP Button -->
+        <button
+          type="button"
+          @click="showCustomRfpModal = true"
+          class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold shadow-md shadow-purple-500/20 flex items-center gap-1.5 transition cursor-pointer"
+          title="Paste an Upwork or LinkedIn RFP for instant AI pitch"
+        >
+          <Sparkles class="w-3.5 h-3.5" />
+          <span class="hidden sm:inline">Ingest Upwork / RFP</span>
+          <span class="sm:hidden">RFP</span>
         </button>
 
         <!-- Quick Add Lead Button -->
@@ -484,14 +609,14 @@ const getStageBadgeClass = (stage: string) => {
 
       <!-- 2.5. 24/7 International Lead Hunter & Global RFP Stream -->
       <div v-if="market_requirements && market_requirements.length > 0" class="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-purple-50/90 via-white to-sky-50/90 dark:from-purple-950/20 dark:via-slate-900/90 dark:to-cyan-950/20 border border-purple-200 dark:border-purple-500/20 shadow-sm dark:shadow-xl">
-        <div class="flex items-center justify-between gap-2 mb-3">
+        <div class="flex items-center justify-between gap-2 mb-2">
           <div class="flex items-center gap-2 sm:gap-2.5">
             <Globe class="w-4 h-4 text-purple-600 dark:text-purple-400 animate-pulse shrink-0" />
             <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider truncate">
               24/7 International Lead Hunter (Hacker News • WeWorkRemotely • RemoteOK • Reddit)
             </h3>
             <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-700 dark:text-purple-400 font-bold border border-purple-500/20 shrink-0">
-              {{ market_requirements.length }} Qualified RFPs
+              {{ filteredMarketRequirements.length }} Qualified RFPs
             </span>
           </div>
           <button
@@ -503,75 +628,129 @@ const getStageBadgeClass = (stage: string) => {
           </button>
         </div>
 
-        <div v-if="showGlobalRfps" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 max-h-[440px] overflow-y-auto custom-scrollbar p-1">
-          <div
-            v-for="req in market_requirements"
-            :key="req.id"
-            class="p-3.5 rounded-xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-500/40 shadow-sm transition-all flex flex-col justify-between"
+        <!-- Source Filter Tabs -->
+        <div v-if="showGlobalRfps" class="flex items-center gap-1.5 overflow-x-auto pb-1 mb-2.5 custom-scrollbar">
+          <button
+            v-for="tab in sourceTabs"
+            :key="tab.key"
+            type="button"
+            @click="selectedSourceFilter = tab.key"
+            class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer shrink-0"
+            :class="selectedSourceFilter === tab.key
+              ? 'bg-purple-600 text-white shadow-sm'
+              : 'bg-white/80 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'"
           >
-            <div>
-              <div class="flex items-center justify-between gap-2 mb-1.5">
-                <span
-                  class="text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase tracking-wider shrink-0"
-                  :class="{
-                    'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20': req.source === 'hackernews',
-                    'bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border-indigo-500/20': req.source === 'weworkremotely',
-                    'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20': req.source === 'remoteok',
-                    'bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border-cyan-500/20': req.source === 'remotive',
-                    'bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/20': req.source === 'himalayas',
-                    'bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20': req.source === 'upwork',
-                    'bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20': req.source === 'reddit',
-                    'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300': !['hackernews', 'weworkremotely', 'remoteok', 'remotive', 'himalayas', 'upwork', 'reddit'].includes(req.source)
-                  }"
+            {{ tab.label }}
+          </button>
+        </div>
+
+        <div v-if="showGlobalRfps">
+          <div v-if="filteredMarketRequirements.length === 0" class="p-6 text-center text-xs text-slate-500 dark:text-slate-400 bg-white/60 dark:bg-slate-900/60 rounded-xl border border-dashed border-slate-300 dark:border-slate-800">
+            No active RFPs matching this channel filter. Click <strong class="text-purple-600 dark:text-purple-400 font-bold">Sync Feeds</strong> or <strong class="text-purple-600 dark:text-purple-400 font-bold">Ingest Upwork / RFP</strong> to pull fresh opportunities.
+          </div>
+
+          <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 max-h-[440px] overflow-y-auto custom-scrollbar p-1">
+            <div
+              v-for="req in filteredMarketRequirements"
+              :key="req.id"
+              class="p-3.5 rounded-xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-500/40 shadow-sm transition-all flex flex-col justify-between"
+            >
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-1.5">
+                  <span
+                    class="text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase tracking-wider shrink-0"
+                    :class="{
+                      'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20': req.source === 'hackernews',
+                      'bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border-indigo-500/20': req.source === 'weworkremotely',
+                      'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20': req.source === 'remoteok',
+                      'bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border-cyan-500/20': req.source === 'remotive',
+                      'bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/20': req.source === 'himalayas',
+                      'bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20': ['upwork', 'direct', 'custom'].includes(req.source),
+                      'bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20': req.source === 'reddit',
+                      'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300': !['hackernews', 'weworkremotely', 'remoteok', 'remotive', 'himalayas', 'upwork', 'reddit', 'direct', 'custom'].includes(req.source)
+                    }"
+                  >
+                    {{ req.source }}
+                  </span>
+                  <span class="text-xs font-mono font-extrabold text-purple-600 dark:text-purple-300 tabular-nums">
+                    {{ req.budget }}
+                  </span>
+                </div>
+
+                <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 line-clamp-1 mb-1">
+                  {{ req.title }}
+                </h4>
+
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-3 mb-2.5 leading-relaxed">
+                  {{ req.raw_text }}
+                </p>
+
+                <div class="flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500 font-medium mb-3">
+                  <span>{{ req.location }}</span>
+                  <span>•</span>
+                  <span class="text-emerald-600 dark:text-emerald-400 font-semibold">{{ req.relevance_score }}/100 Match</span>
+                  <span>•</span>
+                  <span>{{ req.created_at }}</span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                <!-- Review & Edit Pitch Modal -->
+                <button
+                  type="button"
+                  @click="openPitchPreview(req)"
+                  class="flex-1 inline-flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer bg-purple-600 hover:bg-purple-700 text-white shadow-sm"
                 >
-                  {{ req.source }}
-                </span>
-                <span class="text-xs font-mono font-extrabold text-purple-600 dark:text-purple-300 tabular-nums">
-                  {{ req.budget }}
-                </span>
+                  <Sparkles class="w-3.5 h-3.5" />
+                  <span>Review Pitch</span>
+                </button>
+
+                <!-- Quick Copy Pitch -->
+                <button
+                  type="button"
+                  @click="copyReqPitch(req)"
+                  title="Quick Copy Pitch"
+                  class="inline-flex items-center justify-center p-1.5 rounded-lg border transition cursor-pointer"
+                  :class="copiedReqId === req.id
+                    ? 'bg-emerald-600 text-white border-emerald-600'
+                    : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'"
+                >
+                  <Check v-if="copiedReqId === req.id" class="w-3.5 h-3.5" />
+                  <Copy v-else class="w-3.5 h-3.5" />
+                </button>
+
+                <!-- Convert to Deal -->
+                <button
+                  type="button"
+                  @click="convertReqToDeal(req.id)"
+                  title="Convert to Active Pipeline Deal"
+                  class="inline-flex items-center justify-center p-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-700 dark:text-indigo-400 border border-indigo-500/20 transition cursor-pointer"
+                >
+                  <ArrowRight class="w-3.5 h-3.5" />
+                </button>
+
+                <!-- Dismiss / Archive -->
+                <button
+                  type="button"
+                  @click="dismissReq(req.id)"
+                  title="Dismiss from feed"
+                  class="inline-flex items-center justify-center p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/20 transition cursor-pointer"
+                >
+                  <Trash2 class="w-3.5 h-3.5" />
+                </button>
+
+                <!-- Original URL -->
+                <a
+                  v-if="req.url"
+                  :href="req.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="View original job post"
+                  class="inline-flex items-center justify-center p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition"
+                >
+                  <ExternalLink class="w-3.5 h-3.5" />
+                </a>
               </div>
-
-              <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 line-clamp-1 mb-1">
-                {{ req.title }}
-              </h4>
-
-              <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-3 mb-2.5 leading-relaxed">
-                {{ req.raw_text }}
-              </p>
-
-              <div class="flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500 font-medium mb-3">
-                <span>{{ req.location }}</span>
-                <span>•</span>
-                <span class="text-emerald-600 dark:text-emerald-400 font-semibold">{{ req.relevance_score }}/100 Match</span>
-                <span>•</span>
-                <span>{{ req.created_at }}</span>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
-              <button
-                type="button"
-                @click="copyReqPitch(req)"
-                class="flex-1 inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer"
-                :class="copiedReqId === req.id
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-purple-600 hover:bg-purple-700 text-white shadow-sm'"
-              >
-                <Check v-if="copiedReqId === req.id" class="w-3.5 h-3.5" />
-                <Copy v-else class="w-3.5 h-3.5" />
-                <span>{{ copiedReqId === req.id ? 'Copied Pitch!' : 'Copy USD Pitch' }}</span>
-              </button>
-
-              <a
-                v-if="req.url"
-                :href="req.url"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="View original job post"
-                class="inline-flex items-center justify-center p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition"
-              >
-                <ExternalLink class="w-3.5 h-3.5" />
-              </a>
             </div>
           </div>
         </div>
@@ -899,6 +1078,19 @@ const getStageBadgeClass = (stage: string) => {
       :show="showCsvImport"
       @close="showCsvImport = false"
       @imported="() => { triggerToast('CSV imported into sales pipeline!'); router.reload(); }"
+    />
+
+    <CustomRfpModal
+      :show="showCustomRfpModal"
+      @close="showCustomRfpModal = false"
+      @ingested="() => { triggerToast('Upwork / Custom RFP ingested and pitch generated!'); router.reload({ only: ['market_requirements'] }); }"
+    />
+
+    <PitchPreviewModal
+      :show="showPitchModal"
+      :requirement="selectedReqForPitch"
+      @close="showPitchModal = false"
+      @convert="convertReqToDeal"
     />
   </div>
 </template>

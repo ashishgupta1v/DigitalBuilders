@@ -66,6 +66,12 @@ Route::middleware(['web', 'crm.admin'])->prefix('crm')->name('crm.')->group(func
     Route::get('/deals/{id}/proposal', [CrmProposalController::class, 'show'])->name('deals.proposal');
     Route::post('/deals/{id}/proposal', [CrmProposalController::class, 'save'])->name('deals.proposal.save');
     Route::post('/deals/{id}/proposal/send', [CrmProposalController::class, 'send'])->name('deals.proposal.send');
+
+    // Market Requirements & Lead Hunter Actions
+    Route::post('/market/poll', [CrmMarketIngestionController::class, 'pollLive'])->name('market.poll');
+    Route::post('/market/ingest-custom', [CrmMarketIngestionController::class, 'handleExternalRequirement'])->name('market.ingest-custom');
+    Route::post('/market/requirements/{id}/dismiss', [CrmMarketIngestionController::class, 'dismiss'])->name('market.dismiss');
+    Route::post('/market/requirements/{id}/convert', [CrmMarketIngestionController::class, 'convertToDeal'])->name('market.convert');
 });
 
 // Public Ingestion & Webhook Endpoints

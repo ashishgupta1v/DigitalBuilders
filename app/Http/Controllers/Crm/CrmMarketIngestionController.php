@@ -227,6 +227,112 @@ class CrmMarketIngestionController extends Controller
             'requirement_id' => $req->id,
             'segment'        => $pitchData['segment'],
             'score'          => $score,
+            'pitch'          => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
         ], 201);
     }
+
+    /**
+     * Trigger live polling across all configured international channels from the CRM cockpit.
+     */
+    public function pollLive(InternationalLeadScraperService $scraper): JsonResponse
+    {
+        try {
+            $stats = $scraper->pollAll();
+            return response()->json([
+                'success' => true,
+                'message' => "Polling cycle complete. Newly ingested: {$stats['total']} RFPs.",
+                'stats'   => $stats,
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Error during live market polling: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Polling failed: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Dismiss / Archive an RFP from the active stream.
+     */
+    public function dismiss(int $id): JsonResponse
+    {
+        $req = MarketRequirement::findOrFail($id);
+        $req->update([
+            'status'           => 'rejected',
+            'rejection_reason' => 'Dismissed by founder in Cockpit',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'RFP dismissed from active stream.',
+        ]);
+    }
+
+    /**
+     * Convert an RFP directly into an active CRM Lead & Deal.
+     */
+    public function convertToDeal(Request $request, int $id): JsonResponse
+    {
+        $req = MarketRequirement::findOrFail($id);
+        $stage = (string) $request->input('stage', 'proposal_sent');
+
+        $name = $req->contact_name ?: ($req->contact_company ?: 'RFP Prospect');
+        $company = $req->contact_company ?: 'Direct Client';
+        $email = $req->contact_email ?: ('rfp-' . $req->id . '@digitalbuilders.in');
+        $currency = $req->currency ?: 'USD';
+        $amount = (float) ($req->estimated_amount ?: ($currency === 'USD' ? 5000.00 : 185000.00));
+
+        $deal = DB::transaction(function () use ($req, $stage, $name, $company, $email, $currency, $amount) {
+            $lead = Lead::create([
+                'name'             => $name,
+                'email'            => $email,
+                'phone'            => $req->contact_phone,
+                'company'          => $company,
+                'segment'          => $req->matched_segment ?: 'general',
+                'status'           => 'active',
+                'score'            => max(75, (int) $req->relevance_score),
+                'touchpoint_count' => 1,
+                'last_contact_date'=> now(),
+                'next_action_date' => now()->addDays(2),
+                'next_action_note' => 'Follow up on proposal (Touch 2)',
+            ]);
+
+            $deal = Deal::create([
+                'lead_id'             => $lead->id,
+                'title'               => substr($req->title ?: "Project for {$company}", 0, 190),
+                'amount'              => $amount,
+                'currency'            => $currency,
+                'stage'               => $stage,
+                'probability'         => $stage === 'proposal_sent' ? 60 : 35,
+                'scope_summary'       => substr($req->raw_text, 0, 500),
+                'expected_close_date' => now()->addDays(14),
+            ]);
+
+            $req->update([
+                'status'     => 'converted',
+                'lead_id'    => $lead->id,
+                'deal_id'    => $deal->id,
+                'pitched_at' => now(),
+            ]);
+
+            Activity::create([
+                'lead_id'      => $lead->id,
+                'deal_id'      => $deal->id,
+                'type'         => 'note',
+                'subject'      => "Converted from {$req->source} RFP",
+                'body'         => "Converted from Market Requirement #{$req->id}.\n\nPitch Draft:\n{$req->pitch_draft}",
+                'performed_at' => now(),
+            ]);
+
+            return $deal;
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'RFP successfully converted to active CRM deal!',
+            'deal_id' => $deal->id,
+        ]);
+    }
 }
+

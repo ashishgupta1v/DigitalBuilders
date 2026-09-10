@@ -170,15 +170,16 @@ class CrmDashboardController extends Controller
         }
 
         $marketRequirements = MarketRequirement::query()
+            ->whereIn('status', ['qualified', 'pending'])
             ->latest()
-            ->limit(20)
+            ->limit(24)
             ->get()
             ->map(function ($req) {
                 return [
                     'id'               => $req->id,
                     'source'           => $req->source,
-                    'title'            => $req->title,
-                    'raw_text'         => $req->raw_text,
+                    'title'            => html_entity_decode((string) $req->title, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                    'raw_text'         => html_entity_decode((string) $req->raw_text, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
                     'budget'           => $req->formatted_amount,
                     'currency'         => $req->currency,
                     'contact_name'     => $req->contact_name,

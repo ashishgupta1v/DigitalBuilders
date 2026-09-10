@@ -29,6 +29,27 @@ class InternationalLeadScraperService
         '$10',
         '$20',
         '$50',
+        'junior',
+        'júnior',
+        'intern',
+        'internship',
+        'trainee',
+        'entry level',
+        'vaga afirmativa',
+        'aprendiz',
+        '.net',
+        'c#',
+        'c++',
+        'angular',
+        'cobol',
+        'salesforce admin',
+        'sap consultant',
+        'equity only',
+        'unpaid',
+        'cofounder no salary',
+        'desenvolvedor',
+        'desenvolvedora',
+        'estágio',
     ];
 
     public function __construct(
@@ -437,21 +458,32 @@ class InternationalLeadScraperService
 
             foreach ($jobs as $job) {
                 $guid = (string) ($job['guid'] ?? $job['applicationLink'] ?? '');
-                $title = (string) ($job['title'] ?? '');
-                $company = (string) ($job['companyName'] ?? '');
-                $description = strip_tags((string) ($job['description'] ?? ''));
+                $cleanTitle = trim(html_entity_decode((string) ($job['title'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $cleanCompany = trim(html_entity_decode((string) ($job['companyName'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $cleanDescription = trim(html_entity_decode(strip_tags((string) ($job['description'] ?? '')), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
                 $url = (string) ($job['applicationLink'] ?? '');
 
-                if (!$guid || !$title || MarketRequirement::where('source', 'himalayas')->where('external_id', $guid)->exists()) {
+                if (!$guid || !$cleanTitle || MarketRequirement::where('source', 'himalayas')->where('external_id', $guid)->exists()) {
                     continue;
                 }
 
-                $fullText = "{$title} at {$company}. {$description}";
+                // Deduplicate by clean title across recent requirements
+                if (MarketRequirement::where('title', 'like', "%{$cleanTitle}%")->exists()) {
+                    continue;
+                }
+
+                // Exclude Portuguese / foreign language postings
+                if (preg_match('/\b(vaga|afirmativa|remoto|pleno|sênior|júnior|desenvolvedor|desenvolvedora|estágio|clt|pj)\b/i', $cleanTitle . ' ' . $cleanDescription)) {
+                    continue;
+                }
+
+                $fullText = "{$cleanTitle} at {$cleanCompany}. {$cleanDescription}";
                 if (!$this->passesTier1Filters($fullText)) {
                     continue;
                 }
 
-                $isRelevant = preg_match('/\b(vue|react|laravel|full-stack|fullstack|node|python|mobile|pwa|mvp|ai|saas|developer|engineer|software)\b/i', $fullText);
+                // Must explicitly target our core product & web engineering capabilities
+                $isRelevant = preg_match('/\b(vue|react|next|laravel|php|full-stack|fullstack|node|python|django|fastapi|pwa|mvp|saas|portal|crm|erp|architect)\b/i', $cleanTitle);
                 if (!$isRelevant) {
                     continue;
                 }
@@ -471,17 +503,17 @@ class InternationalLeadScraperService
                     continue;
                 }
 
-                $pitchData = $this->pitchGenerator->generatePitch($fullText, null, $company, 'USD');
+                $pitchData = $this->pitchGenerator->generatePitch($fullText, null, $cleanCompany, 'USD');
 
                 $req = MarketRequirement::create([
                     'source'           => 'himalayas',
                     'external_id'      => substr($guid, 0, 190),
-                    'title'            => substr("Himalayas: {$title} — {$company}", 0, 190),
-                    'raw_text'         => substr($description, 0, 3000),
+                    'title'            => substr("Himalayas: {$cleanTitle} — {$cleanCompany}", 0, 190),
+                    'raw_text'         => substr($cleanDescription, 0, 3000),
                     'budget_raw'       => $budgetRaw,
                     'estimated_amount' => min($amount, 20000.00),
                     'currency'         => 'USD',
-                    'contact_company'  => $company,
+                    'contact_company'  => $cleanCompany,
                     'location'         => 'Remote (Global)',
                     'matched_segment'  => $pitchData['segment'],
                     'relevance_score'  => $score,
@@ -489,7 +521,7 @@ class InternationalLeadScraperService
                     'status'           => 'qualified',
                     'metadata'         => [
                         'url'     => $url,
-                        'company' => $company,
+                        'company' => $cleanCompany,
                     ],
                 ]);
 
