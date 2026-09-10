@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Crm;
 
 use App\Http\Controllers\Controller;
+use App\Mail\CrmOutreachMail;
 use App\Models\Activity;
+use App\Models\CrmOutreachEmail;
 use App\Models\Deal;
 use App\Models\Lead;
 use App\Models\Organization;
@@ -14,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class CrmLeadController extends Controller
 {
@@ -124,6 +127,22 @@ class CrmLeadController extends Controller
                     'created_at_raw'    => $activity->created_at->format('d M Y, H:i'),
                 ];
             }),
+            'outreach_emails' => CrmOutreachEmail::where('lead_id', $lead->id)
+                ->latest()
+                ->take(10)
+                ->get()
+                ->map(fn ($email) => [
+                    'id'                => $email->id,
+                    'subject'           => $email->subject,
+                    'touchpoint_number' => $email->touchpoint_number,
+                    'sent_at'           => $email->sent_at?->format('d M, h:i A'),
+                    'opened_at'         => $email->opened_at?->format('d M, h:i A'),
+                    'open_count'        => (int) $email->open_count,
+                    'clicked_at'        => $email->clicked_at?->format('d M, h:i A'),
+                    'click_count'       => (int) $email->click_count,
+                    'last_clicked_url'  => $email->last_clicked_url,
+                    'status'            => $email->status,
+                ]),
         ]);
     }
 
@@ -477,5 +496,93 @@ class CrmLeadController extends Controller
         }
 
         return response()->json(['success' => false, 'message' => 'Unknown action.'], 400);
+    }
+
+    public function sendOutreachEmail(Request $request, int $id): JsonResponse
+    {
+        $lead = Lead::with(['deals' => fn($q) => $q->latest()->limit(1)])->findOrFail($id);
+
+        if (empty($lead->email)) {
+            return response()->json(['error' => 'This lead does not have a valid email address.'], 422);
+        }
+
+        $validated = $request->validate([
+            'subject'           => ['required', 'string', 'max:255'],
+            'body'              => ['nullable', 'string', 'max:10000'],
+            'body_text'         => ['nullable', 'string', 'max:10000'],
+            'touchpoint_number' => ['nullable', 'integer', 'min:1', 'max:5'],
+        ]);
+
+        $body = $validated['body'] ?? $validated['body_text'] ?? null;
+        if (empty($body)) {
+            return response()->json(['error' => 'Email body content cannot be empty.'], 422);
+        }
+
+        $deal = $lead->deals->first();
+        $trackingToken = bin2hex(random_bytes(16));
+        $touchNumber = (int) ($validated['touchpoint_number'] ?? max(1, ($lead->touchpoint_count ?? 0) + 1));
+
+        $outreach = CrmOutreachEmail::create([
+            'lead_id'           => $lead->id,
+            'deal_id'           => $deal?->id,
+            'tracking_token'    => $trackingToken,
+            'recipient_email'   => $lead->email,
+            'recipient_name'    => $lead->name,
+            'subject'           => $validated['subject'],
+            'body_text'         => $body,
+            'body_html'         => $body,
+            'touchpoint_number' => $touchNumber,
+            'sent_at'           => now(),
+            'status'            => 'sent',
+        ]);
+
+        try {
+            Mail::to($lead->email)->send(new CrmOutreachMail(
+                outreachSubject: $validated['subject'],
+                bodyContent: $body,
+                trackingToken: $trackingToken,
+                recipientName: $lead->name,
+            ));
+        } catch (\Throwable $e) {
+            Log::error('Failed to dispatch outreach email: ' . $e->getMessage());
+            return response()->json(['error' => 'Mail delivery failed: ' . $e->getMessage()], 500);
+        }
+
+        $lead->increment('touchpoint_count');
+        $lead->update([
+            'last_contact_date' => now(),
+            'next_action_date'  => now()->addDays(2),
+            'next_action_note'  => "Touch " . min(5, $touchNumber + 1) . ": Follow-up after email",
+        ]);
+
+        if ($deal && in_array($deal->stage, ['new', 'inbound'], true)) {
+            $deal->update([
+                'stage'       => 'contacted',
+                'probability' => 25,
+            ]);
+            $lead->update(['stage' => 'contacted']);
+        }
+
+        Activity::create([
+            'lead_id'           => $lead->id,
+            'deal_id'           => $deal?->id,
+            'user_id'           => $request->user()?->id,
+            'type'              => 'email',
+            'subject'           => "Outreach Email Dispatched (Touch #{$touchNumber})",
+            'description'       => "Subject: \"{$validated['subject']}\"\nRecipient: {$lead->email}",
+            'touchpoint_number' => $touchNumber,
+            'metadata'          => [
+                'outreach_id'    => $outreach->id,
+                'tracking_token' => $trackingToken,
+            ],
+        ]);
+
+        return response()->json([
+            'success'          => true,
+            'message'          => "Tracked email dispatched to {$lead->email}!",
+            'outreach_id'      => $outreach->id,
+            'touchpoint_count' => $lead->fresh()->touchpoint_count,
+            'deal_stage'       => $deal?->fresh()->stage,
+        ]);
     }
 }

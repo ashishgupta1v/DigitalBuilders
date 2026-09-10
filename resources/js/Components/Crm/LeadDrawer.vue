@@ -3,7 +3,8 @@ import { ref, watch, computed } from 'vue'
 import {
   X, Building2, User, Phone, Mail, MessageSquare, Calendar, Sparkles,
   CreditCard, CheckCircle2, AlertCircle, ArrowRight, DollarSign, Clock,
-  FileText, Send, Copy, Check, ExternalLink, ChevronRight, Edit3
+  FileText, Send, Copy, Check, ExternalLink, ChevronRight, Edit3,
+  Eye, MousePointerClick, Bot
 } from 'lucide-vue-next'
 
 const props = defineProps<{
@@ -26,6 +27,20 @@ const activeTab = ref<'timeline' | 'commercials' | 'notes'>('timeline')
 const newNote = ref('')
 const newNoteType = ref('note')
 const loggingActivity = ref(false)
+
+// Outbound Tracked Email
+const showEmailModal = ref(false)
+const emailSubject = ref('')
+const emailBody = ref('')
+const emailTouch = ref(1)
+const sendingEmail = ref(false)
+
+// Inbound Reply Triage
+const showTriageModal = ref(false)
+const triageInput = ref('')
+const triaging = ref(false)
+const triageResult = ref<any>(null)
+const triageCopied = ref(false)
 
 // Wire Logging Modal
 const showWireModal = ref(false)
@@ -139,6 +154,98 @@ const copyBookingLink = async () => {
   await navigator.clipboard.writeText('https://www.digitalbuilders.in/book')
   copiedBooking.value = true
   setTimeout(() => { copiedBooking.value = false }, 2500)
+}
+
+const openEmailComposer = (targetTouch?: number) => {
+  if (!leadData.value?.lead?.email) return
+  const name = leadData.value.lead.name || 'there'
+  const company = leadData.value.lead.company || 'your team'
+  const touch = targetTouch ? Number(targetTouch) : Math.min(5, (leadData.value.lead.touchpoint_count || 0) + 1)
+  emailTouch.value = touch
+
+  if (touch === 1) {
+    emailSubject.value = `Architecture & Technical Execution for ${company}`
+    emailBody.value = `Hi ${name},\n\nI'm Ashish Gupta, Principal Software Architect and Founder at DigitalBuilders (https://www.digitalbuilders.in).\n\nI noticed your active software engineering requirements. At DigitalBuilders, we specialize in high-throughput web applications, clean microservices, and custom ERP systems built with zero bloated plugins, 100% automated test coverage, and weekly live staging deliveries.\n\nWe provide complete IP ownership and a 30-day post-launch warranty on every project.\n\nWould you be open to a quick 15-minute technical sync this week? You can pick a convenient slot directly on my calendar here:\n👉 https://www.digitalbuilders.in/book\n\nLooking forward to speaking.\n\nBest regards,\nAshish Gupta`
+  } else if (touch === 2) {
+    emailSubject.value = `DigitalBuilders Scope Estimator & Pricing Book for ${company}`
+    emailBody.value = `Hi ${name},\n\nFollowing up on my previous note. Wanted to share our transparent 2026 Scope Estimator in case you want to ballpark engineering costs and milestones for ${company}:\n👉 https://www.digitalbuilders.in/estimator\n\nIf you have a quick 10 minutes, let's connect to review your technical bottlenecks:\n👉 https://www.digitalbuilders.in/book\n\nBest,\nAshish Gupta`
+  } else if (touch === 3) {
+    emailSubject.value = `Architecture Case Study relevant to ${company}`
+    emailBody.value = `Hi ${name},\n\nThought you might find this relevant—we recently architected an industrial ERP & ordering system for Garg Enterprises (10k+ SKUs) that eliminated dispatch errors completely: https://www.digitalbuilders.in/portfolio/garg-enterprises.\n\nWe've also built high-concurrency platforms like Habuilt handling 65k+ users: https://www.digitalbuilders.in/portfolio/habuilt.\n\nCould we jump on a 15-minute screen share to review how we would structure ${company}'s build?\n👉 https://www.digitalbuilders.in/book\n\nBest regards,\nAshish Gupta`
+  } else {
+    emailSubject.value = `Checking in on ${company}'s technical roadmap`
+    emailBody.value = `Hi ${name},\n\nAshish here from DigitalBuilders. Dropping a quick note to see if solving software bottlenecks for ${company} is still a priority for this quarter, or if you'd like to revisit down the road?\n\nIf now is not a good time, no worries at all. If you want to review your build scope, you can reach me anytime at https://www.digitalbuilders.in/book.\n\nBest,\nAshish Gupta`
+  }
+  showEmailModal.value = true
+}
+
+const sendTrackedEmail = async () => {
+  if (!leadData.value?.lead?.id) return
+  sendingEmail.value = true
+  try {
+    const res = await fetch(`/crm/leads/${leadData.value.lead.id}/send-email`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+      },
+      body: JSON.stringify({
+        subject: emailSubject.value,
+        body_text: emailBody.value,
+        touchpoint_number: emailTouch.value,
+      }),
+    })
+    const data = await res.json()
+    if (data.success) {
+      showEmailModal.value = false
+      fetchLeadDetails()
+      emit('updated', 'Tracked email dispatched! Stage updated to Contacted.')
+    } else {
+      alert(data.error || 'Failed to send email.')
+    }
+  } catch (err: any) {
+    console.error('Error sending tracked email', err)
+    alert('Failed to dispatch email. Please check server logs.')
+  } finally {
+    sendingEmail.value = false
+  }
+}
+
+const runReplyTriage = async () => {
+  if (!leadData.value?.lead?.id || !triageInput.value.trim()) return
+  triaging.value = true
+  triageResult.value = null
+  try {
+    const res = await fetch(`/crm/leads/${leadData.value.lead.id}/triage-reply`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+      },
+      body: JSON.stringify({
+        message: triageInput.value.trim(),
+        apply_stage_action: true,
+      }),
+    })
+    const data = await res.json()
+    if (data.success) {
+      triageResult.value = data
+      fetchLeadDetails()
+      emit('updated', `Reply triaged: ${data.intent.toUpperCase()}`)
+    }
+  } catch (err) {
+    console.error('Error running reply triage', err)
+  } finally {
+    triaging.value = false
+  }
+}
+
+const copyTriageResponse = () => {
+  const resp = triageResult.value?.battlecard_response || triageResult.value?.suggested_response
+  if (!resp) return
+  navigator.clipboard.writeText(resp)
+  triageCopied.value = true
+  setTimeout(() => { triageCopied.value = false }, 2500)
 }
 
 const sendMailto = () => {
@@ -353,16 +460,27 @@ const submitWirePayment = async () => {
           </div>
 
           <div class="flex items-center gap-1.5 self-end sm:self-auto shrink-0 w-full sm:w-auto flex-wrap sm:flex-nowrap">
-            <!-- Send Email -->
+            <!-- Send Tracked Email -->
             <button
               v-if="leadData?.lead?.email"
               type="button"
-              @click="sendMailto"
+              @click="openEmailComposer(leadData?.lead?.touchpoint_count ? leadData.lead.touchpoint_count + 1 : 1)"
               class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-600 dark:text-sky-400 border border-sky-500/20 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
-              title="Open email draft"
+              title="Compose 1-click tracked email with open/click telemetry"
             >
               <Mail class="w-3.5 h-3.5" />
               <span>Email</span>
+            </button>
+
+            <!-- AI Reply Triage -->
+            <button
+              type="button"
+              @click="showTriageModal = true"
+              class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-violet-500/10 hover:bg-violet-500/20 text-violet-600 dark:text-violet-400 border border-violet-500/20 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+              title="Triage inbound prospect reply with AI battlecards"
+            >
+              <Bot class="w-3.5 h-3.5" />
+              <span>Triage</span>
             </button>
 
             <!-- Copy Pitch -->
@@ -440,6 +558,61 @@ const submitWirePayment = async () => {
       <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-5 custom-scrollbar">
         <!-- Tab 1: Timeline & Notes -->
         <div v-if="activeTab === 'timeline'" class="space-y-4">
+          <!-- Tracked Email Telemetry Stream -->
+          <div v-if="leadData?.outreach_emails?.length > 0" class="p-4 rounded-2xl bg-sky-50/50 dark:bg-sky-950/20 border border-sky-200 dark:border-sky-800/60 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-sky-900 dark:text-sky-200 flex items-center gap-1.5">
+                <Mail class="w-3.5 h-3.5 text-sky-500" />
+                Tracked Email Telemetry ({{ leadData.outreach_emails.length }})
+              </span>
+              <span class="text-[10px] text-sky-600 dark:text-sky-400 font-mono">1x1 Pixel & Link Redirects</span>
+            </div>
+
+            <div class="space-y-2">
+              <div
+                v-for="em in leadData.outreach_emails"
+                :key="em.id"
+                class="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs flex items-center justify-between gap-3"
+              >
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase bg-sky-100 dark:bg-sky-900/50 text-sky-700 dark:text-sky-300">
+                      Touch #{{ em.touchpoint_number }}
+                    </span>
+                    <span class="font-bold text-slate-800 dark:text-slate-200 truncate">{{ em.subject }}</span>
+                  </div>
+                  <div class="text-[10px] text-slate-400 mt-1 flex items-center gap-2">
+                    <span>Sent {{ em.sent_at }}</span>
+                    <span v-if="em.opened_at">• Opened {{ em.opened_at }}</span>
+                    <span v-if="em.clicked_at">• Clicked {{ em.clicked_at }}</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2 shrink-0 text-[11px]">
+                  <!-- Open Telemetry -->
+                  <div
+                    class="flex items-center gap-1 px-2 py-0.5 rounded-lg font-mono font-semibold"
+                    :class="em.open_count > 0 ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'"
+                    :title="em.opened_at ? `Opened ${em.opened_at}` : 'Unopened'"
+                  >
+                    <Eye class="w-3 h-3" />
+                    <span>{{ em.open_count > 0 ? `${em.open_count} open${em.open_count > 1 ? 's' : ''}` : 'Unopened' }}</span>
+                  </div>
+
+                  <!-- Click Telemetry -->
+                  <div
+                    class="flex items-center gap-1 px-2 py-0.5 rounded-lg font-mono font-semibold"
+                    :class="em.click_count > 0 ? 'bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 border border-purple-500/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'"
+                    :title="em.clicked_at ? `Clicked ${em.clicked_at}` : 'No clicks'"
+                  >
+                    <MousePointerClick class="w-3 h-3" />
+                    <span>{{ em.click_count > 0 ? `${em.click_count} click${em.click_count > 1 ? 's' : ''}` : '0 clicks' }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Add Note Box -->
           <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-3">
             <div class="flex items-center justify-between">
@@ -752,6 +925,191 @@ const submitWirePayment = async () => {
           >
             {{ loggingWire ? 'Verifying...' : 'Confirm & Close Deal' }}
           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inline Modal: Tracked Email Composer -->
+    <div
+      v-if="showEmailModal"
+      class="fixed inset-0 z-60 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4"
+    >
+      <div class="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+          <div class="flex items-center gap-2">
+            <div class="p-2 rounded-xl bg-sky-500/10 text-sky-500 border border-sky-500/20">
+              <Mail class="w-4 h-4" />
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white">Tracked Outreach Email</h3>
+              <p class="text-[11px] text-slate-500">Includes 1x1 tracking pixel + booking redirect telemetry</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            @click="showEmailModal = false"
+            class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+          >
+            <X class="w-4 h-4" />
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block text-[11px] font-medium text-slate-700 dark:text-slate-300 mb-1">To</label>
+            <input
+              type="text"
+              :value="`${leadData?.lead?.name || ''} <${leadData?.lead?.email || ''}>`"
+              disabled
+              class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-600 dark:text-slate-400 font-mono"
+            />
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="flex-1">
+              <label class="block text-[11px] font-medium text-slate-700 dark:text-slate-300 mb-1">Touchpoint Sequence</label>
+              <select
+                v-model="emailTouch"
+                @change="openEmailComposer(emailTouch)"
+                class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-slate-100"
+              >
+                <option :value="1">Touch #1: Initial Architecture Intro</option>
+                <option :value="2">Touch #2: 48h Sprint Follow-Up</option>
+                <option :value="3">Touch #3: Technical Case Study Brief</option>
+                <option :value="4">Touch #4: Quarterly Check-in</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-medium text-slate-700 dark:text-slate-300 mb-1">Subject</label>
+            <input
+              v-model="emailSubject"
+              type="text"
+              class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-slate-100 font-semibold"
+            />
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-medium text-slate-700 dark:text-slate-300 mb-1">Email Body (Plain text / links auto-tracked)</label>
+            <textarea
+              v-model="emailBody"
+              rows="8"
+              class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-slate-100 font-sans leading-relaxed focus:ring-1 focus:ring-sky-500 focus:outline-none"
+            ></textarea>
+          </div>
+
+          <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-2">
+            <Eye class="w-3.5 h-3.5 text-sky-500 shrink-0" />
+            <span>Opens and link clicks will send real-time alerts to your configured executive Telegram bot.</span>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button
+            type="button"
+            @click="showEmailModal = false"
+            class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            @click="sendTrackedEmail"
+            :disabled="sendingEmail || !emailSubject || !emailBody"
+            class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+          >
+            <Send class="w-3.5 h-3.5" />
+            <span>{{ sendingEmail ? 'Dispatching...' : 'Dispatch Tracked Email' }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inline Modal: AI Reply Triage & Battlecards -->
+    <div
+      v-if="showTriageModal"
+      class="fixed inset-0 z-60 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4"
+    >
+      <div class="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+          <div class="flex items-center gap-2">
+            <div class="p-2 rounded-xl bg-violet-500/10 text-violet-500 border border-violet-500/20">
+              <Bot class="w-4 h-4" />
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white">AI Reply Triage & Battlecards</h3>
+              <p class="text-[11px] text-slate-500">Paste lead response to classify intent & generate optimal rebuttal</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            @click="showTriageModal = false"
+            class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+          >
+            <X class="w-4 h-4" />
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block text-[11px] font-medium text-slate-700 dark:text-slate-300 mb-1">
+              Prospect's Inbound Message (Email, WhatsApp, or LinkedIn)
+            </label>
+            <textarea
+              v-model="triageInput"
+              rows="4"
+              placeholder="e.g. Thanks for reaching out, but your pricing is too high for our current seed stage..."
+              class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-slate-100 font-sans leading-relaxed focus:ring-1 focus:ring-violet-500 focus:outline-none"
+            ></textarea>
+          </div>
+
+          <div class="flex justify-end">
+            <button
+              type="button"
+              @click="runReplyTriage"
+              :disabled="triaging || !triageInput.trim()"
+              class="px-4 py-1.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+            >
+              <Sparkles class="w-3.5 h-3.5" />
+              <span>{{ triaging ? 'Analyzing Intent...' : 'Analyze Reply' }}</span>
+            </button>
+          </div>
+
+          <!-- Triage Classification Results -->
+          <div v-if="triageResult" class="p-3.5 rounded-2xl bg-violet-50/50 dark:bg-violet-950/20 border border-violet-200 dark:border-violet-800/60 space-y-3">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-violet-900 dark:text-violet-200">Detected Intent:</span>
+                <span class="px-2 py-0.5 rounded-md text-xs font-bold uppercase bg-violet-200 dark:bg-violet-900/60 text-violet-800 dark:text-violet-300">
+                  {{ triageResult.intent?.replace('_', ' ') }}
+                </span>
+              </div>
+              <span v-if="triageResult.confidence" class="text-[10px] text-slate-500 font-mono">
+                Confidence: {{ Math.round(triageResult.confidence * 100) }}%
+              </span>
+            </div>
+
+            <div>
+              <div class="text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Recommended Battlecard Response:</div>
+              <div class="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-800 dark:text-slate-200 whitespace-pre-wrap font-sans leading-relaxed">
+                {{ triageResult.battlecard_response }}
+              </div>
+            </div>
+
+            <div class="flex justify-end gap-2">
+              <button
+                type="button"
+                @click="copyTriageResponse"
+                class="px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer border"
+                :class="triageCopied ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'"
+              >
+                <Check v-if="triageCopied" class="w-3.5 h-3.5" />
+                <Copy v-else class="w-3.5 h-3.5" />
+                <span>{{ triageCopied ? 'Copied to Clipboard' : 'Copy Response' }}</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

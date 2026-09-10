@@ -7,12 +7,20 @@ use App\Http\Controllers\Crm\CrmAiController;
 use App\Http\Controllers\Crm\CrmAuthController;
 use App\Http\Controllers\Crm\CrmDashboardController;
 use App\Http\Controllers\Crm\CrmDealController;
+use App\Http\Controllers\Crm\CrmEmailTrackingController;
+use App\Http\Controllers\Crm\CrmInboundReplyController;
 use App\Http\Controllers\Crm\CrmLeadController;
 use App\Http\Controllers\Crm\CrmMarketIngestionController;
 use App\Http\Controllers\Crm\CrmPaymentController;
 use App\Http\Controllers\Crm\CrmProposalController;
 use App\Http\Controllers\Crm\TelegramWebhookController;
 use Illuminate\Support\Facades\Route;
+
+// Public Email Engagement Tracking (Opens & Clicks)
+Route::prefix('crm/track')->group(function () {
+    Route::get('/open/{token}', [CrmEmailTrackingController::class, 'trackOpen'])->name('crm.track.open');
+    Route::get('/click/{token}', [CrmEmailTrackingController::class, 'trackClick'])->name('crm.track.click');
+});
 
 // Public CRM Auth & Password Recovery Routes
 Route::middleware(['web'])->prefix('crm')->group(function () {
@@ -53,6 +61,8 @@ Route::middleware(['web', 'crm.admin'])->prefix('crm')->name('crm.')->group(func
     Route::delete('/leads/{id}', [CrmLeadController::class, 'destroy'])->name('leads.destroy');
     Route::post('/leads/bulk', [CrmLeadController::class, 'bulkAction'])->name('leads.bulk');
     Route::post('/leads/import', [CrmLeadController::class, 'importCsv'])->name('leads.import');
+    Route::post('/leads/{id}/send-email', [CrmLeadController::class, 'sendOutreachEmail'])->name('leads.send-email');
+    Route::post('/leads/{id}/triage-reply', [CrmInboundReplyController::class, 'triageLeadReply'])->name('leads.triage-reply');
 
     // Deal & Pipeline Mechanics
     Route::post('/deals/{id}/stage', [CrmDealController::class, 'updateStage'])->name('deals.stage');
@@ -95,4 +105,5 @@ Route::prefix('api/crm')->name('api.crm.')->group(function () {
     Route::post('/ingest/indiamart', [CrmMarketIngestionController::class, 'handleIndiaMartPush'])->name('ingest.indiamart');
     Route::post('/ingest/requirement', [CrmMarketIngestionController::class, 'handleExternalRequirement'])->name('ingest.requirement');
     Route::post('/webhooks/telegram', [TelegramWebhookController::class, 'handle'])->name('webhooks.telegram');
+    Route::post('/webhooks/reply', [CrmInboundReplyController::class, 'handleExternalWebhook'])->name('webhooks.reply');
 });
