@@ -16,10 +16,11 @@ use App\Http\Controllers\Crm\CrmProposalController;
 use App\Http\Controllers\Crm\TelegramWebhookController;
 use Illuminate\Support\Facades\Route;
 
-// Public Email Engagement Tracking (Opens & Clicks)
-Route::prefix('crm/track')->group(function () {
-    Route::get('/open/{token}', [CrmEmailTrackingController::class, 'trackOpen'])->name('crm.track.open');
-    Route::get('/click/{token}', [CrmEmailTrackingController::class, 'trackClick'])->name('crm.track.click');
+// Public Email Engagement Tracking (Opens, Clicks & Unsubscribe)
+Route::prefix('crm')->group(function () {
+    Route::get('/track/open/{token}', [CrmEmailTrackingController::class, 'trackOpen'])->name('crm.track.open');
+    Route::get('/track/click/{token}', [CrmEmailTrackingController::class, 'trackClick'])->name('crm.track.click');
+    Route::get('/unsubscribe/{token}', [\App\Http\Controllers\Crm\CrmSequenceController::class, 'unsubscribe'])->name('crm.unsubscribe');
 });
 
 // Public CRM Auth & Password Recovery Routes
@@ -69,6 +70,15 @@ Route::middleware(['web', 'crm.admin'])->prefix('crm')->name('crm.')->group(func
     Route::post('/leads/{id}/enrich', [CrmLeadController::class, 'enrich'])->name('leads.enrich');
     Route::get('/leads/{id}/duplicates', [CrmLeadController::class, 'checkDuplicates'])->name('leads.duplicates');
     Route::post('/leads/{id}/merge', [CrmLeadController::class, 'merge'])->name('leads.merge');
+
+    // Outbound Campaigns & Automated Sequences
+    Route::get('/leads/{lead}/sequence', [\App\Http\Controllers\Crm\CrmSequenceController::class, 'show'])->name('leads.sequence');
+    Route::post('/leads/{lead}/sequence/regenerate', [\App\Http\Controllers\Crm\CrmSequenceController::class, 'regenerate'])->name('leads.sequence.regenerate');
+    Route::post('/sequences/{sequence}/start', [\App\Http\Controllers\Crm\CrmSequenceController::class, 'start'])->name('sequences.start');
+    Route::post('/sequences/{sequence}/pause', [\App\Http\Controllers\Crm\CrmSequenceController::class, 'pause'])->name('sequences.pause');
+    Route::post('/sequences/{sequence}/resume', [\App\Http\Controllers\Crm\CrmSequenceController::class, 'resume'])->name('sequences.resume');
+    Route::post('/leads/{lead}/mark-replied', [\App\Http\Controllers\Crm\CrmSequenceController::class, 'markReplied'])->name('leads.mark-replied');
+    Route::put('/sequences/{sequence}/steps/{step}', [\App\Http\Controllers\Crm\CrmSequenceController::class, 'updateStep'])->name('sequences.steps.update');
 
     // Deal & Pipeline Mechanics
     Route::post('/deals/{id}/stage', [CrmDealController::class, 'updateStage'])->name('deals.stage');

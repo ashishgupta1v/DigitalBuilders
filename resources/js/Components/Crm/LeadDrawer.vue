@@ -4,7 +4,7 @@ import {
   X, Building2, User, Phone, Mail, MessageSquare, Calendar, Sparkles,
   CreditCard, CheckCircle2, AlertCircle, ArrowRight, DollarSign, Clock,
   FileText, Send, Copy, Check, ExternalLink, ChevronRight, Edit3,
-  Eye, MousePointerClick, Bot, Receipt, Globe
+  Eye, MousePointerClick, Bot, Receipt, Globe, Play, Pause, RefreshCw, Search
 } from 'lucide-vue-next'
 
 const props = defineProps<{
@@ -21,7 +21,17 @@ const emit = defineEmits<{
 
 const leadData = ref<any>(null)
 const loading = ref(false)
-const activeTab = ref<'timeline' | 'commercials' | 'notes'>('timeline')
+const activeTab = ref<'timeline' | 'sequence' | 'commercials' | 'notes'>('timeline')
+
+// Outbound Sequence State
+const sequenceData = ref<any>(null)
+const loadingSequence = ref(false)
+const startingSequence = ref(false)
+const pausingSequence = ref(false)
+const editingStepId = ref<number | null>(null)
+const stepEdits = ref<Record<number, { subject: string; body_text: string; delay_days: number }>>({})
+const contactEmailInput = ref('')
+const savingEmail = ref(false)
 
 // Activity Logging
 const newNote = ref('')
@@ -174,12 +184,203 @@ const fetchLeadDetails = async () => {
   }
 }
 
+const loadSequence = async () => {
+  if (!props.leadId) return
+  loadingSequence.value = true
+  try {
+    const res = await fetch(`/crm/leads/${props.leadId}/sequence`)
+    const data = await res.json()
+    sequenceData.value = data.sequence
+    if (data.sequence?.steps) {
+      data.sequence.steps.forEach((s: any) => {
+        stepEdits.value[s.id] = { subject: s.subject, body_text: s.body_text, delay_days: s.delay_days }
+      })
+    }
+  } catch (err) {
+    console.error('Failed to load sequence', err)
+  } finally {
+    loadingSequence.value = false
+  }
+}
+
+const regenerateSequence = async () => {
+  if (!props.leadId) return
+  loadingSequence.value = true
+  try {
+    const res = await fetch(`/crm/leads/${props.leadId}/sequence/regenerate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+      },
+    })
+    const data = await res.json()
+    sequenceData.value = data.sequence
+    if (data.sequence?.steps) {
+      data.sequence.steps.forEach((s: any) => {
+        stepEdits.value[s.id] = { subject: s.subject, body_text: s.body_text, delay_days: s.delay_days }
+      })
+    }
+    emit('updated', 'AI 4-Step Cadence regenerated!')
+  } catch (err) {
+    console.error('Failed to regenerate sequence', err)
+  } finally {
+    loadingSequence.value = false
+  }
+}
+
+const startSequence = async () => {
+  if (!sequenceData.value?.id) return
+  startingSequence.value = true
+  try {
+    const stepsPayload = Object.entries(stepEdits.value).map(([id, val]) => ({ id: Number(id), ...val }))
+    const res = await fetch(`/crm/sequences/${sequenceData.value.id}/start`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+      },
+      body: JSON.stringify({ steps: stepsPayload }),
+    })
+    const data = await res.json()
+    if (data.success) {
+      sequenceData.value = data.sequence
+      fetchLeadDetails()
+      emit('updated', 'Campaign launched! Touch #1 dispatched.')
+    } else {
+      alert(data.error || 'Failed to start campaign.')
+    }
+  } catch (err) {
+    console.error('Failed to start sequence', err)
+  } finally {
+    startingSequence.value = false
+  }
+}
+
+const pauseSequence = async () => {
+  if (!sequenceData.value?.id) return
+  pausingSequence.value = true
+  try {
+    const res = await fetch(`/crm/sequences/${sequenceData.value.id}/pause`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+      },
+    })
+    const data = await res.json()
+    if (data.success) {
+      sequenceData.value = data.sequence
+      emit('updated', 'Sequence paused.')
+    }
+  } catch (err) {
+    console.error('Failed to pause sequence', err)
+  } finally {
+    pausingSequence.value = false
+  }
+}
+
+const resumeSequence = async () => {
+  if (!sequenceData.value?.id) return
+  pausingSequence.value = true
+  try {
+    const res = await fetch(`/crm/sequences/${sequenceData.value.id}/resume`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+      },
+    })
+    const data = await res.json()
+    if (data.success) {
+      sequenceData.value = data.sequence
+      emit('updated', 'Sequence resumed.')
+    }
+  } catch (err) {
+    console.error('Failed to resume sequence', err)
+  } finally {
+    pausingSequence.value = false
+  }
+}
+
+const markAsReplied = async () => {
+  if (!props.leadId) return
+  try {
+    const res = await fetch(`/crm/leads/${props.leadId}/mark-replied`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+      },
+      body: JSON.stringify({ note: 'Prospect replied to email outreach' }),
+    })
+    const data = await res.json()
+    if (data.success) {
+      loadSequence()
+      fetchLeadDetails()
+      emit('updated', 'Prospect marked as replied. Outbound sequence halted.')
+    }
+  } catch (err) {
+    console.error('Failed to mark replied', err)
+  }
+}
+
+const saveStep = async (stepId: number) => {
+  if (!sequenceData.value?.id || !stepEdits.value[stepId]) return
+  try {
+    const res = await fetch(`/crm/sequences/${sequenceData.value.id}/steps/${stepId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+      },
+      body: JSON.stringify(stepEdits.value[stepId]),
+    })
+    const data = await res.json()
+    if (data.success) {
+      editingStepId.value = null
+      emit('updated', 'Step saved.')
+    }
+  } catch (err) {
+    console.error('Failed to save step', err)
+  }
+}
+
+const saveContactEmail = async () => {
+  if (!props.leadId || !contactEmailInput.value.trim()) return
+  savingEmail.value = true
+  try {
+    const res = await fetch(`/crm/leads/${props.leadId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+      },
+      body: JSON.stringify({ email: contactEmailInput.value.trim() }),
+    })
+    const data = await res.json()
+    if (data.success) {
+      if (leadData.value?.lead) {
+        leadData.value.lead.email = contactEmailInput.value.trim()
+      }
+      contactEmailInput.value = ''
+      loadSequence()
+      emit('updated', 'Email updated! Sequence unlocked.')
+    }
+  } catch (err) {
+    console.error('Failed to save email', err)
+  } finally {
+    savingEmail.value = false
+  }
+}
+
 watch(
   () => [props.show, props.leadId],
   () => {
     if (props.show && props.leadId) {
       fetchLeadDetails()
       fetchDuplicates()
+      loadSequence()
     }
   },
   { immediate: true }
@@ -697,6 +898,14 @@ const submitWirePayment = async () => {
           <span>Timeline & Notes ({{ leadData?.activities?.length || 0 }})</span>
         </button>
         <button
+          @click="activeTab = 'sequence'"
+          class="pb-3 transition border-b-2 cursor-pointer flex items-center gap-2 shrink-0"
+          :class="activeTab === 'sequence' ? 'border-purple-500 dark:border-purple-400 text-purple-600 dark:text-purple-300 font-bold' : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'"
+        >
+          <Send class="w-3.5 h-3.5" />
+          <span>Outbound Cadence ({{ sequenceData?.status ? sequenceData.status.toUpperCase() : '4 Steps' }})</span>
+        </button>
+        <button
           @click="activeTab = 'commercials'"
           class="pb-3 transition border-b-2 cursor-pointer flex items-center gap-2 shrink-0"
           :class="activeTab === 'commercials' ? 'border-cyan-500 dark:border-cyan-400 text-cyan-600 dark:text-cyan-300 font-bold' : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'"
@@ -708,6 +917,257 @@ const submitWirePayment = async () => {
 
       <!-- Tab Content Area -->
       <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-5 custom-scrollbar">
+        <!-- Tab 0: Outbound Cadence Engine -->
+        <div v-if="activeTab === 'sequence'" class="space-y-4">
+          <!-- Missing Email Contact Warning & 1-Click Search Helper -->
+          <div v-if="!leadData?.lead?.email" class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-3">
+            <div class="flex items-center gap-2">
+              <AlertCircle class="w-4 h-4 text-amber-500 shrink-0" />
+              <span class="font-bold text-amber-900 dark:text-amber-200 text-xs">
+                No Verified Contact Email for this Prospect
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-600 dark:text-slate-400">
+              To launch automated B2B outbound cadences, add an email address. Use quick-search to find their founder/CEO profile on LinkedIn or Google:
+            </p>
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <a
+                :href="`https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent((leadData?.lead?.name || '') + ' ' + (leadData?.lead?.company || ''))}`"
+                target="_blank"
+                class="px-2.5 py-1 rounded-lg bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 dark:text-blue-400 border border-blue-500/20 text-[11px] font-bold flex items-center gap-1.5 transition"
+              >
+                <ExternalLink class="w-3 h-3" />
+                <span>Search on LinkedIn</span>
+              </a>
+              <a
+                :href="`https://www.google.com/search?q=${encodeURIComponent((leadData?.lead?.name || '') + ' ' + (leadData?.lead?.company || '') + ' email')}`"
+                target="_blank"
+                class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 text-[11px] font-bold flex items-center gap-1.5 transition"
+              >
+                <Search class="w-3 h-3" />
+                <span>Search on Google</span>
+              </a>
+            </div>
+            <div class="flex items-center gap-2 pt-1">
+              <input
+                v-model="contactEmailInput"
+                type="email"
+                placeholder="Paste founder/decision-maker email..."
+                class="flex-1 px-3 py-1.5 bg-white dark:bg-slate-950 border border-amber-300 dark:border-amber-800 rounded-xl text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-amber-500"
+              />
+              <button
+                type="button"
+                @click="saveContactEmail"
+                :disabled="savingEmail || !contactEmailInput.trim()"
+                class="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition disabled:opacity-50 cursor-pointer shadow-xs"
+              >
+                {{ savingEmail ? 'Saving...' : 'Save & Unlock' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Cadence Header Status Card -->
+          <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <Send class="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-white">
+                  4-Step Outbound Cadence Engine
+                </h4>
+                <span
+                  class="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono uppercase border"
+                  :class="{
+                    'bg-purple-500/10 text-purple-600 border-purple-500/20': sequenceData?.status === 'draft',
+                    'bg-emerald-500/10 text-emerald-600 border-emerald-500/20': sequenceData?.status === 'active',
+                    'bg-amber-500/10 text-amber-600 border-amber-500/20': sequenceData?.status === 'paused',
+                    'bg-sky-500/10 text-sky-600 border-sky-500/20': sequenceData?.status === 'replied',
+                    'bg-rose-500/10 text-rose-600 border-rose-500/20': sequenceData?.status === 'opted_out',
+                    'bg-slate-500/10 text-slate-500 border-slate-500/20': sequenceData?.status === 'completed',
+                  }"
+                >
+                  {{ sequenceData?.status || 'Draft' }}
+                </span>
+              </div>
+
+              <div class="flex items-center gap-2 flex-wrap">
+                <button
+                  type="button"
+                  @click="regenerateSequence"
+                  :disabled="loadingSequence"
+                  class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 text-[11px] font-semibold flex items-center gap-1 transition cursor-pointer"
+                  title="Re-generate personalized sequence copy with AI"
+                >
+                  <RefreshCw class="w-3 h-3" :class="{ 'animate-spin': loadingSequence }" />
+                  <span>Regenerate AI Copy</span>
+                </button>
+
+                <button
+                  v-if="sequenceData?.status === 'active'"
+                  type="button"
+                  @click="pauseSequence"
+                  :disabled="pausingSequence"
+                  class="px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/20 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+                >
+                  <Pause class="w-3 h-3" />
+                  <span>Pause</span>
+                </button>
+
+                <button
+                  v-if="sequenceData?.status === 'paused'"
+                  type="button"
+                  @click="resumeSequence"
+                  :disabled="pausingSequence"
+                  class="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+                >
+                  <Play class="w-3 h-3" />
+                  <span>Resume</span>
+                </button>
+
+                <button
+                  v-if="sequenceData?.status === 'active' || sequenceData?.status === 'paused'"
+                  type="button"
+                  @click="markAsReplied"
+                  class="px-2.5 py-1 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-700 dark:text-sky-400 border border-sky-500/20 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+                  title="Prospect replied on email or LinkedIn — stop remaining touches"
+                >
+                  <CheckCircle2 class="w-3 h-3" />
+                  <span>Mark Replied</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 1-Click Launch Button -->
+            <div v-if="sequenceData?.status === 'draft'" class="pt-2">
+              <button
+                type="button"
+                @click="startSequence"
+                :disabled="startingSequence || !leadData?.lead?.email"
+                class="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white text-xs font-extrabold shadow-md shadow-purple-500/20 flex items-center justify-center gap-2 transition cursor-pointer disabled:opacity-50"
+              >
+                <Send class="w-4 h-4" :class="{ 'animate-pulse': startingSequence }" />
+                <span>{{ startingSequence ? 'Launching Campaign...' : '🚀 1-Click Approve & Launch Cadence (Send Touch #1 Now)' }}</span>
+              </button>
+              <div class="text-[10px] text-slate-400 text-center mt-1.5">
+                Dispatches Touch #1 immediately via SMTP. Touchpoints #2 (+3d), #3 (+7d), and #4 (+11d) will automatically execute on schedule.
+              </div>
+            </div>
+          </div>
+
+          <!-- The 4 Steps Timeline -->
+          <div v-if="loadingSequence" class="py-10 text-center text-xs text-slate-400">
+            <RefreshCw class="w-6 h-6 animate-spin mx-auto text-purple-500 mb-2" />
+            <span>Loading AI Sequence Steps...</span>
+          </div>
+
+          <div v-else class="space-y-3">
+            <div
+              v-for="step in sequenceData?.steps || []"
+              :key="step.id"
+              class="p-4 rounded-2xl bg-white dark:bg-slate-900 border transition shadow-xs"
+              :class="{
+                'border-emerald-500/50 dark:border-emerald-500/40 bg-emerald-500/[0.02]': step.status === 'sent',
+                'border-purple-500/40 dark:border-purple-500/30': step.status === 'scheduled',
+                'border-slate-200 dark:border-slate-800': step.status === 'pending' || step.status === 'skipped',
+              }"
+            >
+              <div class="flex items-center justify-between gap-2 mb-2.5">
+                <div class="flex items-center gap-2">
+                  <span
+                    class="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-extrabold font-mono"
+                    :class="{
+                      'bg-emerald-500 text-white': step.status === 'sent',
+                      'bg-purple-600 text-white': step.status === 'scheduled',
+                      'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400': step.status === 'pending',
+                      'bg-slate-100 text-slate-400 line-through': step.status === 'skipped',
+                    }"
+                  >
+                    {{ step.step_number }}
+                  </span>
+                  <div>
+                    <div class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                      <span>{{ step.title }}</span>
+                      <span class="text-[10px] text-slate-400 font-normal">
+                        ({{ step.delay_days === 0 ? 'Day 0 • Immediate' : `+${step.delay_days} days` }})
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <span
+                    class="px-2 py-0.5 rounded text-[10px] font-bold font-mono uppercase"
+                    :class="{
+                      'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400': step.status === 'sent',
+                      'bg-purple-500/15 text-purple-700 dark:text-purple-400': step.status === 'scheduled',
+                      'bg-slate-100 dark:bg-slate-800 text-slate-500': step.status === 'pending',
+                      'bg-slate-100 dark:bg-slate-800 text-slate-400 line-through': step.status === 'skipped',
+                    }"
+                  >
+                    {{ step.status === 'scheduled' && step.scheduled_at ? `Scheduled (${new Date(step.scheduled_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })})` : step.status }}
+                  </span>
+
+                  <button
+                    v-if="step.status !== 'sent'"
+                    type="button"
+                    @click="editingStepId = (editingStepId === step.id ? null : step.id)"
+                    class="p-1 rounded-lg text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition cursor-pointer"
+                    title="Edit step content"
+                  >
+                    <Edit3 class="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+
+              <!-- Content Viewer / Inline Editor -->
+              <div v-if="editingStepId === step.id" class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                <div>
+                  <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Subject Line</label>
+                  <input
+                    v-if="stepEdits[step.id]"
+                    v-model="stepEdits[step.id].subject"
+                    type="text"
+                    class="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-950 border border-purple-500/40 rounded-xl text-xs text-slate-900 dark:text-slate-100 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Email Body</label>
+                  <textarea
+                    v-if="stepEdits[step.id]"
+                    v-model="stepEdits[step.id].body_text"
+                    rows="6"
+                    class="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-purple-500/40 rounded-xl text-xs text-slate-900 dark:text-slate-100 focus:outline-none font-sans leading-relaxed"
+                  ></textarea>
+                </div>
+                <div class="flex justify-end gap-2">
+                  <button
+                    type="button"
+                    @click="editingStepId = null"
+                    class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-semibold cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    @click="saveStep(step.id)"
+                    class="px-3 py-1 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold cursor-pointer"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+
+              <div v-else class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
+                <div class="font-bold text-slate-800 dark:text-slate-200">
+                  Subject: <span class="font-normal">{{ stepEdits[step.id]?.subject || step.subject }}</span>
+                </div>
+                <p class="whitespace-pre-line text-[11px] leading-relaxed line-clamp-3 text-slate-500 dark:text-slate-400">
+                  {{ stepEdits[step.id]?.body_text || step.body_text }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Tab 1: Timeline & Notes -->
         <div v-if="activeTab === 'timeline'" class="space-y-4">
           <!-- Tracked Email Telemetry Stream -->

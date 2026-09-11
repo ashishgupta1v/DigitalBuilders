@@ -395,4 +395,162 @@ PROMPT;
             'suggested_architecture' => 'Modular full-stack architecture with REST/GraphQL APIs, reactive UI, and automated CI/CD deployment.',
         ];
     }
+
+    /**
+     * Generate a 4-step B2B outbound cadence personalized for a lead.
+     *
+     * Cadence:
+     * - Step 1 (Day 0): Relevant Tech Pitch + Case Study Proof + Dual CTA
+     * - Step 2 (Day 3): Technical Architecture Value Drop & Pitfall Prevention
+     * - Step 3 (Day 7): Executive Check-In / Quick Bump
+     * - Step 4 (Day 11): Graceful Breakup & Open Door
+     *
+     * @return array<int, array{step_number: int, delay_days: int, title: string, subject: string, body_text: string}>
+     */
+    public function generateFullCadence(\App\Models\Lead $lead): array
+    {
+        $contactName = trim((string) ($lead->name ?: 'there'));
+        $firstName = explode(' ', $contactName)[0];
+        $company = trim((string) ($lead->company ?: ''));
+        $companyContext = !empty($company) ? " at {$company}" : '';
+        $fullText = ($lead->description ?: '') . ' ' . ($lead->ai_summary ?: '') . ' ' . ($lead->project_type ?: '');
+
+        $segment = $this->classifySegment($fullText);
+        $case = self::CASE_STUDIES[$segment] ?? self::CASE_STUDIES['general'];
+
+        $scraper = app(\App\Services\SalesFunnel\InternationalLeadScraperService::class);
+        $detectedTags = $scraper->extractTechTags($fullText);
+        $techSummary = !empty($detectedTags) ? implode(', ', array_slice($detectedTags, 0, 3)) : 'scalable web architecture';
+
+        // Check if OpenAI is available for customized dynamic generation
+        $apiKey = config('services.openai.api_key') ?? env('OPENAI_API_KEY');
+        if (!empty($apiKey)) {
+            try {
+                $proofContext = $this->buildProofOfWorkContext($detectedTags);
+                $prompt = <<<PROMPT
+You are Ashish Gupta, Founder & Lead Architect at DigitalBuilders (https://www.digitalbuilders.in).
+We build production web platforms, SaaS MVPs, and AI integrations in 4-6 week fixed-price sprints.
+
+{$proofContext}
+
+Generate a 4-step B2B cold email outbound cadence for this lead:
+- Recipient Name: {$contactName} (First Name: {$firstName})
+- Company: {$company}
+- Project Context: {$fullText}
+- Tech Stack: {$techSummary}
+
+Return ONLY a JSON array of exactly 4 objects matching this format:
+[
+  {
+    "step_number": 1,
+    "delay_days": 0,
+    "title": "Touch 1: Pitch & Case Study",
+    "subject": "Punchy subject line referencing their tech or company",
+    "body_text": "High-conviction intro under 130 words citing our case study proof and ending with calendar CTA https://www.digitalbuilders.in/book"
+  },
+  {
+    "step_number": 2,
+    "delay_days": 3,
+    "title": "Touch 2: Technical Value Drop",
+    "subject": "Re: [same subject as step 1]",
+    "body_text": "Architectural advice under 110 words sharing a specific recommendation for scaling {$techSummary} and avoiding tech debt"
+  },
+  {
+    "step_number": 3,
+    "delay_days": 7,
+    "title": "Touch 3: Executive Bump",
+    "subject": "Re: [same subject as step 1]",
+    "body_text": "Short 3-sentence check-in asking if they resolved engineering bandwidth for {$company}"
+  },
+  {
+    "step_number": 4,
+    "delay_days": 11,
+    "title": "Touch 4: Graceful Breakup",
+    "subject": "Re: [same subject as step 1]",
+    "body_text": "Polite breakup email closing loop for now but leaving the door open"
+  }
+]
+PROMPT;
+
+                $response = Http::timeout(25)->withHeaders([
+                    'Authorization' => 'Bearer ' . $apiKey,
+                    'Content-Type'  => 'application/json',
+                ])->post('https://api.openai.com/v1/chat/completions', [
+                    'model'       => 'gpt-4o-mini',
+                    'messages'    => [
+                        ['role' => 'system', 'content' => 'You are an elite B2B sales development copywriter for a high-end engineering studio.'],
+                        ['role' => 'user', 'content' => $prompt],
+                    ],
+                    'temperature' => 0.4,
+                ]);
+
+                if ($response->successful()) {
+                    $content = $response->json('choices.0.message.content');
+                    $cleanJson = trim((string) preg_replace('/^```(?:json)?|```$/im', '', (string) $content));
+                    $decoded = json_decode($cleanJson, true);
+                    if (is_array($decoded) && count($decoded) === 4) {
+                        return $decoded;
+                    }
+                }
+            } catch (\Throwable $e) {
+                Log::warning('OpenAI full cadence generation failed, falling back to local generator: ' . $e->getMessage());
+            }
+        }
+
+        // High-conviction deterministic 4-step sequence fallback
+        $baseSubject = !empty($company)
+            ? "Quick idea on {$company}'s {$techSummary} architecture"
+            : "Idea on your {$techSummary} architecture";
+
+        return [
+            [
+                'step_number' => 1,
+                'delay_days'  => 0,
+                'title'       => 'Touch 1: Pitch & Case Study',
+                'subject'     => $baseSubject,
+                'body_text'   => "Hi {$firstName},\n\n"
+                    . "I saw your requirements{$companyContext} around {$techSummary}.\n\n"
+                    . "I'm Ashish, founder and lead architect at DigitalBuilders (https://www.digitalbuilders.in). We engineer high-performance web platforms and MVPs in 4–6 week fixed-price sprints.\n\n"
+                    . "Recently, we solved a very similar architecture challenge for {$case['client']} — {$case['metric']}.\n\n"
+                    . "Would you be open to a 15-minute technical discovery call this week to review your architecture and sprint roadmap?\n\n"
+                    . "👉 Pick a time that fits your timezone: https://www.digitalbuilders.in/book\n"
+                    . "Or scope your sprint budget instantly: https://www.digitalbuilders.in/estimator\n\n"
+                    . "Best regards,\nAshish Gupta | Lead Architect, DigitalBuilders\n+91 90870 21592",
+            ],
+            [
+                'step_number' => 2,
+                'delay_days'  => 3,
+                'title'       => 'Touch 2: Technical Architecture Value Drop',
+                'subject'     => "Re: {$baseSubject}",
+                'body_text'   => "Hi {$firstName},\n\n"
+                    . "Following up on my note below with a quick technical takeaway from our work on {$techSummary}:\n\n"
+                    . "When scaling {$techSummary} under production load, teams frequently run into database bottlenecking and un-indexed relation queries. At {$case['client']}, we implemented {$case['solution']}, which delivered {$case['metric']}.\n\n"
+                    . "If you'd like me to do a quick 10-minute audit of your architecture or spec before you begin building, I'd be happy to share notes:\n"
+                    . "https://www.digitalbuilders.in/book\n\n"
+                    . "Best,\nAshish",
+            ],
+            [
+                'step_number' => 3,
+                'delay_days'  => 7,
+                'title'       => 'Touch 3: Executive Check-in / Quick Bump',
+                'subject'     => "Re: {$baseSubject}",
+                'body_text'   => "Hi {$firstName},\n\n"
+                    . "Quick check-in — wanted to see if you have already lined up engineering resources for this{$companyContext}, or if you're still evaluating technical partners?\n\n"
+                    . "We have an engineering sprint opening starting next week and can ship Phase 1 with 100% code ownership and a 60-day warranty.\n\n"
+                    . "Let me know if a 10-min chat makes sense: https://www.digitalbuilders.in/book\n\n"
+                    . "Best,\nAshish Gupta",
+            ],
+            [
+                'step_number' => 4,
+                'delay_days'  => 11,
+                'title'       => 'Touch 4: Graceful Breakup & Open Door',
+                'subject'     => "Re: {$baseSubject}",
+                'body_text'   => "Hi {$firstName},\n\n"
+                    . "I'm guessing your priorities may have shifted or you're already sorted on engineering for {$company}, so I won't follow up further.\n\n"
+                    . "If you ever need senior sprint execution, custom MVP delivery, or an architectural second opinion down the road, please feel free to reach out anytime.\n\n"
+                    . "Wishing you great success with the platform.\n\n"
+                    . "Best regards,\nAshish Gupta\nFounder, DigitalBuilders\nhttps://www.digitalbuilders.in",
+            ],
+        ];
+    }
 }

@@ -36,6 +36,9 @@ class LeadModel extends Model
         'next_action_note',
         'ai_summary',
         'objection_flag',
+        'country',
+        'unsubscribed_at',
+        'enrichment_data',
         'utm_source',
         'utm_medium',
         'utm_campaign',
@@ -51,6 +54,7 @@ class LeadModel extends Model
             'notes_count'       => 'integer',
             'last_contact_date' => 'datetime',
             'next_action_date'  => 'datetime',
+            'unsubscribed_at'   => 'datetime',
         ];
     }
 
@@ -77,6 +81,16 @@ class LeadModel extends Model
     public function payments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\App\Models\Payment::class, 'lead_id')->orderBy('created_at', 'desc');
+    }
+
+    public function sequences(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\CrmSequence::class, 'lead_id')->orderBy('created_at', 'desc');
+    }
+
+    public function outreachEmails(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\CrmOutreachEmail::class, 'lead_id')->orderBy('created_at', 'desc');
     }
 
     protected static function newFactory(): \App\Modules\Library\Infrastructure\Persistence\Factories\LeadModelFactory

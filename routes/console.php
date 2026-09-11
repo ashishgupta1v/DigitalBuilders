@@ -9,6 +9,7 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('market:poll-requirements')->hourly()->withoutOverlapping();
+Schedule::command('crm:process-sequences')->everyTenMinutes()->withoutOverlapping();
 Schedule::command('crm:process-cadence')->dailyAt('09:00');
 Schedule::command('crm:morning-battlecard')->dailyAt('08:00');
 

@@ -509,13 +509,13 @@ class InternationalLeadScraperService
 
             foreach ($jobs as $job) {
                 $id = (string) ($job['id'] ?? '');
-                $title = trim(html_entity_decode((string) ($job['title'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-                $company = trim(html_entity_decode((string) ($job['company_name'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-                $description = trim(html_entity_decode(strip_tags((string) ($job['description'] ?? '')), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $title = mb_convert_encoding(trim(html_entity_decode((string) ($job['title'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8')), 'UTF-8', 'UTF-8');
+                $company = mb_convert_encoding(trim(html_entity_decode((string) ($job['company_name'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8')), 'UTF-8', 'UTF-8');
+                $description = mb_convert_encoding(trim(html_entity_decode(strip_tags((string) ($job['description'] ?? '')), ENT_QUOTES | ENT_HTML5, 'UTF-8')), 'UTF-8', 'UTF-8');
                 $url = (string) ($job['url'] ?? '');
                 $salary = (string) ($job['salary'] ?? '');
                 $jobType = strtolower((string) ($job['job_type'] ?? ''));
-                $location = (string) ($job['candidate_required_location'] ?? 'Remote (Global)');
+                $location = mb_convert_encoding((string) ($job['candidate_required_location'] ?? 'Remote (Global)'), 'UTF-8', 'UTF-8');
 
                 if (!$id || !$title || MarketRequirement::where('source', 'remotive')->where('external_id', $id)->exists()) {
                     continue;
@@ -541,11 +541,14 @@ class InternationalLeadScraperService
 
                 $pitchData = $this->pitchGenerator->generateAiPitch($fullText, null, $company, 'remotive', 'USD', $budget['raw']);
 
+                $cleanTitle = mb_substr("Remotive Contract: {$title} — {$company}", 0, 190, 'UTF-8');
+                $cleanRawText = mb_substr($description, 0, 3000, 'UTF-8');
+
                 $req = MarketRequirement::create([
                     'source'           => 'remotive',
                     'external_id'      => $id,
-                    'title'            => substr("Remotive Contract: {$title} — {$company}", 0, 190),
-                    'raw_text'         => substr($description, 0, 3000),
+                    'title'            => $cleanTitle,
+                    'raw_text'         => $cleanRawText,
                     'budget_raw'       => $budget['raw'],
                     'estimated_amount' => min($budget['amount'], 18000.00),
                     'currency'         => 'USD',

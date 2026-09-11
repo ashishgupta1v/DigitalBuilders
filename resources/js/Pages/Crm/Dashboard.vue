@@ -6,7 +6,7 @@ import {
   Filter, LayoutGrid, List, MessageSquare, LogOut, CheckCircle2,
   Sparkles, ExternalLink, ShieldAlert, ShieldCheck, ArrowRight, Building2, Check, Clock, X,
   Globe, Copy, RefreshCw, Trash2, Kanban, Send, Mail, Calendar, Layers,
-  ChevronRight, ArrowUpRight, CheckSquare, Square
+  ChevronRight, ArrowUpRight, CheckSquare, Square, Eye, MousePointerClick
 } from 'lucide-vue-next'
 
 import KanbanColumn from '@/Components/Crm/KanbanColumn.vue'
@@ -57,6 +57,28 @@ const props = defineProps<{
     search: string
     tab?: string
   }
+  campaigns_stats?: {
+    total_sequences: number
+    active_sequences: number
+    replied_sequences: number
+    total_emails_sent: number
+    open_rate: number
+    click_rate: number
+    reply_rate: number
+    upcoming_queue: Array<{
+      id: number
+      sequence_id: number
+      lead_id: number
+      lead_name: string
+      company: string
+      email: string
+      step_number: number
+      title: string
+      subject: string
+      scheduled_at: string
+      scheduled_for_human: string
+    }>
+  }
   app_meta: {
     app_name: string
     founder_name: string
@@ -68,7 +90,7 @@ const props = defineProps<{
 }>()
 
 // Navigation & Active Tab
-const activeMainTab = ref<'hunter' | 'deals' | 'leads' | 'studio'>(
+const activeMainTab = ref<'hunter' | 'deals' | 'leads' | 'campaigns' | 'studio'>(
   (props.filters.tab as any) || 'hunter'
 )
 
@@ -260,7 +282,7 @@ const applyFilters = () => {
   )
 }
 
-const switchMainTab = (tabKey: 'hunter' | 'deals' | 'leads' | 'studio') => {
+const switchMainTab = (tabKey: 'hunter' | 'deals' | 'leads' | 'campaigns' | 'studio') => {
   activeMainTab.value = tabKey
   applyFilters()
 }
@@ -575,6 +597,17 @@ const logout = () => {
             </button>
             <button
               type="button"
+              @click="switchMainTab('campaigns')"
+              class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+              :class="activeMainTab === 'campaigns'
+                ? 'bg-white dark:bg-slate-800 text-purple-600 dark:text-purple-400 shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'"
+            >
+              <Send class="w-3.5 h-3.5" />
+              <span>Campaigns ({{ campaigns_stats?.active_sequences || 0 }})</span>
+            </button>
+            <button
+              type="button"
               @click="switchMainTab('studio')"
               class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
               :class="activeMainTab === 'studio'
@@ -676,6 +709,14 @@ const logout = () => {
           :class="activeMainTab === 'leads' ? 'text-purple-600 font-extrabold' : 'text-slate-500'"
         >
           👥 Leads
+        </button>
+        <button
+          type="button"
+          @click="switchMainTab('campaigns')"
+          class="text-[11px] font-bold px-2 py-1 rounded"
+          :class="activeMainTab === 'campaigns' ? 'text-purple-600 font-extrabold' : 'text-slate-500'"
+        >
+          🚀 Drips ({{ campaigns_stats?.active_sequences || 0 }})
         </button>
         <button
           type="button"
@@ -1277,7 +1318,143 @@ const logout = () => {
       </section>
 
       <!-- ========================================================================= -->
-      <!-- TAB 4: ⚡ SMART INGEST & AI PROPOSAL STUDIO                               -->
+      <!-- TAB 4: 🚀 OUTBOUND CAMPAIGNS & AUTOMATED DRIP SEQUENCES                  -->
+      <!-- ========================================================================= -->
+      <section v-if="activeMainTab === 'campaigns'" class="space-y-6">
+        <!-- Campaign Performance KPI Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4">
+          <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="flex items-center justify-between text-xs text-slate-500 font-semibold mb-1">
+              <span>Active Sequences</span>
+              <Send class="w-3.5 h-3.5 text-purple-500" />
+            </div>
+            <div class="text-2xl font-extrabold text-purple-600 dark:text-purple-400 font-mono">
+              {{ campaigns_stats?.active_sequences || 0 }}
+            </div>
+            <div class="text-[11px] text-slate-400 mt-1">In-flight 4-step cadences</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="flex items-center justify-between text-xs text-slate-500 font-semibold mb-1">
+              <span>Emails Dispatched</span>
+              <Mail class="w-3.5 h-3.5 text-sky-500" />
+            </div>
+            <div class="text-2xl font-extrabold text-slate-900 dark:text-white font-mono">
+              {{ campaigns_stats?.total_emails_sent || 0 }}
+            </div>
+            <div class="text-[11px] text-slate-400 mt-1">Total trackable touches sent</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="flex items-center justify-between text-xs text-slate-500 font-semibold mb-1">
+              <span>Open Rate</span>
+              <Eye class="w-3.5 h-3.5 text-emerald-500" />
+            </div>
+            <div class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
+              {{ campaigns_stats?.open_rate || 0 }}%
+            </div>
+            <div class="text-[11px] text-slate-400 mt-1">Tracked 1x1 pixel opens</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="flex items-center justify-between text-xs text-slate-500 font-semibold mb-1">
+              <span>Click Rate</span>
+              <MousePointerClick class="w-3.5 h-3.5 text-indigo-500" />
+            </div>
+            <div class="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400 font-mono">
+              {{ campaigns_stats?.click_rate || 0 }}%
+            </div>
+            <div class="text-[11px] text-slate-400 mt-1">Book & portfolio link clicks</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="flex items-center justify-between text-xs text-slate-500 font-semibold mb-1">
+              <span>Reply Conversion</span>
+              <CheckCircle2 class="w-3.5 h-3.5 text-cyan-500" />
+            </div>
+            <div class="text-2xl font-extrabold text-cyan-600 dark:text-cyan-400 font-mono">
+              {{ campaigns_stats?.reply_rate || 0 }}%
+            </div>
+            <div class="text-[11px] text-slate-400 mt-1">{{ campaigns_stats?.replied_sequences || 0 }} prospects replied</div>
+          </div>
+        </div>
+
+        <!-- Upcoming Automated Touches Queue -->
+        <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <Clock class="w-4 h-4 text-purple-600 dark:text-purple-400" />
+              <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                Automated Outbound Queue (Next Scheduled Touches)
+              </h3>
+            </div>
+            <div class="flex items-center gap-2 text-[11px] text-slate-500">
+              <span class="inline-flex items-center gap-1.5 text-emerald-600 font-semibold">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Worker Active (10-min cron)
+              </span>
+            </div>
+          </div>
+
+          <div v-if="!campaigns_stats?.upcoming_queue?.length" class="p-10 text-center text-xs text-slate-400 bg-slate-50 dark:bg-slate-950/50 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">
+            <Send class="w-8 h-8 mx-auto text-slate-300 dark:text-slate-700 mb-2" />
+            <p class="font-semibold text-slate-600 dark:text-slate-400">No scheduled sequence touches pending.</p>
+            <p class="text-[11px] text-slate-400 mt-0.5">Open any lead from the Directory or Hunter tab to approve and launch a 4-step cadence.</p>
+          </div>
+
+          <div v-else class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-slate-800 text-[10px] text-slate-500 uppercase tracking-wider text-left">
+                  <th class="pb-2.5 font-semibold">Prospect & Company</th>
+                  <th class="pb-2.5 font-semibold text-center">Step #</th>
+                  <th class="pb-2.5 font-semibold">Step Title & Subject</th>
+                  <th class="pb-2.5 font-semibold">Scheduled Execution</th>
+                  <th class="pb-2.5 font-semibold text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                <tr
+                  v-for="item in campaigns_stats.upcoming_queue"
+                  :key="item.id"
+                  class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition"
+                >
+                  <td class="py-3">
+                    <div class="font-bold text-slate-800 dark:text-slate-200">{{ item.lead_name }}</div>
+                    <div class="text-[11px] text-slate-400">{{ item.company || item.email }}</div>
+                  </td>
+                  <td class="py-3 text-center">
+                    <span class="w-5 h-5 inline-flex items-center justify-center rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 font-mono font-bold text-[10px]">
+                      {{ item.step_number }}
+                    </span>
+                  </td>
+                  <td class="py-3 max-w-md">
+                    <div class="font-semibold text-slate-700 dark:text-slate-300 truncate">{{ item.title }}</div>
+                    <div class="text-[11px] text-slate-400 truncate">{{ item.subject }}</div>
+                  </td>
+                  <td class="py-3 text-slate-600 dark:text-slate-400 font-mono text-[11px]">
+                    <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold">
+                      {{ item.scheduled_for_human }}
+                    </span>
+                  </td>
+                  <td class="py-3 text-right">
+                    <button
+                      type="button"
+                      @click="openLeadDetails(item.lead_id)"
+                      class="px-2.5 py-1 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-bold transition cursor-pointer"
+                    >
+                      Manage Cadence
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 5: ⚡ SMART INGEST & AI PROPOSAL STUDIO                               -->
       <!-- ========================================================================= -->
       <section v-if="activeMainTab === 'studio'" class="space-y-6">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">

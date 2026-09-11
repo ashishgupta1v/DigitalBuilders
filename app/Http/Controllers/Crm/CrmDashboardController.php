@@ -9,13 +9,14 @@ use App\Models\Deal;
 use App\Models\Lead;
 use App\Models\MarketRequirement;
 use App\Models\Organization;
+use App\Services\SalesFunnel\CrmSequenceEngineService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class CrmDashboardController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request, CrmSequenceEngineService $sequenceEngine): Response
     {
         $segment = $request->query('segment', 'all');
         $search = trim((string) $request->query('search', ''));
@@ -229,7 +230,7 @@ class CrmDashboardController extends Controller
 
         // 4. Leads Directory Data (Full management table)
         $leadsQuery = Lead::query()
-            ->with(['organization', 'deals' => fn($q) => $q->latest()])
+            ->with(['organization', 'deals' => fn($q) => $q->latest(), 'sequences' => fn($q) => $q->latest()])
             ->latest();
 
         if ($segment !== 'all') {
@@ -246,6 +247,7 @@ class CrmDashboardController extends Controller
 
         $allLeads = $leadsQuery->limit(100)->get()->map(function ($lead) {
             $latestDeal = $lead->deals->first();
+            $activeSeq = $lead->sequences->first();
             return [
                 'id'                => $lead->id,
                 'name'              => $lead->name,
@@ -264,6 +266,12 @@ class CrmDashboardController extends Controller
                 'next_action_date'  => $lead->next_action_date?->format('d M Y'),
                 'next_action_note'  => $lead->next_action_note,
                 'created_at'        => $lead->created_at->diffForHumans(),
+                'active_sequence'   => $activeSeq ? [
+                    'id'           => $activeSeq->id,
+                    'status'       => $activeSeq->status,
+                    'current_step' => $activeSeq->current_step,
+                    'total_steps'  => $activeSeq->total_steps,
+                ] : null,
             ];
         });
 
@@ -344,6 +352,7 @@ class CrmDashboardController extends Controller
             'stages'              => $groupedDeals,
             'all_deals'           => $allDeals,
             'all_leads'           => $allLeads,
+            'campaigns_stats'     => $sequenceEngine->getCampaignStats(),
             'filters'             => [
                 'segment' => $segment,
                 'search'  => $search,

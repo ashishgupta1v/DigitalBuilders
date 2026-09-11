@@ -78,11 +78,13 @@ class CrmOutreachMail extends Mailable
         <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0; font-size: 13px; color: #64748b; line-height: 1.6;">
             <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 2px;">Ashish Gupta</strong>
             <span style="color: #475569; font-weight: 600;">Principal Architect &amp; Founder</span> · <a href="{$homeTracked}" style="color: #0284c7; text-decoration: none; font-weight: 700;">DigitalBuilders</a><br>
-            <span style="font-size: 12px; color: #64748b;">Enterprise Web Architecture · Production ERPs · Cloud Infrastructure</span>
             <div style="margin-top: 10px; display: flex; gap: 14px; font-size: 12px;">
                 <a href="{$homeTracked}" style="color: #0284c7; text-decoration: none; font-weight: 600;">🌐 digitalbuilders.in</a>
                 &nbsp;·&nbsp;
                 <a href="{$calendarTracked}" style="color: #0284c7; text-decoration: none; font-weight: 600;">📅 Book 15-Min Technical Sync</a>
+            </div>
+            <div style="margin-top: 16px; font-size: 11px; color: #94a3b8;">
+                If you'd rather not receive follow-ups regarding this project, <a href="{$baseUrl}/crm/unsubscribe/{$this->trackingToken}" style="color: #94a3b8; text-decoration: underline;">click here to unsubscribe</a>.
             </div>
         </div>
 

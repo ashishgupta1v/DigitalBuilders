@@ -147,6 +147,7 @@ class CrmLeadController extends Controller
                     'last_clicked_url'  => $email->last_clicked_url,
                     'status'            => $email->status,
                 ]),
+            'sequence' => $lead->sequences()->with(['steps' => fn($q) => $q->orderBy('step_number', 'asc')])->latest()->first(),
         ]);
     }
 
