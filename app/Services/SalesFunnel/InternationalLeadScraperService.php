@@ -76,11 +76,15 @@ class InternationalLeadScraperService
             'jobicy'         => $this->pollJobicy(),
             'arbeitnow'      => $this->pollArbeitnow(),
             'producthunt'    => $this->pollProductHuntLaunches(),
+            'indiehackers'   => $this->pollIndieHackers(),
+            'wellfound'      => $this->pollWellfound(),
+            'substack'       => $this->pollSubstackBuildInPublic(),
             'weworkremotely' => $this->pollWeWorkRemotely(),
             'remoteok'       => $this->pollRemoteOk(),
             'remotive'       => $this->pollRemotive(),
             'himalayas'      => $this->pollHimalayas(),
             'reddit'         => $this->pollReddit(),
+            'reddit_startup' => $this->pollRedditStartupSignals(),
         ];
 
         $stats['total'] = array_sum($stats);
@@ -1336,5 +1340,412 @@ class InternationalLeadScraperService
         }
 
         return !empty($tags) ? array_values(array_unique($tags)) : ['Full-Stack'];
+    }
+
+    /**
+     * Poll Indie Hackers "developer wanted" posts via their RSS/public feed.
+     * Targets solo SaaS founders actively seeking a technical co-founder or dev partner.
+     */
+    public function pollIndieHackers(): int
+    {
+        $ingested = 0;
+
+        try {
+            $posts = [];
+
+            // Try public RSS for developers-wanted group
+            $rssResp = Http::withoutVerifying()->timeout(12)->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 DigitalBuilders/1.0',
+                'Accept'     => 'application/rss+xml, application/xml, text/xml',
+            ])->get('https://www.indiehackers.com/group/developers-wanted/feed');
+
+            if ($rssResp->successful()) {
+                $xml = @simplexml_load_string($rssResp->body());
+                if ($xml && isset($xml->channel->item)) {
+                    foreach ($xml->channel->item as $item) {
+                        $link   = (string) $item->link;
+                        $title  = trim(html_entity_decode((string) $item->title, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                        $desc   = trim(html_entity_decode(strip_tags((string) $item->description), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                        $posts[] = [
+                            'id'      => md5($link),
+                            'title'   => $title,
+                            'content' => $desc,
+                            'url'     => $link,
+                            'author'  => 'IH Founder',
+                        ];
+                    }
+                }
+            }
+
+            foreach ($posts as $post) {
+                $id      = (string) ($post['id'] ?? '');
+                $title   = (string) ($post['title'] ?? '');
+                $content = (string) ($post['content'] ?? '');
+                $url     = (string) ($post['url'] ?? '');
+                $author  = (string) ($post['author'] ?? 'IH Founder');
+
+                if (!$id || !$title || MarketRequirement::where('source', 'indiehackers')->where('external_id', $id)->exists()) {
+                    continue;
+                }
+
+                $fullText = "{$title}\n\n{$content}";
+
+                if (!preg_match('/\b(developer|engineer|co-founder|dev partner|agency|build|backend|frontend|fullstack)\b/i', $fullText)) {
+                    continue;
+                }
+
+                if (!$this->passesTier1Filters($fullText)) {
+                    continue;
+                }
+
+                $budget    = $this->extractBudget($fullText, '$3,000 – $8,000');
+                $score     = $this->pitchGenerator->scoreRelevance($fullText, $budget['raw'], null, null);
+                if ($score < 45) {
+                    continue;
+                }
+
+                $pitchData = $this->pitchGenerator->generateAiPitch($fullText, $author, null, 'indiehackers', 'USD', $budget['raw']);
+                $techTags  = $this->extractTechTags($fullText);
+
+                $req = MarketRequirement::create([
+                    'source'           => 'indiehackers',
+                    'external_id'      => substr($id, 0, 150),
+                    'title'            => substr("IndieHackers: {$title}", 0, 190),
+                    'raw_text'         => substr($content, 0, 3000),
+                    'budget_raw'       => $budget['raw'],
+                    'estimated_amount' => $pitchData['estimated_amount'] ?? $budget['amount'],
+                    'currency'         => 'USD',
+                    'contact_name'     => $author,
+                    'location'         => 'Global / Remote (Indie Hackers)',
+                    'matched_segment'  => $pitchData['segment'],
+                    'relevance_score'  => $pitchData['relevance_score'] ?? $score,
+                    'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
+                    'status'           => 'qualified',
+                    'metadata'         => [
+                        'url'                    => $url,
+                        'author'                 => $author,
+                        'tech_tags'              => $techTags,
+                        'email_pitch'            => $pitchData['email_pitch'] ?? null,
+                        'email_subject'          => $pitchData['email_subject'] ?? null,
+                        'linkedin_dm'            => $pitchData['linkedin_dm'] ?? null,
+                        'detected_tech_stack'    => $pitchData['detected_tech_stack'] ?? $techTags,
+                        'suggested_architecture' => $pitchData['suggested_architecture'] ?? null,
+                    ],
+                ]);
+
+                $this->telegramBot->sendOpportunityAlert($req, $pitchData);
+                $ingested++;
+            }
+        } catch (\Throwable $e) {
+            Log::warning('IndieHackers polling exception: ' . $e->getMessage());
+        }
+
+        return $ingested;
+    }
+
+    /**
+     * Poll Wellfound (AngelList) RSS for contract / freelance funded-startup tech roles.
+     * Targets Seed / Series A startups posting for contractor or consultant engineering help.
+     */
+    public function pollWellfound(): int
+    {
+        $ingested = 0;
+
+        $feedUrls = [
+            'https://wellfound.com/jobs.rss?role=Software+Engineer&remote=true&job_type=Contract',
+            'https://wellfound.com/jobs.rss?role=Full+Stack+Engineer&remote=true&job_type=Contract',
+        ];
+
+        foreach ($feedUrls as $feedUrl) {
+            try {
+                $response = Http::withoutVerifying()->timeout(12)->withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) DigitalBuilders/1.0',
+                    'Accept'     => 'application/rss+xml, application/xml, text/xml',
+                ])->get($feedUrl);
+
+                if (!$response->successful()) {
+                    continue;
+                }
+
+                $xml = @simplexml_load_string($response->body());
+                if (!$xml || !isset($xml->channel->item)) {
+                    continue;
+                }
+
+                foreach ($xml->channel->item as $item) {
+                    $link        = (string) $item->link;
+                    $title       = trim(html_entity_decode((string) $item->title, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                    $description = trim(html_entity_decode(strip_tags((string) $item->description), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                    $guid        = (string) ($item->guid ?: md5($link));
+
+                    if (MarketRequirement::where('source', 'wellfound')->where('external_id', $guid)->exists()) {
+                        continue;
+                    }
+
+                    $fullText = "{$title}\n\n{$description}";
+
+                    if (!preg_match('/\b(contract|contractor|freelance|consultant|project|part-time|mvp)\b/i', $fullText)) {
+                        continue;
+                    }
+
+                    if (!$this->passesTier1Filters($fullText)) {
+                        continue;
+                    }
+
+                    $budget = $this->extractBudget($fullText, '$6,000 – $14,000');
+                    $score  = $this->pitchGenerator->scoreRelevance($fullText, $budget['raw'], null, null);
+                    if ($score < 50) {
+                        continue;
+                    }
+
+                    $company = null;
+                    if (preg_match('/[-–—]\s*(.+)$/', $title, $m)) {
+                        $company = trim($m[1]);
+                    }
+
+                    $pitchData = $this->pitchGenerator->generateAiPitch($fullText, null, $company, 'wellfound', 'USD', $budget['raw']);
+                    $techTags  = $this->extractTechTags($fullText);
+
+                    $req = MarketRequirement::create([
+                        'source'           => 'wellfound',
+                        'external_id'      => substr($guid, 0, 150),
+                        'title'            => substr("Wellfound: {$title}", 0, 190),
+                        'raw_text'         => substr($description, 0, 3000),
+                        'budget_raw'       => $budget['raw'],
+                        'estimated_amount' => $pitchData['estimated_amount'] ?? $budget['amount'],
+                        'currency'         => 'USD',
+                        'contact_company'  => $company,
+                        'location'         => 'Remote (Funded Startup / Global)',
+                        'matched_segment'  => $pitchData['segment'],
+                        'relevance_score'  => $pitchData['relevance_score'] ?? $score,
+                        'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
+                        'status'           => 'qualified',
+                        'metadata'         => [
+                            'url'                    => $link,
+                            'company'                => $company,
+                            'tech_tags'              => $techTags,
+                            'email_pitch'            => $pitchData['email_pitch'] ?? null,
+                            'email_subject'          => $pitchData['email_subject'] ?? null,
+                            'linkedin_dm'            => $pitchData['linkedin_dm'] ?? null,
+                            'detected_tech_stack'    => $pitchData['detected_tech_stack'] ?? $techTags,
+                            'suggested_architecture' => $pitchData['suggested_architecture'] ?? null,
+                        ],
+                    ]);
+
+                    $this->telegramBot->sendOpportunityAlert($req, $pitchData);
+                    $ingested++;
+                }
+            } catch (\Throwable $e) {
+                Log::warning('Wellfound polling exception: ' . $e->getMessage());
+            }
+        }
+
+        return $ingested;
+    }
+
+    /**
+     * Poll Substack #buildinpublic tag feed for founders announcing new builds.
+     * First-mover outreach window is 72h after the post — zero competition at this stage.
+     */
+    public function pollSubstackBuildInPublic(): int
+    {
+        $ingested = 0;
+
+        try {
+            $response = Http::withoutVerifying()->timeout(12)->withHeaders([
+                'User-Agent' => 'DigitalBuilders/1.0 (LeadHunter; founder@digitalbuilders.in)',
+                'Accept'     => 'application/json',
+            ])->get('https://substack.com/api/v1/reader/feed/tag/buildinpublic', ['limit' => 20]);
+
+            $posts = [];
+            if ($response->successful()) {
+                $posts = $response->json('posts') ?? $response->json() ?? [];
+            }
+
+            if (!is_array($posts)) {
+                return 0;
+            }
+
+            foreach (array_slice($posts, 0, 15) as $post) {
+                $id      = (string) ($post['id'] ?? md5((string) ($post['canonical_url'] ?? uniqid())));
+                $title   = trim(html_entity_decode((string) ($post['title'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $excerpt = trim(html_entity_decode(strip_tags((string) ($post['subtitle'] ?? $post['truncated_body_text'] ?? '')), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $url     = (string) ($post['canonical_url'] ?? '');
+                $author  = (string) ($post['publisherName'] ?? $post['author'] ?? 'Substack Founder');
+
+                if (!$id || !$title || MarketRequirement::where('source', 'substack')->where('external_id', $id)->exists()) {
+                    continue;
+                }
+
+                $fullText = "{$title}\n\n{$excerpt}";
+
+                if (!preg_match('/\b(building|launched|shipping|mvp|saas|app|product|startup|tool|platform|api|software)\b/i', $fullText)) {
+                    continue;
+                }
+
+                if (!$this->passesTier1Filters($fullText)) {
+                    continue;
+                }
+
+                $budget    = $this->extractBudget($fullText, '$3,500 – $7,000');
+                $score     = $this->pitchGenerator->scoreRelevance($fullText, $budget['raw'], null, null);
+                if ($score < 40) {
+                    continue;
+                }
+
+                $pitchData = $this->pitchGenerator->generateAiPitch(
+                    "Founder building in public: {$title}. {$excerpt}. They just announced their build and may need backend scaling, mobile apps, or technical co-founder guidance.",
+                    $author, null, 'substack', 'USD', $budget['raw']
+                );
+                $techTags = $this->extractTechTags($fullText);
+
+                $req = MarketRequirement::create([
+                    'source'           => 'substack',
+                    'external_id'      => substr($id, 0, 150),
+                    'title'            => substr("Substack BIP: {$title}", 0, 190),
+                    'raw_text'         => substr($excerpt, 0, 3000),
+                    'budget_raw'       => $budget['raw'],
+                    'estimated_amount' => $pitchData['estimated_amount'] ?? $budget['amount'],
+                    'currency'         => 'USD',
+                    'contact_name'     => $author,
+                    'location'         => 'Global (Build-in-Public Community)',
+                    'matched_segment'  => $pitchData['segment'],
+                    'relevance_score'  => $pitchData['relevance_score'] ?? $score,
+                    'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
+                    'status'           => 'qualified',
+                    'metadata'         => [
+                        'url'                    => $url,
+                        'author'                 => $author,
+                        'tech_tags'              => $techTags,
+                        'email_pitch'            => $pitchData['email_pitch'] ?? null,
+                        'email_subject'          => "Loved your #buildinpublic post — here's how we can accelerate {$title}",
+                        'linkedin_dm'            => "Saw your #buildinpublic post about \"{$title}\" — congrats on shipping! We help founders scale from MVP to production in 4-week sprints. Would love to connect!",
+                        'detected_tech_stack'    => $pitchData['detected_tech_stack'] ?? $techTags,
+                        'suggested_architecture' => $pitchData['suggested_architecture'] ?? null,
+                    ],
+                ]);
+
+                $this->telegramBot->sendOpportunityAlert($req, $pitchData);
+                $ingested++;
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Substack BIP polling exception: ' . $e->getMessage());
+        }
+
+        return $ingested;
+    }
+
+    /**
+     * Poll r/startups, r/SaaS, r/Entrepreneur for dev-seeking and hiring signals.
+     * Complements pollReddit() which only covers r/forhire.
+     */
+    public function pollRedditStartupSignals(): int
+    {
+        $clientId     = config('services.reddit.client_id') ?? env('REDDIT_CLIENT_ID');
+        $clientSecret = config('services.reddit.client_secret') ?? env('REDDIT_CLIENT_SECRET');
+
+        if (!$clientId || !$clientSecret) {
+            return 0;
+        }
+
+        $ingested = 0;
+
+        try {
+            $authResponse = Http::asForm()
+                ->withBasicAuth($clientId, $clientSecret)
+                ->withHeaders(['User-Agent' => 'DigitalBuildersBot/1.0'])
+                ->post('https://www.reddit.com/api/v1/access_token', [
+                    'grant_type' => 'client_credentials',
+                ]);
+
+            if (!$authResponse->successful()) {
+                return 0;
+            }
+
+            $token = $authResponse->json('access_token');
+            if (!$token) {
+                return 0;
+            }
+
+            $subreddits   = ['startups', 'SaaS', 'Entrepreneur'];
+            $hiringPattern = '/\b(looking for|need|hiring|seeking|want to hire|find a developer|need a developer|build an app|build an mvp|need tech|technical co-founder|dev shop|development agency|outsource)\b/i';
+
+            foreach ($subreddits as $sub) {
+                $postsResponse = Http::withToken($token)
+                    ->withHeaders(['User-Agent' => 'DigitalBuildersBot/1.0'])
+                    ->get("https://oauth.reddit.com/r/{$sub}/new", ['limit' => 20]);
+
+                if (!$postsResponse->successful()) {
+                    continue;
+                }
+
+                $children = $postsResponse->json('data.children') ?? [];
+                foreach ($children as $child) {
+                    $post      = $child['data'] ?? [];
+                    $id        = (string) ($post['id'] ?? '');
+                    $title     = trim(html_entity_decode((string) ($post['title'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                    $selftext  = trim(html_entity_decode((string) ($post['selftext'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                    $author    = (string) ($post['author'] ?? 'Redditor');
+                    $permalink = 'https://reddit.com' . ($post['permalink'] ?? '');
+
+                    if (!$id || MarketRequirement::where('source', 'reddit_startup')->where('external_id', $id)->exists()) {
+                        continue;
+                    }
+
+                    $fullText = "{$title}\n\n{$selftext}";
+
+                    if (!preg_match($hiringPattern, $fullText)) {
+                        continue;
+                    }
+
+                    if (!$this->passesTier1Filters($fullText)) {
+                        continue;
+                    }
+
+                    $budget = $this->extractBudget($fullText, '$3,000 – $7,000');
+                    $score  = $this->pitchGenerator->scoreRelevance($fullText, $budget['raw'], null, null);
+                    if ($score < 45) {
+                        continue;
+                    }
+
+                    $pitchData = $this->pitchGenerator->generateAiPitch($fullText, $author, null, 'reddit_startup', 'USD', $budget['raw']);
+                    $techTags  = $this->extractTechTags($fullText);
+
+                    $req = MarketRequirement::create([
+                        'source'           => 'reddit_startup',
+                        'external_id'      => $id,
+                        'title'            => substr("r/{$sub}: {$title}", 0, 190),
+                        'raw_text'         => substr($fullText, 0, 3000),
+                        'budget_raw'       => $budget['raw'],
+                        'estimated_amount' => $pitchData['estimated_amount'] ?? $budget['amount'],
+                        'currency'         => 'USD',
+                        'contact_name'     => $author,
+                        'location'         => "Reddit (r/{$sub})",
+                        'matched_segment'  => $pitchData['segment'],
+                        'relevance_score'  => $pitchData['relevance_score'] ?? $score,
+                        'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
+                        'status'           => 'qualified',
+                        'metadata'         => [
+                            'url'                    => $permalink,
+                            'subreddit'              => $sub,
+                            'author'                 => $author,
+                            'tech_tags'              => $techTags,
+                            'email_pitch'            => $pitchData['email_pitch'] ?? null,
+                            'email_subject'          => $pitchData['email_subject'] ?? null,
+                            'linkedin_dm'            => $pitchData['linkedin_dm'] ?? null,
+                            'detected_tech_stack'    => $pitchData['detected_tech_stack'] ?? $techTags,
+                            'suggested_architecture' => $pitchData['suggested_architecture'] ?? null,
+                        ],
+                    ]);
+
+                    $this->telegramBot->sendOpportunityAlert($req, $pitchData);
+                    $ingested++;
+                }
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Reddit startup signals polling exception: ' . $e->getMessage());
+        }
+
+        return $ingested;
     }
 }

@@ -92,50 +92,114 @@ class AiPitchGeneratorService
     }
 
     /**
-     * Calculate an intent / relevance score (0 - 100) strictly geared for international USD contracts.
+     * Calculate an intent / relevance score (0 - 100) — multi-factor v2.
+     *
+     * Score breakdown:
+     *  - Budget tier   (40 pts): $10k+ = 40, $5k–10k = 30, $2k–5k = 20, hourly/custom = 10
+     *  - Tech match    (30 pts): overlap with DigitalBuilders core stack
+     *  - Intent signal (20 pts): urgency keywords (urgent, ASAP, immediately, this week)
+     *  - Contactability (10 pts): verified email or phone present
      */
     public function scoreRelevance(string $text, ?string $budget, ?string $phone, ?string $email): int
     {
         $normalized = strtolower($text);
 
-        // 1. Hard Penalties: Reject full-time corporate employment signals
+        // Hard Penalty: Reject full-time corporate employment signals
         if (preg_match('/\b(w2 only|full time employee|permanent role|401k|healthcare benefits|dental benefits|relocation assistance|on-site only)\b/i', $normalized)) {
-            return 20; // Unqualified
+            return 20;
         }
 
-        $score = 40; // Base score
+        // Hard Penalty: Reject non-contract / permanent full-time postings
+        if (preg_match('/\b(full-time|full time)\b/i', $normalized) && !preg_match('/\b(contract|freelance|consultant|project|mvp|part-time)\b/i', $normalized)) {
+            return 25;
+        }
 
-        // 2. High-intent contract / freelance / project signals (+25)
+        $score = 0;
+
+        // Factor 1: Budget tier (max 40 pts)
+        if (!empty($budget) && $budget !== 'N/A') {
+            preg_match_all('/\$([0-9,]+(?:\.[0-9]{2})?)\s*(?:k\b)?/i', $budget, $amounts);
+            $parsedAmounts = array_map(fn($v) => (float) str_replace(',', '', $v) * (stripos($budget, 'k') !== false && (float) str_replace(',', '', $v) < 1000 ? 1000 : 1), $amounts[1] ?? []);
+            $maxAmount = !empty($parsedAmounts) ? max($parsedAmounts) : 0;
+            if ($maxAmount >= 10000)     $score += 40;
+            elseif ($maxAmount >= 5000)  $score += 30;
+            elseif ($maxAmount >= 2000)  $score += 20;
+            elseif ($maxAmount > 0)      $score += 10;
+            else                         $score += 5; // Budget exists but unparseable
+        }
+
+        // Factor 2: Tech stack match (max 30 pts)
+        $techHits = 0;
+        $coreStack = ['vue', 'react', 'next\.js', 'nuxt', 'laravel', 'php', 'node', 'typescript', 'python', 'fastapi', 'django', 'tailwind', 'postgres', 'postgresql', 'redis', 'pwa', 'ai agent', 'llm', 'flutter', 'mobile app', 'react native'];
+        foreach ($coreStack as $tech) {
+            if (preg_match('/\b' . $tech . '\b/i', $normalized)) {
+                $techHits++;
+            }
+        }
+        $score += min(30, $techHits * 8);
+
+        // Factor 3: High-intent contract/urgency signals (max 20 pts)
+        $intentScore = 0;
         if (preg_match('/\b(contract|contractor|freelance|freelancer|fixed price|milestone|mvp|project-based|seeking developer|hire developer|build mvp|looking for agency|looking for developer|rfp)\b/i', $normalized)) {
-            $score += 25;
+            $intentScore += 12;
         }
-
-        // 3. Core Tech Stack Match (+20)
-        if (preg_match('/\b(vue|react|next\.js|nuxt|laravel|php|node|typescript|python|fastapi|django|tailwind|postgres|postgresql|redis|pwa|ai agent|llm)\b/i', $normalized)) {
-            $score += 20;
+        if (preg_match('/\b(urgent|asap|immediately|this week|need now|quickly|fast|deadline|launch)\b/i', $normalized)) {
+            $intentScore += 8;
         }
+        $score += min(20, $intentScore);
 
-        // 4. Client Contactability (+15)
+        // Factor 4: Contactability (max 10 pts)
         if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $score += 15;
-        }
-
-        // 5. Explicit USD Budget Detected (+10)
-        if (!empty($budget) && $budget !== 'N/A' && preg_match('/\$[0-9]/', $budget)) {
             $score += 10;
+        } elseif (!empty($phone)) {
+            $score += 5;
         }
 
-        // 6. Detailed Scope (+10)
+        // Bonus: Detailed scope description
         $len = strlen(trim($text));
-        if ($len > 120) {
-            $score += 5;
-        }
-        if ($len > 300) {
-            $score += 5;
-        }
+        if ($len > 300) $score += 3;
+        if ($len > 800) $score += 2;
 
         return min($score, 99);
     }
+
+    /**
+     * Build proof-of-work context string by mapping detected tech tags to live DigitalBuilders case studies.
+     * This is injected into AI pitch prompts to produce hyper-personalized, evidence-backed proposals.
+     */
+    public function buildProofOfWorkContext(array $techTags): string
+    {
+        $tagStr = implode(' ', $techTags);
+
+        // Python/AI/FastAPI/Concurrency → Habuilt case study
+        if (preg_match('/\b(python|fastapi|ai|llm|concurrency|redis|scalab|high.traffic|websocket)\b/i', $tagStr)) {
+            $case = self::CASE_STUDIES['saas_ai'];
+            return "PROOF: We built {$case['client']} — {$case['metric']} ({$case['proof_url']})";
+        }
+
+        // Vue/Laravel/ERP/PWA/Manufacturing → Garg Enterprises
+        if (preg_match('/\b(laravel|vue|erp|pwa|inventory|barcode|dispatch|manufacturing|offline)\b/i', $tagStr)) {
+            $case = self::CASE_STUDIES['manufacturing'];
+            return "PROOF: We built {$case['client']} — {$case['metric']} ({$case['proof_url']})";
+        }
+
+        // EdTech/WhatsApp Bot/Tutoring → ZoetiCoach
+        if (preg_match('/\b(edtech|education|tutor|whatsapp|bot|student|coaching|lms|automation)\b/i', $tagStr)) {
+            $case = self::CASE_STUDIES['edtech'];
+            return "PROOF: We built {$case['client']} — {$case['metric']} ({$case['proof_url']})";
+        }
+
+        // E-commerce/Stripe/Next.js → MyAstrova
+        if (preg_match('/\b(ecommerce|stripe|shopify|next\.js|checkout|payment|d2c|store|catalog)\b/i', $tagStr)) {
+            $case = self::CASE_STUDIES['ecommerce'];
+            return "PROOF: We built {$case['client']} — {$case['metric']} ({$case['proof_url']})";
+        }
+
+        // Default general case
+        $case = self::CASE_STUDIES['general'];
+        return "PROOF: {$case['hook']} ({$case['proof_url']})";
+    }
+
 
     /**
      * Generate an AI-powered proposal and outreach package using OpenAI GPT-4o-mini,
@@ -157,9 +221,16 @@ class AiPitchGeneratorService
         }
 
         try {
-            $prompt = <<<PROMPT
+            // Build dynamic proof-of-work context from the requirement text
+        $scraper       = app(\App\Services\SalesFunnel\InternationalLeadScraperService::class);
+        $detectedTags  = $scraper->extractTechTags($requirementText);
+        $proofContext  = $this->buildProofOfWorkContext($detectedTags);
+
+        $prompt = <<<PROMPT
 You are Ashish Gupta, Founder & Lead Software Architect at DigitalBuilders (https://www.digitalbuilders.in).
 DigitalBuilders is a boutique software engineering studio that builds high-performance web applications, SaaS MVPs, custom portals, and AI agent integrations for US/EU startups and founders in 4-6 week fixed-price sprints.
+
+{$proofContext}
 
 Analyze this client project requirement / RFP:
 Context:
@@ -181,9 +252,9 @@ Respond ONLY with a valid JSON object matching this exact schema:
   "estimated_budget_usd": 6500,
   "budget_range": "$5,000 – $8,000",
   "timeline": "4 to 6 weeks",
-  "upwork_proposal": "Winning, conversational, hook-first proposal under 160 words with bullet points answering the client's core problem, mentioning 1 relevant proof point, and ending with dual CTA: (1) https://www.digitalbuilders.in/book (15-min calendar slot) and (2) https://www.digitalbuilders.in/estimator (instant sprint estimator). Signed off by Ashish Gupta.",
+  "upwork_proposal": "Winning, conversational, hook-first proposal under 160 words with bullet points answering the client's core problem, mentioning the proof point above, and ending with dual CTA: (1) https://www.digitalbuilders.in/book (15-min calendar slot) and (2) https://www.digitalbuilders.in/estimator (instant sprint estimator). Signed off by Ashish Gupta.",
   "cold_email_subject": "Punchy, personalized subject line for cold email",
-  "cold_email_body": "3-paragraph authoritative executive cold email to founder/stakeholder with the same dual CTAs.",
+  "cold_email_body": "3-paragraph authoritative executive cold email to founder/stakeholder with the same dual CTAs and citing the specific proof point.",
   "linkedin_dm": "Under 280-character high-value LinkedIn connection note or message."
 }
 PROMPT;
