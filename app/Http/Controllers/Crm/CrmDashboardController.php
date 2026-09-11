@@ -44,6 +44,62 @@ class CrmDashboardController extends Controller
         $winRate = $closedTotal > 0 ? (int) round(($wonDealsCount / $closedTotal) * 100) : 0;
         $avgDealSize = $activeDealsCount > 0 ? round($totalPipelineUsd / $activeDealsCount) : 0;
 
+        // Source ROI Analytics and Pipeline Velocity
+        $allLeadsForAnalytics = Lead::with(['deals'])->get();
+        $sourcesMap = [];
+
+        foreach ($allLeadsForAnalytics as $lead) {
+            $src = strtolower(trim((string) ($lead->source ?: 'direct')));
+            if ($src === '') {
+                $src = 'direct';
+            }
+
+            if (!isset($sourcesMap[$src])) {
+                $sourcesMap[$src] = [
+                    'source'      => $src,
+                    'label'       => ucfirst(str_replace(['_', '-'], ' ', $src)),
+                    'total_leads' => 0,
+                    'deals_count' => 0,
+                    'won_count'   => 0,
+                    'lost_count'  => 0,
+                    'won_usd'     => 0,
+                ];
+            }
+
+            $sourcesMap[$src]['total_leads']++;
+            foreach ($lead->deals as $deal) {
+                $sourcesMap[$src]['deals_count']++;
+                $valUsd = $deal->currency === 'USD' ? (float) $deal->amount : round((float) $deal->amount / max(1.0, $inrToUsdRate));
+                if ($deal->stage === 'closed_won') {
+                    $sourcesMap[$src]['won_count']++;
+                    $sourcesMap[$src]['won_usd'] += $valUsd;
+                } elseif ($deal->stage === 'closed_lost') {
+                    $sourcesMap[$src]['lost_count']++;
+                }
+            }
+        }
+
+        $sourceAnalytics = array_values(array_map(function ($item) {
+            $closed = $item['won_count'] + $item['lost_count'];
+            $item['win_rate'] = $closed > 0 ? (int) round(($item['won_count'] / $closed) * 100) : ($item['deals_count'] > 0 ? (int) round(($item['won_count'] / $item['deals_count']) * 100) : 0);
+            $item['won_usd'] = (float) round($item['won_usd']);
+            return $item;
+        }, $sourcesMap));
+
+        usort($sourceAnalytics, fn($a, $b) => ($b['won_usd'] <=> $a['won_usd']) ?: ($b['total_leads'] <=> $a['total_leads']));
+
+        // Pipeline Velocity: Average days from lead creation to deal closed_won
+        $wonDealsWithDates = Deal::where('stage', 'closed_won')->with('lead')->get();
+        $velocityDays = [];
+        foreach ($wonDealsWithDates as $wd) {
+            $startDate = $wd->lead?->created_at ?? $wd->created_at;
+            if ($startDate && $wd->updated_at) {
+                $diff = max(1, $startDate->diffInDays($wd->updated_at));
+                $velocityDays[] = $diff;
+            }
+        }
+        $avgVelocityDays = !empty($velocityDays) ? round(array_sum($velocityDays) / count($velocityDays), 1) : 14.0;
+
         $overdueCount = Lead::query()
             ->whereNotNull('next_action_date')
             ->where('next_action_date', '<=', now()->endOfDay())
@@ -215,16 +271,21 @@ class CrmDashboardController extends Controller
         $marketRequirements = MarketRequirement::query()
             ->whereIn('status', ['qualified', 'pending'])
             ->latest()
-            ->limit(40)
+            ->limit(50)
             ->get()
             ->map(function ($req) {
                 $meta = $req->metadata ?? [];
+                $techTags = (!empty($meta['tech_tags']) && is_array($meta['tech_tags']))
+                    ? $meta['tech_tags']
+                    : $this->inferTechTags((string) $req->title . ' ' . (string) $req->raw_text);
+
                 return [
                     'id'                     => $req->id,
                     'source'                 => $req->source,
                     'title'                  => html_entity_decode((string) $req->title, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
                     'raw_text'               => html_entity_decode((string) $req->raw_text, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
                     'budget'                 => $req->formatted_amount,
+                    'estimated_amount'       => (float) ($req->estimated_amount ?? 0),
                     'currency'               => $req->currency ?: 'USD',
                     'contact_name'           => $req->contact_name,
                     'contact_company'        => $req->contact_company,
@@ -240,7 +301,8 @@ class CrmDashboardController extends Controller
                     'email_pitch'            => $meta['email_pitch'] ?? null,
                     'email_subject'          => $meta['email_subject'] ?? ('Technical Proposal for ' . ($req->contact_company ?: 'Your Project')),
                     'linkedin_dm'            => $meta['linkedin_dm'] ?? null,
-                    'detected_tech_stack'    => $meta['detected_tech_stack'] ?? [],
+                    'tech_tags'              => $techTags,
+                    'detected_tech_stack'    => !empty($meta['detected_tech_stack']) ? $meta['detected_tech_stack'] : $techTags,
                     'suggested_architecture' => $meta['suggested_architecture'] ?? null,
                     'client_pain_points'     => $meta['client_pain_points'] ?? [],
                     'created_at'             => $req->created_at->diffForHumans(),
@@ -255,6 +317,8 @@ class CrmDashboardController extends Controller
                 'win_rate'           => $winRate,
                 'overdue_count'      => $overdueCount,
                 'avg_deal_size'      => (float) $avgDealSize,
+                'avg_velocity_days'  => (float) $avgVelocityDays,
+                'source_analytics'   => $sourceAnalytics,
             ],
             'action_queue'        => $actionQueue,
             'market_requirements' => $marketRequirements,
@@ -267,5 +331,35 @@ class CrmDashboardController extends Controller
                 'tab'     => $activeTab,
             ],
         ]);
+    }
+
+    /**
+     * Infer technology stack tags from requirement text for frontend filtering.
+     */
+    private function inferTechTags(string $text): array
+    {
+        $tags = [];
+        $textLower = strtolower($text);
+
+        $stackMap = [
+            'Laravel'    => ['laravel', 'artisan', 'eloquent', 'blade', 'livewire'],
+            'Vue'        => ['vue', 'vuejs', 'vue.js', 'vue 3', 'pinia', 'inertia', 'vite'],
+            'React'      => ['react', 'reactjs', 'nextjs', 'next.js', 'typescript'],
+            'Python/AI'  => ['python', 'fastapi', 'django', 'langchain', 'openai', 'llm', 'machine learning', 'ai/ml', 'pytorch', 'rag', 'agent'],
+            'Mobile'     => ['flutter', 'react native', 'ios', 'android', 'swift', 'kotlin'],
+            'Full-Stack' => ['fullstack', 'full-stack', 'full stack', 'backend', 'frontend', 'api integration', 'microservices', 'saas'],
+            'Database'   => ['postgresql', 'postgres', 'mysql', 'supabase', 'redis', 'dynamodb', 'mongodb', 'sql'],
+        ];
+
+        foreach ($stackMap as $label => $keywords) {
+            foreach ($keywords as $kw) {
+                if (str_contains($textLower, $kw)) {
+                    $tags[] = $label;
+                    break;
+                }
+            }
+        }
+
+        return !empty($tags) ? array_values(array_unique($tags)) : ['Full-Stack'];
     }
 }

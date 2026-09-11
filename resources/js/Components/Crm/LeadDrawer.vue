@@ -112,6 +112,54 @@ const stages = [
   { key: 'closed_lost', label: 'Lost', num: 8 },
 ]
 
+// Duplicate Detection & Merge State
+const duplicateCheckResult = ref<{ count: number; duplicates: any[] }>({ count: 0, duplicates: [] })
+const checkingDuplicates = ref(false)
+const mergingDuplicateId = ref<number | null>(null)
+const showMergeConfirm = ref<any | null>(null)
+
+const fetchDuplicates = async () => {
+  if (!props.leadId) return
+  checkingDuplicates.value = true
+  try {
+    const res = await fetch(`/crm/leads/${props.leadId}/duplicates`)
+    const data = await res.json()
+    duplicateCheckResult.value = data
+  } catch (e) {
+    console.error('Failed to check duplicates', e)
+  } finally {
+    checkingDuplicates.value = false
+  }
+}
+
+const mergeDuplicate = async (dupId: number) => {
+  if (!props.leadId) return
+  mergingDuplicateId.value = dupId
+  try {
+    const res = await fetch(`/crm/leads/${props.leadId}/merge`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+      },
+      body: JSON.stringify({ duplicate_lead_id: dupId }),
+    })
+    const data = await res.json()
+    if (data.success) {
+      emit('updated', data.message)
+      showMergeConfirm.value = null
+      fetchLeadDetails()
+      fetchDuplicates()
+    } else {
+      alert(data.message || 'Merge failed')
+    }
+  } catch (e) {
+    console.error('Error merging lead records', e)
+  } finally {
+    mergingDuplicateId.value = null
+  }
+}
+
 const fetchLeadDetails = async () => {
   if (!props.leadId) return
   loading.value = true
@@ -131,6 +179,7 @@ watch(
   () => {
     if (props.show && props.leadId) {
       fetchLeadDetails()
+      fetchDuplicates()
     }
   },
   { immediate: true }
@@ -580,6 +629,58 @@ const submitWirePayment = async () => {
             >
               <MessageSquare class="w-3.5 h-3.5" />
               <span>WA</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Duplicate Contact Alert Banner & Quick Merge Action -->
+      <div
+        v-if="duplicateCheckResult.count > 0"
+        class="mx-4 sm:mx-6 mt-3 p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-orange-500/10 border border-amber-500/30 text-xs"
+      >
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="flex items-center gap-2">
+            <AlertCircle class="w-4 h-4 text-amber-500 shrink-0" />
+            <span class="font-bold text-amber-900 dark:text-amber-200">
+              Potential Duplicate Records Detected ({{ duplicateCheckResult.count }})
+            </span>
+          </div>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300 font-mono font-bold">
+            Matched Phone / Domain / Company
+          </span>
+        </div>
+
+        <div class="space-y-2">
+          <div
+            v-for="dup in duplicateCheckResult.duplicates"
+            :key="dup.id"
+            class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-amber-200/80 dark:border-amber-800/60 flex items-center justify-between gap-2 shadow-xs"
+          >
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-bold text-slate-900 dark:text-white truncate">{{ dup.name }}</span>
+                <span class="text-[11px] text-slate-500 truncate">{{ dup.company }}</span>
+                <span
+                  v-for="r in dup.reasons"
+                  :key="r"
+                  class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300"
+                >
+                  {{ r }}
+                </span>
+              </div>
+              <div class="text-[10px] text-slate-400 mt-0.5 truncate">
+                {{ dup.email || 'No email' }} • {{ dup.phone || 'No phone' }} • Stage: {{ dup.stage }} ({{ dup.deals_count }} deals) • Created {{ dup.created_at }}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              @click="showMergeConfirm = dup"
+              :disabled="mergingDuplicateId === dup.id"
+              class="px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-[11px] font-bold transition flex items-center gap-1 cursor-pointer shrink-0 shadow-xs disabled:opacity-50"
+            >
+              <span>{{ mergingDuplicateId === dup.id ? 'Merging...' : 'Merge Into Lead' }}</span>
             </button>
           </div>
         </div>
@@ -1177,4 +1278,54 @@ const submitWirePayment = async () => {
       </div>
     </div>
   </div>
+
+  <!-- Merge Confirmation Dialog -->
+  <Teleport to="body">
+    <div
+      v-if="showMergeConfirm"
+      class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      @click.self="showMergeConfirm = null"
+    >
+      <div class="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-amber-400/40 p-6 space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="p-2.5 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+            <AlertCircle class="w-5 h-5" />
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white">Confirm Lead Merge</h3>
+            <p class="text-xs text-slate-500 mt-0.5">This action is permanent and cannot be undone.</p>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-xs space-y-1">
+          <div class="font-bold text-amber-900 dark:text-amber-200">Merging duplicate into this lead:</div>
+          <div class="text-slate-700 dark:text-slate-300">
+            <strong>{{ showMergeConfirm.name }}</strong> ({{ showMergeConfirm.company }})
+          </div>
+          <div class="text-slate-500">{{ showMergeConfirm.email }} • {{ showMergeConfirm.phone }}</div>
+          <div class="text-[11px] text-amber-700 dark:text-amber-300 mt-2">
+            All deals ({{ showMergeConfirm.deals_count }}), activities, notes, and outreach emails will be reassigned to this lead. The duplicate will be archived.
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-1">
+          <button
+            type="button"
+            @click="showMergeConfirm = null"
+            class="px-4 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold transition cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            @click="mergeDuplicate(showMergeConfirm.id)"
+            :disabled="mergingDuplicateId !== null"
+            class="px-4 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer disabled:opacity-60"
+          >
+            <span>{{ mergingDuplicateId !== null ? 'Merging...' : 'Confirm & Merge' }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </Teleport>
 </template>

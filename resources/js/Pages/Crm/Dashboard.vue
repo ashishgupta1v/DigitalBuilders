@@ -31,6 +31,17 @@ const props = defineProps<{
     win_rate: number
     overdue_count: number
     avg_deal_size?: number
+    avg_velocity_days?: number
+    source_analytics?: Array<{
+      source: string
+      label: string
+      total_leads: number
+      deals_count: number
+      won_count: number
+      lost_count: number
+      won_usd: number
+      win_rate: number
+    }>
     total_pipeline_inr?: number
     won_revenue_inr?: number
   }
@@ -65,17 +76,38 @@ const activeQueue = computed(() => {
 // RFP Hunter State
 const isPolling = ref(false)
 const selectedSourceFilter = ref('all')
+const selectedStackFilter = ref('all')
+const selectedBudgetTier = ref('all')
 const dismissedReqIds = ref<number[]>([])
 const purgingJunk = ref(false)
+
+const techStackTabs = [
+  { key: 'all', label: 'All Stack' },
+  { key: 'Laravel', label: '🔴 Laravel' },
+  { key: 'Vue', label: '🟢 Vue' },
+  { key: 'React', label: '🔵 React' },
+  { key: 'Python/AI', label: '🤖 Python/AI' },
+  { key: 'Mobile', label: '📱 Mobile' },
+  { key: 'Full-Stack', label: '⚡ Full-Stack' },
+  { key: 'Database', label: '🗄️ Database' },
+]
+
+const budgetTierTabs = [
+  { key: 'all', label: 'All Budgets' },
+  { key: 'high', label: '💎 High Value ($5k+)' },
+  { key: 'mid', label: '🚀 Sprint ($2k–$5k)' },
+  { key: 'low', label: '⚡ Hourly / Custom' },
+]
 
 const sourceTabs = [
   { key: 'all', label: 'All Sources' },
   { key: 'upwork', label: '🟢 Upwork' },
   { key: 'hackernews', label: '🟠 Hacker News' },
-  { key: 'weworkremotely', label: '💼 WeWorkRemotely' },
-  { key: 'remoteok', label: '🚀 RemoteOK' },
-  { key: 'remotive', label: '🌐 Remotive' },
+  { key: 'github', label: '⚫ GitHub' },
   { key: 'reddit', label: '🔴 Reddit' },
+  { key: 'remoteok', label: '🚀 RemoteOK' },
+  { key: 'weworkremotely', label: '💼 WeWork' },
+  { key: 'remotive', label: '🌐 Remotive' },
 ]
 
 const filteredMarketRequirements = computed(() => {
@@ -86,6 +118,19 @@ const filteredMarketRequirements = computed(() => {
       if (selectedSourceFilter.value === 'all') return true
       if (selectedSourceFilter.value === 'upwork') return ['upwork', 'direct', 'custom_url', 'direct_rfp'].includes(req.source)
       return req.source === selectedSourceFilter.value
+    })
+    .filter((req: any) => {
+      if (selectedStackFilter.value === 'all') return true
+      const tags: string[] = req.tech_tags || req.detected_tech_stack || []
+      return tags.includes(selectedStackFilter.value)
+    })
+    .filter((req: any) => {
+      if (selectedBudgetTier.value === 'all') return true
+      const amt = req.estimated_amount || 0
+      if (selectedBudgetTier.value === 'high') return amt >= 5000
+      if (selectedBudgetTier.value === 'mid') return amt >= 2000 && amt < 5000
+      if (selectedBudgetTier.value === 'low') return amt < 2000 || amt === 0
+      return true
     })
 })
 
@@ -729,43 +774,80 @@ const logout = () => {
       <!-- TAB 1: 🛰️ INTERNATIONAL RFP HUNTER & LIVE FEEDS                          -->
       <!-- ========================================================================= -->
       <section v-if="activeMainTab === 'hunter'" class="space-y-4">
-        <!-- Sub-header & Source Filter Controls -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 custom-scrollbar">
-            <button
-              v-for="tab in sourceTabs"
-              :key="tab.key"
-              type="button"
-              @click="selectedSourceFilter = tab.key"
-              class="px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer shrink-0"
-              :class="selectedSourceFilter === tab.key
-                ? 'bg-purple-600 text-white shadow-sm'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'"
-            >
-              {{ tab.label }}
-            </button>
+        <!-- Hunter Filter Bar (Source, Stack, Budget) -->
+        <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+          <!-- Row 1: Platform Source Tabs + Sync Actions -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 custom-scrollbar">
+              <button
+                v-for="tab in sourceTabs"
+                :key="tab.key"
+                type="button"
+                @click="selectedSourceFilter = tab.key"
+                class="px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer shrink-0"
+                :class="selectedSourceFilter === tab.key
+                  ? 'bg-purple-600 text-white shadow-sm'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'"
+              >
+                {{ tab.label }}
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                @click="purgeJunkReqs"
+                :disabled="purgingJunk"
+                class="px-3 py-1.5 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                title="Clean out dismissed or low-relevance items"
+              >
+                <Trash2 class="w-3.5 h-3.5" />
+                <span>Clean Feed</span>
+              </button>
+              <button
+                type="button"
+                @click="pollFeedsLive"
+                :disabled="isPolling"
+                class="px-3 py-1.5 rounded-xl text-xs font-bold text-purple-700 dark:text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              >
+                <RefreshCw class="w-3.5 h-3.5" :class="{ 'animate-spin': isPolling }" />
+                <span>{{ isPolling ? 'Scanning...' : 'Sync Feeds' }}</span>
+              </button>
+            </div>
           </div>
 
-          <div class="flex items-center gap-2 shrink-0">
+          <!-- Row 2: Tech Stack Pills -->
+          <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0">Stack:</span>
             <button
+              v-for="stack in techStackTabs"
+              :key="stack.key"
               type="button"
-              @click="purgeJunkReqs"
-              :disabled="purgingJunk"
-              class="px-3 py-1.5 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
-              title="Clean out dismissed or low-relevance items"
+              @click="selectedStackFilter = stack.key"
+              class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer shrink-0"
+              :class="selectedStackFilter === stack.key
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'"
             >
-              <Trash2 class="w-3.5 h-3.5" />
-              <span>Clean Feed</span>
+              {{ stack.label }}
             </button>
+            <span class="mx-2 h-4 w-px bg-slate-200 dark:bg-slate-700 shrink-0"></span>
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0">Budget:</span>
             <button
+              v-for="tier in budgetTierTabs"
+              :key="tier.key"
               type="button"
-              @click="pollFeedsLive"
-              :disabled="isPolling"
-              class="px-3 py-1.5 rounded-xl text-xs font-bold text-purple-700 dark:text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              @click="selectedBudgetTier = tier.key"
+              class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer shrink-0"
+              :class="selectedBudgetTier === tier.key
+                ? 'bg-emerald-600 text-white shadow-sm'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'"
             >
-              <RefreshCw class="w-3.5 h-3.5" :class="{ 'animate-spin': isPolling }" />
-              <span>{{ isPolling ? 'Scanning...' : 'Sync Feeds' }}</span>
+              {{ tier.label }}
             </button>
+            <span v-if="selectedStackFilter !== 'all' || selectedBudgetTier !== 'all'" class="ml-auto shrink-0 text-[11px] text-purple-600 dark:text-purple-400 font-bold">
+              {{ filteredMarketRequirements.length }} results
+            </span>
           </div>
         </div>
 
@@ -929,6 +1011,56 @@ const logout = () => {
             @proposal="openProposalModal"
             @move-stage="onMoveDealStage"
           />
+        </div>
+
+        <!-- Source ROI & Pipeline Velocity Analytics -->
+        <div v-if="telemetry.source_analytics?.length" class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <TrendingUp class="w-4 h-4 text-purple-500" />
+              <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Source ROI & Revenue Attribution</h3>
+            </div>
+            <span class="text-[11px] text-slate-400 font-mono">
+              Avg Close Velocity: <strong class="text-purple-600 dark:text-purple-300">{{ telemetry.avg_velocity_days }}d</strong>
+            </span>
+          </div>
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-slate-800 text-[10px] text-slate-500 uppercase tracking-wider">
+                  <th class="pb-2 text-left font-semibold">Source</th>
+                  <th class="pb-2 text-center font-semibold">Leads</th>
+                  <th class="pb-2 text-center font-semibold">Deals</th>
+                  <th class="pb-2 text-center font-semibold">Won</th>
+                  <th class="pb-2 text-center font-semibold">Win Rate</th>
+                  <th class="pb-2 text-right font-semibold">Revenue Won ($)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                <tr
+                  v-for="row in telemetry.source_analytics"
+                  :key="row.source"
+                  class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition"
+                >
+                  <td class="py-2 font-semibold text-slate-800 dark:text-slate-200 capitalize">{{ row.label }}</td>
+                  <td class="py-2 text-center text-slate-600 dark:text-slate-400 font-mono">{{ row.total_leads }}</td>
+                  <td class="py-2 text-center text-slate-600 dark:text-slate-400 font-mono">{{ row.deals_count }}</td>
+                  <td class="py-2 text-center font-mono">
+                    <span :class="row.won_count > 0 ? 'text-emerald-600 dark:text-emerald-400 font-bold' : 'text-slate-400'">{{ row.won_count }}</span>
+                  </td>
+                  <td class="py-2 text-center">
+                    <span
+                      class="px-2 py-0.5 rounded-md font-mono font-bold text-[10px]"
+                      :class="row.win_rate >= 50 ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400' : row.win_rate > 0 ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'"
+                    >{{ row.win_rate }}%</span>
+                  </td>
+                  <td class="py-2 text-right font-mono font-bold text-emerald-700 dark:text-emerald-400">
+                    {{ row.won_usd > 0 ? '$' + Number(row.won_usd).toLocaleString() : '—' }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 

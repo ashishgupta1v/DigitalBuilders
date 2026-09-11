@@ -67,6 +67,8 @@ Route::middleware(['web', 'crm.admin'])->prefix('crm')->name('crm.')->group(func
     Route::post('/leads/{id}/send-email', [CrmLeadController::class, 'sendOutreachEmail'])->name('leads.send-email');
     Route::post('/leads/{id}/triage-reply', [CrmInboundReplyController::class, 'triageLeadReply'])->name('leads.triage-reply');
     Route::post('/leads/{id}/enrich', [CrmLeadController::class, 'enrich'])->name('leads.enrich');
+    Route::get('/leads/{id}/duplicates', [CrmLeadController::class, 'checkDuplicates'])->name('leads.duplicates');
+    Route::post('/leads/{id}/merge', [CrmLeadController::class, 'merge'])->name('leads.merge');
 
     // Deal & Pipeline Mechanics
     Route::post('/deals/{id}/stage', [CrmDealController::class, 'updateStage'])->name('deals.stage');

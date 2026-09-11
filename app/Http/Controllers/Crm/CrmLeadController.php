@@ -10,7 +10,10 @@ use App\Models\Activity;
 use App\Models\CrmOutreachEmail;
 use App\Models\Deal;
 use App\Models\Lead;
+use App\Models\LeadNote;
+use App\Models\MarketRequirement;
 use App\Models\Organization;
+use App\Models\Payment;
 use App\Services\SalesFunnel\CrmLeadEnrichmentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -623,6 +626,177 @@ class CrmLeadController extends Controller
             'message'    => 'Lead intelligence dossier enriched successfully!',
             'dossier'    => $dossier,
             'ai_summary' => $lead->ai_summary,
+        ]);
+    }
+
+    /**
+     * Scan database for possible duplicate leads matching phone, email, domain, or company name.
+     */
+    public function checkDuplicates(int $id): JsonResponse
+    {
+        $lead = Lead::with('organization')->findOrFail($id);
+        $cleanPhone = preg_replace('/\D+/', '', (string) $lead->phone);
+        $last10Phone = strlen($cleanPhone) >= 10 ? substr($cleanPhone, -10) : null;
+
+        $emailDomain = null;
+        if (!empty($lead->email) && str_contains($lead->email, '@')) {
+            $emailParts = explode('@', $lead->email);
+            $domainCandidate = strtolower(trim($emailParts[1] ?? ''));
+            $publicProviders = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com', 'protonmail.com', 'zoho.com', 'aol.com', 'mail.com'];
+            if (!in_array($domainCandidate, $publicProviders, true) && strlen($domainCandidate) > 3) {
+                $emailDomain = $domainCandidate;
+            }
+        }
+
+        $companyNormalized = trim((string) ($lead->company ?? $lead->organization?->name ?? ''));
+
+        $query = Lead::query()
+            ->where('id', '!=', $lead->id)
+            ->where('status', '!=', 'archived');
+
+        $query->where(function ($q) use ($last10Phone, $emailDomain, $companyNormalized, $lead) {
+            $hasCondition = false;
+
+            if ($last10Phone) {
+                $q->orWhere('phone', 'like', "%{$last10Phone}%");
+                $hasCondition = true;
+            }
+
+            if (!empty($lead->email)) {
+                $q->orWhere('email', strtolower(trim($lead->email)));
+                $hasCondition = true;
+            }
+
+            if ($emailDomain) {
+                $q->orWhere('email', 'like', "%@{$emailDomain}");
+                $hasCondition = true;
+            }
+
+            if (strlen($companyNormalized) >= 4) {
+                $q->orWhere('company', 'like', "%{$companyNormalized}%");
+                $hasCondition = true;
+            }
+
+            if (!$hasCondition) {
+                $q->whereRaw('0 = 1');
+            }
+        });
+
+        $duplicates = $query->with(['organization', 'deals'])->limit(10)->get()->map(function ($dup) use ($last10Phone, $lead, $companyNormalized, $emailDomain) {
+            $reasons = [];
+            if (!empty($lead->email) && !empty($dup->email) && strtolower(trim($dup->email)) === strtolower(trim($lead->email))) {
+                $reasons[] = 'Exact Email Match';
+            } elseif ($emailDomain && !empty($dup->email) && str_ends_with(strtolower(trim($dup->email)), '@' . $emailDomain)) {
+                $reasons[] = 'Company Domain Match (' . $emailDomain . ')';
+            }
+
+            $dupPhone = preg_replace('/\D+/', '', (string) $dup->phone);
+            if ($last10Phone && str_contains($dupPhone, $last10Phone)) {
+                $reasons[] = 'Phone Match (***' . substr($last10Phone, -4) . ')';
+            }
+
+            if (strlen($companyNormalized) >= 4 && stripos((string) $dup->company, $companyNormalized) !== false) {
+                $reasons[] = 'Company Name Match';
+            }
+
+            return [
+                'id'          => $dup->id,
+                'name'        => $dup->name,
+                'company'     => $dup->company ?? $dup->organization?->name ?? 'N/A',
+                'email'       => $dup->email,
+                'phone'       => $dup->phone,
+                'stage'       => $dup->stage,
+                'score'       => (int) ($dup->score ?? 50),
+                'created_at'  => $dup->created_at->format('d M Y'),
+                'reasons'     => !empty($reasons) ? $reasons : ['Potential Overlap'],
+                'deals_count' => $dup->deals->count(),
+            ];
+        });
+
+        return response()->json([
+            'count'      => $duplicates->count(),
+            'duplicates' => $duplicates,
+        ]);
+    }
+
+    /**
+     * Merge a duplicate lead into this master lead.
+     */
+    public function merge(Request $request, int $id): JsonResponse
+    {
+        $masterLead = Lead::findOrFail($id);
+
+        $validated = $request->validate([
+            'duplicate_lead_id' => ['required', 'integer', 'different:id', 'exists:leads,id'],
+        ]);
+
+        $duplicateLead = Lead::with(['deals', 'activities', 'notes'])->findOrFail($validated['duplicate_lead_id']);
+
+        DB::transaction(function () use ($masterLead, $duplicateLead, $request) {
+            // 1. Backfill any missing contact fields on master
+            $updates = [];
+            if (empty($masterLead->email) && !empty($duplicateLead->email)) {
+                $updates['email'] = $duplicateLead->email;
+            }
+            if (empty($masterLead->phone) && !empty($duplicateLead->phone)) {
+                $updates['phone'] = $duplicateLead->phone;
+            }
+            if (empty($masterLead->company) && !empty($duplicateLead->company)) {
+                $updates['company'] = $duplicateLead->company;
+            }
+            if (empty($masterLead->role_title) && !empty($duplicateLead->role_title)) {
+                $updates['role_title'] = $duplicateLead->role_title;
+            }
+            if (empty($masterLead->organization_id) && !empty($duplicateLead->organization_id)) {
+                $updates['organization_id'] = $duplicateLead->organization_id;
+            }
+            if (($duplicateLead->score ?? 0) > ($masterLead->score ?? 0)) {
+                $updates['score'] = $duplicateLead->score;
+            }
+            $updates['touchpoint_count'] = ($masterLead->touchpoint_count ?? 0) + ($duplicateLead->touchpoint_count ?? 0);
+
+            if (!empty($updates)) {
+                $masterLead->update($updates);
+            }
+
+            // 2. Re-point deals
+            Deal::where('lead_id', $duplicateLead->id)->update(['lead_id' => $masterLead->id]);
+
+            // 3. Re-point activities
+            Activity::where('lead_id', $duplicateLead->id)->update(['lead_id' => $masterLead->id]);
+
+            // 4. Re-point notes
+            LeadNote::where('lead_id', $duplicateLead->id)->update(['lead_id' => $masterLead->id]);
+
+            // 5. Re-point outreach emails
+            CrmOutreachEmail::where('lead_id', $duplicateLead->id)->update(['lead_id' => $masterLead->id]);
+
+            // 6. Re-point payments
+            Payment::where('lead_id', $duplicateLead->id)->update(['lead_id' => $masterLead->id]);
+
+            // 7. Re-point market requirements if any
+            MarketRequirement::where('lead_id', $duplicateLead->id)->update(['lead_id' => $masterLead->id]);
+
+            // 8. Archive the duplicate record
+            $duplicateLead->update([
+                'status'           => 'archived',
+                'next_action_note' => "Merged into Master Lead #{$masterLead->id} on " . now()->format('d M Y H:i'),
+            ]);
+
+            // 9. Log activity on master lead
+            Activity::create([
+                'lead_id'     => $masterLead->id,
+                'user_id'     => $request->user()?->id,
+                'type'        => 'note',
+                'subject'     => "Merged Duplicate Lead #{$duplicateLead->id}",
+                'description' => "Consolidated record for '{$duplicateLead->name}' ({$duplicateLead->email}, {$duplicateLead->company}) into this lead. Reassigned all deals, activities, notes, and outreach tracking.",
+            ]);
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => "Lead #{$duplicateLead->id} successfully consolidated into Lead #{$masterLead->id}.",
+            'master'  => $masterLead->fresh(['deals', 'activities', 'notes']),
         ]);
     }
 }

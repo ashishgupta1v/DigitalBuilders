@@ -72,6 +72,7 @@ class InternationalLeadScraperService
         $stats = [
             'hn'             => $this->pollHackerNews(),
             'upwork'         => $this->pollUpwork(),
+            'github'         => $this->pollGitHubDiscussions(),
             'weworkremotely' => $this->pollWeWorkRemotely(),
             'remoteok'       => $this->pollRemoteOk(),
             'remotive'       => $this->pollRemotive(),
@@ -892,5 +893,134 @@ class InternationalLeadScraperService
             'raw'       => $defaultRange,
             'is_hourly' => false,
         ];
+    }
+
+    /**
+     * Poll public GitHub Discussions & Issues for developer contract / freelance requirements.
+     */
+    public function pollGitHubDiscussions(): int
+    {
+        $ingested = 0;
+
+        try {
+            $query = 'is:issue is:open ("contract developer" OR "hire developer" OR "freelance developer" OR "bounty")';
+            $url = 'https://api.github.com/search/issues?' . http_build_query([
+                'q'        => $query,
+                'sort'     => 'created',
+                'order'    => 'desc',
+                'per_page' => 15,
+            ]);
+
+            $response = Http::timeout(10)
+                ->withHeaders([
+                    'User-Agent' => 'DigitalBuilders-Lead-Hunter/1.0',
+                    'Accept'     => 'application/vnd.github.v3+json',
+                ])
+                ->get($url);
+
+            if (!$response->successful()) {
+                Log::warning('GitHub RFP poll returned status ' . $response->status());
+                return 0;
+            }
+
+            $items = $response->json('items') ?? [];
+
+            foreach ($items as $item) {
+                $externalId = 'gh_' . ($item['id'] ?? uniqid());
+                $title = (string) ($item['title'] ?? 'Developer Requirement');
+                $body = (string) ($item['body'] ?? '');
+                $author = (string) ($item['user']['login'] ?? 'GitHub User');
+                $htmlUrl = (string) ($item['html_url'] ?? '');
+
+                $fullText = $title . "\n\n" . $body;
+
+                if (!$this->passesTier1Filters($fullText)) {
+                    continue;
+                }
+
+                $existing = MarketRequirement::where('source', 'github')
+                    ->where('external_id', $externalId)
+                    ->first();
+
+                if ($existing) {
+                    continue;
+                }
+
+                $budget = $this->extractBudget($fullText, '$3,500 – $7,500');
+                $pitchData = $this->pitchGenerator->generateAiPitch(
+                    $fullText,
+                    $author,
+                    'GitHub Open Source / Startup',
+                    'github',
+                    'USD',
+                    $budget['raw']
+                );
+
+                $techTags = $this->extractTechTags($fullText);
+
+                MarketRequirement::create([
+                    'source'           => 'github',
+                    'external_id'      => $externalId,
+                    'title'            => substr($title, 0, 190),
+                    'raw_text'         => substr($fullText, 0, 3000),
+                    'budget_raw'       => $pitchData['budget_range'] ?? $budget['raw'],
+                    'estimated_amount' => $pitchData['estimated_amount'] ?? $budget['amount'],
+                    'currency'         => 'USD',
+                    'contact_name'     => $author,
+                    'contact_company'  => 'GitHub Project (' . ($item['repository_url'] ? basename(dirname((string) $item['repository_url'])) : 'Community') . ')',
+                    'location'         => 'Global / Remote',
+                    'matched_segment'  => $pitchData['segment'],
+                    'relevance_score'  => $pitchData['relevance_score'] ?? 75,
+                    'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
+                    'status'           => 'qualified',
+                    'metadata'         => [
+                        'url'                    => $htmlUrl,
+                        'tech_tags'              => $techTags,
+                        'email_pitch'            => $pitchData['email_pitch'] ?? null,
+                        'email_subject'          => $pitchData['email_subject'] ?? ("Regarding your requirement: " . substr($title, 0, 50)),
+                        'linkedin_dm'            => $pitchData['linkedin_dm'] ?? null,
+                        'detected_tech_stack'    => $pitchData['detected_tech_stack'] ?? $techTags,
+                        'suggested_architecture' => $pitchData['suggested_architecture'] ?? null,
+                        'client_pain_points'     => $pitchData['client_pain_points'] ?? [],
+                    ],
+                ]);
+
+                $ingested++;
+            }
+        } catch (\Throwable $e) {
+            Log::error('GitHub poll error: ' . $e->getMessage());
+        }
+
+        return $ingested;
+    }
+
+    /**
+     * Extract technology tags from raw RFP text.
+     */
+    public function extractTechTags(string $text): array
+    {
+        $tags = [];
+        $textLower = strtolower($text);
+
+        $stackMap = [
+            'Laravel'    => ['laravel', 'artisan', 'eloquent', 'blade', 'livewire'],
+            'Vue'        => ['vue', 'vuejs', 'vue.js', 'vue 3', 'pinia', 'inertia', 'vite'],
+            'React'      => ['react', 'reactjs', 'nextjs', 'next.js', 'typescript'],
+            'Python/AI'  => ['python', 'fastapi', 'django', 'langchain', 'openai', 'llm', 'machine learning', 'ai/ml', 'pytorch', 'rag'],
+            'Mobile'     => ['flutter', 'react native', 'ios', 'android', 'swift', 'kotlin'],
+            'Full-Stack' => ['fullstack', 'full-stack', 'full stack', 'backend', 'frontend', 'api integration', 'microservices'],
+            'Database'   => ['postgresql', 'postgres', 'mysql', 'supabase', 'redis', 'dynamodb', 'mongodb'],
+        ];
+
+        foreach ($stackMap as $label => $keywords) {
+            foreach ($keywords as $kw) {
+                if (preg_match('/\b' . preg_quote($kw, '/') . '\b/i', $textLower)) {
+                    $tags[] = $label;
+                    break;
+                }
+            }
+        }
+
+        return !empty($tags) ? array_values(array_unique($tags)) : ['Full-Stack'];
     }
 }
