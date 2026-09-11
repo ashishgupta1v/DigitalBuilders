@@ -316,16 +316,27 @@ class CrmDashboardController extends Controller
         });
 
         // 5. Market Requirements / Lead Hunter Stream (Sanitized & Enriched)
-        $marketRequirements = MarketRequirement::query()
-            ->whereIn('status', ['qualified', 'pending'])
+        $marketReqQuery = MarketRequirement::query()
+            ->whereIn('status', ['qualified', 'pending']);
+
+        if ($search !== '') {
+            $marketReqQuery->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('raw_text', 'like', "%{$search}%")
+                  ->orWhere('contact_company', 'like', "%{$search}%")
+                  ->orWhere('source', 'like', "%{$search}%");
+            });
+        }
+
+        $marketRequirements = $marketReqQuery
             ->latest()
-            ->limit(50)
+            ->limit(150)
             ->get()
             ->map(function ($req) {
                 $meta = $req->metadata ?? [];
-                $techTags = (!empty($meta['tech_tags']) && is_array($meta['tech_tags']))
-                    ? $meta['tech_tags']
-                    : $this->inferTechTags((string) $req->title . ' ' . (string) $req->raw_text);
+                $existingTags = (!empty($meta['tech_tags']) && is_array($meta['tech_tags'])) ? $meta['tech_tags'] : [];
+                $inferredTags = $this->inferTechTags((string) $req->title . ' ' . (string) $req->raw_text);
+                $techTags = array_values(array_unique(array_merge($existingTags, $inferredTags)));
 
                 return [
                     'id'                     => $req->id,
@@ -421,25 +432,23 @@ class CrmDashboardController extends Controller
         $tags = [];
         $textLower = strtolower($text);
 
-        $stackMap = [
-            'Laravel'    => ['laravel', 'artisan', 'eloquent', 'blade', 'livewire'],
-            'Vue'        => ['vue', 'vuejs', 'vue.js', 'vue 3', 'pinia', 'inertia', 'vite'],
-            'React'      => ['react', 'reactjs', 'nextjs', 'next.js', 'typescript'],
-            'Python/AI'  => ['python', 'fastapi', 'django', 'langchain', 'openai', 'llm', 'machine learning', 'ai/ml', 'pytorch', 'rag', 'agent'],
-            'Mobile'     => ['flutter', 'react native', 'ios', 'android', 'swift', 'kotlin'],
-            'Full-Stack' => ['fullstack', 'full-stack', 'full stack', 'backend', 'frontend', 'api integration', 'microservices', 'saas'],
-            'Database'   => ['postgresql', 'postgres', 'mysql', 'supabase', 'redis', 'dynamodb', 'mongodb', 'sql'],
+        $patterns = [
+            'Mobile'     => '/\b(flutter|react[ -]?native|ios|android|swift|kotlin|expo|hybrid app|mobile app|mobile application|pwa|mobile-first)\b/i',
+            'Web App'    => '/\b(web[ -]?app|web[ -]?application|website|saas|portal|dashboard|web platform)\b/i',
+            'Laravel'    => '/\b(laravel|artisan|eloquent|blade|livewire)\b/i',
+            'Vue'        => '/\b(vue|vuejs|vue\.js|vue 3|pinia|inertia|vite)\b/i',
+            'React'      => '/\b(react|reactjs|nextjs|next\.js|typescript)\b/i',
+            'Python/AI'  => '/\b(python|fastapi|django|langchain|openai|llm|machine learning|ai\/ml|pytorch|rag|ai agent)\b/i',
+            'Full-Stack' => '/\b(fullstack|full-stack|full stack|backend|frontend|api integration|microservices|software engineer|developer)\b/i',
+            'Database'   => '/\b(postgresql|postgres|mysql|supabase|redis|dynamodb|mongodb|sql)\b/i',
         ];
 
-        foreach ($stackMap as $label => $keywords) {
-            foreach ($keywords as $kw) {
-                if (str_contains($textLower, $kw)) {
-                    $tags[] = $label;
-                    break;
-                }
+        foreach ($patterns as $label => $pattern) {
+            if (preg_match($pattern, $text)) {
+                $tags[] = $label;
             }
         }
 
-        return !empty($tags) ? array_values(array_unique($tags)) : ['Full-Stack'];
+        return !empty($tags) ? array_values(array_unique($tags)) : ['Web App', 'Full-Stack'];
     }
 }

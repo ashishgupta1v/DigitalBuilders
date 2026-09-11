@@ -145,14 +145,17 @@ const selectedBudgetTier = ref('all')
 const dismissedReqIds = ref<number[]>([])
 const purgingJunk = ref(false)
 
+const hunterSearchQuery = ref('')
+
 const techStackTabs = [
   { key: 'all', label: 'All Stack' },
+  { key: 'Web App', label: '🌐 Web Apps / SaaS' },
+  { key: 'Mobile', label: '📱 Mobile / Hybrid' },
   { key: 'Laravel', label: '🔴 Laravel' },
   { key: 'Vue', label: '🟢 Vue' },
   { key: 'React', label: '🔵 React' },
-  { key: 'Python/AI', label: '🤖 Python/AI' },
-  { key: 'Mobile', label: '📱 Mobile' },
   { key: 'Full-Stack', label: '⚡ Full-Stack' },
+  { key: 'Python/AI', label: '🤖 Python/AI' },
   { key: 'Database', label: '🗄️ Database' },
 ]
 
@@ -202,6 +205,12 @@ const filteredMarketRequirements = computed(() => {
       if (selectedBudgetTier.value === 'mid') return amt >= 2000 && amt < 5000
       if (selectedBudgetTier.value === 'low') return amt < 2000 || amt === 0
       return true
+    })
+    .filter((req: any) => {
+      const q = (hunterSearchQuery.value || searchQuery.value || '').toLowerCase().trim()
+      if (!q) return true
+      const searchTarget = `${req.title || ''} ${req.raw_text || ''} ${req.contact_company || ''} ${(req.tech_tags || []).join(' ')}`.toLowerCase()
+      return searchTarget.includes(q)
     })
 })
 
@@ -1296,38 +1305,53 @@ onUnmounted(() => {
             </div>
           </div>
 
-          <!-- Row 2: Tech Stack Pills -->
-          <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0">Stack:</span>
-            <button
-              v-for="stack in techStackTabs"
-              :key="stack.key"
-              type="button"
-              @click="selectedStackFilter = stack.key"
-              class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer shrink-0"
-              :class="selectedStackFilter === stack.key
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'"
-            >
-              {{ stack.label }}
-            </button>
-            <span class="mx-2 h-4 w-px bg-slate-200 dark:bg-slate-700 shrink-0"></span>
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0">Budget:</span>
-            <button
-              v-for="tier in budgetTierTabs"
-              :key="tier.key"
-              type="button"
-              @click="selectedBudgetTier = tier.key"
-              class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer shrink-0"
-              :class="selectedBudgetTier === tier.key
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'"
-            >
-              {{ tier.label }}
-            </button>
-            <span v-if="selectedStackFilter !== 'all' || selectedBudgetTier !== 'all'" class="ml-auto shrink-0 text-[11px] text-purple-600 dark:text-purple-400 font-bold">
-              {{ filteredMarketRequirements.length }} results
-            </span>
+          <!-- Row 2: Tech Stack Pills & Search -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0">Stack:</span>
+              <button
+                v-for="stack in techStackTabs"
+                :key="stack.key"
+                type="button"
+                @click="selectedStackFilter = stack.key"
+                class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer shrink-0"
+                :class="selectedStackFilter === stack.key
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'"
+              >
+                {{ stack.label }}
+              </button>
+              <span class="mx-2 h-4 w-px bg-slate-200 dark:bg-slate-700 shrink-0"></span>
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0">Budget:</span>
+              <button
+                v-for="tier in budgetTierTabs"
+                :key="tier.key"
+                type="button"
+                @click="selectedBudgetTier = tier.key"
+                class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer shrink-0"
+                :class="selectedBudgetTier === tier.key
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'"
+              >
+                {{ tier.label }}
+              </button>
+            </div>
+
+            <!-- Hunter Quick Search Bar -->
+            <div class="flex items-center gap-2 shrink-0">
+              <div class="relative w-full sm:w-56">
+                <Search class="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  v-model="hunterSearchQuery"
+                  type="text"
+                  placeholder="Filter RFPs (e.g. mobile, react, web)..."
+                  class="w-full pl-8 pr-2.5 py-1 rounded-lg text-xs bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-0 focus:ring-1 focus:ring-purple-500 placeholder:text-slate-400"
+                />
+              </div>
+              <span v-if="selectedStackFilter !== 'all' || selectedBudgetTier !== 'all' || hunterSearchQuery" class="shrink-0 text-[11px] text-purple-600 dark:text-purple-400 font-bold">
+                {{ filteredMarketRequirements.length }} results
+              </span>
+            </div>
           </div>
         </div>
 
