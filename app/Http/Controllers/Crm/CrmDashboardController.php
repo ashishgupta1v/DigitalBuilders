@@ -45,8 +45,16 @@ class CrmDashboardController extends Controller
         $winRate = $closedTotal > 0 ? (int) round(($wonDealsCount / $closedTotal) * 100) : 0;
         $avgDealSize = $activeDealsCount > 0 ? round($totalPipelineUsd / $activeDealsCount) : 0;
 
+        $founderEmails = array_values(array_unique(array_filter([
+            config('crm.founder_email'),
+            config('mail.lead_inbox'),
+            'ashishgupta1v@gmail.com',
+            'ashishg7555@gmail.com',
+            'founder@digitalbuilders.in'
+        ])));
+
         // Source ROI Analytics and Pipeline Velocity
-        $allLeadsForAnalytics = Lead::with(['deals'])->get();
+        $allLeadsForAnalytics = Lead::whereNotIn('email', $founderEmails)->with(['deals'])->get();
         $sourcesMap = [];
 
         foreach ($allLeadsForAnalytics as $lead) {
@@ -102,6 +110,7 @@ class CrmDashboardController extends Controller
         $avgVelocityDays = !empty($velocityDays) ? round(array_sum($velocityDays) / count($velocityDays), 1) : 14.0;
 
         $overdueCount = Lead::query()
+            ->whereNotIn('email', $founderEmails)
             ->whereNotNull('next_action_date')
             ->where('next_action_date', '<=', now()->endOfDay())
             ->whereNotIn('status', ['converted', 'archived'])
@@ -110,6 +119,7 @@ class CrmDashboardController extends Controller
         // 2. Daily Action Queue (High-Priority International Follow-ups)
         $actionQueue = Lead::query()
             ->with(['organization', 'deals' => fn($q) => $q->latest()->limit(1)])
+            ->whereNotIn('email', $founderEmails)
             ->whereNotIn('status', ['converted', 'archived'])
             ->where(function ($query) {
                 $query->where('next_action_date', '<=', now()->addHours(12))
@@ -122,19 +132,23 @@ class CrmDashboardController extends Controller
             ->get()
             ->map(function ($lead) {
                 $latestDeal = $lead->deals->first();
+                $company = $lead->company ?? $lead->organization?->name ?? 'Inbound Client Inquiry';
+                $actionNote = $lead->next_action_note ?: ($lead->status === 'new' ? 'Discovery call & requirement review' : 'Follow-up required');
+                $dealVal = $latestDeal ? $latestDeal->formatted_amount : ($lead->estimated_value ? '$' . number_format($lead->estimated_value) : '$5,000 USD (Est.)');
+
                 return [
                     'id'               => $lead->id,
-                    'name'             => $lead->name,
-                    'company'          => $lead->company ?? $lead->organization?->name ?? null,
+                    'name'             => $lead->name ?: 'New Client Inquiry',
+                    'company'          => $company,
                     'phone'            => $lead->phone,
                     'email'            => $lead->email,
                     'segment'          => $lead->segment ?? 'general',
                     'score'            => (int) ($lead->score ?? 50),
                     'touchpoint_count' => (int) ($lead->touchpoint_count ?? 0),
                     'next_action_date' => $lead->next_action_date?->toIso8601String(),
-                    'next_action_note' => $lead->next_action_note,
+                    'next_action_note' => $actionNote,
                     'is_overdue'       => $lead->next_action_date && $lead->next_action_date->isPast(),
-                    'deal_value'       => $latestDeal ? $latestDeal->formatted_amount : null,
+                    'deal_value'       => $dealVal,
                     'deal_id'          => $latestDeal?->id,
                 ];
             });
@@ -230,6 +244,7 @@ class CrmDashboardController extends Controller
 
         // 4. Leads Directory Data (Full management table)
         $leadsQuery = Lead::query()
+            ->whereNotIn('email', $founderEmails)
             ->with(['organization', 'deals' => fn($q) => $q->latest(), 'sequences' => fn($q) => $q->latest()])
             ->latest();
 
