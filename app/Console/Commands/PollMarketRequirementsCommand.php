@@ -21,14 +21,17 @@ class PollMarketRequirementsCommand extends Command
         $this->table(
             ['Source', 'Ingested Qualified RFPs'],
             [
-                ['Hacker News (Seeking Freelancer)', $stats['hn']],
-                ['WeWorkRemotely (Full-Stack / Contracts)', $stats['weworkremotely']],
-                ['RemoteOK (Funded Startups)', $stats['remoteok']],
-                ['Remotive (Global Software RFPs)', $stats['remotive']],
-                ['Himalayas (International Dev Contracts)', $stats['himalayas']],
-                ['Upwork (Personal RSS Stream)', $stats['upwork']],
-                ['Reddit (r/forhire & r/freelance_forhire)', $stats['reddit']],
-                ['Total Newly Ingested', $stats['total']],
+                ['Hacker News (Seeking Freelancer)', $stats['hn'] ?? 0],
+                ['Product Hunt (Top Launch MVPs)', $stats['producthunt'] ?? 0],
+                ['Jobicy (Remote Tech Contracts)', $stats['jobicy'] ?? 0],
+                ['Arbeitnow (European & Global Tech)', $stats['arbeitnow'] ?? 0],
+                ['WeWorkRemotely (Full-Stack / Contracts)', $stats['weworkremotely'] ?? 0],
+                ['RemoteOK (Funded Startups)', $stats['remoteok'] ?? 0],
+                ['Remotive (Global Software RFPs)', $stats['remotive'] ?? 0],
+                ['Himalayas (International Dev Contracts)', $stats['himalayas'] ?? 0],
+                ['Upwork (Personal RSS Stream)', $stats['upwork'] ?? 0],
+                ['Reddit (r/forhire & r/freelance_forhire)', $stats['reddit'] ?? 0],
+                ['Total Newly Ingested', $stats['total'] ?? 0],
             ]
         );
 
