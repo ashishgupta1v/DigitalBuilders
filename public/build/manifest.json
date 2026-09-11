@@ -91,8 +91,8 @@
       "_createLucideIcon-DfEAtFS7.js"
     ]
   },
-  "_receipt-D4fwkxHv.js": {
-    "file": "assets/receipt-D4fwkxHv.js",
+  "_receipt-jOwyjFKF.js": {
+    "file": "assets/receipt-jOwyjFKF.js",
     "name": "receipt",
     "imports": [
       "_createLucideIcon-DfEAtFS7.js"
@@ -150,7 +150,7 @@
     ]
   },
   "resources/js/Pages/Crm/Dashboard.vue": {
-    "file": "assets/Dashboard-DX2r5YpN.js",
+    "file": "assets/Dashboard-B6_oyAcD.js",
     "name": "Dashboard",
     "src": "resources/js/Pages/Crm/Dashboard.vue",
     "isDynamicEntry": true,
@@ -160,7 +160,7 @@
       "_createLucideIcon-DfEAtFS7.js",
       "_mail-DuoYSn7a.js",
       "_printer-C8Vv2ngI.js",
-      "_receipt-D4fwkxHv.js",
+      "_receipt-jOwyjFKF.js",
       "_sparkles-qa0RZLfe.js",
       "_shield-check-CDWK9xoe.js",
       "_ThemeToggle-CM3LXsCM.js"
@@ -200,15 +200,14 @@
     ]
   },
   "resources/js/Pages/Crm/PublicProposal.vue": {
-    "file": "assets/PublicProposal-iPnB8H7k.js",
+    "file": "assets/PublicProposal-BQwtd-87.js",
     "name": "PublicProposal",
     "src": "resources/js/Pages/Crm/PublicProposal.vue",
     "isDynamicEntry": true,
     "imports": [
       "_index.esm-Cv9nl8f5.js",
-      "_createLucideIcon-DfEAtFS7.js",
       "_printer-C8Vv2ngI.js",
-      "_receipt-D4fwkxHv.js",
+      "_receipt-jOwyjFKF.js",
       "_sparkles-qa0RZLfe.js",
       "_ApplicationLogo--7M9VasL.js",
       "_ThemeToggle-CM3LXsCM.js"
@@ -449,7 +448,7 @@
     ]
   },
   "resources/js/app.ts": {
-    "file": "assets/app-_y_GSkpM.js",
+    "file": "assets/app-zCKIaOmN.js",
     "name": "app",
     "src": "resources/js/app.ts",
     "isEntry": true,
@@ -489,7 +488,7 @@
       "resources/js/Pages/Services/WebApp.vue"
     ],
     "css": [
-      "assets/app-CV8azSvJ.css"
+      "assets/app-B4hJ82g7.css"
     ]
   }
 }

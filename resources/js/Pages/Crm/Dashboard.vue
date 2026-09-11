@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { Head, router, Link } from '@inertiajs/vue3'
 import {
   TrendingUp, Users, DollarSign, AlertCircle, Plus, Upload, Search,
   Filter, LayoutGrid, List, MessageSquare, LogOut, CheckCircle2,
   Sparkles, ExternalLink, ShieldAlert, ShieldCheck, ArrowRight, Building2, Check, Clock, X,
   Globe, Copy, RefreshCw, Trash2, Kanban, Send, Mail, Calendar, Layers,
-  ChevronRight, ArrowUpRight, CheckSquare, Square, Eye, MousePointerClick
+  ChevronRight, ArrowUpRight, CheckSquare, Square, Eye, MousePointerClick,
+  Command, Keyboard, Columns, Maximize2
 } from 'lucide-vue-next'
 
 import KanbanColumn from '@/Components/Crm/KanbanColumn.vue'
@@ -20,6 +21,11 @@ import PitchPreviewModal from '@/Components/Crm/PitchPreviewModal.vue'
 import SecuritySettingsModal from '@/Components/Crm/SecuritySettingsModal.vue'
 import ConvertToDealModal from '@/Components/Crm/ConvertToDealModal.vue'
 import ThemeToggle from '@/Components/ThemeToggle.vue'
+import CommandPalette from '@/Components/Crm/CommandPalette.vue'
+import KeyboardShortcutsModal from '@/Components/Crm/KeyboardShortcutsModal.vue'
+import FloatingShortcutDock from '@/Components/Crm/FloatingShortcutDock.vue'
+import RfpInspectorPane from '@/Components/Crm/RfpInspectorPane.vue'
+import LeadInspectorPane from '@/Components/Crm/LeadInspectorPane.vue'
 
 const showSecurityModal = ref(false)
 
@@ -535,6 +541,339 @@ const sendDirectMailto = (lead: any) => {
 const logout = () => {
   router.post('/crm/logout')
 }
+
+// =========================================================================
+// POWER-USER COCKPIT & HOTKEY ENGINE
+// =========================================================================
+const showCommandPalette = ref(false)
+const showShortcutsModal = ref(false)
+const isSplitView = ref(true)
+
+const selectedRfpIndex = ref(0)
+const selectedLeadIndex = ref(0)
+
+const focusedRfp = computed(() => {
+  const list = filteredMarketRequirements.value
+  if (!list.length) return null
+  const idx = Math.min(Math.max(0, selectedRfpIndex.value), list.length - 1)
+  return list[idx] || null
+})
+
+const focusedLead = computed(() => {
+  const list = filteredLeads.value
+  if (!list.length) return null
+  const idx = Math.min(Math.max(0, selectedLeadIndex.value), list.length - 1)
+  return list[idx] || null
+})
+
+const toggleSplitView = () => {
+  isSplitView.value = !isSplitView.value
+  try {
+    localStorage.setItem('crm_split_view', String(isSplitView.value))
+  } catch (e) {}
+  triggerToast(isSplitView.value ? '⚡ Split Cockpit Mode Enabled' : '🖥️ Full-Width Mode Enabled')
+}
+
+const stepSelection = (delta: number) => {
+  if (activeMainTab.value === 'hunter') {
+    const len = filteredMarketRequirements.value.length
+    if (len === 0) return
+    let next = selectedRfpIndex.value + delta
+    if (next < 0) next = len - 1
+    if (next >= len) next = 0
+    selectedRfpIndex.value = next
+    nextTick(() => {
+      const el = document.getElementById(`rfp-item-${filteredMarketRequirements.value[next]?.id}`)
+      el?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    })
+  } else if (activeMainTab.value === 'leads') {
+    const len = filteredLeads.value.length
+    if (len === 0) return
+    let next = selectedLeadIndex.value + delta
+    if (next < 0) next = len - 1
+    if (next >= len) next = 0
+    selectedLeadIndex.value = next
+    nextTick(() => {
+      const el = document.getElementById(`lead-item-${filteredLeads.value[next]?.id}`)
+      el?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    })
+  }
+}
+
+const handleHotkeyConvert = () => {
+  if (activeMainTab.value === 'hunter' && focusedRfp.value) {
+    convertReqToDeal(focusedRfp.value)
+  } else if (activeMainTab.value === 'leads' && focusedLead.value) {
+    selectedReqForConvert.value = {
+      title: `${focusedLead.value.company || focusedLead.value.name} — Custom Scope`,
+      estimated_amount: focusedLead.value.deal_amount ? parseInt(focusedLead.value.deal_amount.replace(/[^0-9]/g, '')) || 5000 : 5000,
+      contact_name: focusedLead.value.name,
+      contact_company: focusedLead.value.company,
+      contact_email: focusedLead.value.email,
+      source: focusedLead.value.segment || 'direct',
+      raw_text: focusedLead.value.notes || 'Lead converted to active deal pipeline.',
+    }
+    showConvertModal.value = true
+  }
+}
+
+const handleHotkeyOutreach = () => {
+  if (activeMainTab.value === 'hunter' && focusedRfp.value) {
+    openPitchPreview(focusedRfp.value)
+  } else if (activeMainTab.value === 'leads' && focusedLead.value) {
+    openLeadDetails(focusedLead.value.id)
+  }
+}
+
+const handleHotkeyPitch = () => {
+  if (activeMainTab.value === 'hunter' && focusedRfp.value) {
+    copyReqPitch(focusedRfp.value)
+  }
+}
+
+const handleHotkeyDismiss = () => {
+  if (activeMainTab.value === 'hunter' && focusedRfp.value) {
+    dismissReq(focusedRfp.value.id)
+  } else if (activeMainTab.value === 'leads' && focusedLead.value) {
+    deleteLead(focusedLead.value.id)
+  }
+}
+
+const handleHotkeyEnrich = async () => {
+  if (activeMainTab.value === 'leads' && focusedLead.value) {
+    triggerToast(`Enriching dossier for ${focusedLead.value.name}...`)
+    try {
+      const res = await fetch(`/crm/leads/${focusedLead.value.id}/enrich`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+        },
+      })
+      const data = await res.json()
+      if (data.success) {
+        triggerToast('Lead dossier enriched!')
+        router.reload({ only: ['all_leads'] })
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+}
+
+const enrichLeadFromInspector = async (leadId: number) => {
+  triggerToast('Enriching contact intelligence dossier...')
+  try {
+    const res = await fetch(`/crm/leads/${leadId}/enrich`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+      },
+    })
+    const data = await res.json()
+    if (data.success) {
+      triggerToast('Intelligence dossier enriched!')
+      router.reload({ only: ['all_leads'] })
+    }
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+const handleHotkeyInspect = () => {
+  if (activeMainTab.value === 'hunter' && focusedRfp.value) {
+    openPitchPreview(focusedRfp.value)
+  } else if (activeMainTab.value === 'leads' && focusedLead.value) {
+    openLeadDetails(focusedLead.value.id)
+  }
+}
+
+const exportLeadsCsv = () => {
+  const leads = props.all_leads || []
+  if (!leads.length) {
+    triggerToast('No leads available to export')
+    return
+  }
+  const headers = ['ID', 'Name', 'Company', 'Email', 'Phone', 'Segment', 'Score', 'Deal Amount', 'Status']
+  const rows = leads.map(l => [
+    l.id,
+    `"${(l.name || '').replace(/"/g, '""')}"`,
+    `"${(l.company || '').replace(/"/g, '""')}"`,
+    `"${(l.email || '').replace(/"/g, '""')}"`,
+    `"${(l.phone || '').replace(/"/g, '""')}"`,
+    `"${(l.segment || '').replace(/"/g, '""')}"`,
+    l.score || 0,
+    `"${(l.deal_amount || '').replace(/"/g, '""')}"`,
+    `"${(l.status || '').replace(/"/g, '""')}"`
+  ])
+  const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n')
+  const encodedUri = encodeURI(csvContent)
+  const link = document.createElement('a')
+  link.setAttribute('href', encodedUri)
+  link.setAttribute('download', `digitalbuilders_leads_${new Date().toISOString().slice(0,10)}.csv`)
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  triggerToast(`Exported ${leads.length} leads to CSV`)
+}
+
+const handleCommandAction = (actionKey: string) => {
+  if (actionKey === 'new-lead') {
+    showQuickAdd.value = true
+  } else if (actionKey === 'sync-feeds') {
+    pollFeedsLive()
+  } else if (actionKey === 'toggle-theme') {
+    const isDark = document.documentElement.classList.contains('dark')
+    if (isDark) {
+      document.documentElement.classList.remove('dark')
+      localStorage.setItem('theme', 'light')
+    } else {
+      document.documentElement.classList.add('dark')
+      localStorage.setItem('theme', 'dark')
+    }
+    triggerToast(`Theme switched to ${isDark ? 'Light' : 'Dark'} mode`)
+  } else if (actionKey === 'security') {
+    showSecurityModal.value = true
+  } else if (actionKey === 'export-csv') {
+    exportLeadsCsv()
+  }
+}
+
+const handleCommandSelectRfp = (rfp: any) => {
+  switchMainTab('hunter')
+  const idx = filteredMarketRequirements.value.findIndex(r => r.id === rfp.id)
+  if (idx !== -1) {
+    selectedRfpIndex.value = idx
+  }
+  nextTick(() => {
+    const el = document.getElementById(`rfp-item-${rfp.id}`)
+    el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  })
+}
+
+const handleCommandSelectDeal = (deal: any) => {
+  switchMainTab('deals')
+}
+
+const handleCommandSelectLead = (leadId: number) => {
+  openLeadDetails(leadId)
+}
+
+const handleGlobalKeyDown = (e: KeyboardEvent) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault()
+    showCommandPalette.value = !showCommandPalette.value
+    return
+  }
+
+  const target = e.target as HTMLElement
+  if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable)) {
+    return
+  }
+
+  if (e.key === 'Escape') {
+    if (showCommandPalette.value) { showCommandPalette.value = false; return }
+    if (showShortcutsModal.value) { showShortcutsModal.value = false; return }
+    if (showDrawer.value) { showDrawer.value = false; return }
+    if (showPitchModal.value) { showPitchModal.value = false; return }
+    if (showConvertModal.value) { showConvertModal.value = false; return }
+    if (showQuickAdd.value) { showQuickAdd.value = false; return }
+    if (showSecurityModal.value) { showSecurityModal.value = false; return }
+  }
+
+  if (e.key === '?') {
+    e.preventDefault()
+    showShortcutsModal.value = !showShortcutsModal.value
+    return
+  }
+
+  if (e.key === '[') {
+    e.preventDefault()
+    toggleSplitView()
+    return
+  }
+
+  if (e.key === '1') { switchMainTab('hunter'); return }
+  if (e.key === '2') { switchMainTab('deals'); return }
+  if (e.key === '3') { switchMainTab('leads'); return }
+  if (e.key === '4') { switchMainTab('campaigns'); return }
+  if (e.key === '5') { switchMainTab('studio'); return }
+
+  if (e.key.toLowerCase() === 'j' || e.key === 'ArrowDown') {
+    e.preventDefault()
+    stepSelection(1)
+    return
+  }
+  if (e.key.toLowerCase() === 'k' || e.key === 'ArrowUp') {
+    e.preventDefault()
+    stepSelection(-1)
+    return
+  }
+
+  if (e.key.toLowerCase() === 'd') {
+    e.preventDefault()
+    handleHotkeyConvert()
+    return
+  }
+
+  if (e.key.toLowerCase() === 'a') {
+    e.preventDefault()
+    handleHotkeyOutreach()
+    return
+  }
+
+  if (e.key.toLowerCase() === 'p') {
+    e.preventDefault()
+    handleHotkeyPitch()
+    return
+  }
+
+  if (e.key.toLowerCase() === 'x') {
+    e.preventDefault()
+    handleHotkeyDismiss()
+    return
+  }
+
+  if (e.key.toLowerCase() === 'e') {
+    e.preventDefault()
+    handleHotkeyEnrich()
+    return
+  }
+
+  if (e.key === ' ' || e.key === 'Spacebar') {
+    e.preventDefault()
+    handleHotkeyInspect()
+    return
+  }
+
+  if (e.key.toLowerCase() === 'n') {
+    e.preventDefault()
+    showQuickAdd.value = true
+    return
+  }
+
+  if (e.key.toLowerCase() === 's') {
+    e.preventDefault()
+    pollFeedsLive()
+    return
+  }
+}
+
+onMounted(() => {
+  try {
+    const saved = localStorage.getItem('crm_split_view')
+    if (saved !== null) {
+      isSplitView.value = saved === 'true'
+    }
+  } catch (e) {}
+
+  window.addEventListener('keydown', handleGlobalKeyDown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleGlobalKeyDown)
+})
 </script>
 
 <template>
@@ -622,6 +961,42 @@ const logout = () => {
 
         <!-- Action Header Controls -->
         <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          <!-- Command Palette Trigger -->
+          <button
+            type="button"
+            @click="showCommandPalette = true"
+            class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-100 dark:bg-slate-850 hover:bg-purple-500/10 hover:border-purple-500/40 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+            title="Open Command Center (Ctrl+K)"
+          >
+            <Command class="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+            <span class="hidden sm:inline">Cockpit</span>
+            <kbd class="hidden sm:inline px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-800 text-[10px] font-mono text-slate-500">⌘K</kbd>
+          </button>
+
+          <!-- Split View Toggle -->
+          <button
+            type="button"
+            @click="toggleSplitView"
+            class="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 sm:py-2 rounded-xl border text-xs font-bold transition cursor-pointer"
+            :class="isSplitView
+              ? 'bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30'
+              : 'bg-slate-100 dark:bg-slate-850 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800'"
+            :title="isSplitView ? 'Switch to Full-Width View ([)' : 'Switch to Split Cockpit View ([)'"
+          >
+            <Columns class="w-3.5 h-3.5" />
+            <span class="hidden xl:inline">{{ isSplitView ? 'Split Mode' : 'Full Mode' }}</span>
+          </button>
+
+          <!-- Keyboard Shortcuts Sheet -->
+          <button
+            type="button"
+            @click="showShortcutsModal = true"
+            class="p-1.5 sm:p-2 rounded-xl text-slate-500 hover:text-purple-600 dark:text-slate-400 dark:hover:text-purple-400 hover:bg-slate-100 dark:hover:bg-slate-850 transition cursor-pointer"
+            title="Keyboard Shortcuts Cheat Sheet (?)"
+          >
+            <Keyboard class="w-4 h-4" />
+          </button>
+
           <button
             type="button"
             @click="pollFeedsLive"
@@ -943,117 +1318,218 @@ const logout = () => {
           <p class="mt-1">Click "Sync Feeds" to poll Product Hunt launches, Jobicy, Arbeitnow, HackerNews, and Upwork, or use the "AI Proposal Studio" to paste any custom RFP link.</p>
         </div>
 
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          <div
-            v-for="req in filteredMarketRequirements"
-            :key="req.id"
-            class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-purple-400 dark:hover:border-purple-500/40 shadow-sm transition flex flex-col justify-between group"
-          >
-            <div>
-              <!-- Top Row: Source, Budget & Score -->
-              <div class="flex items-center justify-between gap-2 mb-2">
-                <div class="flex items-center gap-1.5">
-                  <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
-                    {{ req.source }}
-                  </span>
-                  <span class="text-[11px] font-extrabold font-mono text-emerald-600 dark:text-emerald-400">
-                    {{ req.budget }}
+        <!-- Split Cockpit View vs Full Grid -->
+        <template v-else>
+          <!-- Split-Screen Cockpit View -->
+          <div v-if="isSplitView" class="flex flex-col lg:flex-row gap-4 items-start">
+            <!-- Left List: Dense & Keyboard Navigable (J/K) -->
+            <div class="w-full lg:w-[45%] xl:w-[42%] space-y-2.5 max-h-[calc(100vh-220px)] overflow-y-auto pr-1.5 custom-scrollbar">
+              <div
+                v-for="(req, idx) in filteredMarketRequirements"
+                :key="req.id"
+                :id="`rfp-item-${req.id}`"
+                @click="selectedRfpIndex = idx"
+                class="p-3.5 rounded-2xl border transition-all cursor-pointer group select-none relative"
+                :class="selectedRfpIndex === idx
+                  ? 'bg-purple-50/80 dark:bg-purple-950/30 border-purple-500/80 dark:border-purple-400 ring-2 ring-purple-500/40 shadow-lg shadow-purple-500/10'
+                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-purple-400 dark:hover:border-slate-700'"
+              >
+                <!-- Active Indicator Pill -->
+                <div
+                  v-if="selectedRfpIndex === idx"
+                  class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-8 bg-purple-600 rounded-r-md shadow-sm"
+                ></div>
+
+                <!-- Top Row: Source, Budget, Score -->
+                <div class="flex items-center justify-between gap-2 mb-1.5">
+                  <div class="flex items-center gap-1.5">
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
+                      {{ req.source }}
+                    </span>
+                    <span class="text-[11px] font-extrabold font-mono text-emerald-600 dark:text-emerald-400">
+                      {{ req.budget }}
+                    </span>
+                  </div>
+                  <span
+                    class="px-2 py-0.5 rounded-md text-[10px] font-bold font-mono"
+                    :class="req.relevance_score >= 80 ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'"
+                  >
+                    {{ req.relevance_score }}% Match
                   </span>
                 </div>
-                <span
-                  class="px-2 py-0.5 rounded-md text-[10px] font-bold font-mono"
-                  :class="req.relevance_score >= 80 ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'"
-                >
-                  {{ req.relevance_score }}/100 Match
-                </span>
-              </div>
 
-              <!-- Title -->
-              <h4 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white line-clamp-2 mb-1.5 leading-snug">
-                {{ req.title }}
-              </h4>
+                <!-- Title -->
+                <h4 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug mb-1">
+                  {{ req.title }}
+                </h4>
 
-              <!-- Scope Description -->
-              <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed mb-3">
-                {{ req.raw_text }}
-              </p>
+                <!-- Excerpt -->
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed mb-2">
+                  {{ req.raw_text }}
+                </p>
 
-              <!-- Meta: Contact & Location -->
-              <div class="text-[11px] text-slate-500 flex items-center gap-2 flex-wrap mb-3">
-                <span v-if="req.contact_company" class="font-semibold text-slate-700 dark:text-slate-300">
-                  🏢 {{ req.contact_company }}
-                </span>
-                <span v-if="req.contact_name" class="text-slate-600 dark:text-slate-400">
-                  👤 {{ req.contact_name }}
-                </span>
-                <span v-if="req.contact_email" class="text-sky-600 dark:text-sky-400 truncate">
-                  ✉️ {{ req.contact_email }}
-                </span>
-                <span class="text-slate-400">🕒 {{ req.created_at }}</span>
+                <!-- Footer Info & 1-Key Hints -->
+                <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1.5 border-t border-slate-100 dark:border-slate-800/80">
+                  <span class="truncate max-w-[180px]">
+                    {{ req.contact_company || req.contact_name || 'Verified Client' }}
+                  </span>
+                  <div class="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      @click.stop="convertReqToDeal(req)"
+                      class="px-2 py-0.5 rounded-md bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold transition flex items-center gap-0.5 cursor-pointer"
+                      title="Convert to Deal (D)"
+                    >
+                      <span>Convert</span>
+                      <kbd class="text-[9px] font-mono opacity-60">D</kbd>
+                    </button>
+                    <button
+                      type="button"
+                      @click.stop="openPitchPreview(req)"
+                      class="px-2 py-0.5 rounded-md bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 text-[10px] font-bold transition flex items-center gap-0.5 cursor-pointer"
+                      title="AI Pitch (P)"
+                    >
+                      <span>Pitch</span>
+                      <kbd class="text-[9px] font-mono opacity-60">P</kbd>
+                    </button>
+                    <button
+                      type="button"
+                      @click.stop="dismissReq(req.id)"
+                      class="p-1 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-500/10 transition cursor-pointer"
+                      title="Dismiss (X)"
+                    >
+                      <X class="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!-- Card Action Footer -->
-            <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-1.5">
-              <div class="flex items-center gap-1.5">
-                <!-- Preview / Tailor Pitch -->
-                <button
-                  type="button"
-                  @click="openPitchPreview(req)"
-                  class="px-3 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/20 text-xs font-bold transition flex items-center gap-1 cursor-pointer"
-                >
-                  <Sparkles class="w-3.5 h-3.5" />
-                  <span>Pitch</span>
-                </button>
+            <!-- Right Inspector Pane: Instant Live Details (Zero Latency) -->
+            <div class="hidden lg:flex flex-1 sticky top-20 h-[calc(100vh-220px)] w-full">
+              <RfpInspectorPane
+                :requirement="focusedRfp"
+                :app-meta="app_meta"
+                @convert="convertReqToDeal"
+                @dismiss="dismissReq"
+                @open-pitch-modal="openPitchPreview"
+              />
+            </div>
+          </div>
 
-                <!-- Quick Copy Upwork Pitch -->
-                <button
-                  type="button"
-                  @click="copyReqPitch(req)"
-                  class="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition cursor-pointer"
-                  title="Quick Copy Upwork Proposal"
-                >
-                  <Check v-if="copiedReqId === req.id" class="w-4 h-4 text-emerald-500" />
-                  <Copy v-else class="w-4 h-4" />
-                </button>
+          <!-- Full-Width Card Grid View -->
+          <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div
+              v-for="req in filteredMarketRequirements"
+              :key="req.id"
+              class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-purple-400 dark:hover:border-purple-500/40 shadow-sm transition flex flex-col justify-between group"
+            >
+              <div>
+                <!-- Top Row: Source, Budget & Score -->
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
+                      {{ req.source }}
+                    </span>
+                    <span class="text-[11px] font-extrabold font-mono text-emerald-600 dark:text-emerald-400">
+                      {{ req.budget }}
+                    </span>
+                  </div>
+                  <span
+                    class="px-2 py-0.5 rounded-md text-[10px] font-bold font-mono"
+                    :class="req.relevance_score >= 80 ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'"
+                  >
+                    {{ req.relevance_score }}/100 Match
+                  </span>
+                </div>
 
-                <!-- Open Source Link -->
-                <a
-                  v-if="req.url"
-                  :href="req.url"
-                  target="_blank"
-                  class="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition"
-                  title="Open source link"
-                >
-                  <ExternalLink class="w-4 h-4" />
-                </a>
+                <!-- Title -->
+                <h4 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white line-clamp-2 mb-1.5 leading-snug">
+                  {{ req.title }}
+                </h4>
+
+                <!-- Scope Description -->
+                <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed mb-3">
+                  {{ req.raw_text }}
+                </p>
+
+                <!-- Meta: Contact & Location -->
+                <div class="text-[11px] text-slate-500 flex items-center gap-2 flex-wrap mb-3">
+                  <span v-if="req.contact_company" class="font-semibold text-slate-700 dark:text-slate-300">
+                    🏢 {{ req.contact_company }}
+                  </span>
+                  <span v-if="req.contact_name" class="text-slate-600 dark:text-slate-400">
+                    👤 {{ req.contact_name }}
+                  </span>
+                  <span v-if="req.contact_email" class="text-sky-600 dark:text-sky-400 truncate">
+                    ✉️ {{ req.contact_email }}
+                  </span>
+                  <span class="text-slate-400">🕒 {{ req.created_at }}</span>
+                </div>
               </div>
 
-              <div class="flex items-center gap-1.5">
-                <!-- Convert to Deal -->
-                <button
-                  type="button"
-                  @click="convertReqToDeal(req)"
-                  class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-sm"
-                  title="Convert to active Pipeline Deal ($ USD)"
-                >
-                  <ArrowRight class="w-3.5 h-3.5" />
-                  <span>Convert ($)</span>
-                </button>
+              <!-- Card Action Footer -->
+              <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-1.5">
+                <div class="flex items-center gap-1.5">
+                  <!-- Preview / Tailor Pitch -->
+                  <button
+                    type="button"
+                    @click="openPitchPreview(req)"
+                    class="px-3 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/20 text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+                  >
+                    <Sparkles class="w-3.5 h-3.5" />
+                    <span>Pitch</span>
+                  </button>
 
-                <!-- Dismiss -->
-                <button
-                  type="button"
-                  @click="dismissReq(req.id)"
-                  class="p-1.5 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-500/10 transition cursor-pointer"
-                  title="Dismiss from feed"
-                >
-                  <X class="w-4 h-4" />
-                </button>
+                  <!-- Quick Copy Upwork Pitch -->
+                  <button
+                    type="button"
+                    @click="copyReqPitch(req)"
+                    class="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition cursor-pointer"
+                    title="Quick Copy Upwork Proposal"
+                  >
+                    <Check v-if="copiedReqId === req.id" class="w-4 h-4 text-emerald-500" />
+                    <Copy v-else class="w-4 h-4" />
+                  </button>
+
+                  <!-- Open Source Link -->
+                  <a
+                    v-if="req.url"
+                    :href="req.url"
+                    target="_blank"
+                    class="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition"
+                    title="Open source link"
+                  >
+                    <ExternalLink class="w-4 h-4" />
+                  </a>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                  <!-- Convert to Deal -->
+                  <button
+                    type="button"
+                    @click="convertReqToDeal(req)"
+                    class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-sm"
+                    title="Convert to active Pipeline Deal ($ USD)"
+                  >
+                    <ArrowRight class="w-3.5 h-3.5" />
+                    <span>Convert ($)</span>
+                  </button>
+
+                  <!-- Dismiss -->
+                  <button
+                    type="button"
+                    @click="dismissReq(req.id)"
+                    class="p-1.5 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-500/10 transition cursor-pointer"
+                    title="Dismiss from feed"
+                  >
+                    <X class="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </template>
       </section>
 
       <!-- ========================================================================= -->
@@ -1191,6 +1667,19 @@ const logout = () => {
 
             <button
               type="button"
+              @click="toggleSplitView"
+              class="px-3 py-1.5 rounded-xl border text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+              :class="isSplitView
+                ? 'bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30'
+                : 'bg-slate-100 dark:bg-slate-850 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800'"
+              :title="isSplitView ? 'Switch to Full Table View' : 'Switch to Split Cockpit View'"
+            >
+              <Columns class="w-3.5 h-3.5" />
+              <span class="hidden sm:inline">{{ isSplitView ? 'Split View' : 'Table View' }}</span>
+            </button>
+
+            <button
+              type="button"
               @click="showQuickAdd = true"
               class="px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm"
             >
@@ -1200,8 +1689,109 @@ const logout = () => {
           </div>
         </div>
 
-        <!-- Leads Table -->
-        <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <!-- Split Cockpit View vs Full Table -->
+        <template v-if="isSplitView">
+          <div class="flex flex-col lg:flex-row gap-4 items-start">
+            <!-- Left List: Dense & Keyboard Navigable (J/K) -->
+            <div class="w-full lg:w-[48%] xl:w-[45%] space-y-2.5 max-h-[calc(100vh-220px)] overflow-y-auto pr-1.5 custom-scrollbar">
+              <div v-if="filteredLeads.length === 0" class="p-8 text-center text-xs text-slate-400 bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
+                No leads found matching your search.
+              </div>
+
+              <div
+                v-for="(lead, idx) in filteredLeads"
+                :key="lead.id"
+                :id="`lead-item-${lead.id}`"
+                @click="selectedLeadIndex = idx"
+                class="p-3.5 rounded-2xl border transition-all cursor-pointer group select-none relative"
+                :class="selectedLeadIndex === idx
+                  ? 'bg-purple-50/80 dark:bg-purple-950/30 border-purple-500/80 dark:border-purple-400 ring-2 ring-purple-500/40 shadow-lg shadow-purple-500/10'
+                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-purple-400 dark:hover:border-slate-700'"
+              >
+                <!-- Active Indicator Pill -->
+                <div
+                  v-if="selectedLeadIndex === idx"
+                  class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-8 bg-purple-600 rounded-r-md shadow-sm"
+                ></div>
+
+                <div class="flex items-start justify-between gap-2 mb-1.5">
+                  <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white font-extrabold text-xs flex items-center justify-center shrink-0">
+                      {{ (lead.name || 'P').charAt(0).toUpperCase() }}
+                    </div>
+                    <div class="min-w-0">
+                      <div class="text-xs font-bold text-slate-900 dark:text-white truncate">
+                        {{ lead.name }}
+                      </div>
+                      <div class="text-[11px] text-slate-500 font-medium truncate">
+                        {{ lead.company || 'Private Client' }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-1.5 shrink-0">
+                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
+                      {{ lead.segment }}
+                    </span>
+                    <span class="font-mono font-bold text-emerald-600 dark:text-emerald-400 text-[11px]">
+                      {{ lead.score }}%
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Footer details & one-key hints -->
+                <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1.5 border-t border-slate-100 dark:border-slate-800/80">
+                  <span class="font-mono font-bold text-slate-800 dark:text-slate-200">
+                    {{ lead.deal_amount || '$0' }}
+                  </span>
+                  <div class="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      @click.stop="openLeadDetails(lead.id)"
+                      class="px-2 py-0.5 rounded-md bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 text-[10px] font-bold transition flex items-center gap-0.5 cursor-pointer"
+                      title="Inspect Profile & Cadence (Space / A)"
+                    >
+                      <span>Profile</span>
+                      <kbd class="text-[9px] font-mono opacity-60">Space</kbd>
+                    </button>
+                    <button
+                      v-if="lead.email"
+                      type="button"
+                      @click.stop="sendDirectMailto(lead)"
+                      class="p-1 rounded-md text-slate-400 hover:text-sky-600 hover:bg-sky-500/10 transition cursor-pointer"
+                      title="Direct Email"
+                    >
+                      <Mail class="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      @click.stop="deleteLead(lead.id)"
+                      class="p-1 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-500/10 transition cursor-pointer"
+                      title="Delete (X)"
+                    >
+                      <Trash2 class="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Inspector Pane -->
+            <div class="hidden lg:flex flex-1 sticky top-20 h-[calc(100vh-220px)] w-full">
+              <LeadInspectorPane
+                :lead="focusedLead"
+                :app-meta="app_meta"
+                @open-drawer="openLeadDetails"
+                @convert="convertReqToDeal"
+                @enrich="enrichLeadFromInspector"
+                @delete="deleteLead"
+              />
+            </div>
+          </div>
+        </template>
+
+        <!-- Full Table View -->
+        <div v-else class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
           <div class="overflow-x-auto custom-scrollbar">
             <table class="w-full text-left border-collapse text-xs">
               <thead>
@@ -1703,6 +2293,38 @@ const logout = () => {
       :req="selectedReqForConvert"
       @close="showConvertModal = false"
       @converted="onConvertSuccess"
+    />
+
+    <!-- Global Floating Shortcut & Power-User Dock -->
+    <FloatingShortcutDock
+      :active-tab="activeMainTab"
+      :current-index="activeMainTab === 'hunter' ? selectedRfpIndex : selectedLeadIndex"
+      :total-count="activeMainTab === 'hunter' ? filteredMarketRequirements.length : filteredLeads.length"
+      :is-split-view="isSplitView"
+      @toggle-help="showShortcutsModal = true"
+      @toggle-command="showCommandPalette = true"
+      @toggle-split="toggleSplitView"
+    />
+
+    <!-- Global Spotlight Command Palette (Ctrl+K) -->
+    <CommandPalette
+      :show="showCommandPalette"
+      :rfps="filteredMarketRequirements"
+      :deals="all_deals"
+      :leads="all_leads || []"
+      :active-tab="activeMainTab"
+      @close="showCommandPalette = false"
+      @select-rfp="handleCommandSelectRfp"
+      @select-deal="handleCommandSelectDeal"
+      @select-lead="handleCommandSelectLead"
+      @action="handleCommandAction"
+      @switch-tab="(tabKey) => switchMainTab(tabKey as any)"
+    />
+
+    <!-- Keyboard Shortcuts Cheat Sheet Modal (?) -->
+    <KeyboardShortcutsModal
+      :show="showShortcutsModal"
+      @close="showShortcutsModal = false"
     />
 
     <!-- Global Floating Toast Notification -->
