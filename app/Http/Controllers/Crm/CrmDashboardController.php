@@ -310,16 +310,21 @@ class CrmDashboardController extends Controller
             });
 
         // Derive top lead locations dynamically for the KPI subtitle
-        $topLocations = Lead::whereNotNull('country')
-            ->where('country', '!=', '')
-            ->groupBy('country')
-            ->orderByRaw('COUNT(*) DESC')
-            ->limit(3)
-            ->pluck('country')
-            ->toArray();
-        $locationLabel = !empty($topLocations)
-            ? implode(' / ', $topLocations) . ' founders'
-            : 'Global founders';
+        // Wrapped in try/catch: the `country` column may not exist on all DB versions
+        try {
+            $topLocations = Lead::whereNotNull('country')
+                ->where('country', '!=', '')
+                ->groupBy('country')
+                ->orderByRaw('COUNT(*) DESC')
+                ->limit(3)
+                ->pluck('country')
+                ->toArray();
+            $locationLabel = !empty($topLocations)
+                ? implode(' / ', $topLocations) . ' founders'
+                : 'Global founders';
+        } catch (\Throwable $e) {
+            $locationLabel = 'Global founders';
+        }
 
         return Inertia::render('Crm/Dashboard', [
             'telemetry' => [
