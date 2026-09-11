@@ -88,9 +88,13 @@ const props = defineProps<{
   app_meta: {
     app_name: string
     founder_name: string
+    founder_title?: string
     founder_email: string
+    founder_phone?: string
     booking_url: string
+    estimator_url?: string
     website_url: string
+    default_currency?: string
     active_sources_count: number
   }
 }>()
@@ -532,12 +536,14 @@ const bulkDeleteLeads = async () => {
 
 const sendDirectMailto = (lead: any) => {
   if (!lead.email) return
-  const founderName = props.app_meta?.founder_name || 'Ashish Gupta'
+  const founderName = props.app_meta?.founder_name || 'Founder'
+  const founderTitle = props.app_meta?.founder_title || 'founder & lead architect'
   const bookingUrl = props.app_meta?.booking_url || 'https://www.digitalbuilders.in/book'
   const websiteUrl = props.app_meta?.website_url || 'https://www.digitalbuilders.in'
+  const appName = props.app_meta?.app_name || 'DigitalBuilders'
   const company = lead.company || lead.name
   const subject = encodeURIComponent(`Architecture & Timeline Proposal for ${company}`)
-  const body = encodeURIComponent(`Hi ${lead.name},\n\nI'm ${founderName}, founder & lead architect at ${props.app_meta?.app_name || 'DigitalBuilders'} (${websiteUrl}).\n\nWanted to connect regarding your custom software scope.\n\nFeel free to pick a 15-min discovery slot on my calendar: ${bookingUrl}\n\nBest regards,\n${founderName}`)
+  const body = encodeURIComponent(`Hi ${lead.name},\n\nI'm ${founderName}, ${founderTitle} at ${appName} (${websiteUrl}).\n\nWanted to connect regarding your custom software scope.\n\nFeel free to pick a 15-min discovery slot on my calendar: ${bookingUrl}\n\nBest regards,\n${founderName}`)
   window.open(`mailto:${lead.email}?subject=${subject}&body=${body}`, '_blank')
 }
 
@@ -2296,6 +2302,7 @@ onUnmounted(() => {
     <PitchPreviewModal
       :show="showPitchModal"
       :requirement="selectedReqForPitch"
+      :app-meta="app_meta"
       @close="showPitchModal = false"
       @convert="convertReqToDeal"
     />
@@ -2304,6 +2311,7 @@ onUnmounted(() => {
       :show="showDrawer"
       :lead-id="selectedLeadForDrawer"
       :initial-tab="drawerTab"
+      :app-meta="app_meta"
       @close="showDrawer = false"
       @updated="(msg) => { triggerToast(msg || 'Updated'); router.reload() }"
       @open-proposal="openProposalModal"
@@ -2311,6 +2319,7 @@ onUnmounted(() => {
 
     <QuickAddModal
       :show="showQuickAdd"
+      :app-meta="app_meta"
       @close="showQuickAdd = false"
       @success="(msg: string) => { triggerToast(msg); showQuickAdd = false; router.reload() }"
     />
@@ -2324,6 +2333,7 @@ onUnmounted(() => {
     <ProposalModal
       :show="showProposalModal"
       :deal-id="selectedDealForProposal"
+      :app-meta="app_meta"
       @close="showProposalModal = false"
       @saved="(msg: string) => { triggerToast(msg); router.reload() }"
     />
@@ -2360,6 +2370,7 @@ onUnmounted(() => {
       :deals="all_deals"
       :leads="all_leads || []"
       :active-tab="activeMainTab"
+      :sources-count="app_meta?.active_sources_count"
       @close="showCommandPalette = false"
       @select-rfp="handleCommandSelectRfp"
       @select-deal="handleCommandSelectDeal"

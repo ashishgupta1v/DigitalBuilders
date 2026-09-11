@@ -20,16 +20,19 @@ class CrmOutreachMail extends Mailable
         public string $bodyContent,
         public string $trackingToken,
         public ?string $recipientName = null,
-        public string $senderName = 'Ashish Gupta',
-    ) {}
+        public ?string $senderName = null,
+    ) {
+        $this->senderName = $senderName ?: (string) config('crm.founder_name', 'Founder');
+    }
 
     public function envelope(): Envelope
     {
-        $fromAddress = config('mail.from.address') ?: env('MAIL_FROM_ADDRESS', 'ashish@digitalbuilders.in');
+        $fromAddress = config('mail.from.address') ?: config('crm.founder_email') ?: env('MAIL_FROM_ADDRESS', 'ashish@digitalbuilders.in');
         $fromAddress = trim(str_replace(['"', "'", '\\'], '', (string) $fromAddress));
+        $appName = config('crm.company_name', config('app.name', 'DigitalBuilders'));
 
         return new Envelope(
-            from: new Address($fromAddress, 'Ashish Gupta — DigitalBuilders'),
+            from: new Address($fromAddress, "{$this->senderName} — {$appName}"),
             subject: $this->outreachSubject,
         );
     }
@@ -61,8 +64,14 @@ class CrmOutreachMail extends Mailable
             $formattedHtml .= "<p style=\"margin: 0 0 16px 0; line-height: 1.65; color: #334155; font-size: 15px;\">{$paraHtml}</p>";
         }
 
-        $homeTracked = url("/crm/track/click/{$this->trackingToken}?url=" . urlencode('https://www.digitalbuilders.in'));
-        $calendarTracked = url("/crm/track/click/{$this->trackingToken}?url=" . urlencode('https://www.digitalbuilders.in/book'));
+        $siteUrl = rtrim((string) config('crm.website_url', config('app.url', 'https://www.digitalbuilders.in')), '/');
+        $siteDomain = parse_url($siteUrl, PHP_URL_HOST) ?: 'digitalbuilders.in';
+        $bookingUrl = config('crm.booking_url', $siteUrl . '/book');
+        $companyName = config('crm.company_name', config('app.name', 'DigitalBuilders'));
+        $founderTitle = config('crm.founder_title', 'Principal Architect & Founder');
+
+        $homeTracked = url("/crm/track/click/{$this->trackingToken}?url=" . urlencode($siteUrl));
+        $calendarTracked = url("/crm/track/click/{$this->trackingToken}?url=" . urlencode($bookingUrl));
 
         $fullHtml = <<<HTML
 <!DOCTYPE html>
@@ -76,10 +85,10 @@ class CrmOutreachMail extends Mailable
         {$formattedHtml}
 
         <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0; font-size: 13px; color: #64748b; line-height: 1.6;">
-            <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 2px;">Ashish Gupta</strong>
-            <span style="color: #475569; font-weight: 600;">Principal Architect &amp; Founder</span> · <a href="{$homeTracked}" style="color: #0284c7; text-decoration: none; font-weight: 700;">DigitalBuilders</a><br>
+            <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 2px;">{$this->senderName}</strong>
+            <span style="color: #475569; font-weight: 600;">{$founderTitle}</span> · <a href="{$homeTracked}" style="color: #0284c7; text-decoration: none; font-weight: 700;">{$companyName}</a><br>
             <div style="margin-top: 10px; display: flex; gap: 14px; font-size: 12px;">
-                <a href="{$homeTracked}" style="color: #0284c7; text-decoration: none; font-weight: 600;">🌐 digitalbuilders.in</a>
+                <a href="{$homeTracked}" style="color: #0284c7; text-decoration: none; font-weight: 600;">🌐 {$siteDomain}</a>
                 &nbsp;·&nbsp;
                 <a href="{$calendarTracked}" style="color: #0284c7; text-decoration: none; font-weight: 600;">📅 Book 15-Min Technical Sync</a>
             </div>

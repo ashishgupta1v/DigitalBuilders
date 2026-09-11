@@ -58,7 +58,7 @@ const formattedTotal = computed(() => {
   if (props.stageData.total_usd > 0) {
     parts.push('$' + Number(props.stageData.total_usd).toLocaleString())
   }
-  return parts.length > 0 ? parts.join(' · ') : '₹0'
+  return parts.length > 0 ? parts.join(' · ') : '$0'
 })
 
 const onDragOver = (e: DragEvent) => {

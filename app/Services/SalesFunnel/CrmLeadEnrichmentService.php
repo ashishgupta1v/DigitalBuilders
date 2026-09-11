@@ -180,8 +180,11 @@ class CrmLeadEnrichmentService
                 'website_meta'       => $meta['description'] ?? null,
             ];
 
+            $companyName = config('crm.company_name', config('app.name', 'DigitalBuilders'));
+            $websiteUrl = config('crm.website_url', config('app.url', 'https://www.digitalbuilders.in'));
+
             $prompt = <<<PROMPT
-You are a senior enterprise solution architect at DigitalBuilders (https://www.digitalbuilders.in).
+You are a senior enterprise solution architect at {$companyName} ({$websiteUrl}).
 Analyze this prospective client data to compile an executive intelligence dossier for high-conversion founder-to-founder outreach:
 
 Client Data:

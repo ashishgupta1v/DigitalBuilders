@@ -33,7 +33,7 @@ const touchpoints = [
 ]
 
 const objections = [
-  { key: 'price', label: '💰 Price Too High ("₹25k other quote")' },
+  { key: 'price', label: '💰 Price Objection ("Cheaper alternative / budget")' },
   { key: 'inhouse', label: '🛠️ Internal Dev ("We have our own guy")' },
   { key: 'proposal', label: '📄 Send Proposal First ("Email quote")' },
   { key: 'think', label: '🤔 Need to Think About It' },
@@ -43,9 +43,14 @@ const objections = [
 // Real-time sanitized phone number
 const cleanPhone = computed(() => {
   if (!props.lead?.phone) return ''
-  const digits = props.lead.phone.replace(/[^0-9]/g, '')
-  // If Indian 10 digits without country code, prefix 91
-  if (digits.length === 10) return `91${digits}`
+  const raw = String(props.lead.phone).trim()
+  if (raw.startsWith('+')) {
+    return raw.replace(/[^0-9]/g, '')
+  }
+  const digits = raw.replace(/[^0-9]/g, '')
+  if (digits.length === 10 && (props.lead?.region === 'IN' || !props.lead?.region)) {
+    return `91${digits}`
+  }
   return digits
 })
 

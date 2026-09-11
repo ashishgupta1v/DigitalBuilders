@@ -9,6 +9,7 @@ use App\Models\Deal;
 use App\Models\Lead;
 use App\Models\MarketRequirement;
 use App\Models\Organization;
+use App\Models\User;
 use App\Services\SalesFunnel\CrmSequenceEngineService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -45,13 +46,18 @@ class CrmDashboardController extends Controller
         $winRate = $closedTotal > 0 ? (int) round(($wonDealsCount / $closedTotal) * 100) : 0;
         $avgDealSize = $activeDealsCount > 0 ? round($totalPipelineUsd / $activeDealsCount) : 0;
 
-        $founderEmails = array_values(array_unique(array_filter([
-            config('crm.founder_email'),
-            config('mail.lead_inbox'),
-            'ashishgupta1v@gmail.com',
-            'ashishg7555@gmail.com',
-            'founder@digitalbuilders.in'
-        ])));
+        $adminUserEmails = User::where('is_admin', true)->pluck('email')->all();
+
+        $founderEmails = array_values(array_unique(array_filter(array_merge(
+            $adminUserEmails,
+            (array) config('crm.founder_emails', []),
+            [
+                config('crm.founder_email'),
+                config('mail.from.address'),
+                config('mail.lead_inbox'),
+                auth()->user()?->email,
+            ]
+        ))));
 
         // Source ROI Analytics and Pipeline Velocity
         $allLeadsForAnalytics = Lead::whereNotIn('email', $founderEmails)->with(['deals'])->get();
@@ -393,12 +399,16 @@ class CrmDashboardController extends Controller
                 'tab'     => $activeTab,
             ],
             'app_meta'            => [
-                'app_name'      => config('app.name', 'DigitalBuilders'),
-                'founder_name'  => config('crm.founder_name', env('CRM_FOUNDER_NAME', 'Ashish Gupta')),
-                'founder_email' => config('crm.founder_email', env('CRM_FOUNDER_EMAIL', 'founder@digitalbuilders.in')),
-                'booking_url'   => config('crm.booking_url', env('CRM_BOOKING_URL', 'https://www.digitalbuilders.in/book')),
-                'website_url'   => config('crm.website_url', env('CRM_WEBSITE_URL', 'https://www.digitalbuilders.in')),
-                'active_sources_count' => 15,
+                'app_name'             => config('crm.company_name', config('app.name', 'DigitalBuilders')),
+                'founder_name'         => auth()->user()?->name ?: config('crm.founder_name', 'Ashish Gupta'),
+                'founder_title'        => config('crm.founder_title', 'Principal Software Architect & Founder'),
+                'founder_email'        => auth()->user()?->email ?: config('crm.founder_email', 'ashish@digitalbuilders.in'),
+                'founder_phone'        => config('crm.founder_phone', '+91 90870 21592'),
+                'booking_url'          => config('crm.booking_url', 'https://www.digitalbuilders.in/book'),
+                'estimator_url'        => config('crm.estimator_url', 'https://www.digitalbuilders.in/estimator'),
+                'website_url'          => config('crm.website_url', config('app.url', 'https://www.digitalbuilders.in')),
+                'default_currency'     => config('crm.default_currency', 'USD'),
+                'active_sources_count' => (int) max(1, MarketRequirement::distinct('source')->count('source')),
             ],
         ]);
     }

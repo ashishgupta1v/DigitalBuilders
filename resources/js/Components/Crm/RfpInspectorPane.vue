@@ -9,10 +9,15 @@ import {
 const props = defineProps<{
   requirement: any | null
   appMeta?: {
+    app_name?: string
     founder_name?: string
+    founder_title?: string
     founder_email?: string
+    founder_phone?: string
     booking_url?: string
+    estimator_url?: string
     website_url?: string
+    default_currency?: string
   }
 }>()
 
@@ -44,8 +49,9 @@ const emailSubject = computed(() => {
 const linkedinPitch = computed(() => {
   if (!props.requirement) return ''
   const founderName = props.appMeta?.founder_name || 'Ashish'
+  const appName = props.appMeta?.app_name || 'DigitalBuilders'
   const bookingUrl = props.appMeta?.booking_url || 'https://www.digitalbuilders.in/book'
-  return props.requirement.linkedin_dm || `Hi ${props.requirement.contact_name || 'there'}, saw your project regarding ${props.requirement.title}. I'm ${founderName}, lead architect at DigitalBuilders. We specialize in rapid 4-6 week MVP delivery with clean architecture & full IP ownership. Let's sync: ${bookingUrl}`
+  return props.requirement.linkedin_dm || `Hi ${props.requirement.contact_name || 'there'}, saw your project regarding ${props.requirement.title}. I'm ${founderName}, lead architect at ${appName}. We specialize in rapid 4-6 week MVP delivery with clean architecture & full IP ownership. Let's sync: ${bookingUrl}`
 })
 
 const activeCopyText = computed(() => {

@@ -222,13 +222,20 @@ class AiPitchGeneratorService
 
         try {
             // Build dynamic proof-of-work context from the requirement text
-        $scraper       = app(\App\Services\SalesFunnel\InternationalLeadScraperService::class);
-        $detectedTags  = $scraper->extractTechTags($requirementText);
-        $proofContext  = $this->buildProofOfWorkContext($detectedTags);
+            $founderName = config('crm.founder_name', 'Founder');
+            $founderTitle = config('crm.founder_title', 'Founder & Lead Software Architect');
+            $companyName = config('crm.company_name', config('app.name', 'DigitalBuilders'));
+            $websiteUrl = rtrim((string) config('crm.website_url', config('app.url', 'https://www.digitalbuilders.in')), '/');
+            $estimatorUrl = config('crm.estimator_url', $websiteUrl . '/estimator');
+            $bookingUrl = config('crm.booking_url', $websiteUrl . '/book');
 
-        $prompt = <<<PROMPT
-You are Ashish Gupta, Founder & Lead Software Architect at DigitalBuilders (https://www.digitalbuilders.in).
-DigitalBuilders is a boutique software engineering studio that builds high-performance web applications, SaaS MVPs, custom portals, and AI agent integrations for US/EU startups and founders in 4-6 week fixed-price sprints.
+            $scraper       = app(\App\Services\SalesFunnel\InternationalLeadScraperService::class);
+            $detectedTags  = $scraper->extractTechTags($requirementText);
+            $proofContext  = $this->buildProofOfWorkContext($detectedTags);
+
+            $prompt = <<<PROMPT
+You are {$founderName}, {$founderTitle} at {$companyName} ({$websiteUrl}).
+{$companyName} is a boutique software engineering studio that builds high-performance web applications, SaaS MVPs, custom portals, and AI agent integrations for US/EU startups and founders in 4-6 week fixed-price sprints.
 
 {$proofContext}
 
@@ -252,7 +259,7 @@ Respond ONLY with a valid JSON object matching this exact schema:
   "estimated_budget_usd": 6500,
   "budget_range": "$5,000 – $8,000",
   "timeline": "4 to 6 weeks",
-  "upwork_proposal": "Winning, conversational, hook-first proposal under 160 words with bullet points answering the client's core problem, mentioning the proof point above, and ending with dual CTA: (1) https://www.digitalbuilders.in/book (15-min calendar slot) and (2) https://www.digitalbuilders.in/estimator (instant sprint estimator). Signed off by Ashish Gupta.",
+  "upwork_proposal": "Winning, conversational, hook-first proposal under 160 words with bullet points answering the client's core problem, mentioning the proof point above, and ending with dual CTA: (1) {$bookingUrl} (15-min calendar slot) and (2) {$estimatorUrl} (instant sprint estimator). Signed off by {$founderName}.",
   "cold_email_subject": "Punchy, personalized subject line for cold email",
   "cold_email_body": "3-paragraph authoritative executive cold email to founder/stakeholder with the same dual CTAs and citing the specific proof point.",
   "linkedin_dm": "Under 280-character high-value LinkedIn connection note or message."
@@ -266,7 +273,7 @@ PROMPT;
                     'messages'    => [
                         [
                             'role'    => 'system',
-                            'content' => 'You are an elite software sales architect at DigitalBuilders. Output only valid JSON without markdown fences.'
+                            'content' => "You are an elite software sales architect at {$companyName}. Output only valid JSON without markdown fences."
                         ],
                         ['role' => 'user', 'content' => $prompt],
                     ],
@@ -321,6 +328,14 @@ PROMPT;
         $segment = $this->classifySegment($requirementText);
         $case = self::CASE_STUDIES[$segment] ?? self::CASE_STUDIES['general'];
 
+        $founderName = config('crm.founder_name', 'Founder');
+        $founderTitle = config('crm.founder_title', 'Lead Architect');
+        $companyName = config('crm.company_name', config('app.name', 'DigitalBuilders'));
+        $websiteUrl = rtrim((string) config('crm.website_url', config('app.url', 'https://www.digitalbuilders.in')), '/');
+        $estimatorUrl = config('crm.estimator_url', $websiteUrl . '/estimator');
+        $bookingUrl = config('crm.booking_url', $websiteUrl . '/book');
+        $phone = config('crm.founder_phone', '+91 90870 21592');
+
         $greetingName = !empty($contactName) ? trim($contactName) : 'there';
         $companyContext = !empty($company) ? " for {$company}" : '';
         $isUsd = strtoupper((string) $currency) === 'USD';
@@ -332,7 +347,7 @@ PROMPT;
 
         // 1. Upwork / International RFP Proposal (Under 160 words, punchy, Dual CTA)
         $upworkProposal = "Hi {$greetingName},\n\n"
-            . "I'm Ashish, founder and lead architect at DigitalBuilders (https://www.digitalbuilders.in). Saw your requirement{$companyContext}.\n\n"
+            . "I'm {$founderName}, {$founderTitle} at {$companyName} ({$websiteUrl}). Saw your requirement{$companyContext}.\n\n"
             . "Here is how we recently solved this exact challenge:\n"
             . "• Client: {$case['client']} ({$case['location']})\n"
             . "• Solution: {$case['solution']}\n"
@@ -340,16 +355,16 @@ PROMPT;
             . "• Case Proof: {$case['proof_url']}\n\n"
             . "For your scope, we can engineer and ship Phase 1 in {$timeline} ({$budgetRange} fixed-price milestone with 100% source code ownership and 60 days warranty included).\n\n"
             . "Next Steps & Dual CTA:\n"
-            . "1. Pick a 15-min technical discovery slot (auto-converts to your timezone): https://www.digitalbuilders.in/book\n"
-            . "2. Or calculate your exact feature scope and sprint estimate instantly: https://www.digitalbuilders.in/estimator\n\n"
+            . "1. Pick a 15-min technical discovery slot (auto-converts to your timezone): {$bookingUrl}\n"
+            . "2. Or calculate your exact feature scope and sprint estimate instantly: {$estimatorUrl}\n\n"
             . "Happy to answer any technical questions right here.\n"
-            . "Best,\nAshish Gupta | Lead Architect, DigitalBuilders";
+            . "Best,\n{$founderName} | {$founderTitle}, {$companyName}";
 
         // 2. Email Pitch (Detailed, structured, authoritative, Dual CTA)
         $subject = "Architecture & Timeline Proposal for {$greetingName}" . ($company ? " — {$company}" : '');
         $emailPitch = "Hi {$greetingName},\n\n"
             . "I hope you are doing well.\n\n"
-            . "My name is Ashish Gupta — I'm the lead engineer and founder at DigitalBuilders (https://www.digitalbuilders.in). We design and engineer scalable web platforms, SaaS MVPs, and custom business portals for high-growth tech startups.\n\n"
+            . "My name is {$founderName} — I'm the {$founderTitle} at {$companyName} ({$websiteUrl}). We design and engineer scalable web platforms, SaaS MVPs, and custom business portals for high-growth tech startups.\n\n"
             . "I came across your requirement and wanted to reach out directly with our proven technical approach:\n\n"
             . "### How We Solved This Recently:\n"
             . "• Client: {$case['client']} ({$case['location']})\n"
@@ -363,20 +378,20 @@ PROMPT;
             . "• IP & Code Ownership: 100% transferred to you upon completion\n"
             . "• Post-Launch Warranty: 60 days dedicated bug-fix and deployment support included\n\n"
             . "### Next Steps:\n"
-            . "1. Book a 15-minute technical discovery session directly on my calendar: https://www.digitalbuilders.in/book\n"
-            . "2. Or configure your feature scope and generate an instant PDF sprint breakdown: https://www.digitalbuilders.in/estimator\n\n"
+            . "1. Book a 15-minute technical discovery session directly on my calendar: {$bookingUrl}\n"
+            . "2. Or configure your feature scope and generate an instant PDF sprint breakdown: {$estimatorUrl}\n\n"
             . "Looking forward to building together.\n\n"
             . "Best regards,\n"
-            . "Ashish Gupta\n"
-            . "Founder & Lead Architect — DigitalBuilders\n"
-            . "Direct: https://www.digitalbuilders.in\n"
-            . "Direct Phone / WhatsApp: +91 90870 21592";
+            . "{$founderName}\n"
+            . "{$founderTitle} — {$companyName}\n"
+            . "Direct: {$websiteUrl}\n"
+            . "Direct Phone / WhatsApp: {$phone}";
 
         // 3. LinkedIn / X DM
-        $linkedinDm = "Hey {$greetingName} — saw your project post{$companyContext}. I'm Ashish, lead architect at DigitalBuilders. We specialize in taking SaaS MVPs and custom web portals from spec to production in {$timeline} with 100% code ownership. Check our work and book a 15-min chat: https://www.digitalbuilders.in/book";
+        $linkedinDm = "Hey {$greetingName} — saw your project post{$companyContext}. I'm {$founderName}, {$founderTitle} at {$companyName}. We specialize in taking SaaS MVPs and custom web portals from spec to production in {$timeline} with 100% code ownership. Check our work and book a 15-min chat: {$bookingUrl}";
 
         // 4. Reddit DM (with Dual CTA)
-        $redditDm = "Hey {$greetingName} — saw your project post{$companyContext}. I'm Ashish, lead architect at DigitalBuilders. We specialize in taking SaaS MVPs and custom web portals from spec to production in {$timeline} with 100% code ownership. Check our work and book a 15-min chat: https://www.digitalbuilders.in/book or calculate your sprint scope: https://www.digitalbuilders.in/estimator";
+        $redditDm = "Hey {$greetingName} — saw your project post{$companyContext}. I'm {$founderName}, {$founderTitle} at {$companyName}. We specialize in taking SaaS MVPs and custom web portals from spec to production in {$timeline} with 100% code ownership. Check our work and book a 15-min chat: {$bookingUrl} or calculate your sprint scope: {$estimatorUrl}";
 
         return [
             'segment'                => $segment,
@@ -422,13 +437,21 @@ PROMPT;
         $detectedTags = $scraper->extractTechTags($fullText);
         $techSummary = !empty($detectedTags) ? implode(', ', array_slice($detectedTags, 0, 3)) : 'scalable web architecture';
 
+        $founderName = config('crm.founder_name', 'Founder');
+        $founderTitle = config('crm.founder_title', 'Lead Architect');
+        $companyName = config('crm.company_name', config('app.name', 'DigitalBuilders'));
+        $websiteUrl = rtrim((string) config('crm.website_url', config('app.url', 'https://www.digitalbuilders.in')), '/');
+        $estimatorUrl = config('crm.estimator_url', $websiteUrl . '/estimator');
+        $bookingUrl = config('crm.booking_url', $websiteUrl . '/book');
+        $phone = config('crm.founder_phone', '+91 90870 21592');
+
         // Check if OpenAI is available for customized dynamic generation
         $apiKey = config('services.openai.api_key') ?? env('OPENAI_API_KEY');
         if (!empty($apiKey)) {
             try {
                 $proofContext = $this->buildProofOfWorkContext($detectedTags);
                 $prompt = <<<PROMPT
-You are Ashish Gupta, Founder & Lead Architect at DigitalBuilders (https://www.digitalbuilders.in).
+You are {$founderName}, {$founderTitle} at {$companyName} ({$websiteUrl}).
 We build production web platforms, SaaS MVPs, and AI integrations in 4-6 week fixed-price sprints.
 
 {$proofContext}
@@ -446,7 +469,7 @@ Return ONLY a JSON array of exactly 4 objects matching this format:
     "delay_days": 0,
     "title": "Touch 1: Pitch & Case Study",
     "subject": "Punchy subject line referencing their tech or company",
-    "body_text": "High-conviction intro under 130 words citing our case study proof and ending with calendar CTA https://www.digitalbuilders.in/book"
+    "body_text": "High-conviction intro under 130 words citing our case study proof and ending with calendar CTA {$bookingUrl}"
   },
   {
     "step_number": 2,
@@ -510,12 +533,12 @@ PROMPT;
                 'subject'     => $baseSubject,
                 'body_text'   => "Hi {$firstName},\n\n"
                     . "I saw your requirements{$companyContext} around {$techSummary}.\n\n"
-                    . "I'm Ashish, founder and lead architect at DigitalBuilders (https://www.digitalbuilders.in). We engineer high-performance web platforms and MVPs in 4–6 week fixed-price sprints.\n\n"
+                    . "I'm {$founderName}, {$founderTitle} at {$companyName} ({$websiteUrl}). We engineer high-performance web platforms and MVPs in 4–6 week fixed-price sprints.\n\n"
                     . "Recently, we solved a very similar architecture challenge for {$case['client']} — {$case['metric']}.\n\n"
                     . "Would you be open to a 15-minute technical discovery call this week to review your architecture and sprint roadmap?\n\n"
-                    . "👉 Pick a time that fits your timezone: https://www.digitalbuilders.in/book\n"
-                    . "Or scope your sprint budget instantly: https://www.digitalbuilders.in/estimator\n\n"
-                    . "Best regards,\nAshish Gupta | Lead Architect, DigitalBuilders\n+91 90870 21592",
+                    . "👉 Pick a time that fits your timezone: {$bookingUrl}\n"
+                    . "Or scope your sprint budget instantly: {$estimatorUrl}\n\n"
+                    . "Best regards,\n{$founderName} | {$founderTitle}, {$companyName}\n{$phone}",
             ],
             [
                 'step_number' => 2,
@@ -526,8 +549,8 @@ PROMPT;
                     . "Following up on my note below with a quick technical takeaway from our work on {$techSummary}:\n\n"
                     . "When scaling {$techSummary} under production load, teams frequently run into database bottlenecking and un-indexed relation queries. At {$case['client']}, we implemented {$case['solution']}, which delivered {$case['metric']}.\n\n"
                     . "If you'd like me to do a quick 10-minute audit of your architecture or spec before you begin building, I'd be happy to share notes:\n"
-                    . "https://www.digitalbuilders.in/book\n\n"
-                    . "Best,\nAshish",
+                    . "{$bookingUrl}\n\n"
+                    . "Best,\n{$founderName}",
             ],
             [
                 'step_number' => 3,
@@ -537,8 +560,8 @@ PROMPT;
                 'body_text'   => "Hi {$firstName},\n\n"
                     . "Quick check-in — wanted to see if you have already lined up engineering resources for this{$companyContext}, or if you're still evaluating technical partners?\n\n"
                     . "We have an engineering sprint opening starting next week and can ship Phase 1 with 100% code ownership and a 60-day warranty.\n\n"
-                    . "Let me know if a 10-min chat makes sense: https://www.digitalbuilders.in/book\n\n"
-                    . "Best,\nAshish Gupta",
+                    . "Let me know if a 10-min chat makes sense: {$bookingUrl}\n\n"
+                    . "Best,\n{$founderName}",
             ],
             [
                 'step_number' => 4,
@@ -549,7 +572,7 @@ PROMPT;
                     . "I'm guessing your priorities may have shifted or you're already sorted on engineering for {$company}, so I won't follow up further.\n\n"
                     . "If you ever need senior sprint execution, custom MVP delivery, or an architectural second opinion down the road, please feel free to reach out anytime.\n\n"
                     . "Wishing you great success with the platform.\n\n"
-                    . "Best regards,\nAshish Gupta\nFounder, DigitalBuilders\nhttps://www.digitalbuilders.in",
+                    . "Best regards,\n{$founderName}\n{$founderTitle}, {$companyName}\n{$websiteUrl}",
             ],
         ];
     }

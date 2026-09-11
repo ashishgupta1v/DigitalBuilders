@@ -149,6 +149,17 @@ class CrmLeadController extends Controller
                     'status'            => $email->status,
                 ]),
             'sequence' => $lead->sequences()->with(['steps' => fn($q) => $q->orderBy('step_number', 'asc')])->latest()->first(),
+            'app_meta' => [
+                'app_name'         => config('crm.company_name', config('app.name', 'DigitalBuilders')),
+                'founder_name'     => auth()->user()?->name ?: config('crm.founder_name', 'Ashish Gupta'),
+                'founder_title'    => config('crm.founder_title', 'Principal Software Architect & Founder'),
+                'founder_email'    => auth()->user()?->email ?: config('crm.founder_email', 'ashish@digitalbuilders.in'),
+                'founder_phone'    => config('crm.founder_phone', '+91 90870 21592'),
+                'booking_url'      => config('crm.booking_url', 'https://www.digitalbuilders.in/book'),
+                'estimator_url'    => config('crm.estimator_url', 'https://www.digitalbuilders.in/estimator'),
+                'website_url'      => config('crm.website_url', config('app.url', 'https://www.digitalbuilders.in')),
+                'default_currency' => config('crm.default_currency', 'USD'),
+            ],
         ]);
     }
 

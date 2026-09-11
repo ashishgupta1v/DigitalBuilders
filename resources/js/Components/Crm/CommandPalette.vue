@@ -12,6 +12,7 @@ const props = defineProps<{
   deals: any[]
   leads: any[]
   activeTab?: string
+  sourcesCount?: number
 }>()
 
 const emit = defineEmits<{
@@ -27,29 +28,32 @@ const searchInput = ref<HTMLInputElement | null>(null)
 const query = ref('')
 const selectedIndex = ref(0)
 
-const systemActions = [
-  { id: 'act-new-lead', type: 'action', title: 'Add New Lead / Prospect', shortcut: 'N', icon: Plus, action: 'new-lead', category: 'Actions' },
-  { id: 'act-sync-feeds', type: 'action', title: 'Sync Live Feeds (15+ Sources)', shortcut: 'S', icon: RefreshCw, action: 'sync-feeds', category: 'Actions' },
-  { id: 'act-tab-hunter', type: 'tab', title: 'Jump to RFP Hunter', shortcut: '1', icon: Globe, tab: 'hunter', category: 'Navigation' },
-  { id: 'act-tab-deals', type: 'tab', title: 'Jump to Deals Pipeline', shortcut: '2', icon: Kanban, tab: 'deals', category: 'Navigation' },
-  { id: 'act-tab-leads', type: 'tab', title: 'Jump to Leads Directory', shortcut: '3', icon: Users, tab: 'leads', category: 'Navigation' },
-  { id: 'act-tab-campaigns', type: 'tab', title: 'Jump to Outbound Campaigns', shortcut: '4', icon: Send, tab: 'campaigns', category: 'Navigation' },
-  { id: 'act-tab-studio', type: 'tab', title: 'Jump to AI Proposal Studio', shortcut: '5', icon: Sparkles, tab: 'studio', category: 'Navigation' },
-  { id: 'act-theme-toggle', type: 'action', title: 'Toggle Theme (Dark / Light)', shortcut: 'T', icon: SunMoon, action: 'toggle-theme', category: 'Preferences' },
-  { id: 'act-security', type: 'action', title: 'Founder Security & Credentials', shortcut: 'sec', icon: ShieldCheck, action: 'security', category: 'Preferences' },
-  { id: 'act-export', type: 'action', title: 'Export Leads to CSV', shortcut: 'exp', icon: Download, action: 'export-csv', category: 'Data' },
-]
+const systemActions = computed(() => {
+  const count = props.sourcesCount || 10
+  return [
+    { id: 'act-new-lead', type: 'action', title: 'Add New Lead / Prospect', shortcut: 'N', icon: Plus, action: 'new-lead', category: 'Actions' },
+    { id: 'act-sync-feeds', type: 'action', title: `Sync Live Feeds (${count}+ Sources)`, shortcut: 'S', icon: RefreshCw, action: 'sync-feeds', category: 'Actions' },
+    { id: 'act-tab-hunter', type: 'tab', title: 'Jump to RFP Hunter', shortcut: '1', icon: Globe, tab: 'hunter', category: 'Navigation' },
+    { id: 'act-tab-deals', type: 'tab', title: 'Jump to Deals Pipeline', shortcut: '2', icon: Kanban, tab: 'deals', category: 'Navigation' },
+    { id: 'act-tab-leads', type: 'tab', title: 'Jump to Leads Directory', shortcut: '3', icon: Users, tab: 'leads', category: 'Navigation' },
+    { id: 'act-tab-campaigns', type: 'tab', title: 'Jump to Outbound Campaigns', shortcut: '4', icon: Send, tab: 'campaigns', category: 'Navigation' },
+    { id: 'act-tab-studio', type: 'tab', title: 'Jump to AI Proposal Studio', shortcut: '5', icon: Sparkles, tab: 'studio', category: 'Navigation' },
+    { id: 'act-theme-toggle', type: 'action', title: 'Toggle Theme (Dark / Light)', shortcut: 'T', icon: SunMoon, action: 'toggle-theme', category: 'Preferences' },
+    { id: 'act-security', type: 'action', title: 'Founder Security & Credentials', shortcut: 'sec', icon: ShieldCheck, action: 'security', category: 'Preferences' },
+    { id: 'act-export', type: 'action', title: 'Export Leads to CSV', shortcut: 'exp', icon: Download, action: 'export-csv', category: 'Data' },
+  ]
+})
 
 const filteredItems = computed(() => {
   const q = query.value.trim().toLowerCase()
   if (!q) {
-    return systemActions.slice(0, 8)
+    return systemActions.value.slice(0, 8)
   }
 
   const results: any[] = []
 
   // 1. System Actions
-  const matchedActions = systemActions.filter(a => 
+  const matchedActions = systemActions.value.filter(a => 
     a.title.toLowerCase().includes(q) || 
     (a.action && a.action.toLowerCase().includes(q)) ||
     (a.shortcut && a.shortcut.toLowerCase() === q)

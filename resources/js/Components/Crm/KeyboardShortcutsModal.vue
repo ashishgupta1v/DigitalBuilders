@@ -108,7 +108,7 @@ const shortcutGroups = [
       <!-- Footer -->
       <div class="px-5 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50 flex items-center justify-between text-[11px] text-slate-400">
         <span>Press <kbd class="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-800 text-[10px] font-mono font-bold">Esc</kbd> anytime to dismiss</span>
-        <span class="font-mono text-purple-600 dark:text-purple-400 font-semibold">DigitalBuilders Cockpit v2.5</span>
+        <span class="font-mono text-purple-600 dark:text-purple-400 font-semibold">CRM Cockpit v2.5</span>
       </div>
     </div>
   </div>

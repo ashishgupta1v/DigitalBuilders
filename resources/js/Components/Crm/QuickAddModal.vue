@@ -6,6 +6,10 @@ import { X, Plus, Sparkles, Building2, User, Phone, Mail, DollarSign, Layers } f
 const props = defineProps<{
   show: boolean
   defaultStage?: string
+  appMeta?: {
+    default_currency?: string
+    [key: string]: any
+  }
 }>()
 
 const emit = defineEmits<{
@@ -19,31 +23,34 @@ const form = useForm({
   role_title: '',
   phone: '',
   email: '',
-  segment: 'manufacturer',
+  segment: 'international',
   stage: 'new',
-  project_type: '',
+  project_type: 'High-Throughput Web App',
   deal_amount: null as number | null,
-  currency: 'INR',
+  currency: props.appMeta?.default_currency || 'USD',
   pricing_tier: 'growth',
   description: '',
-  score: 60,
+  score: 70,
 })
 
 watch(
-  () => props.defaultStage,
-  (newStage) => {
+  () => [props.defaultStage, props.appMeta],
+  ([newStage]) => {
     if (newStage) {
-      form.stage = newStage
+      form.stage = newStage as string
+    }
+    if (props.appMeta?.default_currency && !form.deal_amount) {
+      form.currency = props.appMeta.default_currency
     }
   },
   { immediate: true }
 )
 
 const onPhoneBlur = () => {
-  let p = form.phone.trim().replace(/[^0-9+]/g, '')
-  if (p.length === 10 && !p.startsWith('+')) {
-    form.phone = `+91 ${p.substring(0, 5)} ${p.substring(5)}`
-  }
+  let p = form.phone.trim()
+  if (!p) return
+  // Preserve international format without forcing +91
+  form.phone = p.replace(/[^0-9+ -]/g, '')
 }
 
 const onSegmentChange = () => {
@@ -51,7 +58,6 @@ const onSegmentChange = () => {
     form.currency = 'USD'
     if (!form.project_type) form.project_type = 'High-Throughput Web App'
   } else {
-    form.currency = 'INR'
     if (!form.project_type) {
       if (form.segment === 'manufacturer') form.project_type = 'Custom ERP & Mobile Ordering App'
       else if (form.segment === 'retail') form.project_type = 'E-Commerce Store & Catalog'
@@ -110,12 +116,12 @@ const submit = () => {
             @change="onSegmentChange"
             class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-700/80 rounded-xl text-slate-900 dark:text-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
           >
-            <option value="manufacturer">Industrial Manufacturer / Factory (₹2.5L–₹6L)</option>
-            <option value="retail">Retail Store / D2C Brand (₹1L–₹2.8L)</option>
-            <option value="clinic">Clinic / Diagnostic Lab / Telehealth (₹1L–₹2.8L)</option>
-            <option value="coaching">Coaching Institute / Academy (₹1.2L–₹3.3L)</option>
-            <option value="startup">Tech Startup / MVP Build (₹1.5L–₹3L)</option>
-            <option value="international">International Founder / US SME ($3.5k–$26k USD)</option>
+            <option value="international">International Founder / Global Startup ($ USD)</option>
+            <option value="startup">Tech Startup / MVP Build</option>
+            <option value="manufacturer">Industrial Manufacturer / Factory</option>
+            <option value="retail">Retail Store / D2C Brand</option>
+            <option value="clinic">Clinic / Diagnostic Lab / Telehealth</option>
+            <option value="coaching">Coaching Institute / Academy</option>
             <option value="general">General Web / Software Build</option>
           </select>
         </div>

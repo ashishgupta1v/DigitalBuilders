@@ -216,7 +216,7 @@ class CrmProposalController extends Controller
         ]);
 
         $bankDetails = [
-            'account_name' => config('services.crm.bank_name_holder', 'DigitalBuilders Engineering (Ashish Gupta)'),
+            'account_name' => config('services.crm.bank_name_holder', config('crm.company_name', 'DigitalBuilders Engineering') . ' (' . config('crm.founder_name', 'Founder') . ')'),
             'bank_name'    => config('services.crm.bank_name', 'HDFC Bank Ltd'),
             'account_no'   => config('services.crm.bank_account_no', '50200084729104'),
             'ifsc_code'    => config('services.crm.bank_ifsc', 'HDFC0000240'),
@@ -251,6 +251,14 @@ class CrmProposalController extends Controller
             'milestones'   => $milestones,
             'payments'     => $payments,
             'bank_details' => $bankDetails,
+            'app_meta'     => [
+                'founder_name'   => config('crm.founder_name', 'Founder'),
+                'founder_title'  => config('crm.founder_title', 'Lead Architect'),
+                'founder_email'  => config('crm.founder_email', 'ashish@digitalbuilders.in'),
+                'founder_phone'  => config('crm.founder_phone', '+91 90870 21592'),
+                'company_name'   => config('crm.company_name', 'DigitalBuilders'),
+                'website_url'    => config('crm.website_url', 'https://digitalbuilders.in'),
+            ],
         ]);
     }
 
@@ -285,7 +293,7 @@ class CrmProposalController extends Controller
 
         // Dispatch instant leadership email alert
         try {
-            $to = config('mail.lead_inbox', 'ashishgupta1v@gmail.com');
+            $to = config('mail.lead_inbox', config('crm.founder_email', 'ashishgupta1v@gmail.com'));
             Mail::to($to)->send(new ProposalAcceptedMail($deal));
         } catch (\Throwable $e) {
             Log::warning('Failed to dispatch proposal accepted email: ' . $e->getMessage());
@@ -615,17 +623,17 @@ class CrmProposalController extends Controller
                 'gst_number' => $deal->organization->gst_number ?? null,
             ],
             'seller' => [
-                'name'         => 'DigitalBuilders Technologies LLP',
-                'brand'        => 'DigitalBuilders Engineering',
-                'lead_contact' => 'Ashish Gupta, Principal Architect',
-                'email'        => 'ashish@digitalbuilders.in',
-                'phone'        => '+91 90870 21592',
-                'website'      => 'https://digitalbuilders.in',
+                'name'         => config('crm.company_legal_name', config('crm.company_name', 'DigitalBuilders Technologies LLP')),
+                'brand'        => config('crm.company_name', 'DigitalBuilders Engineering'),
+                'lead_contact' => config('crm.founder_name', 'Founder') . ', ' . config('crm.founder_title', 'Principal Architect'),
+                'email'        => config('crm.founder_email', 'ashish@digitalbuilders.in'),
+                'phone'        => config('crm.founder_phone', '+91 90870 21592'),
+                'website'      => config('crm.website_url', 'https://digitalbuilders.in'),
                 'gstin'        => config('services.crm.gstin', '07AAACD1234F1Z5'),
-                'address'      => 'DLF Cyber City, Sector 24, Gurugram, Haryana - 122002, India',
+                'address'      => config('crm.company_address', 'DLF Cyber City, Sector 24, Gurugram, Haryana - 122002, India'),
             ],
             'bank_details' => [
-                'account_name' => config('services.crm.bank_name_holder', 'DigitalBuilders Engineering (Ashish Gupta)'),
+                'account_name' => config('services.crm.bank_name_holder', config('crm.company_name', 'DigitalBuilders Engineering') . ' (' . config('crm.founder_name', 'Founder') . ')'),
                 'bank_name'    => config('services.crm.bank_name', 'HDFC Bank Ltd'),
                 'account_no'   => config('services.crm.bank_account_no', '50200084729104'),
                 'ifsc_code'    => config('services.crm.bank_ifsc', 'HDFC0000240'),
@@ -682,20 +690,28 @@ class CrmProposalController extends Controller
             ? "> " . str_replace("\n", "\n> ", trim($deal->scope_summary))
             : "> Production-grade full-stack engineering, custom business logic, automated workflows, and high-performance database design.";
 
+        $founderName = config('crm.founder_name', 'Founder');
+        $founderTitle = config('crm.founder_title', 'Principal Software Architect');
+        $companyBrand = config('crm.company_name', 'DigitalBuilders');
+        $siteUrl = rtrim((string) config('crm.website_url', 'https://digitalbuilders.in'), '/');
+        $founderEmail = config('crm.founder_email', 'ashish@digitalbuilders.in');
+        $founderPhone = config('crm.founder_phone', '+91 90870 21592');
+        $waDigits = preg_replace('/[^0-9]/', '', $founderPhone);
+
         return <<<MARKDOWN
 # Engineering Proposal & Scope of Work
 
 **Prepared For:** {$clientName} ({$roleTitle}) | **{$companyName}**  
 **Project:** {$deal->title}  
 **Date:** {$dateStr}  
-**Prepared By:** Ashish Gupta, Principal Architect @ [DigitalBuilders](https://digitalbuilders.in)  
+**Prepared By:** {$founderName}, {$founderTitle} @ [{$companyBrand}]({$siteUrl})  
 **Total Investment:** **{$formattedAmount} ({$currency})**  
 
 ---
 
 ## 1. Executive Summary & Objective
 
-DigitalBuilders is pleased to submit this formal proposal to engineer, architect, and deploy the **{$deal->title}** for **{$companyName}**.
+{$companyBrand} is pleased to submit this formal proposal to engineer, architect, and deploy the **{$deal->title}** for **{$companyName}**.
 
 Our primary mission is to deliver an enterprise-grade digital solution tailored to the **{$segment}** vertical that completely eliminates operational friction, accelerates transaction speed, and gives your business an unfair competitive advantage.
 
@@ -740,11 +756,11 @@ Total Project Fee: **{$formattedAmount} ({$currency})**
 
 To authorize this proposal and initiate the Phase 1 kickoff sprint, confirm acceptance via the online portal or directly via WhatsApp.
 
-**DigitalBuilders Engineering**  
-Ashish Gupta — Principal Software Architect  
-Direct WhatsApp: [+91 90870 21592](https://wa.me/919087021592)  
-Email: [ashish@digitalbuilders.in](mailto:ashish@digitalbuilders.in)  
-Website: [https://digitalbuilders.in](https://digitalbuilders.in)
+**{$companyBrand} Engineering**  
+{$founderName} — {$founderTitle}  
+Direct WhatsApp: [{$founderPhone}](https://wa.me/{$waDigits})  
+Email: [{$founderEmail}](mailto:{$founderEmail})  
+Website: [{$siteUrl}]({$siteUrl})
 MARKDOWN;
     }
 }

@@ -150,7 +150,10 @@ class TelegramBotService
             $waPhone = '91' . $waPhone;
         }
 
-        $waGreeting = "Hi " . strtok($name, ' ') . ", this is Ashish Gupta, Principal Architect at DigitalBuilders. I just reviewed your " . $projectType . " project inquiry on our portal. Are you available for a quick 5-min architecture sync today?";
+        $founderName = config('crm.founder_name', 'Founder');
+        $founderTitle = config('crm.founder_title', 'Principal Architect');
+        $companyName = config('crm.company_name', config('app.name', 'DigitalBuilders'));
+        $waGreeting = "Hi " . strtok($name, ' ') . ", this is {$founderName}, {$founderTitle} at {$companyName}. I just reviewed your " . $projectType . " project inquiry on our portal. Are you available for a quick 5-min architecture sync today?";
         $waUrl = "https://wa.me/{$waPhone}?text=" . rawurlencode($waGreeting);
 
         $featureList = !empty($features) ? implode(', ', $features) : 'Custom Architecture';

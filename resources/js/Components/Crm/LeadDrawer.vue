@@ -11,6 +11,17 @@ const props = withDefaults(defineProps<{
   show: boolean
   leadId: number | null
   initialTab?: 'timeline' | 'sequence' | 'commercials' | 'notes'
+  appMeta?: {
+    app_name?: string
+    founder_name?: string
+    founder_title?: string
+    founder_email?: string
+    founder_phone?: string
+    booking_url?: string
+    estimator_url?: string
+    website_url?: string
+    default_currency?: string
+  }
 }>(), {
   initialTab: 'timeline',
 })
@@ -23,6 +34,20 @@ const emit = defineEmits<{
 }>()
 
 const leadData = ref<any>(null)
+
+const meta = computed(() => {
+  return props.appMeta || leadData.value?.app_meta || {
+    app_name: 'DigitalBuilders',
+    founder_name: 'Ashish Gupta',
+    founder_title: 'Principal Software Architect & Founder',
+    founder_email: 'ashish@digitalbuilders.in',
+    founder_phone: '+91 90870 21592',
+    booking_url: 'https://www.digitalbuilders.in/book',
+    estimator_url: 'https://www.digitalbuilders.in/estimator',
+    website_url: 'https://www.digitalbuilders.in',
+    default_currency: 'USD',
+  }
+})
 const loading = ref(false)
 const activeTab = ref<'timeline' | 'sequence' | 'commercials' | 'notes'>('timeline')
 
@@ -408,8 +433,14 @@ const currentStageIndex = computed(() => {
 
 const cleanPhone = computed(() => {
   if (!leadData.value?.lead?.phone) return ''
-  const digits = leadData.value.lead.phone.replace(/[^0-9]/g, '')
-  if (digits.length === 10) return `91${digits}`
+  const raw = String(leadData.value.lead.phone).trim()
+  if (raw.startsWith('+')) {
+    return raw.replace(/[^0-9+]/g, '')
+  }
+  const digits = raw.replace(/[^0-9]/g, '')
+  if (digits.length === 10 && (leadData.value?.lead?.region === 'IN' || !leadData.value?.lead?.region)) {
+    return `91${digits}`
+  }
   return digits
 })
 
@@ -442,7 +473,13 @@ const copiedPitch = ref(false)
 const copyOutreachPitch = async () => {
   const name = leadData.value?.lead?.name || 'there'
   const company = leadData.value?.lead?.company || 'your team'
-  const pitch = `Hi ${name},\n\nI'm Ashish, founder and lead architect at DigitalBuilders (https://www.digitalbuilders.in). Saw your project scope for ${company}.\n\nWe specialize in engineering production SaaS MVPs, custom web apps, and AI integrations in 4-6 weeks with 100% code ownership and fixed milestone pricing.\n\n• Book a 15-min discovery call: https://www.digitalbuilders.in/book\n• Or run your feature scope through our sprint estimator: https://www.digitalbuilders.in/estimator\n\nBest regards,\nAshish Gupta | DigitalBuilders`
+  const founderName = meta.value.founder_name
+  const appName = meta.value.app_name
+  const websiteUrl = meta.value.website_url
+  const bookingUrl = meta.value.booking_url
+  const estimatorUrl = meta.value.estimator_url
+
+  const pitch = `Hi ${name},\n\nI'm ${founderName}, founder and lead architect at ${appName} (${websiteUrl}). Saw your project scope for ${company}.\n\nWe specialize in engineering production SaaS MVPs, custom web apps, and AI integrations in 4-6 weeks with 100% code ownership and fixed milestone pricing.\n\n• Book a 15-min discovery call: ${bookingUrl}\n• Or run your feature scope through our sprint estimator: ${estimatorUrl}\n\nBest regards,\n${founderName} | ${appName}`
   await navigator.clipboard.writeText(pitch)
   copiedPitch.value = true
   setTimeout(() => { copiedPitch.value = false }, 2500)
@@ -450,7 +487,7 @@ const copyOutreachPitch = async () => {
 
 const copiedBooking = ref(false)
 const copyBookingLink = async () => {
-  await navigator.clipboard.writeText('https://www.digitalbuilders.in/book')
+  await navigator.clipboard.writeText(meta.value.booking_url)
   copiedBooking.value = true
   setTimeout(() => { copiedBooking.value = false }, 2500)
 }
@@ -462,18 +499,25 @@ const openEmailComposer = (targetTouch?: number) => {
   const touch = targetTouch ? Number(targetTouch) : Math.min(5, (leadData.value.lead.touchpoint_count || 0) + 1)
   emailTouch.value = touch
 
+  const founderName = meta.value.founder_name
+  const appName = meta.value.app_name
+  const founderTitle = meta.value.founder_title
+  const websiteUrl = meta.value.website_url
+  const bookingUrl = meta.value.booking_url
+  const estimatorUrl = meta.value.estimator_url
+
   if (touch === 1) {
     emailSubject.value = `Architecture & Technical Execution for ${company}`
-    emailBody.value = `Hi ${name},\n\nI'm Ashish Gupta, Principal Software Architect and Founder at DigitalBuilders (https://www.digitalbuilders.in).\n\nI noticed your active software engineering requirements. At DigitalBuilders, we specialize in high-throughput web applications, clean microservices, and custom ERP systems built with zero bloated plugins, 100% automated test coverage, and weekly live staging deliveries.\n\nWe provide complete IP ownership and a 30-day post-launch warranty on every project.\n\nWould you be open to a quick 15-minute technical sync this week? You can pick a convenient slot directly on my calendar here:\n👉 https://www.digitalbuilders.in/book\n\nLooking forward to speaking.\n\nBest regards,\nAshish Gupta`
+    emailBody.value = `Hi ${name},\n\nI'm ${founderName}, ${founderTitle} at ${appName} (${websiteUrl}).\n\nI noticed your active software engineering requirements. At ${appName}, we specialize in high-throughput web applications, clean microservices, and custom ERP systems built with zero bloated plugins, 100% automated test coverage, and weekly live staging deliveries.\n\nWe provide complete IP ownership and a 30-day post-launch warranty on every project.\n\nWould you be open to a quick 15-minute technical sync this week? You can pick a convenient slot directly on my calendar here:\n👉 ${bookingUrl}\n\nLooking forward to speaking.\n\nBest regards,\n${founderName}`
   } else if (touch === 2) {
-    emailSubject.value = `DigitalBuilders Scope Estimator & Pricing Book for ${company}`
-    emailBody.value = `Hi ${name},\n\nFollowing up on my previous note. Wanted to share our transparent 2026 Scope Estimator in case you want to ballpark engineering costs and milestones for ${company}:\n👉 https://www.digitalbuilders.in/estimator\n\nIf you have a quick 10 minutes, let's connect to review your technical bottlenecks:\n👉 https://www.digitalbuilders.in/book\n\nBest,\nAshish Gupta`
+    emailSubject.value = `${appName} Scope Estimator & Pricing Book for ${company}`
+    emailBody.value = `Hi ${name},\n\nFollowing up on my previous note. Wanted to share our transparent Scope Estimator in case you want to ballpark engineering costs and milestones for ${company}:\n👉 ${estimatorUrl}\n\nIf you have a quick 10 minutes, let's connect to review your technical bottlenecks:\n👉 ${bookingUrl}\n\nBest,\n${founderName}`
   } else if (touch === 3) {
-    emailSubject.value = `Architecture Case Study relevant to ${company}`
-    emailBody.value = `Hi ${name},\n\nThought you might find this relevant—we recently architected an industrial ERP & ordering system for Garg Enterprises (10k+ SKUs) that eliminated dispatch errors completely: https://www.digitalbuilders.in/portfolio/garg-enterprises.\n\nWe've also built high-concurrency platforms like Habuilt handling 65k+ users: https://www.digitalbuilders.in/portfolio/habuilt.\n\nCould we jump on a 15-minute screen share to review how we would structure ${company}'s build?\n👉 https://www.digitalbuilders.in/book\n\nBest regards,\nAshish Gupta`
+    emailSubject.value = `Architecture Case Studies relevant to ${company}`
+    emailBody.value = `Hi ${name},\n\nThought you might find this relevant—we architected high-performance production systems like Garg Enterprises (industrial dispatch ERP eliminating errors) and Habuilt (handling 65k+ active concurrent users):\n👉 ${websiteUrl}\n\nCould we jump on a 15-minute screen share to review how we would structure ${company}'s build?\n👉 ${bookingUrl}\n\nBest regards,\n${founderName}`
   } else {
     emailSubject.value = `Checking in on ${company}'s technical roadmap`
-    emailBody.value = `Hi ${name},\n\nAshish here from DigitalBuilders. Dropping a quick note to see if solving software bottlenecks for ${company} is still a priority for this quarter, or if you'd like to revisit down the road?\n\nIf now is not a good time, no worries at all. If you want to review your build scope, you can reach me anytime at https://www.digitalbuilders.in/book.\n\nBest,\nAshish Gupta`
+    emailBody.value = `Hi ${name},\n\n${founderName} here from ${appName}. Dropping a quick note to see if solving software bottlenecks for ${company} is still a priority for this quarter, or if you'd like to revisit down the road?\n\nIf now is not a good time, no worries at all. If you want to review your build scope, you can reach me anytime at ${bookingUrl}.\n\nBest,\n${founderName}`
   }
   showEmailModal.value = true
 }
@@ -552,7 +596,12 @@ const sendMailto = () => {
   const name = leadData.value.lead.name || 'there'
   const company = leadData.value.lead.company || 'Your Project'
   const subject = encodeURIComponent(`Architecture & Timeline Proposal for ${company}`)
-  const body = encodeURIComponent(`Hi ${name},\n\nI'm Ashish Gupta, founder & lead architect at DigitalBuilders (https://www.digitalbuilders.in).\n\nWanted to connect regarding your software development scope. We specialize in fixed-price 4-6 week sprints with complete source code ownership.\n\nFeel free to pick a 15-min slot on my calendar: https://www.digitalbuilders.in/book\n\nBest regards,\nAshish Gupta\nFounder & Lead Architect, DigitalBuilders`)
+  const founder = meta.value.founder_name || 'Founder'
+  const title = meta.value.founder_title || 'Lead Architect'
+  const app = meta.value.app_name || 'DigitalBuilders'
+  const site = meta.value.website_url || 'https://www.digitalbuilders.in'
+  const book = meta.value.booking_url || 'https://www.digitalbuilders.in/book'
+  const body = encodeURIComponent(`Hi ${name},\n\nI'm ${founder}, ${title} at ${app} (${site}).\n\nWanted to connect regarding your software development scope. We specialize in fixed-price 4-6 week sprints with complete source code ownership.\n\nFeel free to pick a 15-min slot on my calendar: ${book}\n\nBest regards,\n${founder}\n${title}, ${app}`)
   window.open(`mailto:${leadData.value.lead.email}?subject=${subject}&body=${body}`, '_blank')
 }
 
@@ -1497,7 +1546,7 @@ const submitWirePayment = async () => {
             <textarea
               v-model="newNote"
               rows="2"
-              placeholder="e.g. Talked with owner; agreed to start with ₹19,000 Discovery Sprint..."
+              placeholder="e.g. Talked with stakeholder; agreed to kickoff discovery sprint..."
               class="w-full p-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700/80 rounded-xl text-xs text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 placeholder-slate-400"
             ></textarea>
 
@@ -1548,21 +1597,21 @@ const submitWirePayment = async () => {
             <div class="p-3 sm:p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800">
               <div class="text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-500 font-bold">Deal Total</div>
               <div class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white mt-1 truncate font-mono">
-                {{ activeDeal?.formatted_amount || '₹0' }}
+                {{ activeDeal?.formatted_amount || (activeDeal?.currency === 'INR' ? '₹0' : '$0') }}
               </div>
             </div>
 
             <div class="p-3 sm:p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800">
               <div class="text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-500 font-bold">Collected</div>
               <div class="text-base sm:text-lg font-extrabold text-emerald-600 dark:text-emerald-400 mt-1 truncate font-mono">
-                {{ activeDeal?.formatted_paid || '₹0' }}
+                {{ activeDeal?.formatted_paid || (activeDeal?.currency === 'INR' ? '₹0' : '$0') }}
               </div>
             </div>
 
             <div class="p-3 sm:p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800">
               <div class="text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-500 font-bold">Pending</div>
               <div class="text-base sm:text-lg font-extrabold text-amber-600 dark:text-amber-400 mt-1 truncate font-mono">
-                {{ activeDeal?.currency === 'USD' ? '$' + activeDeal?.pending_balance : '₹' + Number(activeDeal?.pending_balance || 0).toLocaleString('en-IN') }}
+                {{ activeDeal?.currency === 'USD' ? '$' + (activeDeal?.pending_balance || 0) : '₹' + Number(activeDeal?.pending_balance || 0).toLocaleString('en-IN') }}
               </div>
             </div>
           </div>

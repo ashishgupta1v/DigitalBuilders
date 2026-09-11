@@ -5,6 +5,19 @@ import { X, Copy, Check, ExternalLink, ArrowRight, Sparkles, Mail, MessageSquare
 const props = defineProps<{
   show: boolean
   requirement: any | null
+  appMeta?: {
+    founder_name?: string
+    founder_title?: string
+    founder_email?: string
+    founder_phone?: string
+    company_name?: string
+    app_name?: string
+    website_url?: string
+    booking_url?: string
+    estimator_url?: string
+    default_currency?: string
+    active_sources_count?: number
+  }
 }>()
 
 const emit = defineEmits<{
@@ -21,13 +34,18 @@ const linkedinText = ref('')
 const copied = ref(false)
 
 watch(
-  () => props.requirement,
-  (newReq) => {
+  () => [props.requirement, props.appMeta],
+  ([newReq]) => {
     if (newReq) {
+      const founder = props.appMeta?.founder_name || 'Founder'
+      const title = props.appMeta?.founder_title || 'lead architect'
+      const app = props.appMeta?.app_name || 'DigitalBuilders'
+      const book = props.appMeta?.booking_url || 'https://www.digitalbuilders.in/book'
+
       upworkText.value = newReq.upwork_proposal || newReq.pitch_draft || ''
       emailSubject.value = newReq.email_subject || `Technical Architecture Proposal for ${newReq.contact_company || 'Your Project'}`
       emailBody.value = newReq.email_pitch || newReq.pitch_draft || ''
-      linkedinText.value = newReq.linkedin_dm || `Hi ${newReq.contact_name || 'there'}, saw your project regarding ${newReq.title}. I'm Ashish, lead architect at DigitalBuilders. We build scalable SaaS MVPs in 4-6 weeks with 100% code ownership. Let's connect: https://www.digitalbuilders.in/book`
+      linkedinText.value = newReq.linkedin_dm || `Hi ${newReq.contact_name || 'there'}, saw your project regarding ${newReq.title}. I'm ${founder}, ${title} at ${app}. We build scalable SaaS MVPs in 4-6 weeks with 100% code ownership. Let's connect: ${book}`
       copied.value = false
       activePitchTab.value = 'upwork'
     }

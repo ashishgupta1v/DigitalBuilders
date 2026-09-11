@@ -397,20 +397,20 @@ const statusBadgeClass = computed(() => {
           <div class="text-[11px] text-slate-500 dark:text-slate-400 max-w-sm space-y-1">
             <div class="flex items-center gap-1.5 font-bold text-slate-700 dark:text-slate-300 print:text-black">
               <ShieldCheck class="w-3.5 h-3.5 text-purple-600" />
-              <span>DigitalBuilders Engineering Guarantee</span>
+              <span>{{ seller.brand || 'Engineering' }} Guarantee</span>
             </div>
             <p>100% intellectual property handover upon milestone completion. Includes 30 days of hypercare warranty and zero vendor lock-in.</p>
           </div>
 
           <div class="text-left sm:text-right font-mono">
             <div class="text-sm font-bold text-slate-900 dark:text-white print:text-black">
-              Ashish Gupta
+              {{ seller.lead_contact || 'Principal Architect' }}
             </div>
             <div class="text-[11px] text-slate-500 dark:text-slate-400">
-              Principal Software Architect & Founder
+              Founder & Lead Architect
             </div>
             <div class="text-[10px] text-purple-600 dark:text-purple-400 font-bold uppercase tracking-wider mt-0.5">
-              DigitalBuilders Technologies LLP
+              {{ seller.name }}
             </div>
           </div>
         </div>

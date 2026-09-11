@@ -9,10 +9,15 @@ import {
 const props = defineProps<{
   lead: any | null
   appMeta?: {
+    app_name?: string
     founder_name?: string
+    founder_title?: string
     founder_email?: string
+    founder_phone?: string
     booking_url?: string
+    estimator_url?: string
     website_url?: string
+    default_currency?: string
   }
 }>()
 
@@ -27,11 +32,12 @@ const emit = defineEmits<{
 const sendDirectMail = () => {
   if (!props.lead?.email) return
   const founderName = props.appMeta?.founder_name || 'Ashish Gupta'
+  const appName = props.appMeta?.app_name || 'DigitalBuilders'
   const bookingUrl = props.appMeta?.booking_url || 'https://www.digitalbuilders.in/book'
   const websiteUrl = props.appMeta?.website_url || 'https://www.digitalbuilders.in'
   const company = props.lead.company || props.lead.name
   const subject = encodeURIComponent(`Architecture & Timeline Proposal for ${company}`)
-  const body = encodeURIComponent(`Hi ${props.lead.name},\n\nI'm ${founderName}, founder & lead architect at ${props.appMeta?.founder_name || 'DigitalBuilders'} (${websiteUrl}).\n\nWanted to connect regarding your custom software scope.\n\nFeel free to pick a 15-min discovery slot on my calendar: ${bookingUrl}\n\nBest regards,\n${founderName}`)
+  const body = encodeURIComponent(`Hi ${props.lead.name},\n\nI'm ${founderName}, founder & lead architect at ${appName} (${websiteUrl}).\n\nWanted to connect regarding your custom software scope.\n\nFeel free to pick a 15-min discovery slot on my calendar: ${bookingUrl}\n\nBest regards,\n${founderName}`)
   window.open(`mailto:${props.lead.email}?subject=${subject}&body=${body}`, '_blank')
 }
 </script>

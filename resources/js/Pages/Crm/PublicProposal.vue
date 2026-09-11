@@ -62,6 +62,14 @@ const props = defineProps<{
     upi_id?: string
     gstin?: string
   }
+  app_meta?: {
+    founder_name?: string
+    founder_title?: string
+    founder_email?: string
+    founder_phone?: string
+    company_name?: string
+    website_url?: string
+  }
 }>()
 
 const accepting = ref(false)
@@ -111,8 +119,10 @@ const acceptProposal = async () => {
     if (data.success) {
       accepted.value = true
       // Open WhatsApp confirmation directly
-      const msg = `Hi Ashish, I have reviewed and accepted the proposal for *${props.deal.title}*. Let's schedule the Phase 1 kickoff sprint!`
-      window.open(`https://wa.me/919087021592?text=${encodeURIComponent(msg)}`, '_blank')
+      const founder = props.app_meta?.founder_name || 'Founder'
+      const phoneDigits = (props.app_meta?.founder_phone || '919087021592').replace(/[^0-9]/g, '')
+      const msg = `Hi ${founder}, I have reviewed and accepted the proposal for *${props.deal.title}*. Let's schedule the Phase 1 kickoff sprint!`
+      window.open(`https://wa.me/${phoneDigits}?text=${encodeURIComponent(msg)}`, '_blank')
     }
   } catch (err) {
     console.error('Failed to accept proposal', err)
@@ -226,7 +236,7 @@ const printProposal = () => {
           </button>
 
           <a
-            href="https://wa.me/919087021592"
+            :href="'https://wa.me/' + ((app_meta?.founder_phone || '919087021592').replace(/[^0-9]/g, ''))"
             target="_blank"
             class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600/10 hover:bg-emerald-600/20 dark:bg-emerald-600/20 dark:hover:bg-emerald-600/30 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 text-xs font-semibold transition"
           >
@@ -526,7 +536,7 @@ const printProposal = () => {
             <div>
               <h4 class="text-base font-bold text-slate-900 dark:text-white print:text-black">Proposal Formally Accepted</h4>
               <p class="text-xs text-slate-600 dark:text-slate-300 print:text-slate-600 mt-0.5">
-                Thank you, {{ lead.name }}! Our lead architect Ashish has been notified and our engineering team is preparing your Phase 1 repository and staging environment.
+                Thank you, {{ lead.name }}! Our {{ app_meta?.founder_title || 'lead architect' }} {{ app_meta?.founder_name || 'Founder' }} has been notified and our engineering team is preparing your Phase 1 repository and staging environment.
               </p>
             </div>
           </div>
@@ -551,10 +561,10 @@ const printProposal = () => {
         </div>
       </article>
 
-      <!-- DigitalBuilders Guarantee Banner (Hidden on print) -->
+      <!-- Engineering Guarantee Banner (Hidden on print) -->
       <div class="mt-8 text-center text-xs text-slate-500 dark:text-slate-400 print:hidden">
-        <p>DigitalBuilders • 100% Code Ownership • 30-Day Hypercare Warranty • Zero Vendor Lock-in</p>
-        <p class="mt-1">For urgent queries, reach Ashish directly at <a href="mailto:ashish@digitalbuilders.in" class="text-purple-600 dark:text-purple-400 hover:underline">ashish@digitalbuilders.in</a></p>
+        <p>{{ app_meta?.company_name || 'DigitalBuilders' }} • 100% Code Ownership • 30-Day Hypercare Warranty • Zero Vendor Lock-in</p>
+        <p class="mt-1">For urgent queries, reach {{ app_meta?.founder_name || 'our team' }} directly at <a :href="'mailto:' + (app_meta?.founder_email || 'ashish@digitalbuilders.in')" class="text-purple-600 dark:text-purple-400 hover:underline">{{ app_meta?.founder_email || 'ashish@digitalbuilders.in' }}</a></p>
       </div>
     </main>
   </div>

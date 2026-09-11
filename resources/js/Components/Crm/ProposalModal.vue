@@ -8,6 +8,19 @@ import {
 const props = defineProps<{
   show: boolean
   dealId: number | null
+  appMeta?: {
+    founder_name?: string
+    founder_title?: string
+    founder_email?: string
+    founder_phone?: string
+    company_name?: string
+    app_name?: string
+    website_url?: string
+    booking_url?: string
+    estimator_url?: string
+    default_currency?: string
+    active_sources_count?: number
+  }
 }>()
 
 const emit = defineEmits<{
@@ -146,17 +159,23 @@ const copyClientLink = async () => {
 
 const cleanPhone = computed(() => {
   if (!proposalData.value?.client_phone) return ''
-  const digits = proposalData.value.client_phone.replace(/[^0-9]/g, '')
+  const raw = String(proposalData.value.client_phone).trim()
+  if (raw.startsWith('+')) {
+    return raw.replace(/[^0-9]/g, '')
+  }
+  const digits = raw.replace(/[^0-9]/g, '')
   if (digits.length === 10) return `91${digits}`
   return digits
 })
 
 const whatsAppShareUrl = computed(() => {
   if (!proposalData.value) return '#'
+  const founder = props.appMeta?.founder_name || 'Founder'
+  const founderTitle = props.appMeta?.founder_title || 'Lead Architect'
   const lines = [
     `Hi ${proposalData.value.client_name},`,
     '',
-    `Our lead architect Ashish has finalized the engineering architecture and commercial scope for *${proposalData.value.title}*.`,
+    `Our ${founderTitle} ${founder} has finalized the engineering architecture and commercial scope for *${proposalData.value.title}*.`,
     '',
     `Target Investment: *${proposalData.value.formatted_amount}*`,
     `You can review and accept the official scope document online here:`,
