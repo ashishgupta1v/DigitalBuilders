@@ -182,8 +182,8 @@ class CrmDashboardController extends Controller
             $groupedDeals[$stageKey] = [
                 'meta'        => $stageMeta,
                 'count'       => $stageDeals->count(),
-                'total_usd'   => $stageDeals->sum(function ($d) {
-                    return $d->currency === 'USD' ? (float) $d->amount : round((float) $d->amount / 85.0);
+                'total_usd'   => $stageDeals->sum(function ($d) use ($inrToUsdRate) {
+                    return $d->currency === 'USD' ? (float) $d->amount : round((float) $d->amount / max(1.0, $inrToUsdRate));
                 }),
                 'deals'       => $stageDeals->map(function ($deal) {
                     return [
@@ -309,6 +309,18 @@ class CrmDashboardController extends Controller
                 ];
             });
 
+        // Derive top lead locations dynamically for the KPI subtitle
+        $topLocations = Lead::whereNotNull('country')
+            ->where('country', '!=', '')
+            ->groupBy('country')
+            ->orderByRaw('COUNT(*) DESC')
+            ->limit(3)
+            ->pluck('country')
+            ->toArray();
+        $locationLabel = !empty($topLocations)
+            ? implode(' / ', $topLocations) . ' founders'
+            : 'Global founders';
+
         return Inertia::render('Crm/Dashboard', [
             'telemetry' => [
                 'total_pipeline_usd' => (float) $totalPipelineUsd,
@@ -319,6 +331,8 @@ class CrmDashboardController extends Controller
                 'avg_deal_size'      => (float) $avgDealSize,
                 'avg_velocity_days'  => (float) $avgVelocityDays,
                 'source_analytics'   => $sourceAnalytics,
+                'location_label'     => $locationLabel,
+                'total_leads_count'  => (int) Lead::count(),
             ],
             'action_queue'        => $actionQueue,
             'market_requirements' => $marketRequirements,
@@ -329,6 +343,14 @@ class CrmDashboardController extends Controller
                 'segment' => $segment,
                 'search'  => $search,
                 'tab'     => $activeTab,
+            ],
+            'app_meta'            => [
+                'app_name'      => config('app.name', 'DigitalBuilders'),
+                'founder_name'  => config('crm.founder_name', env('CRM_FOUNDER_NAME', 'Ashish Gupta')),
+                'founder_email' => config('crm.founder_email', env('CRM_FOUNDER_EMAIL', 'founder@digitalbuilders.in')),
+                'booking_url'   => config('crm.booking_url', env('CRM_BOOKING_URL', 'https://www.digitalbuilders.in/book')),
+                'website_url'   => config('crm.website_url', env('CRM_WEBSITE_URL', 'https://www.digitalbuilders.in')),
+                'active_sources_count' => 15,
             ],
         ]);
     }

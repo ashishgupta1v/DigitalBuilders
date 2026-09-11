@@ -32,6 +32,8 @@ const props = defineProps<{
     overdue_count: number
     avg_deal_size?: number
     avg_velocity_days?: number
+    location_label?: string
+    total_leads_count?: number
     source_analytics?: Array<{
       source: string
       label: string
@@ -55,6 +57,14 @@ const props = defineProps<{
     search: string
     tab?: string
   }
+  app_meta: {
+    app_name: string
+    founder_name: string
+    founder_email: string
+    booking_url: string
+    website_url: string
+    active_sources_count: number
+  }
 }>()
 
 // Navigation & Active Tab
@@ -71,6 +81,28 @@ const showMobileSearch = ref(false)
 const dismissedQueueIds = ref<number[]>([])
 const activeQueue = computed(() => {
   return props.action_queue.filter(item => !dismissedQueueIds.value.includes(item.id))
+})
+
+// Computed: grammatically correct deal/lead count labels
+const dealCountLabel = computed(() => {
+  const n = props.telemetry.active_deals_count
+  return `${n} ${n === 1 ? 'Deal' : 'Deals'}`
+})
+
+const leadCountLabel = computed(() => {
+  const n = props.all_leads?.length || 0
+  return `${n} ${n === 1 ? 'Contact' : 'Contacts'}`
+})
+
+const leadsLocationLabel = computed(() => {
+  return props.telemetry.location_label || 'Global founders'
+})
+
+const overdueSubtitle = computed(() => {
+  const n = props.telemetry.overdue_count
+  if (n === 0) return 'All follow-ups on schedule'
+  if (n === 1) return '1 lead needs immediate outreach'
+  return `${n} leads overdue — respond within 60 mins`
 })
 
 // RFP Hunter State
@@ -236,7 +268,8 @@ const switchMainTab = (tabKey: 'hunter' | 'deals' | 'leads' | 'studio') => {
 const pollFeedsLive = async () => {
   if (isPolling.value) return
   isPolling.value = true
-  triggerToast('Scanning HackerNews, Upwork RSS & live feeds for fresh contracts...')
+  const sourceCount = props.app_meta?.active_sources_count || 15
+  triggerToast(`Scanning ${sourceCount} live feeds for fresh contracts — Product Hunt, Indie Hackers, HackerNews, Reddit, Wellfound...`)
   try {
     const res = await fetch('/crm/market/poll', {
       method: 'POST',
@@ -468,8 +501,12 @@ const bulkDeleteLeads = async () => {
 
 const sendDirectMailto = (lead: any) => {
   if (!lead.email) return
-  const subject = encodeURIComponent(`Architecture & Timeline Proposal for ${lead.company || lead.name}`)
-  const body = encodeURIComponent(`Hi ${lead.name},\n\nI'm Ashish Gupta, founder & lead architect at DigitalBuilders (https://www.digitalbuilders.in).\n\nWanted to connect regarding your custom software scope.\n\nFeel free to pick a 15-min discovery slot on my calendar: https://www.digitalbuilders.in/book\n\nBest regards,\nAshish Gupta`)
+  const founderName = props.app_meta?.founder_name || 'Ashish Gupta'
+  const bookingUrl = props.app_meta?.booking_url || 'https://www.digitalbuilders.in/book'
+  const websiteUrl = props.app_meta?.website_url || 'https://www.digitalbuilders.in'
+  const company = lead.company || lead.name
+  const subject = encodeURIComponent(`Architecture & Timeline Proposal for ${company}`)
+  const body = encodeURIComponent(`Hi ${lead.name},\n\nI'm ${founderName}, founder & lead architect at ${props.app_meta?.app_name || 'DigitalBuilders'} (${websiteUrl}).\n\nWanted to connect regarding your custom software scope.\n\nFeel free to pick a 15-min discovery slot on my calendar: ${bookingUrl}\n\nBest regards,\n${founderName}`)
   window.open(`mailto:${lead.email}?subject=${subject}&body=${body}`, '_blank')
 }
 
@@ -479,7 +516,7 @@ const logout = () => {
 </script>
 
 <template>
-  <Head title="Executive International Sales Cockpit — DigitalBuilders" />
+  <Head :title="`Executive International Sales Cockpit — ${app_meta?.app_name || 'CRM'}`" />
 
   <div class="crm-cockpit min-h-screen bg-slate-50 dark:bg-[#070b14] text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-purple-500 selection:text-white transition-colors duration-200">
     <!-- Top Executive Nav Header -->
@@ -686,7 +723,7 @@ const logout = () => {
             <Kanban class="w-3.5 h-3.5 text-sky-500" />
           </div>
           <div class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white font-mono tracking-tight">
-            {{ telemetry.active_deals_count }} Deals
+            {{ dealCountLabel }}
           </div>
           <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Avg Deal: {{ telemetry.avg_deal_size ? '$' + Number(telemetry.avg_deal_size).toLocaleString() : '—' }}</div>
         </div>
@@ -698,9 +735,9 @@ const logout = () => {
             <Users class="w-3.5 h-3.5 text-indigo-500" />
           </div>
           <div class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white font-mono tracking-tight">
-            {{ all_leads?.length || 0 }} Contacts
+            {{ leadCountLabel }}
           </div>
-          <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Targeting US/EU founders</div>
+          <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">{{ leadsLocationLabel }}</div>
         </div>
 
         <!-- Overdue Follow-ups -->
@@ -713,9 +750,9 @@ const logout = () => {
             <AlertCircle class="w-3.5 h-3.5" />
           </div>
           <div class="text-xl sm:text-2xl font-extrabold tracking-tight font-mono" :class="telemetry.overdue_count > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-900 dark:text-white'">
-            {{ telemetry.overdue_count }} Due Today
+            {{ telemetry.overdue_count > 0 ? `${telemetry.overdue_count} Overdue` : '0 Due Today' }}
           </div>
-          <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Outreach within 60 mins</div>
+          <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">{{ overdueSubtitle }}</div>
         </div>
       </div>
 
