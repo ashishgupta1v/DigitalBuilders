@@ -88,6 +88,7 @@ class CrmLeadController extends Controller
                 'next_action_note'  => $lead->next_action_note,
                 'ai_summary'        => $lead->ai_summary,
                 'objection_flag'    => $lead->objection_flag,
+                'enrichment_data'   => $lead->enrichment_data,
                 'description'       => $lead->description,
                 'created_at'        => $lead->created_at->format('d M Y, h:i A'),
             ],
@@ -623,10 +624,12 @@ class CrmLeadController extends Controller
         ]);
 
         return response()->json([
-            'success'    => true,
-            'message'    => 'Lead intelligence dossier enriched successfully!',
-            'dossier'    => $dossier,
-            'ai_summary' => $lead->ai_summary,
+            'success'         => true,
+            'message'         => 'Lead intelligence dossier enriched successfully!',
+            'dossier'         => $dossier,
+            'enrichment_data' => $lead->enrichment_data,
+            'score'           => (int) $lead->score,
+            'ai_summary'      => $lead->ai_summary,
         ]);
     }
 

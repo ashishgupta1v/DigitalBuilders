@@ -393,8 +393,11 @@ const openPitchPreview = (req: any) => {
   showPitchModal.value = true
 }
 
-const openLeadDetails = (leadId: number) => {
+const drawerTab = ref<'timeline' | 'sequence' | 'commercials' | 'notes'>('timeline')
+
+const openLeadDetails = (leadId: number, tab: 'timeline' | 'sequence' | 'commercials' | 'notes' = 'timeline') => {
   selectedLeadForDrawer.value = leadId
+  drawerTab.value = tab
   showDrawer.value = true
 }
 
@@ -1210,6 +1213,17 @@ onUnmounted(() => {
               <span class="text-xs font-bold text-slate-900 dark:text-slate-200 font-mono">{{ item.deal_value }}</span>
               <div class="flex items-center gap-1">
                 <button
+                  v-if="item.has_pending_sequence"
+                  type="button"
+                  @click="openLeadDetails(item.id, 'sequence')"
+                  class="px-2.5 py-1 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-[11px] font-bold shadow-xs transition cursor-pointer flex items-center gap-1"
+                  title="Review and approve Touch 1 email"
+                >
+                  <Send class="w-3 h-3" />
+                  <span>Review & Approve</span>
+                </button>
+                <button
+                  v-else
                   type="button"
                   @click="openLeadDetails(item.id)"
                   class="px-2.5 py-1 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-[11px] font-bold transition cursor-pointer"
@@ -1739,6 +1753,23 @@ onUnmounted(() => {
                   </div>
                 </div>
 
+                <!-- Detected Tech Stack Pills -->
+                <div v-if="lead.detected_stack?.length" class="flex items-center gap-1 flex-wrap mb-2">
+                  <span
+                    v-for="t in lead.detected_stack.slice(0, 3)"
+                    :key="t"
+                    class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60"
+                  >
+                    ⚡ {{ t }}
+                  </span>
+                  <span
+                    v-if="lead.detected_stack.length > 3"
+                    class="text-[9px] font-bold text-slate-400 font-mono"
+                  >
+                    +{{ lead.detected_stack.length - 3 }}
+                  </span>
+                </div>
+
                 <!-- Footer details & one-key hints -->
                 <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1.5 border-t border-slate-100 dark:border-slate-800/80">
                   <span class="font-mono font-bold text-slate-800 dark:text-slate-200">
@@ -1838,6 +1869,21 @@ onUnmounted(() => {
                       {{ lead.name }}
                     </button>
                     <div class="text-[11px] text-slate-500 font-medium">{{ lead.company }}</div>
+                    <div v-if="lead.detected_stack?.length" class="flex items-center gap-1 flex-wrap mt-1">
+                      <span
+                        v-for="t in lead.detected_stack.slice(0, 3)"
+                        :key="t"
+                        class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
+                      >
+                        ⚡ {{ t }}
+                      </span>
+                      <span
+                        v-if="lead.detected_stack.length > 3"
+                        class="text-[9px] font-bold text-slate-400 font-mono"
+                      >
+                        +{{ lead.detected_stack.length - 3 }}
+                      </span>
+                    </div>
                   </td>
 
                   <td class="p-3.5 font-mono text-[11px] text-slate-600 dark:text-slate-400">
@@ -2257,6 +2303,7 @@ onUnmounted(() => {
     <LeadDrawer
       :show="showDrawer"
       :lead-id="selectedLeadForDrawer"
+      :initial-tab="drawerTab"
       @close="showDrawer = false"
       @updated="(msg) => { triggerToast(msg || 'Updated'); router.reload() }"
       @open-proposal="openProposalModal"

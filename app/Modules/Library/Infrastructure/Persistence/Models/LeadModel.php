@@ -55,6 +55,7 @@ class LeadModel extends Model
             'last_contact_date' => 'datetime',
             'next_action_date'  => 'datetime',
             'unsubscribed_at'   => 'datetime',
+            'enrichment_data'   => 'array',
         ];
     }
 

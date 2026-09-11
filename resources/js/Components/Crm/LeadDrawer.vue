@@ -3,14 +3,17 @@ import { ref, watch, computed } from 'vue'
 import {
   X, Building2, User, Phone, Mail, MessageSquare, Calendar, Sparkles,
   CreditCard, CheckCircle2, AlertCircle, ArrowRight, DollarSign, Clock,
-  FileText, Send, Copy, Check, ExternalLink, ChevronRight, Edit3,
+  FileText, Send, Copy, Check, ExternalLink, ChevronRight, ChevronDown, ChevronUp, Edit3,
   Eye, MousePointerClick, Bot, Receipt, Globe, Play, Pause, RefreshCw, Search
 } from 'lucide-vue-next'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   show: boolean
   leadId: number | null
-}>()
+  initialTab?: 'timeline' | 'sequence' | 'commercials' | 'notes'
+}>(), {
+  initialTab: 'timeline',
+})
 
 const emit = defineEmits<{
   (e: 'close'): void
@@ -375,9 +378,12 @@ const saveContactEmail = async () => {
 }
 
 watch(
-  () => [props.show, props.leadId],
+  () => [props.show, props.leadId, props.initialTab],
   () => {
     if (props.show && props.leadId) {
+      if (props.initialTab) {
+        activeTab.value = props.initialTab
+      }
       fetchLeadDetails()
       fetchDuplicates()
       loadSequence()
@@ -385,6 +391,11 @@ watch(
   },
   { immediate: true }
 )
+
+const enrichment = computed(() => leadData.value?.lead?.enrichment_data || null)
+const step1Draft = computed(() => sequenceData.value?.steps?.find((s: any) => s.step_number === 1) || null)
+const isStep1AwaitingApproval = computed(() => sequenceData.value?.status === 'draft' && !!step1Draft.value)
+const isDossierCollapsed = ref(false)
 
 const activeDeal = computed(() => {
   return leadData.value?.deals?.[0] || null
@@ -887,6 +898,53 @@ const submitWirePayment = async () => {
         </div>
       </div>
 
+      <!-- Smart Outbound Sequence Approval Banner (1-Click Founder Dispatch) -->
+      <div
+        v-if="isStep1AwaitingApproval"
+        class="mx-4 sm:mx-6 mt-3 p-3.5 rounded-2xl bg-gradient-to-r from-purple-500/15 via-indigo-500/10 to-sky-500/15 border border-purple-400/50 dark:border-purple-500/40 shadow-sm space-y-2.5"
+      >
+        <div class="flex items-center justify-between gap-2 flex-wrap">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-purple-500 animate-pulse"></span>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-purple-900 dark:text-purple-200 flex items-center gap-1.5">
+              ⚡ Touch #1 Outreach Ready for Founder Review
+            </span>
+          </div>
+          <button
+            type="button"
+            @click="activeTab = 'sequence'"
+            class="text-[11px] font-bold text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1 cursor-pointer"
+          >
+            <span>View Full 4-Step Cadence</span>
+            <ArrowRight class="w-3 h-3" />
+          </button>
+        </div>
+
+        <div class="p-3 rounded-xl bg-white dark:bg-slate-950 border border-purple-200/80 dark:border-purple-900/60 text-xs">
+          <div class="font-bold text-slate-900 dark:text-slate-100 truncate">
+            Subject: <span class="font-normal text-slate-600 dark:text-slate-300">{{ step1Draft?.subject }}</span>
+          </div>
+          <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 line-clamp-3 leading-relaxed font-sans whitespace-pre-line">
+            {{ step1Draft?.body_text }}
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-0.5">
+          <span class="text-[10px] text-slate-500 dark:text-slate-400">
+            Dispatches Touch 1 now. Touches #2 (+3d), #3 (+7d), and #4 (+11d) schedule automatically.
+          </span>
+          <button
+            type="button"
+            @click="startSequence"
+            :disabled="startingSequence || !leadData?.lead?.email"
+            class="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white text-xs font-extrabold shadow-md shadow-purple-500/20 transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
+          >
+            <Send class="w-3.5 h-3.5" :class="{ 'animate-pulse': startingSequence }" />
+            <span>{{ startingSequence ? 'Dispatching...' : '🚀 1-Click Approve & Dispatch Touch #1' }}</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Content Tabs -->
       <div class="px-4 sm:px-6 pt-3 flex gap-4 sm:gap-6 border-b border-slate-200 dark:border-slate-800 text-xs font-semibold uppercase tracking-wider bg-slate-50/50 dark:bg-slate-950/30 overflow-x-auto custom-scrollbar">
         <button
@@ -917,6 +975,189 @@ const submitWirePayment = async () => {
 
       <!-- Tab Content Area -->
       <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-5 custom-scrollbar">
+        <!-- Executive Intelligence Dossier (Domain, Tech Stack, Pain Points & Research Links) -->
+        <div
+          v-if="enrichment"
+          class="p-4 rounded-2xl bg-gradient-to-br from-slate-50 via-indigo-50/20 to-purple-50/20 dark:from-slate-950 dark:via-indigo-950/25 dark:to-purple-950/25 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3"
+        >
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <Building2 class="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
+              <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-white">
+                Executive Intelligence Dossier
+              </h4>
+              <span
+                v-if="enrichment.is_domain_verified"
+                class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+              >
+                Live Domain Verified
+              </span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                @click="enrichLead"
+                :disabled="enrichingLead"
+                class="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
+                title="Re-scan domain and refresh OpenAI intelligence dossier"
+              >
+                <RefreshCw class="w-3 h-3" :class="{ 'animate-spin': enrichingLead }" />
+                <span>{{ enrichingLead ? 'Scanning...' : 'Re-scan Domain' }}</span>
+              </button>
+
+              <button
+                type="button"
+                @click="isDossierCollapsed = !isDossierCollapsed"
+                class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition cursor-pointer"
+                :title="isDossierCollapsed ? 'Expand dossier' : 'Collapse dossier'"
+              >
+                <ChevronDown v-if="isDossierCollapsed" class="w-4 h-4" />
+                <ChevronUp v-else class="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          <!-- Expanded Dossier Details -->
+          <div v-if="!isDossierCollapsed" class="space-y-3">
+            <!-- Business Overview & Metrics -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <div class="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-1">
+                <div class="text-[10px] uppercase font-bold text-slate-400">Industry & Core Offering</div>
+                <div class="font-bold text-slate-900 dark:text-slate-100">{{ enrichment.industry || 'Software / Technology' }}</div>
+                <div class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed font-sans">
+                  {{ enrichment.company_summary }}
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between">
+                <div>
+                  <div class="text-[10px] uppercase font-bold text-slate-400">Team Size & Scale</div>
+                  <div class="font-bold text-slate-900 dark:text-slate-100 mt-0.5">{{ enrichment.estimated_team_size || '1-20 Founders' }}</div>
+                </div>
+                <div class="pt-2 mt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                  <span class="text-[10px] uppercase font-bold text-slate-400">Target Domain</span>
+                  <span class="font-mono text-[11px] font-bold text-indigo-600 dark:text-indigo-400">{{ enrichment.domain || 'Direct Contact' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Detected Tech Stack Badges -->
+            <div v-if="enrichment.detected_tech_stack?.length" class="space-y-1.5">
+              <div class="text-[10px] uppercase font-bold text-slate-400">Detected & Recommended Tech Stack</div>
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span
+                  v-for="tag in enrichment.detected_tech_stack"
+                  :key="tag"
+                  class="px-2.5 py-1 rounded-lg text-[10px] font-bold font-mono bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 shadow-xs"
+                >
+                  ⚡ {{ tag }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Client Pain Points & Recommended Hook -->
+            <div v-if="enrichment.client_pain_points?.length || enrichment.recommended_hook" class="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-xs space-y-1.5">
+              <div v-if="enrichment.client_pain_points?.length" class="flex items-start gap-2">
+                <span class="text-[10px] font-bold uppercase text-amber-600 dark:text-amber-400 shrink-0">Pain Points:</span>
+                <span class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
+                  {{ enrichment.client_pain_points.join(' • ') }}
+                </span>
+              </div>
+              <div v-if="enrichment.recommended_hook" class="flex items-start gap-2 pt-1 border-t border-slate-100 dark:border-slate-800/80">
+                <span class="text-[10px] font-bold uppercase text-purple-600 dark:text-purple-400 shrink-0">Outreach Hook:</span>
+                <span class="text-[11px] text-purple-700 dark:text-purple-300 font-medium font-sans">
+                  "{{ enrichment.recommended_hook }}"
+                </span>
+              </div>
+            </div>
+
+            <!-- 1-Tap Research Links -->
+            <div class="flex items-center gap-1.5 flex-wrap pt-1">
+              <a
+                v-if="enrichment.domain"
+                :href="'https://' + enrichment.domain"
+                target="_blank"
+                class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1 transition shadow-xs"
+              >
+                <Globe class="w-3 h-3 text-cyan-500" />
+                <span>Website</span>
+                <ExternalLink class="w-2.5 h-2.5 text-slate-400" />
+              </a>
+              <a
+                v-if="enrichment.linkedin_company_url"
+                :href="enrichment.linkedin_company_url"
+                target="_blank"
+                class="px-2.5 py-1 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 text-[11px] font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1 transition"
+              >
+                <Building2 class="w-3 h-3" />
+                <span>LinkedIn Co.</span>
+                <ExternalLink class="w-2.5 h-2.5 text-blue-400" />
+              </a>
+              <a
+                v-if="enrichment.linkedin_exec_url"
+                :href="enrichment.linkedin_exec_url"
+                target="_blank"
+                class="px-2.5 py-1 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/20 text-[11px] font-bold text-sky-600 dark:text-sky-400 flex items-center gap-1 transition"
+              >
+                <User class="w-3 h-3" />
+                <span>Founder Profile</span>
+                <ExternalLink class="w-2.5 h-2.5 text-sky-400" />
+              </a>
+              <a
+                v-if="enrichment.crunchbase_url"
+                :href="enrichment.crunchbase_url"
+                target="_blank"
+                class="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 transition"
+              >
+                <DollarSign class="w-3 h-3" />
+                <span>Crunchbase</span>
+                <ExternalLink class="w-2.5 h-2.5 text-emerald-400" />
+              </a>
+              <a
+                v-if="enrichment.builtwith_url"
+                :href="enrichment.builtwith_url"
+                target="_blank"
+                class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 border border-slate-200 dark:border-slate-700 text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1 transition"
+              >
+                <Bot class="w-3 h-3 text-purple-500" />
+                <span>BuiltWith</span>
+                <ExternalLink class="w-2.5 h-2.5 text-slate-400" />
+              </a>
+            </div>
+          </div>
+
+          <!-- Collapsed Strip View -->
+          <div v-else class="flex items-center justify-between text-xs text-slate-500">
+            <div class="flex items-center gap-2 truncate">
+              <span class="font-bold text-slate-800 dark:text-slate-200 truncate">{{ enrichment.company_name }}</span>
+              <span>•</span>
+              <span class="font-mono text-indigo-600 dark:text-indigo-400">{{ enrichment.domain || 'Direct Contact' }}</span>
+              <span>•</span>
+              <span class="truncate">{{ enrichment.industry }}</span>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <a
+                v-if="enrichment.linkedin_company_url"
+                :href="enrichment.linkedin_company_url"
+                target="_blank"
+                class="p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-blue-600"
+                title="LinkedIn"
+              >
+                <Building2 class="w-3.5 h-3.5" />
+              </a>
+              <a
+                v-if="enrichment.domain"
+                :href="'https://' + enrichment.domain"
+                target="_blank"
+                class="p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-cyan-600"
+                title="Website"
+              >
+                <Globe class="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+        </div>
         <!-- Tab 0: Outbound Cadence Engine -->
         <div v-if="activeTab === 'sequence'" class="space-y-4">
           <!-- Missing Email Contact Warning & 1-Click Search Helper -->

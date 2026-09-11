@@ -118,13 +118,20 @@ class CrmDashboardController extends Controller
 
         // 2. Daily Action Queue (High-Priority International Follow-ups)
         $actionQueue = Lead::query()
-            ->with(['organization', 'deals' => fn($q) => $q->latest()->limit(1)])
+            ->with([
+                'organization',
+                'deals' => fn($q) => $q->latest()->limit(1),
+                'sequences' => fn($q) => $q->with(['steps' => fn($sq) => $sq->orderBy('step_number', 'asc')])->latest()->limit(1),
+            ])
             ->whereNotIn('email', $founderEmails)
             ->whereNotIn('status', ['converted', 'archived'])
             ->where(function ($query) {
                 $query->where('next_action_date', '<=', now()->addHours(12))
                     ->orWhereNull('next_action_date')
-                    ->orWhere('score', '>=', 70);
+                    ->orWhere('score', '>=', 70)
+                    ->orWhereHas('sequences', function ($sq) {
+                        $sq->where('status', 'draft');
+                    });
             })
             ->orderBy('score', 'desc')
             ->orderBy('next_action_date', 'asc')
@@ -133,23 +140,33 @@ class CrmDashboardController extends Controller
             ->map(function ($lead) {
                 $latestDeal = $lead->deals->first();
                 $company = $lead->company ?? $lead->organization?->name ?? 'Inbound Client Inquiry';
-                $actionNote = $lead->next_action_note ?: ($lead->status === 'new' ? 'Discovery call & requirement review' : 'Follow-up required');
+                $latestSeq = $lead->sequences->first();
+                $step1 = $latestSeq ? $latestSeq->steps->firstWhere('step_number', 1) : null;
+                $isSeqPending = $latestSeq && ($latestSeq->status === 'draft' || ($step1 && $step1->status === 'pending'));
+
+                $actionNote = $isSeqPending
+                    ? '⚡ Touch 1 Email Ready for Founder Review'
+                    : ($lead->next_action_note ?: ($lead->status === 'new' ? 'Discovery call & requirement review' : 'Follow-up required'));
+
                 $dealVal = $latestDeal ? $latestDeal->formatted_amount : ($lead->estimated_value ? '$' . number_format($lead->estimated_value) : '$5,000 USD (Est.)');
 
                 return [
-                    'id'               => $lead->id,
-                    'name'             => $lead->name ?: 'New Client Inquiry',
-                    'company'          => $company,
-                    'phone'            => $lead->phone,
-                    'email'            => $lead->email,
-                    'segment'          => $lead->segment ?? 'general',
-                    'score'            => (int) ($lead->score ?? 50),
-                    'touchpoint_count' => (int) ($lead->touchpoint_count ?? 0),
-                    'next_action_date' => $lead->next_action_date?->toIso8601String(),
-                    'next_action_note' => $actionNote,
-                    'is_overdue'       => $lead->next_action_date && $lead->next_action_date->isPast(),
-                    'deal_value'       => $dealVal,
-                    'deal_id'          => $latestDeal?->id,
+                    'id'                   => $lead->id,
+                    'name'                 => $lead->name ?: 'New Client Inquiry',
+                    'company'              => $company,
+                    'phone'                => $lead->phone,
+                    'email'                => $lead->email,
+                    'segment'              => $lead->segment ?? 'general',
+                    'score'                => (int) ($lead->score ?? 50),
+                    'touchpoint_count'     => (int) ($lead->touchpoint_count ?? 0),
+                    'next_action_date'     => $lead->next_action_date?->toIso8601String(),
+                    'next_action_note'     => $actionNote,
+                    'is_overdue'           => $lead->next_action_date && $lead->next_action_date->isPast(),
+                    'deal_value'           => $dealVal,
+                    'deal_id'              => $latestDeal?->id,
+                    'has_pending_sequence' => (bool) $isSeqPending,
+                    'sequence_id'          => $latestSeq?->id,
+                    'enrichment_data'      => $lead->enrichment_data,
                 ];
             });
 
@@ -287,6 +304,8 @@ class CrmDashboardController extends Controller
                     'current_step' => $activeSeq->current_step,
                     'total_steps'  => $activeSeq->total_steps,
                 ] : null,
+                'enrichment_data'   => $lead->enrichment_data,
+                'detected_stack'    => $lead->enrichment_data['detected_tech_stack'] ?? [],
             ];
         });
 

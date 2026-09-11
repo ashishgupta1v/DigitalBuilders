@@ -151,6 +151,20 @@ const sendDirectMail = () => {
         </div>
       </div>
 
+      <!-- Detected Tech Stack Profile -->
+      <div v-if="lead.detected_stack?.length" class="space-y-1.5">
+        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Detected & Recommended Stack</div>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span
+            v-for="t in lead.detected_stack"
+            :key="t"
+            class="px-2 py-0.5 rounded-lg text-[10px] font-bold font-mono bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 shadow-xs"
+          >
+            ⚡ {{ t }}
+          </span>
+        </div>
+      </div>
+
       <!-- Outbound Cadence Widget -->
       <div class="p-4 rounded-xl bg-purple-500/5 dark:bg-purple-950/20 border border-purple-500/20 space-y-3">
         <div class="flex items-center justify-between">
