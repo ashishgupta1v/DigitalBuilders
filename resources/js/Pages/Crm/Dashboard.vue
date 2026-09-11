@@ -101,6 +101,9 @@ const budgetTierTabs = [
 
 const sourceTabs = [
   { key: 'all', label: 'All Sources' },
+  { key: 'producthunt', label: '😸 Product Hunt' },
+  { key: 'jobicy', label: '💼 Jobicy' },
+  { key: 'arbeitnow', label: '🌐 Arbeitnow' },
   { key: 'upwork', label: '🟢 Upwork' },
   { key: 'hackernews', label: '🟠 Hacker News' },
   { key: 'github', label: '⚫ GitHub' },
@@ -855,7 +858,7 @@ const logout = () => {
         <div v-if="filteredMarketRequirements.length === 0" class="p-12 text-center text-xs text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800">
           <Globe class="w-8 h-8 text-purple-500/40 mx-auto mb-2 animate-pulse" />
           <p class="font-bold text-slate-700 dark:text-slate-300 text-sm">No RFPs in this channel right now</p>
-          <p class="mt-1">Click "Sync Feeds" to poll HackerNews & Upwork RSS, or use the "AI Proposal Studio" to paste any project link.</p>
+          <p class="mt-1">Click "Sync Feeds" to poll Product Hunt launches, Jobicy, Arbeitnow, HackerNews, and Upwork, or use the "AI Proposal Studio" to paste any custom RFP link.</p>
         </div>
 
         <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">

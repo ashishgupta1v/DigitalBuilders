@@ -73,6 +73,9 @@ class InternationalLeadScraperService
             'hn'             => $this->pollHackerNews(),
             'upwork'         => $this->pollUpwork(),
             'github'         => $this->pollGitHubDiscussions(),
+            'jobicy'         => $this->pollJobicy(),
+            'arbeitnow'      => $this->pollArbeitnow(),
+            'producthunt'    => $this->pollProductHuntLaunches(),
             'weworkremotely' => $this->pollWeWorkRemotely(),
             'remoteok'       => $this->pollRemoteOk(),
             'remotive'       => $this->pollRemotive(),
@@ -85,7 +88,8 @@ class InternationalLeadScraperService
     }
 
     /**
-     * Poll Hacker News Algolia Search API for live "SEEKING FREELANCER" and direct founder posts.
+     * Poll Hacker News Algolia Search API for live "SEEKING FREELANCER" and direct founder posts,
+     * including targeting the official monthly "Ask HN: Freelancer? Seeking Freelancer?" megathread.
      */
     public function pollHackerNews(): int
     {
@@ -98,12 +102,35 @@ class InternationalLeadScraperService
                 'hitsPerPage' => 20,
             ]);
 
-            $response = Http::timeout(10)->get($url);
-            if (!$response->successful()) {
-                return 0;
+            $response = Http::withoutVerifying()->timeout(10)->get($url);
+            $hits = $response->successful() ? ($response->json('hits') ?? []) : [];
+
+            // Also check current month's official "Ask HN: Freelancer? Seeking Freelancer?" thread
+            try {
+                $monthlyUrl = 'https://hn.algolia.com/api/v1/search?' . http_build_query([
+                    'tags'        => 'story',
+                    'query'       => 'Ask HN: Freelancer? Seeking Freelancer?',
+                    'hitsPerPage' => 1,
+                ]);
+                $storyResp = Http::withoutVerifying()->timeout(8)->get($monthlyUrl);
+                if ($storyResp->successful()) {
+                    $storyId = $storyResp->json('hits.0.objectID');
+                    if ($storyId) {
+                        $commentsUrl = 'https://hn.algolia.com/api/v1/search_by_date?' . http_build_query([
+                            'tags'        => "comment,story_{$storyId}",
+                            'query'       => 'SEEKING FREELANCER',
+                            'hitsPerPage' => 20,
+                        ]);
+                        $cResp = Http::withoutVerifying()->timeout(8)->get($commentsUrl);
+                        if ($cResp->successful() && !empty($cResp->json('hits'))) {
+                            $hits = array_merge($hits, $cResp->json('hits'));
+                        }
+                    }
+                }
+            } catch (\Throwable $e) {
+                Log::info('HN monthly thread fetch skipped: ' . $e->getMessage());
             }
 
-            $hits = $response->json('hits') ?? [];
             foreach ($hits as $hit) {
                 $commentId = (string) ($hit['objectID'] ?? '');
                 $rawText = (string) ($hit['comment_text'] ?? '');
@@ -989,6 +1016,293 @@ class InternationalLeadScraperService
             }
         } catch (\Throwable $e) {
             Log::error('GitHub poll error: ' . $e->getMessage());
+        }
+
+        return $ingested;
+    }
+
+    /**
+     * Poll Jobicy API for contract / freelance developer requirements.
+     */
+    public function pollJobicy(): int
+    {
+        $ingested = 0;
+
+        try {
+            $response = Http::withoutVerifying()->timeout(12)->withHeaders([
+                'User-Agent' => 'DigitalBuilders/1.0 (LeadHunter; founder@digitalbuilders.in)',
+            ])->get('https://jobicy.com/api/v2/remote-jobs', [
+                'count'    => 30,
+                'industry' => 'engineering',
+            ]);
+
+            if (!$response->successful()) {
+                return 0;
+            }
+
+            $jobs = $response->json('jobs') ?? [];
+            if (!is_array($jobs)) {
+                return 0;
+            }
+
+            foreach ($jobs as $job) {
+                $id = (string) ($job['id'] ?? '');
+                $title = trim(html_entity_decode((string) ($job['jobTitle'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $company = trim(html_entity_decode((string) ($job['companyName'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $description = trim(html_entity_decode(strip_tags((string) ($job['jobDescription'] ?? $job['jobExcerpt'] ?? '')), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $url = (string) ($job['url'] ?? '');
+                $jobType = implode(' ', (array) ($job['jobType'] ?? []));
+                $location = (string) ($job['jobGeo'] ?? 'Remote (Global)');
+
+                if (!$id || !$title || MarketRequirement::where('source', 'jobicy')->where('external_id', $id)->exists()) {
+                    continue;
+                }
+
+                $fullText = "{$title} at {$company}. {$jobType}. {$description}";
+
+                // Filter for contract, freelance, or software project scopes
+                $isContract = preg_match('/\b(contract|contractor|freelance|part-time|project|consultant|mvp)\b/i', $fullText);
+                if (!$isContract) {
+                    continue;
+                }
+
+                if (!$this->passesTier1Filters($fullText)) {
+                    continue;
+                }
+
+                $salaryMin = (float) ($job['salaryMin'] ?? 0);
+                $budgetRaw = '$5,000 – $10,000';
+                $amount = 6500.00;
+                if ($salaryMin > 1000) {
+                    $budgetRaw = '$' . number_format($salaryMin) . '+';
+                    $amount = min($salaryMin, 25000.00);
+                }
+
+                $score = $this->pitchGenerator->scoreRelevance($fullText, $budgetRaw, null, null);
+                if ($score < 50) {
+                    continue;
+                }
+
+                $pitchData = $this->pitchGenerator->generateAiPitch($fullText, null, $company, 'jobicy', 'USD', $budgetRaw);
+                $techTags = $this->extractTechTags($fullText);
+
+                $req = MarketRequirement::create([
+                    'source'           => 'jobicy',
+                    'external_id'      => $id,
+                    'title'            => substr("Jobicy: {$title} — {$company}", 0, 190),
+                    'raw_text'         => substr($description, 0, 3000),
+                    'budget_raw'       => $budgetRaw,
+                    'estimated_amount' => $amount,
+                    'currency'         => 'USD',
+                    'contact_company'  => $company,
+                    'location'         => $location,
+                    'matched_segment'  => $pitchData['segment'],
+                    'relevance_score'  => $pitchData['relevance_score'] ?? $score,
+                    'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
+                    'status'           => 'qualified',
+                    'metadata'         => [
+                        'url'                    => $url,
+                        'company'                => $company,
+                        'tech_tags'              => $techTags,
+                        'email_pitch'            => $pitchData['email_pitch'] ?? null,
+                        'email_subject'          => $pitchData['email_subject'] ?? null,
+                        'linkedin_dm'            => $pitchData['linkedin_dm'] ?? null,
+                        'detected_tech_stack'    => $techTags,
+                        'suggested_architecture' => $pitchData['suggested_architecture'] ?? null,
+                    ],
+                ]);
+
+                $this->telegramBot->sendOpportunityAlert($req, $pitchData);
+                $ingested++;
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Jobicy polling exception: ' . $e->getMessage());
+        }
+
+        return $ingested;
+    }
+
+    /**
+     * Poll Arbeitnow API for contract and freelance software engineering projects.
+     */
+    public function pollArbeitnow(): int
+    {
+        $ingested = 0;
+
+        try {
+            $response = Http::withoutVerifying()->timeout(12)->withHeaders([
+                'User-Agent' => 'DigitalBuilders/1.0 (LeadHunter; founder@digitalbuilders.in)',
+            ])->get('https://www.arbeitnow.com/api/job-board-api');
+
+            if (!$response->successful()) {
+                return 0;
+            }
+
+            $items = $response->json('data') ?? [];
+            if (!is_array($items)) {
+                return 0;
+            }
+
+            $slice = array_slice($items, 0, 35);
+            foreach ($slice as $job) {
+                $slug = (string) ($job['slug'] ?? '');
+                $title = trim(html_entity_decode((string) ($job['title'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $company = trim(html_entity_decode((string) ($job['company_name'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $description = trim(html_entity_decode(strip_tags((string) ($job['description'] ?? '')), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $url = (string) ($job['url'] ?? '');
+                $jobTypes = implode(' ', (array) ($job['job_types'] ?? []));
+                $tags = implode(', ', (array) ($job['tags'] ?? []));
+                $location = (string) ($job['location'] ?? 'Remote (Global)');
+
+                if (!$slug || !$title || MarketRequirement::where('source', 'arbeitnow')->where('external_id', $slug)->exists()) {
+                    continue;
+                }
+
+                $fullText = "{$title} at {$company}. Tags: {$tags}. Types: {$jobTypes}. {$description}";
+
+                // Filter for contract/freelance/consulting projects
+                if (!preg_match('/\b(contract|contractor|freelance|part-time|consultant|project|mvp)\b/i', $fullText)) {
+                    continue;
+                }
+
+                if (!$this->passesTier1Filters($fullText)) {
+                    continue;
+                }
+
+                $budget = $this->extractBudget($fullText, '$4,500 – $9,500');
+                $score = $this->pitchGenerator->scoreRelevance($fullText, $budget['raw'], null, null);
+                if ($score < 50) {
+                    continue;
+                }
+
+                $pitchData = $this->pitchGenerator->generateAiPitch($fullText, null, $company, 'arbeitnow', 'USD', $budget['raw']);
+                $techTags = $this->extractTechTags($fullText);
+
+                $req = MarketRequirement::create([
+                    'source'           => 'arbeitnow',
+                    'external_id'      => $slug,
+                    'title'            => substr("Arbeitnow: {$title} — {$company}", 0, 190),
+                    'raw_text'         => substr($description, 0, 3000),
+                    'budget_raw'       => $budget['raw'],
+                    'estimated_amount' => $pitchData['estimated_amount'] ?? $budget['amount'] ?? 6500.00,
+                    'currency'         => 'USD',
+                    'contact_company'  => $company,
+                    'location'         => $location,
+                    'matched_segment'  => $pitchData['segment'],
+                    'relevance_score'  => $pitchData['relevance_score'] ?? $score,
+                    'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
+                    'status'           => 'qualified',
+                    'metadata'         => [
+                        'url'                    => $url,
+                        'company'                => $company,
+                        'tech_tags'              => $techTags,
+                        'email_pitch'            => $pitchData['email_pitch'] ?? null,
+                        'email_subject'          => $pitchData['email_subject'] ?? null,
+                        'linkedin_dm'            => $pitchData['linkedin_dm'] ?? null,
+                        'detected_tech_stack'    => $techTags,
+                        'suggested_architecture' => $pitchData['suggested_architecture'] ?? null,
+                    ],
+                ]);
+
+                $this->telegramBot->sendOpportunityAlert($req, $pitchData);
+                $ingested++;
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Arbeitnow polling exception: ' . $e->getMessage());
+        }
+
+        return $ingested;
+    }
+
+    /**
+     * Poll Product Hunt RSS for newly launched software startups needing v2 scaling & mobile engineering.
+     */
+    public function pollProductHuntLaunches(): int
+    {
+        $ingested = 0;
+
+        try {
+            $response = Http::withoutVerifying()->timeout(12)->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            ])->get('https://www.producthunt.com/feed');
+
+            if (!$response->successful()) {
+                return 0;
+            }
+
+            $xml = @simplexml_load_string($response->body());
+            if (!$xml || !isset($xml->entry)) {
+                return 0;
+            }
+
+            $count = 0;
+            foreach ($xml->entry as $entry) {
+                $productName = trim((string) ($entry->title ?? ''));
+                $url = (string) ($entry->link->attributes()['href'] ?? $entry->link['href'] ?? '');
+                $rawContent = trim((string) ($entry->content ?? ''));
+                $cleanContent = trim(html_entity_decode(strip_tags($rawContent), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $cleanContent = trim(preg_replace('/\b(Discussion\s*\|\s*Link)\b/i', '', $cleanContent));
+                $guid = 'ph_' . md5($productName . $url);
+
+                if (!$productName || strlen($cleanContent) < 10 || MarketRequirement::where('source', 'producthunt')->where('external_id', $guid)->exists()) {
+                    continue;
+                }
+
+                $fullText = "{$productName}: {$cleanContent}";
+
+                // Filter for software, apps, tools, platforms, AI, and SaaS
+                if (!preg_match('/\b(app|platform|saas|ai|software|tool|bot|portal|dashboard|builder|analytics|automation|mobile|web|cloud|api|workspace|credit|design)\b/i', $fullText)) {
+                    continue;
+                }
+
+                $techTags = $this->extractTechTags($fullText);
+                $budgetRaw = '$4,500 – $8,500 (V2 Architecture Sprint)';
+                $amount = 5500.00;
+
+                $pitchData = $this->pitchGenerator->generateAiPitch(
+                    "Startup launched on Product Hunt: {$productName}. Concept: {$cleanContent}. Needs v2 architecture sprint, mobile apps, and high-concurrency cloud scaling.",
+                    $productName . ' Founder',
+                    $productName,
+                    'producthunt',
+                    'USD',
+                    $budgetRaw
+                );
+
+                $req = MarketRequirement::create([
+                    'source'           => 'producthunt',
+                    'external_id'      => substr($guid, 0, 190),
+                    'title'            => substr("Product Hunt Launch: {$productName}", 0, 190),
+                    'raw_text'         => substr($cleanContent, 0, 3000),
+                    'budget_raw'       => $budgetRaw,
+                    'estimated_amount' => $amount,
+                    'currency'         => 'USD',
+                    'contact_company'  => $productName,
+                    'location'         => 'Global (Product Hunt Launch)',
+                    'matched_segment'  => 'saas_ai',
+                    'relevance_score'  => 85,
+                    'pitch_draft'      => $pitchData['upwork_proposal'] ?? $pitchData['short_pitch'],
+                    'status'           => 'qualified',
+                    'metadata'         => [
+                        'url'                    => $url,
+                        'product_name'           => $productName,
+                        'tech_tags'              => $techTags,
+                        'email_pitch'            => $pitchData['email_pitch'] ?? null,
+                        'email_subject'          => "Scaling architecture & mobile v2 for {$productName} (congrats on launch!)",
+                        'linkedin_dm'            => "Congrats on the {$productName} launch! We help newly launched SaaS teams build their mobile apps and scale backend concurrency in 4-week sprints. Let's connect!",
+                        'detected_tech_stack'    => $techTags,
+                        'suggested_architecture' => 'High-concurrency PostgreSQL backend with Redis caching and native iOS/Android PWA apps.',
+                    ],
+                ]);
+
+                $this->telegramBot->sendOpportunityAlert($req, $pitchData);
+                $ingested++;
+                $count++;
+                if ($count >= 5) {
+                    break;
+                }
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Product Hunt polling exception: ' . $e->getMessage());
         }
 
         return $ingested;

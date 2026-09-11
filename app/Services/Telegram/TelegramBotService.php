@@ -125,6 +125,77 @@ class TelegramBotService
     }
 
     /**
+     * Dispatch an immediate high-priority alert for inbound website leads (Estimator, Contact Form).
+     */
+    public function sendInboundLeadAlert(
+        string $name,
+        string $email,
+        string $phone,
+        string $source,
+        string $projectType,
+        ?string $budget = null,
+        ?string $timeline = null,
+        array $features = [],
+        ?string $notes = null
+    ): bool {
+        if (!$this->botToken || !$this->chatId) {
+            Log::info("TelegramBotService: Lead alert logged locally (no token): {$name} - {$email}");
+            return false;
+        }
+
+        $cleanPhone = preg_replace('/[^0-9+]/', '', $phone);
+        $waPhone = ltrim($cleanPhone, '+');
+        // If 10 digits starting with 6-9, assume India (+91)
+        if (strlen($waPhone) === 10 && preg_match('/^[6-9]/', $waPhone)) {
+            $waPhone = '91' . $waPhone;
+        }
+
+        $waGreeting = "Hi " . strtok($name, ' ') . ", this is Ashish Gupta, Principal Architect at DigitalBuilders. I just reviewed your " . $projectType . " project inquiry on our portal. Are you available for a quick 5-min architecture sync today?";
+        $waUrl = "https://wa.me/{$waPhone}?text=" . rawurlencode($waGreeting);
+
+        $featureList = !empty($features) ? implode(', ', $features) : 'Custom Architecture';
+        $budgetDisplay = $budget ?: 'Scope-derived';
+
+        $text = "🚨 *NEW INBOUND CLIENT INQUIRY*\n"
+            . "━━━━━━━━━━━━━━━━━━━━\n"
+            . "• *Client:* `{$name}`\n"
+            . "• *Phone:* `{$phone}`\n"
+            . "• *Email:* `{$email}`\n"
+            . "• *Source:* *{$source}*\n"
+            . "• *Project Type:* {$projectType}\n"
+            . "• *Estimated Budget:* `{$budgetDisplay}`\n"
+            . ($timeline ? "• *Target Timeline:* {$timeline}\n" : "")
+            . "• *Selected Features:* {$featureList}\n"
+            . ($notes ? "• *Brief:* _{$notes}_\n" : "")
+            . "\n⚡ *Speed-to-lead rule: Reach out within 5 minutes for 21x qualification rate.*";
+
+        $crmUrl = url('/crm');
+        $keyboard = [
+            'inline_keyboard' => [
+                [
+                    ['text' => '💬 1-Tap WhatsApp Lead', 'url' => $waUrl],
+                    ['text' => '📊 Open CRM Cockpit', 'url' => $crmUrl],
+                ],
+            ],
+        ];
+
+        try {
+            $response = Http::timeout(10)->post("https://api.telegram.org/bot{$this->botToken}/sendMessage", [
+                'chat_id'                  => $this->chatId,
+                'text'                     => $text,
+                'parse_mode'               => 'Markdown',
+                'disable_web_page_preview' => true,
+                'reply_markup'             => json_encode($keyboard),
+            ]);
+
+            return $response->successful();
+        } catch (\Throwable $e) {
+            Log::error("Failed to send Telegram inbound lead alert: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Answer a callback query (e.g. button click toast).
      */
     public function answerCallbackQuery(string $callbackQueryId, string $text): void

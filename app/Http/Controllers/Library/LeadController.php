@@ -48,7 +48,7 @@ class LeadController extends Controller
         // Enrich created LeadModel with growth CRM pipeline fields & UTM attribution
         if ($leadDTO->id) {
             $estimatedVal = $validated['estimated_value'] ?? null;
-            $amount = 149000;
+            $amount = 0.0;
             $currency = 'INR';
             if ($estimatedVal) {
                 $numericVal = (float) preg_replace('/[^0-9.]/', '', $estimatedVal);
@@ -95,6 +95,23 @@ class LeadController extends Controller
                 'description'       => "Project Type: {$leadDTO->projectTypeLabel}. Ingested into CRM with target value {$deal->formatted_amount}.",
                 'touchpoint_number' => 0,
             ]);
+
+            // Instant Telegram Alert for Speed-to-Lead Response
+            try {
+                app(\App\Services\Telegram\TelegramBotService::class)->sendInboundLeadAlert(
+                    name: $leadDTO->name,
+                    email: $leadDTO->email,
+                    phone: $leadDTO->phone,
+                    source: 'Website Contact Form (/contact)',
+                    projectType: $leadDTO->projectTypeLabel ?? 'Custom Solution',
+                    budget: $estimatedVal ?: ($amount > 0 ? "{$currency} " . number_format($amount) : null),
+                    timeline: null,
+                    features: [],
+                    notes: $validated['description'] ?? null
+                );
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('Contact form Telegram alert error: ' . $e->getMessage());
+            }
         }
 
         if ($request->wantsJson()) {

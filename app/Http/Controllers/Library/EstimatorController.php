@@ -67,13 +67,7 @@ class EstimatorController extends Controller
             }
 
             // Extract numeric amount from budget (e.g. "₹1,50,000 - ₹2,50,000" -> average 200,000)
-            $amount = 149000.0;
-            if ($currency === 'USD') {
-                $amount = 4500.0;
-            } elseif ($currency === 'AED') {
-                $amount = 4000.0;
-            }
-
+            $amount = 0.0;
             preg_match_all('/[\d,]+/', $estimatedBudgetString, $matches);
             if (! empty($matches[0])) {
                 $numbers = array_values(array_filter(array_map(function ($val) {
@@ -149,6 +143,23 @@ class EstimatorController extends Controller
                 'description'       => "Interactive Estimator budget: {$estimatedBudgetString}. Auto-scored {$score}/100 and placed in Sales Queue.",
                 'touchpoint_number' => 0,
             ]);
+
+            // Dispatch Instant Speed-to-Lead Telegram Alert to Founder
+            try {
+                app(\App\Services\Telegram\TelegramBotService::class)->sendInboundLeadAlert(
+                    name: $leadDTO->name,
+                    email: $leadDTO->email,
+                    phone: $leadDTO->phone,
+                    source: 'Interactive Cost Estimator (/estimator)',
+                    projectType: $leadDTO->projectTypeLabel ?? $validated['project_type'],
+                    budget: $estimatedBudgetString ?: ($amount > 0 ? "{$currency} " . number_format($amount) : null),
+                    timeline: $validated['estimated_timeline'] ?? null,
+                    features: $validated['features'] ?? [],
+                    notes: $validated['description'] ?? null
+                );
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('Estimator Telegram alert error: ' . $e->getMessage());
+            }
         }
 
         return back()->with('success', 'Your project estimate and inquiry have been received! We will reach out with a detailed roadmap within 24 business hours.');
